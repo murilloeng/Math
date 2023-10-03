@@ -1,0 +1,43 @@
+//std
+#include <cstdlib>
+
+//math
+#include "inc/misc/misc.hpp"
+
+namespace mat
+{
+	int sign(int x)
+	{
+		return x == 0 ? 0 : x < 0 ? -1 : +1;
+	}
+	int sign(bool t)
+	{
+		return t ? +1 : -1;
+	}
+	int sign(double x)
+	{
+		return x == 0 ? 0 : x < 0 ? -1 : +1;
+	}
+
+	void swap(double& a, double& b)
+	{
+		a = a + b;
+		b = a - b;
+		a = a - b;
+	}
+	void swap(unsigned& a, unsigned& b)
+	{
+		a ^= b;
+		b ^= a;
+		a ^= b;
+	}
+
+	double randu(double a, double b)
+	{
+		return a + rand() * (b - a) / RAND_MAX;
+	}
+	double bound(double v, double a, double b)
+	{
+		return fmax(fmin(v, b), a);
+	}
+}
