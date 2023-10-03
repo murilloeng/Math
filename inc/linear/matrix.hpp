@@ -3,7 +3,7 @@
 //std
 #include <initializer_list>
 
-//mat
+//math
 #include "inc/linear/span.hpp"
 
 //defines

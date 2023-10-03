@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstring>
 
-//mat
+//math
 #include "inc/solvers/newmark.hpp"
 
 namespace math

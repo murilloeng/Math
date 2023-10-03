@@ -1,7 +1,7 @@
 //std
 #include <vector>
 
-//mat
+//math
 #include "inc/linear/quat.hpp"
 #include "inc/linear/vec3.hpp"
 #include "inc/linear/mat3.hpp"

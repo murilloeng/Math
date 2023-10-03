@@ -1,7 +1,7 @@
 //std
 #include <cstdlib>
 
-//mat
+//math
 #include "inc/quadrature/rule.hpp"
 #include "inc/quadrature/quadrature.hpp"
 

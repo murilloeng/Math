@@ -3,7 +3,7 @@
 #include <cstdio>
 #include <cstring>
 
-//mat
+//math
 #include "inc/misc/misc.hpp"
 #include "inc/linear/matrix.hpp"
 #include "inc/linear/vector.hpp"

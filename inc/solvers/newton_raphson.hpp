@@ -3,7 +3,7 @@
 //std
 #include <functional>
 
-//mat
+//math
 #include "inc/linear/matrix.hpp"
 #include "inc/linear/vector.hpp"
 #include "inc/solvers/strategies.hpp"

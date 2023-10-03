@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 
-//mat
+//math
 #include "inc/linear/span.hpp"
 #include "inc/linear/mat3.hpp"
 #include "inc/linear/matrix.hpp"
