@@ -4,7 +4,7 @@
 //math
 #include "inc/misc/misc.hpp"
 
-namespace mat
+namespace math
 {
 	int sign(int x)
 	{
