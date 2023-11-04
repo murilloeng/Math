@@ -1,5 +1,8 @@
 //std
 #include <vector>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 //math
 #include "inc/linear/vector.hpp"

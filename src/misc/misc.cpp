@@ -1,5 +1,5 @@
 //std
-#include <cstdlib>
+#include <cmath>
 
 //math
 #include "inc/misc/misc.hpp"

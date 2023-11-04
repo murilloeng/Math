@@ -1,4 +1,5 @@
 //std
+#include <cmath>
 #include <vector>
 #include <cstdio>
 #include <cstdlib>
