@@ -414,11 +414,11 @@ namespace math
 		return m_cols;
 	}
 
-	double* matrix::mem(void)
+	double* matrix::data(void)
 	{
 		return m_ptr;
 	}
-	const double* matrix::mem(void) const
+	const double* matrix::data(void) const
 	{
 		return m_ref;
 	}

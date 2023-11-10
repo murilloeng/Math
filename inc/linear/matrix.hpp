@@ -81,8 +81,8 @@ namespace math
 		unsigned rows(void) const;
 		unsigned cols(void) const;
 
-		double* mem(void);
-		const double* mem(void) const;
+		double* data(void);
+		const double* data(void) const;
 
 		//size
 		matrix& resize(unsigned, unsigned);
