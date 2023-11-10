@@ -40,9 +40,9 @@ namespace math
 	}
 	mat3::mat3(const vec3& v1, const vec3& v2, const vec3& v3) : matrix(3, 3)
 	{
-		memcpy(m_ptr + 0, v1.mem(), 3 * sizeof(double));
-		memcpy(m_ptr + 3, v2.mem(), 3 * sizeof(double));
-		memcpy(m_ptr + 6, v3.mem(), 3 * sizeof(double));
+		memcpy(m_ptr + 0, v1.data(), 3 * sizeof(double));
+		memcpy(m_ptr + 3, v2.data(), 3 * sizeof(double));
+		memcpy(m_ptr + 6, v3.data(), 3 * sizeof(double));
 	}
 	mat3::mat3(const double* s1, const double* s2, const double* s3) : matrix(3, 3)
 	{

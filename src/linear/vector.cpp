@@ -20,7 +20,7 @@ namespace math
 	}
 	vector::vector(const matrix& m) : matrix(m.rows() * m.cols(), 1)
 	{
-		memcpy(m_ptr, m.mem(), m_rows * sizeof(double));
+		memcpy(m_ptr, m.data(), m_rows * sizeof(double));
 	}
 	vector::vector(const double* ptr, unsigned rows) : matrix(ptr, rows, 1)
 	{

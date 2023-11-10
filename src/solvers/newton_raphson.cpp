@@ -61,7 +61,7 @@ namespace math
 		{
 			m_x_new[i] = m_x_old[i] + m_dx[i];
 		}
-		m_system(m_fi.mem(), m_Kt.mem(), m_x_new.mem());
+		m_system(m_fi.data(), m_Kt.data(), m_x_new.data());
 	}
 	void newton_raphson::print(void)
 	{
@@ -76,7 +76,7 @@ namespace math
 		m_step = 0;
 		delete[] m_data;
 		m_data = new double[(m_nd + 1) * m_step_max];
-		m_system(m_fi.mem(), m_Kt.mem(), m_x_new.mem());
+		m_system(m_fi.data(), m_Kt.data(), m_x_new.data());
 		//state
 		m_dl = m_dl0;
 		m_x_old = m_x_new;
