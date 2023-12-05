@@ -90,4 +90,13 @@ namespace math
 		}
 		return s;
 	}
+	double vector::inner(const double* v) const
+	{
+		double s = 0;
+		for(unsigned i = 0; i < m_rows; i++)
+		{
+			s += m_ref[i] * v[i];
+		}
+		return s;
+	}
 }

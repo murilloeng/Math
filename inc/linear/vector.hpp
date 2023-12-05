@@ -28,5 +28,6 @@ namespace math
 		matrix outer(void) const;
 		matrix outer(const vector&) const;
 		double inner(const vector&) const;
+		double inner(const double*) const;
 	};
 }
