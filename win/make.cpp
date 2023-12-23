@@ -5,7 +5,8 @@ int main(int argc, char** argv)
 {
 	//setup
 	Maker maker;
-	maker.m_out = "Math";
+	maker.m_lib = true;
+	maker.m_out = "math";
 	maker.setup(argc, argv);
 	//build
 	if(!maker.m_clean)
