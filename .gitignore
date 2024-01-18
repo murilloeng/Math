@@ -3,5 +3,8 @@
 !*.bat
 !*.cpp
 !*.hpp
+!*.sln
+!*.vcxproj
+!*.filters
 !*Makefile
 !.gitignore
