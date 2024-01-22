@@ -2,7 +2,7 @@
 #include <cmath>
 
 //math
-#include "inc/misc/rotations.hpp"
+#include "Math/inc/misc/rotations.hpp"
 
 namespace math
 {

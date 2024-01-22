@@ -2,7 +2,7 @@
 #include <cmath>
 
 //math
-#include "inc/misc/misc.hpp"
+#include "Math/inc/misc/misc.hpp"
 
 namespace math
 {

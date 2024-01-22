@@ -3,7 +3,7 @@
 #include <cstring>
 
 //math
-#include "inc/solvers/newmark.hpp"
+#include "Math/inc/solvers/newmark.hpp"
 
 namespace math
 {

@@ -6,10 +6,10 @@
 #include <cstring>
 
 //math
-#include "inc/misc/misc.hpp"
-#include "inc/linear/mat3.hpp"
-#include "inc/linear/vector.hpp"
-#include "inc/linear/matrix.hpp"
+#include "Math/inc/misc/misc.hpp"
+#include "Math/inc/linear/mat3.hpp"
+#include "Math/inc/linear/vector.hpp"
+#include "Math/inc/linear/matrix.hpp"
 
 //extern
 extern "C"

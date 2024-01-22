@@ -4,7 +4,7 @@
 #include <initializer_list>
 
 //math
-#include "inc/linear/span.hpp"
+#include "Math/inc/linear/span.hpp"
 
 //defines
 #ifndef MATRIX_STATIC_SIZE

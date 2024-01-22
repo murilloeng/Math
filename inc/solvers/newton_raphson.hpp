@@ -4,9 +4,9 @@
 #include <functional>
 
 //math
-#include "inc/linear/matrix.hpp"
-#include "inc/linear/vector.hpp"
-#include "inc/solvers/strategies.hpp"
+#include "Math/inc/linear/matrix.hpp"
+#include "Math/inc/linear/vector.hpp"
+#include "Math/inc/solvers/strategies.hpp"
 
 namespace math
 {

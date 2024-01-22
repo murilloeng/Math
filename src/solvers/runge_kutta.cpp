@@ -3,7 +3,7 @@
 #include <cstring>
 
 //math
-#include "inc/solvers/runge_kutta.hpp"
+#include "Math/inc/solvers/runge_kutta.hpp"
 
 namespace math
 {

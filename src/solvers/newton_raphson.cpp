@@ -4,11 +4,11 @@
 #include <cstring>
 
 //math
-#include "inc/misc/misc.hpp"
-#include "inc/linear/matrix.hpp"
-#include "inc/linear/vector.hpp"
-#include "inc/solvers/strategies.hpp"
-#include "inc/solvers/newton_raphson.hpp"
+#include "Math/inc/misc/misc.hpp"
+#include "Math/inc/linear/matrix.hpp"
+#include "Math/inc/linear/vector.hpp"
+#include "Math/inc/solvers/strategies.hpp"
+#include "Math/inc/solvers/newton_raphson.hpp"
 
 namespace math
 {

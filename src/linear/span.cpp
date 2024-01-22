@@ -3,9 +3,9 @@
 #include <cstdlib>
 
 //math
-#include "inc/linear/span.hpp"
-#include "inc/linear/mat3.hpp"
-#include "inc/linear/matrix.hpp"
+#include "Math/inc/linear/span.hpp"
+#include "Math/inc/linear/mat3.hpp"
+#include "Math/inc/linear/matrix.hpp"
 
 namespace math
 {
