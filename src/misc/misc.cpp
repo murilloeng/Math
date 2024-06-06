@@ -1,5 +1,6 @@
 //std
 #include <cmath>
+#include <cstring>
 
 //math
 #include "Math/inc/misc/misc.hpp"
@@ -39,5 +40,28 @@ namespace math
 	double bound(double v, double a, double b)
 	{
 		return fmax(fmin(v, b), a);
+	}
+
+	void ndiff(void(*fun)(double*, const double*), double* K, const double* x, unsigned nv, unsigned nx, double dx)
+	{
+		//data
+		double* xp = (double*) alloca(nx * sizeof(double));
+		double* f1 = (double*) alloca(nv * sizeof(double));
+		double* f2 = (double*) alloca(nv * sizeof(double));
+		//setup
+		memcpy(xp, x, nx * sizeof(double));
+		//derivative
+		for(unsigned i = 0; i < nx; i++)
+		{
+			xp[i] -= dx;
+			fun(f1, xp);
+			xp[i] += dx;
+			xp[i] += dx;
+			fun(f2, xp);
+			for(unsigned j = 0; j < nv; j++)
+			{
+				K[j + nv * i] = (f2[j] - f1[j]) / 2 / dx;
+			}
+		}
 	}
 }

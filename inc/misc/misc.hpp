@@ -11,4 +11,6 @@ namespace math
 
 	double randu(double = 0, double = 1);
 	double bound(double, double = -1, double = +1);
+
+	void ndiff(void(*)(double*, const double*), double*, const double*, unsigned, unsigned, double);
 }
