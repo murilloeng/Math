@@ -1,6 +1,7 @@
 //std
 #include <cmath>
 #include <cstring>
+#include <malloc.h>
 
 //math
 #include "Math/inc/misc/misc.hpp"
@@ -45,9 +46,9 @@ namespace math
 	void ndiff(void(*fun)(double*, const double*), double* K, const double* x, unsigned nv, unsigned nx, double dx)
 	{
 		//data
-		double* xp = (double*) alloca(nx * sizeof(double));
-		double* f1 = (double*) alloca(nv * sizeof(double));
-		double* f2 = (double*) alloca(nv * sizeof(double));
+		double* xp = (double*) _alloca(nx * sizeof(double));
+		double* f1 = (double*) _alloca(nv * sizeof(double));
+		double* f2 = (double*) _alloca(nv * sizeof(double));
 		//setup
 		memcpy(xp, x, nx * sizeof(double));
 		//derivative

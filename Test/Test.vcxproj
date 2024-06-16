@@ -10,56 +10,22 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="inc\linear\mat3.hpp" />
-    <ClInclude Include="inc\linear\matrix.hpp" />
-    <ClInclude Include="inc\linear\quat.hpp" />
-    <ClInclude Include="inc\linear\span.hpp" />
-    <ClInclude Include="inc\linear\sparse.hpp" />
-    <ClInclude Include="inc\linear\vec3.hpp" />
-    <ClInclude Include="inc\linear\vector.hpp" />
-    <ClInclude Include="inc\misc\bits.hpp" />
-    <ClInclude Include="inc\misc\misc.hpp" />
-    <ClInclude Include="inc\misc\rotations.hpp" />
-    <ClInclude Include="inc\quadrature\quadrature.hpp" />
-    <ClInclude Include="inc\quadrature\rule.hpp" />
-    <ClInclude Include="inc\solvers\newmark.hpp" />
-    <ClInclude Include="inc\solvers\newton_raphson.hpp" />
-    <ClInclude Include="inc\solvers\runge_kutta.hpp" />
-    <ClInclude Include="inc\solvers\strategies.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\linear\mat3.cpp" />
-    <ClCompile Include="src\linear\matrix.cpp" />
-    <ClCompile Include="src\linear\quat.cpp" />
-    <ClCompile Include="src\linear\span.cpp" />
-    <ClCompile Include="src\linear\sparse.cpp" />
-    <ClCompile Include="src\linear\vec3.cpp" />
-    <ClCompile Include="src\linear\vector.cpp" />
-    <ClCompile Include="src\misc\bits.cpp" />
-    <ClCompile Include="src\misc\misc.cpp" />
-    <ClCompile Include="src\misc\rotations.cpp" />
-    <ClCompile Include="src\quadrature\quadrature.cpp" />
-    <ClCompile Include="src\solvers\newmark.cpp" />
-    <ClCompile Include="src\solvers\newton_raphson.cpp" />
-    <ClCompile Include="src\solvers\runge_kutta.cpp" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{4db73414-bf80-40d2-91ae-a91fe657a018}</ProjectGuid>
-    <RootNamespace>Math</RootNamespace>
+    <ProjectGuid>{2e78e033-1c00-4c6f-a386-57af778126e8}</ProjectGuid>
+    <RootNamespace>Test2</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -78,57 +44,60 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)dist\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)Test\dist\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)dist\$(Platform)\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)Test\dist\$(Platform)\$(Configuration)\</OutDir>
     <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4146;4267</DisableSpecificWarnings>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <AdditionalIncludeDirectories>../..</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>../dist/$(Platform)/$(Configuration)/Math.lib;../../external/cpp/lib/x64/liblapack.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy ..\..\external\cpp\dll\x64\libblas.dll dist\x64\Debug &gt; nul
+copy ..\..\external\cpp\dll\x64\liblapack.dll dist\x64\Debug &gt; nul
+copy ..\..\external\cpp\dll\x64\libgfortran-3.dll dist\x64\Debug &gt; nul
+copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\x64\Debug &gt; nul</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>false</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <LanguageStandard>stdcpp20</LanguageStandard>
-      <AdditionalIncludeDirectories>..</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4146;4267</DisableSpecificWarnings>
-      <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <AdditionalIncludeDirectories>../..</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
-      <SubSystem>
-      </SubSystem>
+      <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>../dist/$(Platform)/$(Configuration)/Math.lib;../../external/cpp/lib/x64/liblapack.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PostBuildEvent>
+      <Command>copy ..\..\external\cpp\dll\x64\libblas.dll dist\x64\Debug &gt; nul
+copy ..\..\external\cpp\dll\x64\liblapack.dll dist\x64\Debug &gt; nul
+copy ..\..\external\cpp\dll\x64\libgfortran-3.dll dist\x64\Debug &gt; nul
+copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\x64\Debug &gt; nul</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\main.cpp" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
