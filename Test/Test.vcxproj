@@ -65,10 +65,10 @@
       <AdditionalDependencies>../dist/$(Platform)/$(Configuration)/Math.lib;../../external/cpp/lib/x64/liblapack.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\external\cpp\dll\x64\libblas.dll dist\x64\Debug &gt; nul
-copy ..\..\external\cpp\dll\x64\liblapack.dll dist\x64\Debug &gt; nul
-copy ..\..\external\cpp\dll\x64\libgfortran-3.dll dist\x64\Debug &gt; nul
-copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\x64\Debug &gt; nul</Command>
+      <Command>copy ..\..\external\cpp\dll\x64\libblas.dll dist\$(platform)\$(configuration) &gt; nul
+copy ..\..\external\cpp\dll\x64\liblapack.dll dist\$(platform)\$(configuration) &gt; nul
+copy ..\..\external\cpp\dll\x64\libgfortran-3.dll dist\$(platform)\$(configuration) &gt; nul
+copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\$(platform)\$(configuration) &gt; nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -89,10 +89,10 @@ copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\x64\Debug &gt; nul</Com
       <AdditionalDependencies>../dist/$(Platform)/$(Configuration)/Math.lib;../../external/cpp/lib/x64/liblapack.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\external\cpp\dll\x64\libblas.dll dist\x64\Debug &gt; nul
-copy ..\..\external\cpp\dll\x64\liblapack.dll dist\x64\Debug &gt; nul
-copy ..\..\external\cpp\dll\x64\libgfortran-3.dll dist\x64\Debug &gt; nul
-copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\x64\Debug &gt; nul</Command>
+      <Command>copy ..\..\external\cpp\dll\x64\libblas.dll dist\$(platform)\$(configuration) &gt; nul
+copy ..\..\external\cpp\dll\x64\liblapack.dll dist\$(platform)\$(configuration) &gt; nul
+copy ..\..\external\cpp\dll\x64\libgfortran-3.dll dist\$(platform)\$(configuration) &gt; nul
+copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\$(platform)\$(configuration) &gt; nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
