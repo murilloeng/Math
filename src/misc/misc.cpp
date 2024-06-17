@@ -1,7 +1,7 @@
 //std
 #include <cmath>
 #include <cstring>
-#include <alloca.h>
+#include <algorithm>
 
 //math
 #include "Math/inc/misc/misc.hpp"
