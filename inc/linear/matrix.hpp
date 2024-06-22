@@ -102,6 +102,7 @@ namespace math
 		void print(const char* = "", double = 0) const;
 
 		//linear
+		matrix& normalize(void);
 		double norm(void) const;
 		double trace(void) const;
 		double determinant(void) const;
