@@ -575,10 +575,6 @@ namespace math
 	}
 
 	//linear
-	matrix& matrix::normalize(void)
-	{
-		return *this /= norm();
-	}
 	double matrix::norm(void) const
 	{
 		double s = 0;
