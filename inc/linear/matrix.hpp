@@ -106,9 +106,9 @@ namespace math
 		double trace(void) const;
 		double determinant(void) const;
 
-		matrix inverse(void) const;
 		matrix transpose(void) const;
-		void solve(matrix&, const matrix&) const;
+		matrix inverse(bool* = nullptr) const;
+		bool solve(matrix&, const matrix&) const;
 
 		bool symmetric(double = 1e-5) const;
 

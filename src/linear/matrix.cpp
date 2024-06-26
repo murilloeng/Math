@@ -655,7 +655,7 @@ namespace math
 		return v;
 	}
 
-	matrix matrix::inverse(void) const
+	matrix matrix::inverse(bool* test) const
 	{
 		//data
 		matrix M(*this);
@@ -665,8 +665,9 @@ namespace math
 		//check
 		if(m_rows != m_cols)
 		{
+			if(test) *test = false;
 			fprintf(stderr, "Error: Inverse called on non-square system!\n");
-			exit(EXIT_FAILURE);
+			return M;
 		}
 		//query
 		pivot = (unsigned*) alloca(m_rows * sizeof(unsigned));
@@ -676,13 +677,8 @@ namespace math
 		lwork = int(query);
 		work = (double*) alloca(lwork * sizeof(double));
 		dgetri_(&m_rows, M.m_ptr, &m_rows, pivot, work, &lwork, &status);
-		//check
-		if(status != 0)
-		{
-			fprintf(stderr, "Error: Inverse failed!\n");
-			exit(EXIT_FAILURE);
-		}
 		//return
+		if(test) *test = status == 0;
 		return M;
 	}
 	matrix matrix::transpose(void) const
@@ -697,7 +693,7 @@ namespace math
 		}
 		return M;
 	}
-	void matrix::solve(matrix& x, const matrix& f) const
+	bool matrix::solve(matrix& x, const matrix& f) const
 	{
 		//data
 		int status;
@@ -707,23 +703,19 @@ namespace math
 		if(m_rows != m_cols)
 		{
 			fprintf(stderr, "Error: solve called on non-square matrix!\n");
-			exit(EXIT_FAILURE);
+			return false;
 		}
 		if(m_cols != x.m_rows || x.m_rows != f.m_rows || x.m_cols != f.m_cols)
 		{
 			fprintf(stderr, "Error: solve called with incompatible matrices!\n");
-			exit(EXIT_FAILURE);
+			return false;
 		}
 		//solve
 		x = f;
 		pivot = (unsigned*) alloca(m_rows * sizeof(unsigned));
 		dgesv_(&m_rows, &x.m_cols, M.m_ptr, &m_rows, pivot, x.m_ptr, &m_rows, &status);
 		//check
-		if(status != 0)
-		{
-			fprintf(stderr, "Error: solve failed!\n");
-			exit(EXIT_FAILURE);
-		}
+		return status == 0;
 	}
 
 	bool matrix::symmetric(double t) const
