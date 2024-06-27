@@ -49,19 +49,33 @@ namespace math
 		double* xp = (double*) alloca(nx * sizeof(double));
 		double* f1 = (double*) alloca(nv * sizeof(double));
 		double* f2 = (double*) alloca(nv * sizeof(double));
+		double* f3 = (double*) alloca(nv * sizeof(double));
+		double* f4 = (double*) alloca(nv * sizeof(double));
 		//setup
 		memcpy(xp, x, nx * sizeof(double));
 		//derivative
 		for(unsigned i = 0; i < nx; i++)
 		{
+			//1st state
 			xp[i] -= dx;
 			fun(f1, xp);
-			xp[i] += dx;
-			xp[i] += dx;
+			//2nd state
+			xp[i] -= dx;
 			fun(f2, xp);
+			//3rd state
+			xp[i] += dx;
+			xp[i] += dx;
+			xp[i] += dx;
+			fun(f3, xp);
+			//4th state
+			xp[i] += dx;
+			fun(f4, xp);
+			//derivative
+			xp[i] -= dx;
+			xp[i] -= dx;
 			for(unsigned j = 0; j < nv; j++)
 			{
-				K[j + nv * i] = (f2[j] - f1[j]) / 2 / dx;
+				K[j + nv * i] = (8 * f3[j] - 8 * f1[j] + f2[j] - f4[j]) / 12 / dx;
 			}
 		}
 	}
