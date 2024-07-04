@@ -43,7 +43,7 @@ namespace math
 		return fmax(fmin(v, b), a);
 	}
 
-	void ndiff(ndiff_fun fun, double* K, const double* x, const void* args, unsigned nv, unsigned nx, double dx)
+	void ndiff(ndiff_fun fun, double* K, const double* x, void* a, unsigned nv, unsigned nx, double dx)
 	{
 		//data
 		double* xp = (double*) alloca(nx * sizeof(double));
@@ -58,18 +58,18 @@ namespace math
 		{
 			//1st state
 			xp[i] -= dx;
-			fun(f1, xp, args);
+			fun(f1, xp, a);
 			//2nd state
 			xp[i] -= dx;
-			fun(f2, xp, args);
+			fun(f2, xp, a);
 			//3rd state
 			xp[i] += dx;
 			xp[i] += dx;
 			xp[i] += dx;
-			fun(f3, xp, args);
+			fun(f3, xp, a);
 			//4th state
 			xp[i] += dx;
-			fun(f4, xp, args);
+			fun(f4, xp, a);
 			//derivative
 			xp[i] -= dx;
 			xp[i] -= dx;

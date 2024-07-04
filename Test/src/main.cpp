@@ -16,7 +16,7 @@ static const double b = 0.25;
 static math::mat3 J;
 static math::vec3 qn, wn, an, t, dt, ddt;
 
-static void fun(double* r, const double* x, const void* args)
+static void fun(double* r, const double* x, void* args)
 {
 	math::vec3 rm(r);
 	const math::vec3 t(x);
