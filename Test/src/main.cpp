@@ -16,7 +16,7 @@ static const double b = 0.25;
 static math::mat3 J;
 static math::vec3 qn, wn, an, t, dt, ddt;
 
-static void fun(double* r, const double* x)
+static void fun(double* r, const double* x, const void* args)
 {
 	math::vec3 rm(r);
 	const math::vec3 t(x);
@@ -53,8 +53,8 @@ int main(void)
 	J[1] = 2;
 	J[2] = 3;
 	math::mat3 Ka, Kn;
-	srand(time(nullptr));
 	const unsigned n = 10000;
+	srand((unsigned) time(nullptr));
 	for(unsigned i = 0; i < n; i++)
 	{
 		t.randu();
@@ -63,7 +63,7 @@ int main(void)
 		dt.randu();
 		ddt.randu();
 		dfun(Ka, t.data());
-		math::ndiff(fun, Kn.data(), t.data(), 3, 3, 1e-8);
+		math::ndiff(fun, Kn.data(), t.data(), nullptr, 3, 3, 1e-8);
 		const double r = (Ka - Kn).norm();
 		if(r < 1e-2)
 		{
