@@ -43,7 +43,7 @@ namespace math
 		return fmax(fmin(v, b), a);
 	}
 
-	void ndiff(ndiff_fun fun, double* K, const double* x, void* a, unsigned nv, unsigned nx, double dx)
+	void ndiff(ndiff_fun fun, double* K, const double* x, void** a, unsigned nv, unsigned nx, double dx)
 	{
 		//data
 		double* xp = (double*) alloca(nx * sizeof(double));
