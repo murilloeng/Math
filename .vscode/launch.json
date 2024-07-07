@@ -21,6 +21,17 @@
 					"ignoreFailures": true
 				}
 			]
+		},
+		{
+			"name": "msvc",
+			"type": "cppvsdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/Test/dist/x64/Debug/Test.exe",
+			"args": [],
+			"environment": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"console": "externalTerminal"
 		}
 	]
 }
