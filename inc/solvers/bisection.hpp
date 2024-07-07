@@ -1,8 +1,5 @@
 #pragma once
 
-//std
-#include <functional>
-
 namespace math
 {
 	class bisection
@@ -16,11 +13,11 @@ namespace math
 
 	public:
 		//solve
-		bool solve(void);
+		bool solve(void**);
 
 		//data
+		double(*m_system)(double, void**);
 		double m_x1, m_x2, m_xs, m_tolerance;
 		unsigned m_iteration, m_iteration_max;
-		std::function<double(double)> m_system;
 	};
 }

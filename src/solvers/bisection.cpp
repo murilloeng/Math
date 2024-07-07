@@ -1,3 +1,7 @@
+//std
+#include <cmath>
+#include <cstdio>
+
 //math
 #include "Math/inc/solvers/bisection.hpp"
 
@@ -16,12 +20,12 @@ namespace math
 	}
 	
 	//solve
-	bool bisection::solve(void)
+	bool bisection::solve(void** args)
 	{
 		//data
 		double fs;
-		double f1 = m_system(m_x1);
-		double f2 = m_system(m_x2);
+		double f1 = m_system(m_x1, args);
+		double f2 = m_system(m_x2, args);
 		//check
 		if(f1 * f2 > 0)
 		{
@@ -36,7 +40,7 @@ namespace math
 			if(fabs(f2) < m_tolerance) { m_xs = m_x2; return true; }
 			//update
 			m_xs = (m_x1 + m_x2) / 2;
-			fs = m_system(m_xs);
+			fs = m_system(m_xs, args);
 			if(fs * f1 > 0) { m_x1 = m_xs; f1 = fs; } else { m_x2 = m_xs; f2 = fs; }
 		}
 		return false;

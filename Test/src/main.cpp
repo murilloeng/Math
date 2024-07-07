@@ -49,42 +49,33 @@ static void dfun(math::mat3& Ka, const double* x, void** args)
 
 int main(void)
 {
-	// //test
-	// J[0] = 1;
-	// J[1] = 2;
-	// J[2] = 3;
-	// math::mat3 Ka, Kn;
-	// const unsigned n = 10000;
-	// srand((unsigned) time(nullptr));
-	// for(unsigned i = 0; i < n; i++)
-	// {
-	// 	t.randu();
-	// 	wn.randu();
-	// 	an.randu();
-	// 	dt.randu();
-	// 	ddt.randu();
-	// 	dfun(Ka, t.data(), nullptr);
-	// 	math::ndiff(fun, Kn.data(), t.data(), nullptr, 3, 3, 1e-8);
-	// 	const double r = (Ka - Kn).norm();
-	// 	if(r < 1e-2)
-	// 	{
-	// 		printf("%04d %+.2e ok\n", i, r);
-	// 	}
-	// 	else
-	// 	{
-	// 		printf("%04d %+.2e not ok\n", i, r);
-	// 		break;
-	// 	}
-	// }
-	math::bisection solver;
-	std::function<double(double)> fun = [](double x){ return x * x * x + x * x + x + 1; };
-
-	solver.m_x1 = -0.5;
-	solver.m_x2 = -1.4;
-	solver.m_system = fun;
-	solver.m_tolerance = 1e-5;
-	solver.solve();
-	printf("%+.2e %+.2e\n", solver.m_xs, fun(solver.m_xs));
+	//test
+	J[0] = 1;
+	J[1] = 2;
+	J[2] = 3;
+	math::mat3 Ka, Kn;
+	const unsigned n = 10000;
+	srand((unsigned) time(nullptr));
+	for(unsigned i = 0; i < n; i++)
+	{
+		t.randu();
+		wn.randu();
+		an.randu();
+		dt.randu();
+		ddt.randu();
+		dfun(Ka, t.data(), nullptr);
+		math::ndiff(fun, Kn.data(), t.data(), nullptr, 3, 3, 1e-8);
+		const double r = (Ka - Kn).norm();
+		if(r < 1e-2)
+		{
+			printf("%04d %+.2e ok\n", i, r);
+		}
+		else
+		{
+			printf("%04d %+.2e not ok\n", i, r);
+			break;
+		}
+	}
 	//return
 	return EXIT_SUCCESS;
 }
