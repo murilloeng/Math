@@ -3,6 +3,23 @@
 
 namespace math
 {
+	void binary_form(char* string, char mask)
+	{
+		for(unsigned i = 0; i < 8 * sizeof(char); i++)
+		{
+			string[i] = mask & (1 << i) ? '1' : '0';
+		}
+		string[8 * sizeof(char)] = '\0';
+	}
+	void binary_form(char* string, unsigned mask)
+	{
+		for(unsigned i = 0; i < 8 * sizeof(unsigned); i++)
+		{
+			string[i] = mask & (1 << i) ? '1' : '0';
+		}
+		string[8 * sizeof(unsigned)] = '\0';
+	}
+
 	bool bit_set(unsigned m, unsigned b)
 	{
 		return m == 2 * b - 3;
