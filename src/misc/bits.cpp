@@ -7,7 +7,7 @@ namespace math
 	{
 		for(unsigned i = 0; i < 8 * sizeof(char); i++)
 		{
-			string[i] = mask & (1 << i) ? '1' : '0';
+			string[8 * sizeof(char) - 1 - i] = mask & (1 << i) ? '1' : '0';
 		}
 		string[8 * sizeof(char)] = '\0';
 	}
@@ -15,7 +15,7 @@ namespace math
 	{
 		for(unsigned i = 0; i < 8 * sizeof(unsigned); i++)
 		{
-			string[i] = mask & (1 << i) ? '1' : '0';
+			string[8 * sizeof(unsigned) - 1 - i] = mask & (1 << i) ? '1' : '0';
 		}
 		string[8 * sizeof(unsigned)] = '\0';
 	}
