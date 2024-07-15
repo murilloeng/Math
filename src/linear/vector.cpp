@@ -99,4 +99,90 @@ namespace math
 		}
 		return s;
 	}
+
+	//operators
+	vector vector::operator+(void) const
+	{
+		return *this;
+	}
+	vector vector::operator-(void) const
+	{
+		return -1 * *this;
+	}
+	vector vector::operator/(double s) const
+	{
+		return vector(*this) /= s;
+	}
+
+	vector vector::operator+(const vector& v) const
+	{
+		return vector(*this) += v;
+	}
+	vector vector::operator-(const vector& v) const
+	{
+		return vector(*this) -= v;
+	}
+
+	vector& vector::operator=(double s)
+	{
+		matrix::operator=(s);
+		return *this;
+	}
+	vector& vector::operator=(const double* v)
+	{
+		matrix::operator=(v);
+		return *this;
+	}
+	vector& vector::operator=(const vector& v)
+	{
+		matrix::operator=(v);
+		return *this;
+	}
+	vector& vector::operator=(std::initializer_list<double> list)
+	{
+		matrix::operator=(list);
+		return *this;
+	}
+
+	vector& vector::operator+=(double s)
+	{
+		matrix::operator+=(s);
+		return *this;
+	}
+	vector& vector::operator-=(double s)
+	{
+		matrix::operator-=(s);
+		return *this;
+	}
+	vector& vector::operator*=(double s)
+	{
+		matrix::operator*=(s);
+		return *this;
+	}
+	vector& vector::operator/=(double s)
+	{
+		matrix::operator/=(s);
+		return *this;
+	}
+
+	vector& vector::operator+=(const double* v)
+	{
+		matrix::operator+=(v);
+		return *this;
+	}
+	vector& vector::operator-=(const double* v)
+	{
+		matrix::operator-=(v);
+		return *this;
+	}
+	vector& vector::operator+=(const vector& v)
+	{
+		matrix::operator+=(v);
+		return *this;
+	}
+	vector& vector::operator-=(const vector& v)
+	{
+		matrix::operator-=(v);
+		return *this;
+	}
 }

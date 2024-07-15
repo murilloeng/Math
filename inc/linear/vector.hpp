@@ -29,5 +29,28 @@ namespace math
 		matrix outer(const vector&) const;
 		double inner(const vector&) const;
 		double inner(const double*) const;
+
+		//operators
+		vector operator+(void) const;
+		vector operator-(void) const;
+		vector operator/(double) const;
+
+		vector operator+(const vector&) const;
+		vector operator-(const vector&) const;
+
+		vector& operator=(double);
+		vector& operator=(const double*);
+		vector& operator=(const vector&);
+		vector& operator=(std::initializer_list<double>);
+
+		vector& operator+=(double);
+		vector& operator-=(double);
+		vector& operator*=(double);
+		vector& operator/=(double);
+
+		vector& operator+=(const double*);
+		vector& operator-=(const double*);
+		vector& operator+=(const vector&);
+		vector& operator-=(const vector&);
 	};
 }
