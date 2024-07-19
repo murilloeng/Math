@@ -16,6 +16,7 @@
     <ClInclude Include="inc\linear\quat.hpp" />
     <ClInclude Include="inc\linear\span.hpp" />
     <ClInclude Include="inc\linear\sparse.hpp" />
+    <ClInclude Include="inc\linear\vec2.hpp" />
     <ClInclude Include="inc\linear\vec3.hpp" />
     <ClInclude Include="inc\linear\vector.hpp" />
     <ClInclude Include="inc\misc\bits.hpp" />
@@ -35,16 +36,19 @@
     <ClCompile Include="src\linear\quat.cpp" />
     <ClCompile Include="src\linear\span.cpp" />
     <ClCompile Include="src\linear\sparse.cpp" />
+    <ClCompile Include="src\linear\vec2.cpp" />
     <ClCompile Include="src\linear\vec3.cpp" />
     <ClCompile Include="src\linear\vector.cpp" />
     <ClCompile Include="src\misc\bits.cpp" />
     <ClCompile Include="src\misc\misc.cpp" />
     <ClCompile Include="src\misc\rotations.cpp" />
+    <ClCompile Include="src\polynomial\Polynomial.cpp" />
     <ClCompile Include="src\quadrature\quadrature.cpp" />
     <ClCompile Include="src\solvers\newmark.cpp" />
     <ClCompile Include="src\solvers\bisection.cpp" />
     <ClCompile Include="src\solvers\newton_raphson.cpp" />
     <ClCompile Include="src\solvers\runge_kutta.cpp" />
+    <ClCompile Include="Test\src\main.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

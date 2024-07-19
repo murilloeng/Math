@@ -7,7 +7,7 @@
 namespace math
 {
 	//constructor
-	Polynomial::Polynomial(void) : m_order(0), m_tolerance(1e-5), m_iteration_max(10000), m_roots(nullptr), m_coefficients(nullptr)
+	Polynomial::Polynomial(void) : m_bound(0), m_order(0), m_tolerance(1e-5), m_iteration_max(10000), m_roots(nullptr), m_coefficients(nullptr)
 	{
 		return;
 	}
@@ -105,8 +105,10 @@ namespace math
 		double b1 = 0, b2 = 0;
 		for(unsigned i = 0; i < m_order; i++)
 		{
-			b1 += fabs(m_coefficients[i] / m_coefficients[m_order]);
-			b2 = fmax(b2, fabs(m_coefficients[i] / m_coefficients[m_order]));
+			const std::complex<double> c = m_coefficients[i] / m_coefficients[m_order];
+			const double s = sqrt(c.real() * c.real() + c.imag() * c.imag());
+			b1 += s;
+			b2 = fmax(b2, s);
 		}
 		b2 += 1;
 		b1 = fmax(1, b1);
