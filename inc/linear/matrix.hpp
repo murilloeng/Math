@@ -115,6 +115,9 @@ namespace math
 		mat3 span3(unsigned, unsigned) const;
 		math::span span(unsigned, unsigned, unsigned = 3, unsigned = 3);
 
+		//svd
+		bool svd(matrix&, matrix&, vector&) const;
+
 		//eigen
 		bool eigen_sym(vector&, matrix&) const;
 		bool eigen_sym(vector&, matrix&, const matrix&) const;
