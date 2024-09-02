@@ -68,7 +68,8 @@
       <Command>copy ..\..\external\cpp\dll\x64\libblas.dll dist\$(platform)\$(configuration) &gt; nul
 copy ..\..\external\cpp\dll\x64\liblapack.dll dist\$(platform)\$(configuration) &gt; nul
 copy ..\..\external\cpp\dll\x64\libgfortran-3.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\$(platform)\$(configuration) &gt; nul</Command>
+copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\$(platform)\$(configuration) &gt; nul
+copy ..\..\external\cpp\dll\x64\libquadmath-0.dll dist\$(platform)\$(configuration) &gt; nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
