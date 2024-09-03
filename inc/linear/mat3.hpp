@@ -1,5 +1,8 @@
 #pragma once
 
+//std
+#include <cstdint>
+
 //math
 #include "Math/inc/linear/matrix.hpp"
 
@@ -46,13 +49,13 @@ namespace math
 		mat3& operator+=(const mat3&);
 		mat3& operator-=(const mat3&);
 
-		double& operator[](unsigned);
-		double& operator()(unsigned);
-		double& operator()(unsigned, unsigned);
+		double& operator[](uint32_t);
+		double& operator()(uint32_t);
+		double& operator()(uint32_t, uint32_t);
 
-		const double& operator[](unsigned) const;
-		const double& operator()(unsigned) const;
-		const double& operator()(unsigned, unsigned) const;
+		const double& operator[](uint32_t) const;
+		const double& operator()(uint32_t) const;
+		const double& operator()(uint32_t, uint32_t) const;
 
 		//misc
 		static mat3 eye(void);

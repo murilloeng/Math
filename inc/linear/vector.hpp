@@ -11,17 +11,17 @@ namespace math
 		//constructors
 		vector(void);
 		vector(const matrix&);
-		vector(const double*, unsigned);
-		vector(unsigned, mode = mode::null);
+		vector(const double*, uint32_t);
+		vector(uint32_t, mode = mode::null);
 		vector(std::initializer_list<double>);
-		vector(double*, unsigned, mode = mode::null);
+		vector(double*, uint32_t, mode = mode::null);
 
 		//destructor
 		virtual ~vector(void);
 
 		//size
-		vector& resize(unsigned);
-		vector& resize(unsigned, unsigned);
+		vector& resize(uint32_t);
+		vector& resize(uint32_t, uint32_t);
 
 		//linear
 		vector unit(void) const;

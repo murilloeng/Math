@@ -19,7 +19,7 @@ namespace math
 		quat(double*);
 		quat(const quat&);
 		quat(const double*);
-		quat(double, unsigned);
+		quat(double, uint32_t);
 		quat(double, const vec3&);
 		quat(double, double, double, double);
 		quat(const vec3&, const vec3&, const vec3&);
@@ -34,18 +34,18 @@ namespace math
 
 		quat operator*(const quat&) const;
 
-		double& operator[](unsigned);
-		double& operator()(unsigned);
+		double& operator[](uint32_t);
+		double& operator()(uint32_t);
 
-		const double& operator[](unsigned) const;
-		const double& operator()(unsigned) const;
+		const double& operator[](uint32_t) const;
+		const double& operator()(uint32_t) const;
 
 		//views
 		quat& reset(void);
 		quat& view_x(void);
 		quat& view_y(void);
 		quat& view_z(void);
-		quat& isometric(unsigned);
+		quat& isometric(uint32_t);
 
 		//linear
 		vec3 axial(void) const;

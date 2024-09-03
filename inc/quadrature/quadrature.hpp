@@ -2,10 +2,11 @@
 
 //std
 #include <cstdio>
+#include <cstdint>
 
 namespace math
 {
-	enum class rule : unsigned;
+	enum class rule : uint32_t;
 }
 
 namespace math
@@ -14,8 +15,8 @@ namespace math
 	{
 	public:
 		//constructor
-		quadrature(unsigned);
-		quadrature(math::rule, unsigned);
+		quadrature(uint32_t);
+		quadrature(math::rule, uint32_t);
 
 		//destructor
 		~quadrature(void);
@@ -25,8 +26,8 @@ namespace math
 		void save(FILE*) const;
 
 		//data
-		unsigned order(unsigned);
-		unsigned order(void) const;
+		uint32_t order(uint32_t);
+		uint32_t order(void) const;
 
 		math::rule rule(void) const;
 		math::rule rule(math::rule);
@@ -36,14 +37,14 @@ namespace math
 		static const char* rule_name(math::rule);
 
 		//points
-		double point(unsigned) const;
-		double weight(unsigned) const;
+		double point(uint32_t) const;
+		double weight(uint32_t) const;
 		const double* points(void) const;
 		const double* weights(void) const;
 
 	private:
 		//data
-		unsigned m_order;
+		uint32_t m_order;
 		double* m_points;
 		double* m_weights;
 		math::rule m_rule;

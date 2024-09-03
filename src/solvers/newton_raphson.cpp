@@ -15,7 +15,7 @@ namespace math
 	//constructors
 	newton_raphson::newton_raphson(void) : 
 		m_silent(false), m_strategy(strategy::control_load), 
-		m_stop([](){ return false; }), m_run_interface([](unsigned){ return; }),
+		m_stop([](){ return false; }), m_run_interface([](uint32_t){ return; }),
 		m_watch_dof(0), m_step_max(100), m_attempt_max(5), m_iteration_max(10), m_nd(1), m_dl0(0.01), m_tolerance(1e-5), m_data(nullptr)
 	{
 		allocate();
@@ -28,7 +28,7 @@ namespace math
 	}
 
 	//data
-	void newton_raphson::size(unsigned size)
+	void newton_raphson::size(uint32_t size)
 	{
 		clear();
 		m_nd = size;
@@ -38,9 +38,9 @@ namespace math
 	{
 		FILE* file = fopen(path, "w");
 		fprintf(file, "%04d\n", m_step);
-		for(unsigned i = 0; i < m_step; i++)
+		for(uint32_t i = 0; i < m_step; i++)
 		{
-			for(unsigned j = 0; j < m_nd + 1; j++)
+			for(uint32_t j = 0; j < m_nd + 1; j++)
 			{
 				fprintf(file, "%+.6e ", m_data[j + (m_nd + 1) * i]);
 			}
@@ -57,7 +57,7 @@ namespace math
 	void newton_raphson::apply(void)
 	{
 		m_l_new = m_l_old + m_dl;
-		for(unsigned i = 0; i < m_nd; i++)
+		for(uint32_t i = 0; i < m_nd; i++)
 		{
 			m_x_new[i] = m_x_old[i] + m_dx[i];
 		}
@@ -88,7 +88,7 @@ namespace math
 		m_l_old = m_l_new;
 		m_x_old = m_x_new;
 		m_data[m_step * (m_nd + 1)] = m_l_new;
-		for(unsigned i = 0; i < m_nd; i++)
+		for(uint32_t i = 0; i < m_nd; i++)
 		{
 			m_data[m_step * (m_nd + 1) + i + 1] = m_x_new[i];
 		}
@@ -97,7 +97,7 @@ namespace math
 	void newton_raphson::residue(void)
 	{
 		//residue
-		for(unsigned i = 0; i < m_nd; i++)
+		for(uint32_t i = 0; i < m_nd; i++)
 		{
 			m_r[i] = m_l_new * m_fe[i] - m_fi[i];
 		}
@@ -174,7 +174,7 @@ namespace math
 		if(m_strategy == strategy::arc_length)
 		{
 			double a = 0, b = 0, c = 0, s = 0;
-			for(unsigned i = 0; i < m_nd; i++)
+			for(uint32_t i = 0; i < m_nd; i++)
 			{
 				s += m_ddxt[i] * m_dx[i];
 				a += m_ddxt[i] * m_ddxt[i];

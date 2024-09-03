@@ -5,29 +5,29 @@ namespace math
 {
 	void binary_form(char* string, char mask)
 	{
-		for(unsigned i = 0; i < 8 * sizeof(char); i++)
+		for(uint32_t i = 0; i < 8 * sizeof(char); i++)
 		{
 			string[8 * sizeof(char) - 1 - i] = mask & (1 << i) ? '1' : '0';
 		}
 		string[8 * sizeof(char)] = '\0';
 	}
-	void binary_form(char* string, unsigned mask)
+	void binary_form(char* string, uint32_t mask)
 	{
-		for(unsigned i = 0; i < 8 * sizeof(unsigned); i++)
+		for(uint32_t i = 0; i < 8 * sizeof(uint32_t); i++)
 		{
-			string[8 * sizeof(unsigned) - 1 - i] = mask & (1 << i) ? '1' : '0';
+			string[8 * sizeof(uint32_t) - 1 - i] = mask & (1 << i) ? '1' : '0';
 		}
-		string[8 * sizeof(unsigned)] = '\0';
+		string[8 * sizeof(uint32_t)] = '\0';
 	}
 
-	bool bit_set(unsigned m, unsigned b)
+	bool bit_set(uint32_t m, uint32_t b)
 	{
 		return m == 2 * b - 3;
 	}
-	unsigned char bit_index(unsigned m)
+	uint8_t bit_index(uint32_t m)
 	{
 		//counter
-		unsigned char c = 0;
+		uint8_t c = 0;
 		//bits
 		while(m >>= 1)
 		{
@@ -36,10 +36,10 @@ namespace math
 		//return
 		return c;
 	}
-	unsigned char bit_count(unsigned m)
+	uint8_t bit_count(uint32_t m)
 	{
 		//counter
-		unsigned char c = 0;
+		uint8_t c = 0;
 		//bits
 		while(m)
 		{
@@ -49,14 +49,14 @@ namespace math
 		//return
 		return c;
 	}
-	unsigned char bit_index(unsigned m, unsigned b)
+	uint8_t bit_index(uint32_t m, uint32_t b)
 	{
 		return bit_count(m & (b - 1));
 	}
-	unsigned char bit_search(unsigned m, unsigned char k)
+	uint8_t bit_search(uint32_t m, uint8_t k)
 	{
 		//counter
-		unsigned char c = 0;
+		uint8_t c = 0;
 		//bits
 		while(c < k)
 		{
@@ -71,10 +71,10 @@ namespace math
 	{
 		return m == 2 * b - 3;
 	}
-	unsigned char bit_index(uint64_t m)
+	uint8_t bit_index(uint64_t m)
 	{
 		//counter
-		unsigned char c = 0;
+		uint8_t c = 0;
 		//bits
 		while(m >>= 1)
 		{
@@ -83,10 +83,10 @@ namespace math
 		//return
 		return c;
 	}
-	unsigned char bit_count(uint64_t m)
+	uint8_t bit_count(uint64_t m)
 	{
 		//counter
-		unsigned char c = 0;
+		uint8_t c = 0;
 		//bits
 		while(m)
 		{
@@ -96,14 +96,14 @@ namespace math
 		//return
 		return c;
 	}
-	unsigned char bit_index(uint64_t m, uint64_t b)
+	uint8_t bit_index(uint64_t m, uint64_t b)
 	{
 		return bit_count(m & (b - 1));
 	}
-	unsigned char bit_search(uint64_t m, unsigned char k)
+	uint8_t bit_search(uint64_t m, uint8_t k)
 	{
 		//counter
-		unsigned char c = 0;
+		uint8_t c = 0;
 		//bits
 		while(c < k)
 		{

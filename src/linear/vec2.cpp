@@ -102,20 +102,20 @@ namespace math
 		return *this;
 	}
 
-	double& vec2::operator[](unsigned i)
+	double& vec2::operator[](uint32_t i)
 	{
 		return m_ptr[i];
 	}
-	double& vec2::operator()(unsigned i)
+	double& vec2::operator()(uint32_t i)
 	{
 		return m_ptr[i];
 	}
 
-	const double& vec2::operator[](unsigned i) const
+	const double& vec2::operator[](uint32_t i) const
 	{
 		return m_ref[i];
 	}
-	const double& vec2::operator()(unsigned i) const
+	const double& vec2::operator()(uint32_t i) const
 	{
 		return m_ref[i];
 	}

@@ -1,6 +1,7 @@
 #pragma once
 
 //std
+#include <cstdint>
 #include <initializer_list>
 
 //math
@@ -15,7 +16,7 @@ namespace math
 {
 	class mat3;
 	class vector;
-	enum class mode : unsigned
+	enum class mode : uint32_t
 	{
 		eye,
 		null,
@@ -31,9 +32,9 @@ namespace math
 		//constructors
 		matrix(void);
 		matrix(const matrix&);
-		matrix(const double*, unsigned, unsigned);
-		matrix(unsigned, unsigned, mode = mode::null);
-		matrix(double*, unsigned, unsigned, mode = mode::null);
+		matrix(const double*, uint32_t, uint32_t);
+		matrix(uint32_t, uint32_t, mode = mode::null);
+		matrix(double*, uint32_t, uint32_t, mode = mode::null);
 		matrix(std::initializer_list<std::initializer_list<double>>, bool = false);
 
 		//destructor
@@ -69,33 +70,33 @@ namespace math
 		matrix& operator+=(const matrix&);
 		matrix& operator-=(const matrix&);
 
-		double& operator[](unsigned);
-		double& operator()(unsigned);
-		double& operator()(unsigned, unsigned);
+		double& operator[](uint32_t);
+		double& operator()(uint32_t);
+		double& operator()(uint32_t, uint32_t);
 
-		const double& operator[](unsigned) const;
-		const double& operator()(unsigned) const;
-		const double& operator()(unsigned, unsigned) const;
+		const double& operator[](uint32_t) const;
+		const double& operator()(uint32_t) const;
+		const double& operator()(uint32_t, uint32_t) const;
 
 		//data
-		unsigned rows(void) const;
-		unsigned cols(void) const;
+		uint32_t rows(void) const;
+		uint32_t cols(void) const;
 
 		double* data(void);
 		const double* data(void) const;
 
 		//size
-		matrix& resize(unsigned, unsigned);
+		matrix& resize(uint32_t, uint32_t);
 
 		//bounds
-		double min(bool = false, unsigned* = nullptr) const;
-		double max(bool = false, unsigned* = nullptr) const;
+		double min(bool = false, uint32_t* = nullptr) const;
+		double max(bool = false, uint32_t* = nullptr) const;
 
 		//util
 		matrix& eye(void);
 		matrix& zeros(void);
-		matrix& swap_rows(unsigned, unsigned);
-		matrix& swap_cols(unsigned, unsigned);
+		matrix& swap_rows(uint32_t, uint32_t);
+		matrix& swap_cols(uint32_t, uint32_t);
 		matrix& randu(double = -1, double = +1);
 
 		//info
@@ -112,8 +113,8 @@ namespace math
 
 		bool symmetric(double = 1e-5) const;
 
-		mat3 span3(unsigned, unsigned) const;
-		math::span span(unsigned, unsigned, unsigned = 3, unsigned = 3);
+		mat3 span3(uint32_t, uint32_t) const;
+		math::span span(uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
 
 		//svd
 		bool svd(matrix&, matrix&, vector&) const;
@@ -127,8 +128,8 @@ namespace math
 		double variance(void) const;
 
 		//static
-		static matrix eye(unsigned, unsigned);
-		static matrix zeros(unsigned, unsigned);
+		static matrix eye(uint32_t, uint32_t);
+		static matrix zeros(uint32_t, uint32_t);
 
 		//friends
 		friend matrix operator*(double, const matrix&);
@@ -139,8 +140,8 @@ namespace math
 		//data
 		bool m_own;
 		double* m_ptr;
-		unsigned m_rows;
-		unsigned m_cols;
+		uint32_t m_rows;
+		uint32_t m_cols;
 		const double* m_ref;
 		double m_mem[MATRIX_STATIC_SIZE];
 

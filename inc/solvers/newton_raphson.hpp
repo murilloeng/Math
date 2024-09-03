@@ -20,7 +20,7 @@ namespace math
 		virtual ~newton_raphson(void);
 
 		//data
-		void size(unsigned);
+		void size(uint32_t);
 		void save(const char*) const;
 
 	private:
@@ -49,11 +49,11 @@ namespace math
 		std::function<bool(void)> m_stop;
 		std::function<void(void)> m_update;
 		std::function<void(void)> m_restore;
-		std::function<void(unsigned)> m_run_interface;
+		std::function<void(uint32_t)> m_run_interface;
 		std::function<void(double*, double*, const double*)> m_system;
 
-		unsigned m_step, m_attempt, m_iteration, m_watch_dof;
-		unsigned m_step_max, m_attempt_max, m_iteration_max, m_nd;
+		uint32_t m_step, m_attempt, m_iteration, m_watch_dof;
+		uint32_t m_step_max, m_attempt_max, m_iteration_max, m_nd;
 		double m_l_old, m_l_new, m_dl, m_dl0, m_ddl, m_tolerance, *m_data;
 
 		matrix m_Kt;

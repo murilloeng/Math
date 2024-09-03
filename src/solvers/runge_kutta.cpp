@@ -8,7 +8,7 @@
 namespace math
 {
 	//constructors
-	runge_kutta::runge_kutta(unsigned nd, bool mem) : m_mem(mem), m_type(true), m_nd(nd), m_ns(100), m_T(100)
+	runge_kutta::runge_kutta(uint32_t nd, bool mem) : m_mem(mem), m_type(true), m_nd(nd), m_ns(100), m_T(100)
 	{
 		m_x = m_mem ? new double[m_nd] : nullptr;
 		m_v = m_mem ? new double[m_nd] : nullptr;
@@ -43,14 +43,14 @@ namespace math
 	{
 		if(!m_type)
 		{
-			for(unsigned i = 0; i < m_nd; i++)
+			for(uint32_t i = 0; i < m_nd; i++)
 			{
 				m_x[i] = m_xn[i] + f * m_v[i];
 			}
 		}
 		else
 		{
-			for(unsigned i = 0; i < m_nd; i++)
+			for(uint32_t i = 0; i < m_nd; i++)
 			{
 				m_x[i] = m_xn[i] + f * m_v[i];
 				m_v[i] = m_vn[i] + f * m_a[i];
@@ -61,14 +61,14 @@ namespace math
 	{
 		if(!m_type)
 		{
-			for(unsigned i = 0; i < m_nd; i++)
+			for(uint32_t i = 0; i < m_nd; i++)
 			{
 				m_dx[i] += f * m_v[i];
 			}
 		}
 		else
 		{
-			for(unsigned i = 0; i < m_nd; i++)
+			for(uint32_t i = 0; i < m_nd; i++)
 			{
 				m_dx[i] += f * m_v[i];
 				m_dv[i] += f * m_a[i];
@@ -122,7 +122,7 @@ namespace math
 	void runge_kutta::corrector(void)
 	{
 		//update state
-		for(unsigned i = 0; i < m_nd; i++)
+		for(uint32_t i = 0; i < m_nd; i++)
 		{
 			m_x[i] = m_xn[i] += m_dx[i];
 			m_v[i] = m_vn[i] += m_dv[i];
@@ -159,7 +159,7 @@ namespace math
 	{
 		m_s++;
 		printf("%04d %+.6e ", m_s, m_t);
-		for(unsigned i = 0; i < m_nd; i++)
+		for(uint32_t i = 0; i < m_nd; i++)
 		{
 			printf("%+.6e %+.6e %+.6e ", m_x[i], m_v[i], m_a[i]);
 		}

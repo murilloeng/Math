@@ -43,11 +43,11 @@ namespace math
 		vec3& operator-=(const vec3&);
 		vec3& operator*=(const mat3&);
 
-		double& operator[](unsigned);
-		double& operator()(unsigned);
+		double& operator[](uint32_t);
+		double& operator()(uint32_t);
 
-		const double& operator[](unsigned) const;
-		const double& operator()(unsigned) const;
+		const double& operator[](uint32_t) const;
+		const double& operator()(uint32_t) const;
 
 		//linear
 		vec3& normalize(void);
@@ -70,8 +70,8 @@ namespace math
 		mat3 rotation_gradient(bool = false) const;
 		vec3 rotation_gradient(const vec3&, bool = false) const;
 
-		mat3 rotation_class(unsigned, bool = false) const;
-		vec3 rotation_class(const vec3&, unsigned, bool = false) const;
+		mat3 rotation_class(uint32_t, bool = false) const;
+		vec3 rotation_class(const vec3&, uint32_t, bool = false) const;
 
 		mat3 rotation_gradient_inverse(bool = false) const;
 		vec3 rotation_gradient_inverse(const vec3&, bool = false) const;
@@ -82,8 +82,8 @@ namespace math
 		mat3 rotation_hessian_inverse(const vec3&, bool = false) const;
 		vec3 rotation_hessian_inverse(const vec3&, const vec3&, bool = false) const;
 
-		mat3 rotation_class_increment(const vec3&, unsigned, bool = false) const;
-		vec3 rotation_class_increment(const vec3&, const vec3&, unsigned, bool = false) const;
+		mat3 rotation_class_increment(const vec3&, uint32_t, bool = false) const;
+		vec3 rotation_class_increment(const vec3&, const vec3&, uint32_t, bool = false) const;
 
 		mat3 rotation_higher(const vec3&, const vec3&, bool = false, bool = true) const;
 		mat3 rotation_higher_inverse(const vec3&, const vec3&, bool = false, bool = true) const;

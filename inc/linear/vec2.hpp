@@ -36,11 +36,11 @@ namespace math
 		vec2& operator+=(const vec2&);
 		vec2& operator-=(const vec2&);
 
-		double& operator[](unsigned);
-		double& operator()(unsigned);
+		double& operator[](uint32_t);
+		double& operator()(uint32_t);
 
-		const double& operator[](unsigned) const;
-		const double& operator()(unsigned) const;
+		const double& operator[](uint32_t) const;
+		const double& operator()(uint32_t) const;
 
 		//linear
 		vec2& normalize(void);

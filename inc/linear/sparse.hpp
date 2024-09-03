@@ -6,7 +6,7 @@ namespace math
 	{
 	public:
 		//constructors
-		sparse(unsigned);
+		sparse(uint32_t);
 
 		//destructor
 		~sparse(void);
@@ -14,8 +14,8 @@ namespace math
 	private:
 		//data
 		double* m_data;
-		unsigned m_size;
-		unsigned* m_col_map;
-		unsigned* m_row_map;
+		uint32_t m_size;
+		uint32_t* m_col_map;
+		uint32_t* m_row_map;
 	};
 }

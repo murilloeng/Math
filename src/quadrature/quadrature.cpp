@@ -14,11 +14,11 @@ extern "C"
 namespace math
 {
 	//constructor
-	quadrature::quadrature(unsigned order) : m_points(nullptr), m_weights(nullptr), m_rule(rule::legendre)
+	quadrature::quadrature(uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(rule::legendre)
 	{
 		this->order(order);
 	}
-	quadrature::quadrature(math::rule rule, unsigned order) : m_points(nullptr), m_weights(nullptr), m_rule(rule)
+	quadrature::quadrature(math::rule rule, uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(rule)
 	{
 		this->order(order);
 	}
@@ -33,7 +33,7 @@ namespace math
 	//serialization
 	void quadrature::load(FILE* file)
 	{
-		unsigned rule;
+		uint32_t rule;
 		if(fscanf(file, "%d %d", &rule, &m_order) != 2)
 		{
 			printf("\tError: Unable to load Quadrature!\n");
@@ -43,15 +43,15 @@ namespace math
 	}
 	void quadrature::save(FILE* file) const
 	{
-		fprintf(file, "%02d %02d ", (unsigned) m_rule, m_order);
+		fprintf(file, "%02d %02d ", (uint32_t) m_rule, m_order);
 	}
 
 	//data
-	unsigned quadrature::order(void) const
+	uint32_t quadrature::order(void) const
 	{
 		return m_order;
 	}
-	unsigned quadrature::order(unsigned order)
+	uint32_t quadrature::order(uint32_t order)
 	{
 		m_order = order;
 		delete[] m_points;
@@ -99,11 +99,11 @@ namespace math
 	{
 		return m_weights;
 	}
-	double quadrature::point(unsigned index) const
+	double quadrature::point(uint32_t index) const
 	{
 		return m_points[index];
 	}
-	double quadrature::weight(unsigned index) const
+	double quadrature::weight(uint32_t index) const
 	{
 		return m_weights[index];
 	}

@@ -1,6 +1,7 @@
 #pragma once
 
 //std
+#include <cstdint>
 #include <complex.h>
 
 namespace math
@@ -15,14 +16,14 @@ namespace math
 		~Polynomial(void);
 
 		//data
-		unsigned order(unsigned);
-		unsigned order(void) const;
+		uint32_t order(uint32_t);
+		uint32_t order(void) const;
 
 		double roots_error(void) const;
-		const std::complex<double> root(unsigned) const;
+		const std::complex<double> root(uint32_t) const;
 
-		std::complex<double> coefficient(unsigned) const;
-		std::complex<double> coefficient(unsigned, std::complex<double>);
+		std::complex<double> coefficient(uint32_t) const;
+		std::complex<double> coefficient(uint32_t, std::complex<double>);
 
 		//value
 		std::complex<double> value(std::complex<double>) const;
@@ -38,9 +39,9 @@ namespace math
 
 		//data
 		double m_bound;
-		unsigned m_order;
+		uint32_t m_order;
 		double m_tolerance;
-		unsigned m_iteration_max;
+		uint32_t m_iteration_max;
 		std::complex<double>* m_roots;
 		std::complex<double>* m_coefficients;
 	};

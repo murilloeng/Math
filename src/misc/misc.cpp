@@ -27,7 +27,7 @@ namespace math
 		b = a - b;
 		a = a - b;
 	}
-	void swap(unsigned& a, unsigned& b)
+	void swap(uint32_t& a, uint32_t& b)
 	{
 		a ^= b;
 		b ^= a;
@@ -43,7 +43,7 @@ namespace math
 		return fmax(fmin(v, b), a);
 	}
 
-	void ndiff(ndiff_fun fun, double* K, const double* x, void** a, unsigned nv, unsigned nx, double dx)
+	void ndiff(ndiff_fun fun, double* K, const double* x, void** a, uint32_t nv, uint32_t nx, double dx)
 	{
 		//data
 		double* xp = (double*) alloca(nx * sizeof(double));
@@ -54,7 +54,7 @@ namespace math
 		//setup
 		memcpy(xp, x, nx * sizeof(double));
 		//derivative
-		for(unsigned i = 0; i < nx; i++)
+		for(uint32_t i = 0; i < nx; i++)
 		{
 			//1st state
 			xp[i] -= dx;
@@ -73,7 +73,7 @@ namespace math
 			//derivative
 			xp[i] -= dx;
 			xp[i] -= dx;
-			for(unsigned j = 0; j < nv; j++)
+			for(uint32_t j = 0; j < nv; j++)
 			{
 				K[j + nv * i] = (8 * f3[j] - 8 * f1[j] + f2[j] - f4[j]) / 12 / dx;
 			}

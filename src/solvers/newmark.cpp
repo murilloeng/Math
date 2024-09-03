@@ -8,7 +8,7 @@
 namespace math
 {
 	//constructors
-	newmark::newmark(unsigned m_nd, bool mem) : m_mem(mem), m_nd(m_nd), m_g(0.50), m_b(0.25)
+	newmark::newmark(uint32_t m_nd, bool mem) : m_mem(mem), m_nd(m_nd), m_g(0.50), m_b(0.25)
 	{
 		//state
 		m_x = m_mem ? new double[m_nd] : nullptr;
@@ -52,7 +52,7 @@ namespace math
 		inertia();
 		internal();
 		external();
-		for(unsigned i = 0; i < m_nd; i++)
+		for(uint32_t i = 0; i < m_nd; i++)
 		{
 			m_r[i] = m_fe[i] - m_fi[i];
 		}
@@ -63,10 +63,10 @@ namespace math
 		inertia();
 		internal();
 		external();
-		for(unsigned i = 0; i < m_nd; i++)
+		for(uint32_t i = 0; i < m_nd; i++)
 		{
 			m_r[i] = m_fe[i] - m_fi[i];
-			for(unsigned j = 0; j < m_nd; j++)
+			for(uint32_t j = 0; j < m_nd; j++)
 			{
 				m_r[i] -= m_M[i + m_nd * j] * m_a[j];
 			}
@@ -103,7 +103,7 @@ namespace math
 	void newmark::predictor(void)
 	{
 		m_t += m_dt;
-		for(unsigned i = 0; i < m_nd; i++)
+		for(uint32_t i = 0; i < m_nd; i++)
 		{
 			m_v[i] += m_dt * m_a[i];
 			m_x[i] += m_dt * m_v[i] - m_dt * m_dt / 2 * m_a[i];
@@ -121,12 +121,12 @@ namespace math
 			// }
 			damping();
 			stifness();
-			for(unsigned i = 0; i < m_nd * m_nd; i++)
+			for(uint32_t i = 0; i < m_nd * m_nd; i++)
 			{
 				m_K[i] += (m_g * m_dt * m_C[i] + m_M[i]) / (m_b * m_dt * m_dt);
 			}
 			// mat::solve(m_dx, m_K, m_r, m_nd);
-			for(unsigned i = 0; i < m_nd; i++)
+			for(uint32_t i = 0; i < m_nd; i++)
 			{
 				m_x[i] += m_dx[i];
 				m_v[i] += m_dx[i] * m_g / (m_b * m_dt);
@@ -138,7 +138,7 @@ namespace math
 	{
 		printf("%04d ", m_s);
 		printf("%+.6e ", m_t);
-		for(unsigned i = 0; i < m_nd; i++)
+		for(uint32_t i = 0; i < m_nd; i++)
 		{
 			printf("%+.6e %+.6e %+.6e ", m_x[i], m_v[i], m_a[i]);
 		}

@@ -1,5 +1,8 @@
 #pragma once
 
+//std
+#include <cstdint>
+
 namespace math
 {
 	class matrix;
@@ -11,7 +14,7 @@ namespace math
 	{
 	public:
 		//constructors
-		span(matrix&, unsigned, unsigned, unsigned = 3, unsigned = 3);
+		span(matrix&, uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
 
 		//destructor
 		virtual ~span(void);
@@ -29,7 +32,7 @@ namespace math
 		const span& operator-=(const span&) const;
 		const span& operator-=(const matrix&) const;
 
-		double& operator()(unsigned, unsigned) const;
+		double& operator()(uint32_t, uint32_t) const;
 
 		//friends
 		friend matrix operator*(const span&, const matrix&);
@@ -38,9 +41,9 @@ namespace math
 	protected:
 		//data
 		matrix& m_k;
-		unsigned m_row;
-		unsigned m_col;
-		unsigned m_rows;
-		unsigned m_cols;
+		uint32_t m_row;
+		uint32_t m_col;
+		uint32_t m_rows;
+		uint32_t m_cols;
 	};
 }

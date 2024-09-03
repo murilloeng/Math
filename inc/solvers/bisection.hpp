@@ -1,5 +1,8 @@
 #pragma once
 
+//std
+#include <cstdint>
+
 namespace math
 {
 	class bisection
@@ -18,6 +21,6 @@ namespace math
 		//data
 		double(*m_system)(double, void**);
 		double m_x1, m_x2, m_xs, m_tolerance;
-		unsigned m_iteration, m_iteration_max;
+		uint32_t m_iteration, m_iteration_max;
 	};
 }

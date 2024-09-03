@@ -2,7 +2,7 @@
 
 namespace math
 {
-	enum class strategy : unsigned
+	enum class strategy : uint32_t
 	{
 		arc_length		= 1 << 0,
 		minimal_norm	= 1 << 1,

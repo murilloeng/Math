@@ -1,12 +1,15 @@
 #pragma once
 
+//std
+#include <cstdint>
+
 namespace math
 {
 	class newmark
 	{
 	public:
 		//constructors
-		newmark(unsigned, bool);
+		newmark(uint32_t, bool);
 
 		//destructor
 		virtual ~newmark(void);
@@ -34,7 +37,7 @@ namespace math
 
 		//data
 		bool m_mem;
-		unsigned m_s, m_nd, m_ns;
+		uint32_t m_s, m_nd, m_ns;
 		double m_t, m_T, m_g, m_b, *m_x, *m_v, *m_a, *m_r;
 		double m_dt, *m_dx, *m_dv, *m_fe, *m_fi, *m_K, *m_C, *m_M;
 

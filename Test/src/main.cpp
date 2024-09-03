@@ -54,9 +54,9 @@ int main(void)
 	J[1] = 2;
 	J[2] = 3;
 	math::mat3 Ka, Kn;
-	const unsigned n = 10000;
-	srand((unsigned) time(nullptr));
-	for(unsigned i = 0; i < n; i++)
+	const uint32_t n = 10000;
+	srand((uint32_t) time(nullptr));
+	for(uint32_t i = 0; i < n; i++)
 	{
 		t.randu();
 		wn.randu();

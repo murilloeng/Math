@@ -26,7 +26,7 @@ namespace math
 	{
 		return;
 	}
-	quat::quat(double t, unsigned i) : vector(4)
+	quat::quat(double t, uint32_t i) : vector(4)
 	{
 		m_ptr[0] = cos(t / 2);
 		m_ptr[1] = i == 0 ? sin(t / 2) : 0;
@@ -83,20 +83,20 @@ namespace math
 		return r;
 	}
 
-	double& quat::operator[](unsigned i)
+	double& quat::operator[](uint32_t i)
 	{
 		return m_ptr[i];
 	}
-	double& quat::operator()(unsigned i)
+	double& quat::operator()(uint32_t i)
 	{
 		return m_ptr[i];
 	}
 
-	const double& quat::operator[](unsigned i) const
+	const double& quat::operator[](uint32_t i) const
 	{
 		return m_ref[i];
 	}
-	const double& quat::operator()(unsigned i) const
+	const double& quat::operator()(uint32_t i) const
 	{
 		return m_ref[i];
 	}
@@ -122,7 +122,7 @@ namespace math
 	{
 		return reset();
 	}
-	quat& quat::isometric(unsigned d)
+	quat& quat::isometric(uint32_t d)
 	{
 		switch(d)
 		{

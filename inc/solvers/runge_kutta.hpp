@@ -1,12 +1,14 @@
 #pragma once
 
+#include <cstdint>
+
 namespace math
 {
 	class runge_kutta
 	{
 	public:
 		//constructors
-		runge_kutta(unsigned, bool);
+		runge_kutta(uint32_t, bool);
 
 		//destructor
 		virtual ~runge_kutta(void);
@@ -34,7 +36,7 @@ namespace math
 
 		//data
 		bool m_mem, m_type;
-		unsigned m_s, m_nd, m_ns;
+		uint32_t m_s, m_nd, m_ns;
 		double m_t, m_T, *m_x, *m_v, *m_a;
 		double m_dt, *m_xn, *m_vn, *m_dx, *m_dv;
 		void (*m_system_1)(double*, const double*, double);

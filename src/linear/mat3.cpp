@@ -104,7 +104,7 @@ namespace math
 
 	mat3& mat3::operator+=(double s)
 	{
-		for(unsigned i = 0; i < 9; i++)
+		for(uint32_t i = 0; i < 9; i++)
 		{
 			m_ptr[i] += s;
 		}
@@ -112,7 +112,7 @@ namespace math
 	}
 	mat3& mat3::operator-=(double s)
 	{
-		for(unsigned i = 0; i < 9; i++)
+		for(uint32_t i = 0; i < 9; i++)
 		{
 			m_ptr[i] -= s;
 		}
@@ -120,7 +120,7 @@ namespace math
 	}
 	mat3& mat3::operator*=(double s)
 	{
-		for(unsigned i = 0; i < 9; i++)
+		for(uint32_t i = 0; i < 9; i++)
 		{
 			m_ptr[i] *= s;
 		}
@@ -128,7 +128,7 @@ namespace math
 	}
 	mat3& mat3::operator/=(double s)
 	{
-		for(unsigned i = 0; i < 9; i++)
+		for(uint32_t i = 0; i < 9; i++)
 		{
 			m_ptr[i] /= s;
 		}
@@ -143,7 +143,7 @@ namespace math
 
 	mat3& mat3::operator+=(const mat3& m)
 	{
-		for(unsigned i = 0; i < 9; i++)
+		for(uint32_t i = 0; i < 9; i++)
 		{
 			m_ptr[i] += m.m_ref[i];
 		}
@@ -151,35 +151,35 @@ namespace math
 	}
 	mat3& mat3::operator-=(const mat3& m)
 	{
-		for(unsigned i = 0; i < 9; i++)
+		for(uint32_t i = 0; i < 9; i++)
 		{
 			m_ptr[i] -= m.m_ref[i];
 		}
 		return *this;
 	}
 
-	double& mat3::operator[](unsigned i)
+	double& mat3::operator[](uint32_t i)
 	{
 		return m_ptr[i];
 	}
-	double& mat3::operator()(unsigned i)
+	double& mat3::operator()(uint32_t i)
 	{
 		return m_ptr[i];
 	}
-	double& mat3::operator()(unsigned i, unsigned j)
+	double& mat3::operator()(uint32_t i, uint32_t j)
 	{
 		return m_ptr[i + 3 * j];
 	}
 
-	const double& mat3::operator[](unsigned i) const
+	const double& mat3::operator[](uint32_t i) const
 	{
 		return m_ref[i];
 	}
-	const double& mat3::operator()(unsigned i) const
+	const double& mat3::operator()(uint32_t i) const
 	{
 		return m_ref[i];
 	}
-	const double& mat3::operator()(unsigned i, unsigned j) const
+	const double& mat3::operator()(uint32_t i, uint32_t j) const
 	{
 		return m_ref[i + 3 * j];
 	}

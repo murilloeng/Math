@@ -1,8 +1,11 @@
 #pragma once
 
+//std
+#include <cstdint>
+
 namespace math
 {
-	enum class rule : unsigned
+	enum class rule : uint32_t
 	{
 		lobatto,
 		legendre,

@@ -116,20 +116,20 @@ namespace math
 		return *this = m * *this;
 	}
 
-	double& vec3::operator[](unsigned i)
+	double& vec3::operator[](uint32_t i)
 	{
 		return m_ptr[i];
 	}
-	double& vec3::operator()(unsigned i)
+	double& vec3::operator()(uint32_t i)
 	{
 		return m_ptr[i];
 	}
 
-	const double& vec3::operator[](unsigned i) const
+	const double& vec3::operator[](uint32_t i) const
 	{
 		return m_ref[i];
 	}
-	const double& vec3::operator()(unsigned i) const
+	const double& vec3::operator()(uint32_t i) const
 	{
 		return m_ref[i];
 	}
@@ -146,7 +146,7 @@ namespace math
 	const vec3& vec3::triad(vec3& t2, vec3& t3, double a) const
 	{
 		//data
-		unsigned i;
+		uint32_t i;
 		min(true, &i);
 		//axes 2
 		t2[(i + 0) % 3] = 0;
@@ -258,7 +258,7 @@ namespace math
 		return v + s * fn(t, 2) * cross(v) + fn(t, 3) * cross(cross(v));
 	}
 
-	mat3 vec3::rotation_class(unsigned n, bool q) const
+	mat3 vec3::rotation_class(uint32_t n, bool q) const
 	{
 		const double t = norm();
 		const int s = q ? -1 : +1;
@@ -267,7 +267,7 @@ namespace math
 		const double f2 = fn(t, n + 2);
 		return f0 * mat3::eye() + s * f1 * spin() + f2 * spin() * spin();
 	}
-	vec3 vec3::rotation_class(const vec3& v, unsigned n, bool q) const
+	vec3 vec3::rotation_class(const vec3& v, uint32_t n, bool q) const
 	{
 		const double t = norm();
 		const int s = q ? -1 : +1;
@@ -324,7 +324,7 @@ namespace math
 		return s * v.cross(u) / 2 - a * (cross(v).cross(u) + cross(v.cross(u))) + b * inner(u) * cross(cross(v));
 	}
 
-	mat3 vec3::rotation_class_increment(const vec3& v, unsigned n, bool q) const
+	mat3 vec3::rotation_class_increment(const vec3& v, uint32_t n, bool q) const
 	{
 		const double t = norm();
 		const int s = q ? -1 : +1;
@@ -334,7 +334,7 @@ namespace math
 		const double df2 = (n + 2) * fn(t, n + 4) - fn(t, n + 3);
 		return (s * df1 * cross(v) + df2 * cross(cross(v))).outer(*this) - s * f1 * v.spin() - f2 * (cross(v).spin() + spin() * v.spin());
 	}
-	vec3 vec3::rotation_class_increment(const vec3& v, const vec3& u, unsigned n, bool q) const
+	vec3 vec3::rotation_class_increment(const vec3& v, const vec3& u, uint32_t n, bool q) const
 	{
 		const double t = norm();
 		const int s = q ? -1 : +1;

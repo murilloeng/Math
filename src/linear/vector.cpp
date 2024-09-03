@@ -14,7 +14,7 @@ namespace math
 	{
 		return;
 	}
-	vector::vector(unsigned rows, mode init) : matrix(rows, 1, init)
+	vector::vector(uint32_t rows, mode init) : matrix(rows, 1, init)
 	{
 		return;
 	}
@@ -22,7 +22,7 @@ namespace math
 	{
 		memcpy(m_ptr, m.data(), m_rows * sizeof(double));
 	}
-	vector::vector(const double* ptr, unsigned rows) : matrix(ptr, rows, 1)
+	vector::vector(const double* ptr, uint32_t rows) : matrix(ptr, rows, 1)
 	{
 		return;
 	}
@@ -30,7 +30,7 @@ namespace math
 	{
 		memcpy(m_ptr, std::data(list), list.size() * sizeof(double));
 	}
-	vector::vector(double* ptr, unsigned rows, mode init) : matrix(ptr, rows, 1, init)
+	vector::vector(double* ptr, uint32_t rows, mode init) : matrix(ptr, rows, 1, init)
 	{
 		return;
 	}
@@ -42,12 +42,12 @@ namespace math
 	}
 
 	//size
-	vector& vector::resize(unsigned rows)
+	vector& vector::resize(uint32_t rows)
 	{
 		matrix::resize(rows, 1);
 		return *this;
 	}
-	vector& vector::resize(unsigned rows, unsigned cols)
+	vector& vector::resize(uint32_t rows, uint32_t cols)
 	{
 		//check
 		if(cols != 1)
@@ -72,9 +72,9 @@ namespace math
 	matrix vector::outer(const vector& v) const
 	{
 		matrix m(m_rows, v.m_rows);
-		for(unsigned i = 0; i < m_rows; i++)
+		for(uint32_t i = 0; i < m_rows; i++)
 		{
-			for(unsigned j = 0; j < v.m_rows; j++)
+			for(uint32_t j = 0; j < v.m_rows; j++)
 			{
 				m(i, j) = m_ref[i] * v.m_ref[j];
 			}
@@ -84,7 +84,7 @@ namespace math
 	double vector::inner(const vector& v) const
 	{
 		double s = 0;
-		for(unsigned i = 0; i < m_rows; i++)
+		for(uint32_t i = 0; i < m_rows; i++)
 		{
 			s += m_ref[i] * v.m_ref[i];
 		}
@@ -93,7 +93,7 @@ namespace math
 	double vector::inner(const double* v) const
 	{
 		double s = 0;
-		for(unsigned i = 0; i < m_rows; i++)
+		for(uint32_t i = 0; i < m_rows; i++)
 		{
 			s += m_ref[i] * v[i];
 		}
