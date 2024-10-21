@@ -18,11 +18,10 @@ namespace math
 	{
 	public:
 		//constructors
-		mat3(void);
-		mat3(mode);
 		mat3(double*);
 		mat3(const mat3&);
 		mat3(const double*);
+		mat3(mode = mode::null);
 		mat3(std::initializer_list<double>);
 		mat3(const vec3&, const vec3&, const vec3&);
 		mat3(const double*, const double*, const double*);

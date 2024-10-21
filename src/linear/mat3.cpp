@@ -13,10 +13,6 @@
 namespace math
 {
 	//constructors
-	mat3::mat3(void) : matrix(3, 3)
-	{
-		return;
-	}
 	mat3::mat3(mode init) : matrix(3, 3, init)
 	{
 		return;
