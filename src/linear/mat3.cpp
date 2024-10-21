@@ -17,6 +17,10 @@ namespace math
 	{
 		return;
 	}
+	mat3::mat3(mode init) : matrix(3, 3, init)
+	{
+		return;
+	}
 	mat3::mat3(double* ptr) : matrix(ptr, 3, 3)
 	{
 		return;

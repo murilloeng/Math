@@ -19,6 +19,7 @@ namespace math
 	public:
 		//constructors
 		mat3(void);
+		mat3(mode);
 		mat3(double*);
 		mat3(const mat3&);
 		mat3(const double*);
