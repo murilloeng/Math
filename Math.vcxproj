@@ -21,6 +21,7 @@
     <ClInclude Include="inc\linear\vector.hpp" />
     <ClInclude Include="inc\misc\bits.hpp" />
     <ClInclude Include="inc\misc\misc.hpp" />
+    <ClInclude Include="inc\misc\fourier.hpp" />
     <ClInclude Include="inc\misc\rotations.hpp" />
     <ClInclude Include="inc\quadrature\quadrature.hpp" />
     <ClInclude Include="inc\quadrature\rule.hpp" />
@@ -41,6 +42,7 @@
     <ClCompile Include="src\linear\vector.cpp" />
     <ClCompile Include="src\misc\bits.cpp" />
     <ClCompile Include="src\misc\misc.cpp" />
+    <ClCompile Include="src\misc\fourier.cpp" />
     <ClCompile Include="src\misc\rotations.cpp" />
     <ClCompile Include="src\polynomial\Polynomial.cpp" />
     <ClCompile Include="src\quadrature\quadrature.cpp" />
