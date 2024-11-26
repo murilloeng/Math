@@ -5,5 +5,6 @@
 
 namespace math
 {
-	double fourier(const double*, double, double, double, uint32_t, uint32_t);
+	void dft(double*, const double*, uint32_t);
+	void idft(double*, const double*, uint32_t);
 }

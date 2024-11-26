@@ -7,7 +7,7 @@
 int main(void)
 {
 	//test
-	test_fourier();
+	test_dft();
 	//return
 	return EXIT_SUCCESS;
 }
