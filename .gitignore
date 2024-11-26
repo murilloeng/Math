@@ -7,4 +7,3 @@
 !*.vcxproj
 !*Makefile
 !.gitignore
-!.vscode/*.json
