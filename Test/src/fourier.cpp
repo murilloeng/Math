@@ -8,7 +8,7 @@
 //test
 #include "Math/Test/inc/tests.hpp"
 
-void test_dft(void)
+void test_fft(void)
 {
 	//data
 	const uint32_t n = 10000;
@@ -34,8 +34,4 @@ void test_dft(void)
 		fprintf(file, "%+.6e %+.6e %+.6e\n", 2 * M_PI * i / T, z[2 * i + 0], z[2 * i + 1]);
 	}
 	fclose(file);
-}
-void test_idft(void)
-{
-	return;
 }

@@ -7,7 +7,7 @@
 int main(void)
 {
 	//test
-	test_dft();
+	test_fft();
 	//return
 	return EXIT_SUCCESS;
 }
