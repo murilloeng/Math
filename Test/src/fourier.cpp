@@ -3,7 +3,7 @@
 #include <vector>
 
 //math
-#include "Math/inc/misc/fourier.hpp"
+#include "Math/inc/misc/misc.hpp"
 
 //test
 #include "Math/Test/inc/tests.hpp"
@@ -27,7 +27,7 @@ void test_dft(void)
 		}
 		
 	}
-	math::dft(z, x, n);
+	math::fft(z, x, n, true);
 	//file
 	for(uint32_t i = 0; i < n; i++)
 	{

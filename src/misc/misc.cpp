@@ -3,6 +3,9 @@
 #include <cstring>
 #include <algorithm>
 
+//ext
+#include "external/cpp/inc/fftw3.h"
+
 //math
 #include "Math/inc/misc/misc.hpp"
 
@@ -41,6 +44,30 @@ namespace math
 	double bound(double v, double a, double b)
 	{
 		return fmax(fmin(v, b), a);
+	}
+
+	void fft(double* z, const double* x, uint32_t n, bool d)
+	{
+		//data
+		fftw_complex* xd = (fftw_complex*) fftw_malloc(n * sizeof(fftw_complex));
+		fftw_complex* zd = (fftw_complex*) fftw_malloc(n * sizeof(fftw_complex));
+		fftw_plan plan = fftw_plan_dft_1d(n, xd, zd, d ? FFTW_FORWARD : FFTW_BACKWARD, FFTW_ESTIMATE);
+		//setup
+		for(uint32_t i = 0; i < n; i++)
+		{
+			xd[i][1] = 0;
+			xd[i][0] = x[i];
+		}
+		//compute
+		fftw_execute(plan);
+		for(uint32_t i = 0; i < n; i++)
+		{
+			z[2 * i + 0] = zd[i][0];
+			z[2 * i + 1] = zd[i][1];
+		}
+		//cleanup
+		fftw_destroy_plan(plan);
+		fftw_free(xd); fftw_free(zd);
 	}
 
 	void ndiff(ndiff_fun fun, double* K, const double* x, void** a, uint32_t nv, uint32_t nx, double dx)
