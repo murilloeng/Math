@@ -15,9 +15,9 @@
 static const uint32_t nt = 10000;
 static const double s = 4.00e-02;
 static const double ka = 1.00e+03;
-static const double ks = 1.00e+03;
-static const double kt = 1.00e+03;
-static const double kb = 1.00e+03;
+static const double ks = 2.00e+03;
+static const double kt = 3.00e+03;
+static const double kb = 4.00e+03;
 
 static math::quat q0, q1, q2;
 static math::mat3 Ku, Kp, Kt, Tr, Nr;
