@@ -70,14 +70,14 @@ namespace math
 		fftw_free(xd); fftw_free(zd);
 	}
 
-	void ndiff(ndiff_fun fun, double* K, const double* x, void** a, uint32_t nv, uint32_t nx, double dx)
+	void ndiff(ndiff_fun fun, double* K, const double* x, void** a, uint32_t nf, uint32_t nx, double dx)
 	{
 		//data
 		double* xp = (double*) alloca(nx * sizeof(double));
-		double* f1 = (double*) alloca(nv * sizeof(double));
-		double* f2 = (double*) alloca(nv * sizeof(double));
-		double* f3 = (double*) alloca(nv * sizeof(double));
-		double* f4 = (double*) alloca(nv * sizeof(double));
+		double* f1 = (double*) alloca(nf * sizeof(double));
+		double* f2 = (double*) alloca(nf * sizeof(double));
+		double* f3 = (double*) alloca(nf * sizeof(double));
+		double* f4 = (double*) alloca(nf * sizeof(double));
 		//setup
 		memcpy(xp, x, nx * sizeof(double));
 		//derivative
@@ -100,9 +100,9 @@ namespace math
 			//derivative
 			xp[i] -= dx;
 			xp[i] -= dx;
-			for(uint32_t j = 0; j < nv; j++)
+			for(uint32_t j = 0; j < nf; j++)
 			{
-				K[j + nv * i] = (8 * f3[j] - 8 * f1[j] + f2[j] - f4[j]) / 12 / dx;
+				K[j + nf * i] = (8 * f3[j] - 8 * f1[j] + f2[j] - f4[j]) / 12 / dx;
 			}
 		}
 	}

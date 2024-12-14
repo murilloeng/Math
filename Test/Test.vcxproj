@@ -100,9 +100,10 @@ copy ..\..\external\cpp\dll\x64\libquadmath-0.dll dist\$(platform)\$(configurati
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\drift.cpp" />
-    <ClCompile Include="src\fourier.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\drift.cpp" />
+    <ClCompile Include="src\joint.cpp" />
+    <ClCompile Include="src\fourier.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\tests.hpp" />

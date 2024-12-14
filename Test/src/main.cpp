@@ -6,8 +6,7 @@
 
 int main(void)
 {
-	//test
-	test_fft();
 	//return
+	test_joint();
 	return EXIT_SUCCESS;
 }
