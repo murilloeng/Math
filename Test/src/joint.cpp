@@ -121,7 +121,6 @@ static void stiffness(double* K, const double* d, void** args)
 	math::matrix(K, 12, 12).span(9, 3) = math::matrix(K, 12, 12).span(9, 3) * t1.rotation_gradient();
 	math::matrix(K, 12, 12).span(3, 9) = math::matrix(K, 12, 12).span(3, 9) * t2.rotation_gradient();
 	math::matrix(K, 12, 12).span(9, 9) = math::matrix(K, 12, 12).span(9, 9) * t2.rotation_gradient();
-
 }
 static void test_force(void)
 {
