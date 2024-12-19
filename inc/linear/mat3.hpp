@@ -57,10 +57,8 @@ namespace math
 		const double& operator()(uint32_t) const;
 		const double& operator()(uint32_t, uint32_t) const;
 
-		//misc
-		static mat3 eye(void);
-
 		//linear
+		static mat3 eye(void);
 		vec3 eigen(void) const;
 		mat3 inverse(void) const;
 		mat3 transpose(void) const;

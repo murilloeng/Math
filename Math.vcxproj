@@ -11,44 +11,48 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\misc\bits.hpp" />
+    <ClInclude Include="inc\misc\fourier.hpp" />
+    <ClInclude Include="inc\misc\misc.hpp" />
+    <ClInclude Include="inc\linear\vec2.hpp" />
+    <ClInclude Include="inc\linear\mat2.hpp" />
+    <ClInclude Include="inc\linear\vec3.hpp" />
     <ClInclude Include="inc\linear\mat3.hpp" />
-    <ClInclude Include="inc\linear\matrix.hpp" />
     <ClInclude Include="inc\linear\quat.hpp" />
     <ClInclude Include="inc\linear\span.hpp" />
-    <ClInclude Include="inc\linear\sparse.hpp" />
-    <ClInclude Include="inc\linear\vec2.hpp" />
-    <ClInclude Include="inc\linear\vec3.hpp" />
     <ClInclude Include="inc\linear\vector.hpp" />
-    <ClInclude Include="inc\misc\bits.hpp" />
-    <ClInclude Include="inc\misc\misc.hpp" />
+    <ClInclude Include="inc\linear\matrix.hpp" />
+    <ClInclude Include="inc\linear\sparse.hpp" />
     <ClInclude Include="inc\misc\rotations.hpp" />
-    <ClInclude Include="inc\quadrature\quadrature.hpp" />
+    <ClInclude Include="inc\polynomial\Polynomial.hpp" />
     <ClInclude Include="inc\quadrature\rule.hpp" />
+    <ClInclude Include="inc\quadrature\quadrature.hpp" />
     <ClInclude Include="inc\solvers\newmark.hpp" />
     <ClInclude Include="inc\solvers\bisection.hpp" />
-    <ClInclude Include="inc\solvers\newton_raphson.hpp" />
-    <ClInclude Include="inc\solvers\runge_kutta.hpp" />
     <ClInclude Include="inc\solvers\strategies.hpp" />
+    <ClInclude Include="inc\solvers\runge_kutta.hpp" />
+    <ClInclude Include="inc\solvers\newton_raphson.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\misc\bits.cpp" />
+    <ClCompile Include="src\misc\fourier.cpp" />
+    <ClCompile Include="src\misc\misc.cpp" />
+    <ClCompile Include="src\linear\vec2.cpp" />
+    <ClCompile Include="src\linear\mat2.cpp" />
+    <ClCompile Include="src\linear\vec3.cpp" />
     <ClCompile Include="src\linear\mat3.cpp" />
-    <ClCompile Include="src\linear\matrix.cpp" />
     <ClCompile Include="src\linear\quat.cpp" />
     <ClCompile Include="src\linear\span.cpp" />
-    <ClCompile Include="src\linear\sparse.cpp" />
-    <ClCompile Include="src\linear\vec2.cpp" />
-    <ClCompile Include="src\linear\vec3.cpp" />
     <ClCompile Include="src\linear\vector.cpp" />
-    <ClCompile Include="src\misc\bits.cpp" />
-    <ClCompile Include="src\misc\misc.cpp" />
+    <ClCompile Include="src\linear\matrix.cpp" />
+    <ClCompile Include="src\linear\sparse.cpp" />
     <ClCompile Include="src\misc\rotations.cpp" />
     <ClCompile Include="src\polynomial\Polynomial.cpp" />
     <ClCompile Include="src\quadrature\quadrature.cpp" />
     <ClCompile Include="src\solvers\newmark.cpp" />
     <ClCompile Include="src\solvers\bisection.cpp" />
-    <ClCompile Include="src\solvers\newton_raphson.cpp" />
     <ClCompile Include="src\solvers\runge_kutta.cpp" />
-    <ClCompile Include="Test\src\main.cpp" />
+    <ClCompile Include="src\solvers\newton_raphson.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

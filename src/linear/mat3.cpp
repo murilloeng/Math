@@ -184,15 +184,13 @@ namespace math
 		return m_ref[i + 3 * j];
 	}
 
-	//misc
+	//linear
 	mat3 mat3::eye(void)
 	{
 		mat3 m;
 		m.matrix::eye();
 		return m;
 	}
-
-	//linear
 	vec3 mat3::eigen(void) const
 	{
 		vec3 s;
