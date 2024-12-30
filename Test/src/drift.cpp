@@ -4,9 +4,9 @@
 #include <cstdlib>
 
 //math
-#include "Math/inc/misc/misc.hpp"
-#include "Math/inc/linear/mat3.hpp"
-#include "Math/inc/linear/vec3.hpp"
+#include "Math/Math/inc/misc/misc.hpp"
+#include "Math/Math/inc/linear/mat3.hpp"
+#include "Math/Math/inc/linear/vec3.hpp"
 
 //test
 #include "Math/Test/inc/tests.hpp"
