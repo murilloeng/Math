@@ -1,8 +1,8 @@
 //std
 #include <cmath>
 
-//roots
-#include "Math/Math/inc/polynomial/Polynomial.hpp"
+//math
+#include "Galileo/mat/inc/polynomial/Polynomial.hpp"
 
 namespace math
 {

@@ -1,7 +1,7 @@
 #pragma once
 
 //math
-#include "Math/Math/inc/linear/matrix.hpp"
+#include "Galileo/mat/inc/linear/matrix.hpp"
 
 namespace math
 {

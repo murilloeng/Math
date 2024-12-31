@@ -1,7 +1,7 @@
 #pragma once
 
 //math
-#include "Math/Math/inc/linear/vector.hpp"
+#include "Galileo/mat/inc/linear/vector.hpp"
 
 namespace math
 {
@@ -16,7 +16,7 @@ namespace math
 		vec2(double, double);
 
 		//destructor
-		virtual ~vec2(void);
+		~vec2(void);
 
 		//operators
 		vec2 operator+(void) const;

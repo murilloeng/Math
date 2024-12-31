@@ -5,7 +5,7 @@
 #include <cstring>
 
 //math
-#include "Math/Math/inc/linear/vector.hpp"
+#include "Galileo/mat/inc/linear/vector.hpp"
 
 namespace math
 {

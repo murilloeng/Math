@@ -6,8 +6,8 @@
 #include <cstring>
 
 //math
-#include "Math/Math/inc/linear/vec2.hpp"
-#include "Math/Math/inc/linear/mat2.hpp"
+#include "Galileo/mat/inc/linear/vec2.hpp"
+#include "Galileo/mat/inc/linear/mat2.hpp"
 
 namespace math
 {

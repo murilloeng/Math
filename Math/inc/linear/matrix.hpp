@@ -5,7 +5,7 @@
 #include <initializer_list>
 
 //math
-#include "Math/Math/inc/linear/span.hpp"
+#include "Galileo/mat/inc/linear/span.hpp"
 
 //defines
 #ifndef MATRIX_STATIC_SIZE

@@ -6,14 +6,14 @@
 #include <cstring>
 
 //math
-#include "Math/Math/inc/linear/quat.hpp"
-#include "Math/Math/inc/linear/vec3.hpp"
-#include "Math/Math/inc/linear/mat3.hpp"
+#include "Galileo/mat/inc/linear/quat.hpp"
+#include "Galileo/mat/inc/linear/vec3.hpp"
+#include "Galileo/mat/inc/linear/mat3.hpp"
 
 namespace math
 {
 	//constructors
-	mat3::mat3(mode init) : matrix(3, 3, init)
+	mat3::mat3(mode mode) : matrix(3, 3, mode)
 	{
 		return;
 	}

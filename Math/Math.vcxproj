@@ -12,8 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\misc\bits.hpp" />
-    <ClInclude Include="inc\misc\fourier.hpp" />
-    <ClInclude Include="inc\misc\misc.hpp" />
+    <ClInclude Include="inc\misc\util.hpp" />
     <ClInclude Include="inc\linear\vec2.hpp" />
     <ClInclude Include="inc\linear\mat2.hpp" />
     <ClInclude Include="inc\linear\vec3.hpp" />
@@ -35,8 +34,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\misc\bits.cpp" />
-    <ClCompile Include="src\misc\fourier.cpp" />
-    <ClCompile Include="src\misc\misc.cpp" />
+    <ClCompile Include="src\misc\util.cpp" />
     <ClCompile Include="src\linear\vec2.cpp" />
     <ClCompile Include="src\linear\mat2.cpp" />
     <ClCompile Include="src\linear\vec3.cpp" />

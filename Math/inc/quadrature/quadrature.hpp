@@ -6,47 +6,53 @@
 
 namespace math
 {
-	enum class rule : uint32_t;
+	namespace quadrature
+	{
+		enum class rule : uint32_t;
+	}
 }
 
 namespace math
 {
-	class quadrature
+	namespace quadrature
 	{
-	public:
-		//constructor
-		quadrature(uint32_t);
-		quadrature(math::rule, uint32_t);
+		class Quadrature
+		{
+		public:
+			//constructor
+			Quadrature(uint32_t);
+			Quadrature(quadrature::rule, uint32_t);
 
-		//destructor
-		~quadrature(void);
+			//destructor
+			~Quadrature(void);
 
-		//serialization
-		void load(FILE*);
-		void save(FILE*) const;
+			//serialization
+			void load(FILE*);
+			void save(FILE*) const;
 
-		//data
-		uint32_t order(uint32_t);
-		uint32_t order(void) const;
+			//data
+			uint32_t order(uint32_t);
+			uint32_t order(void) const;
 
-		math::rule rule(void) const;
-		math::rule rule(math::rule);
+			quadrature::rule rule(void) const;
+			quadrature::rule rule(quadrature::rule);
 
-		//name
-		const char* rule_name(void) const;
-		static const char* rule_name(math::rule);
+			//name
+			const char* rule_name(void) const;
+			static const char* rule_name(quadrature::rule);
 
-		//points
-		double point(uint32_t) const;
-		double weight(uint32_t) const;
-		const double* points(void) const;
-		const double* weights(void) const;
+			//points
+			double point(uint32_t) const;
+			double weight(uint32_t) const;
+			const double* points(void) const;
+			const double* weights(void) const;
 
-	private:
-		//data
-		uint32_t m_order;
-		double* m_points;
-		double* m_weights;
-		math::rule m_rule;
-	};
+		private:
+			//data
+			uint32_t m_order;
+			double* m_points;
+			double* m_weights;
+			quadrature::rule m_rule;
+		};
+	}
 }

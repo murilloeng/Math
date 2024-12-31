@@ -1,7 +1,7 @@
 #pragma once
 
 //math
-#include "Math/Math/inc/linear/vector.hpp"
+#include "Galileo/mat/inc/linear/vector.hpp"
 
 namespace math
 {
@@ -26,7 +26,7 @@ namespace math
 		quat(const double*, const double*, const double*);
 
 		//destructor
-		virtual ~quat(void);
+		~quat(void);
 
 		//operators
 		quat& operator=(const quat&);

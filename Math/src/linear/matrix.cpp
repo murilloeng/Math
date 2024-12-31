@@ -6,24 +6,24 @@
 #include <cstring>
 
 //math
-#include "Math/Math/inc/misc/misc.hpp"
-#include "Math/Math/inc/linear/mat3.hpp"
-#include "Math/Math/inc/linear/vector.hpp"
-#include "Math/Math/inc/linear/matrix.hpp"
+#include "Galileo/mat/inc/misc/util.hpp"
+#include "Galileo/mat/inc/linear/mat3.hpp"
+#include "Galileo/mat/inc/linear/vector.hpp"
+#include "Galileo/mat/inc/linear/matrix.hpp"
 
 //extern
 extern "C"
 {
 	//inverse
-	void dgetrf_(const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*, int*);
-	void dgetri_(const uint32_t*, double*, const uint32_t*, const uint32_t*, double*, const int*, int*);
+	void dgetrf_(const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*, int32_t*);
+	void dgetri_(const uint32_t*, double*, const uint32_t*, const uint32_t*, double*, const int32_t*, int32_t*);
 	//solve
-	void dgesv_(const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*, double*, const uint32_t*, int*);
+	void dgesv_(const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*, double*, const uint32_t*, int32_t*);
 	//svd
 	void dgesdd_(const char*, const uint32_t*, const uint32_t*, double*, const uint32_t*, double*, double*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, int32_t*, int32_t*);
 	//eigen
-	void dsyev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, double*, int*, int*);
-	void dsygv_(const uint32_t*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, double*, double*, int*, int*);
+	void dsyev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, double*, int32_t*, int32_t*);
+	void dsygv_(const uint32_t*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, double*, double*, int32_t*, int32_t*);
 }
 
 namespace math
@@ -75,10 +75,11 @@ namespace math
 	{
 		return;
 	}
-	matrix::matrix(std::initializer_list<std::initializer_list<double>> list, bool columns)
+	matrix::matrix(std::initializer_list<std::initializer_list<double>> list, bool columns) : 
+		m_own(true)
 	{
 		//data
-		const std::initializer_list<double> *data = std::data(list);
+		const std::initializer_list<double>* data = std::data(list);
 		//check
 		for(uint32_t i = 0; i < list.size(); i++)
 		{
@@ -604,83 +605,59 @@ namespace math
 	}
 	double matrix::determinant(void) const
 	{
+		//data
+		int32_t status;
+		matrix M(*this);
+		uint32_t* pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
 		//check
 		if(m_rows != m_cols)
 		{
-			fprintf(stderr, "Matrix: determinant called non-square matrix!\n");
+			fprintf(stderr, "Error: Determinant called on non-square matrix!\n");
 			exit(EXIT_FAILURE);
 		}
-		//diagonal
-		double d = fabs(m_ptr[0]);
-		for(uint32_t i = 1; i < m_rows; i++)
-		{
-			d = fmax(d, fabs(m_ptr[i + m_rows * i]));
-		}
 		//decompose
-		uint32_t p;
+		dgetrf_(&m_rows, &m_cols, M.m_ptr, &m_rows, pivot, &status);
+		//check
+		if(status != 0)
+		{
+			fprintf(stderr, "Error: Determinant failed!\n");
+			exit(EXIT_FAILURE);
+		}
+		//determinant
+		double d = 1;
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
-			p = i;
-			//pivot
-			for(uint32_t j = i + 1; j < m_rows; j++)
-			{
-				p = fabs(m_ptr[j + m_rows * i]) > fabs(m_ptr[p + m_rows * i]) ? j : p;
-			}
-			//check
-			if(fabs(m_ptr[p + m_rows * i]) < 1e-8 * d)
-			{
-				return 0;
-			}
-			//swap
-			if(p != i)
-			{
-				for(uint32_t j = i; j < m_cols; j++)
-				{
-					math::swap(m_ptr[i + m_rows * j], m_ptr[p + m_rows * j]);
-				}
-			}
-			//eliminate
-			for(uint32_t j = i + 1; j < m_rows; j++)
-			{
-				for(uint32_t k = i + 1; k < m_cols; k++)
-				{
-					m_ptr[j + m_rows * k] -= m_ptr[i + m_rows * k] * m_ptr[j + m_rows * i] / m_ptr[i + m_rows * i];
-				}
-			}
+			d *= M.m_ptr[i + m_rows * i];
+			if(i + 1 != pivot[i]) d *= -1;
 		}
 		//return
-		double v = 1;
-		for(uint32_t i = 0; i < m_rows; i++)
-		{
-			v *= m_ptr[i + m_rows * i];
-		}
-		return v;
+		return d;
 	}
 
 	matrix matrix::inverse(bool* test) const
 	{
 		//data
 		matrix M(*this);
-		uint32_t* pivot;
 		double query, *work;
-		int status, lwork = -1;
+		int32_t status, lwork = -1;
+		uint32_t* pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
 		//check
 		if(m_rows != m_cols)
 		{
 			if(test) *test = false;
 			fprintf(stderr, "Error: Inverse called on non-square system!\n");
-			return M;
+			exit(EXIT_FAILURE);
 		}
 		//query
-		pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
 		dgetrf_(&m_rows, &m_cols, M.m_ptr, &m_rows, pivot, &status);
 		dgetri_(&m_rows, M.m_ptr, &m_rows, pivot, &query, &lwork, &status);
 		//inverse
-		lwork = int(query);
+		lwork = int32_t(query);
 		work = (double*) alloca(lwork * sizeof(double));
 		dgetri_(&m_rows, M.m_ptr, &m_rows, pivot, work, &lwork, &status);
-		//return
+		//test
 		if(test) *test = status == 0;
+		//return
 		return M;
 	}
 	matrix matrix::transpose(void) const
@@ -698,25 +675,24 @@ namespace math
 	bool matrix::solve(matrix& x, const matrix& f) const
 	{
 		//data
-		int status;
+		x = f;
+		int32_t status;
 		matrix M(*this);
-		uint32_t* pivot;
+		uint32_t* pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
 		//check
 		if(m_rows != m_cols)
 		{
 			fprintf(stderr, "Error: solve called on non-square matrix!\n");
-			return false;
+			exit(EXIT_FAILURE);
 		}
 		if(m_cols != x.m_rows || x.m_rows != f.m_rows || x.m_cols != f.m_cols)
 		{
 			fprintf(stderr, "Error: solve called with incompatible matrices!\n");
-			return false;
+			exit(EXIT_FAILURE);
 		}
 		//solve
-		x = f;
-		pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
 		dgesv_(&m_rows, &x.m_cols, M.m_ptr, &m_rows, pivot, x.m_ptr, &m_rows, &status);
-		//check
+		//return
 		return status == 0;
 	}
 
@@ -761,14 +737,14 @@ namespace math
 	}
 
 	//svd
-	bool matrix::svd(matrix& R, matrix& V, vector& U) const
+	bool matrix::svd(matrix& U, matrix& V, vector& s) const
 	{
 		//check
-		if(U.m_rows != std::min(m_rows, m_cols))
+		if(s.m_rows != std::min(m_rows, m_cols))
 		{
 			fprintf(stderr, "\tError: SVD third parameter has incompatible dimensions!\n");
 		}
-		if(R.m_rows != R.m_cols || R.m_rows != m_rows)
+		if(U.m_rows != U.m_cols || U.m_rows != m_rows)
 		{
 			fprintf(stderr, "\tError: SVD first parameter has incompatible dimensions!\n");
 		}
@@ -784,11 +760,11 @@ namespace math
 		const char* jobz = "A";
 		int32_t* iwork = (int32_t*) alloca(8 * std::min(m_rows, m_cols) * sizeof(int32_t));
 		//query
-		dgesdd_(jobz, &m_rows, &m_cols, A.m_ptr, &m_rows, U.m_ptr, R.m_ptr, &m_rows, V.m_ptr, &m_cols, &query, &lwork, iwork, &info);
+		dgesdd_(jobz, &m_rows, &m_cols, A.m_ptr, &m_rows, s.m_ptr, U.m_ptr, &m_rows, V.m_ptr, &m_cols, &query, &lwork, iwork, &info);
 		//decompose
 		lwork = (uint32_t) query;
 		double* work = (double*) alloca(lwork * sizeof(double));
-		dgesdd_(jobz, &m_rows, &m_cols, A.m_ptr, &m_rows, U.m_ptr, R.m_ptr, &m_rows, V.m_ptr, &m_cols, work, &lwork, iwork, &info);
+		dgesdd_(jobz, &m_rows, &m_cols, A.m_ptr, &m_rows, s.m_ptr, U.m_ptr, &m_rows, V.m_ptr, &m_cols, work, &lwork, iwork, &info);
 		//return
 		return info == 0;
 	}
@@ -798,12 +774,12 @@ namespace math
 	{
 		//data
 		double query, *work;
-		int status, lwork = -1;
+		int32_t status, lwork = -1;
 		//query
 		dsyev_("V", "L", &m_rows, nullptr, &m_rows, nullptr, &query, &lwork, &status);
 		//eigen
 		P = *this;
-		lwork = (int) query;
+		lwork = (int32_t) query;
 		work = new double[lwork];
 		dsyev_("V", "L", &m_rows, P.m_ptr, &m_rows, v.m_ptr, work, &lwork, &status);
 		//delete
@@ -815,14 +791,14 @@ namespace math
 	{
 		//data
 		double query, *work;
-		int status, lwork = -1;
 		const uint32_t type = 1;
+		int32_t status, lwork = -1;
 		//query
 		dsygv_(&type, "V", "L", &m_rows, nullptr, &m_rows, nullptr, &m_rows, nullptr, &query, &lwork, &status);
 		//eigen
 		P = *this;
 		matrix Q = B;
-		lwork = (int) query;
+		lwork = (int32_t) query;
 		work = new double[lwork];
 		dsygv_(&type, "V", "L", &m_rows, P.m_ptr, &m_rows, Q.m_ptr, &m_rows, v.m_ptr, work, &lwork, &status);
 		//delete

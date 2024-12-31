@@ -2,7 +2,7 @@
 #include <cmath>
 
 //math
-#include "Math/Math/inc/linear/vec2.hpp"
+#include "Galileo/mat/inc/linear/vec2.hpp"
 
 namespace math
 {

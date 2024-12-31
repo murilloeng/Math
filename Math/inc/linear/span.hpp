@@ -17,7 +17,7 @@ namespace math
 		span(matrix&, uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
 
 		//destructor
-		virtual ~span(void);
+		~span(void);
 
 		//operators
 		const span& operator=(double) const;

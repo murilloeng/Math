@@ -1,25 +1,30 @@
 //std
 #include <cmath>
+#include <ctime>
+#include <cfloat>
+#include <cstdio>
 #include <cstring>
-#include <algorithm>
+#include <malloc.h>
 
 //ext
 #include "external/cpp/inc/fftw3.h"
 
 //math
-#include "Math/Math/inc/misc/misc.hpp"
+#include "Galileo/mat/inc/misc/util.hpp"
+#include "Galileo/mat/inc/linear/vector.hpp"
+#include "Galileo/mat/inc/linear/matrix.hpp"
 
 namespace math
 {
-	int sign(int x)
+	int32_t sign(int32_t x)
 	{
 		return x == 0 ? 0 : x < 0 ? -1 : +1;
 	}
-	int sign(bool t)
+	int32_t sign(bool t)
 	{
 		return t ? +1 : -1;
 	}
-	int sign(double x)
+	int32_t sign(double x)
 	{
 		return x == 0 ? 0 : x < 0 ? -1 : +1;
 	}
@@ -70,14 +75,31 @@ namespace math
 		fftw_free(xd); fftw_free(zd);
 	}
 
-	void ndiff(ndiff_fun fun, double* K, const double* x, void** a, uint32_t nf, uint32_t nx, double dx)
+	char* time_format(char* string, const time_t& time, bool date)
+	{
+		if(!date)
+		{
+			const tm* c = localtime(&time);
+			const char* format = "%02d:%02d:%02d";
+			sprintf(string, format, c->tm_hour - 1, c->tm_min, c->tm_sec);
+		}
+		else
+		{
+			const tm* c = localtime(&time);
+			const char* format = "%02d:%02d:%02d %02d/%02d/%04d";
+			sprintf(string, format, c->tm_hour, c->tm_min, c->tm_sec, c->tm_mday, c->tm_mon + 1, c->tm_year + 1900);
+		}
+		return string;
+	}
+
+	void ndiff(ndiff_fun fun, double* K, const double* x, void** a, uint32_t nv, uint32_t nx, double dx)
 	{
 		//data
 		double* xp = (double*) alloca(nx * sizeof(double));
-		double* f1 = (double*) alloca(nf * sizeof(double));
-		double* f2 = (double*) alloca(nf * sizeof(double));
-		double* f3 = (double*) alloca(nf * sizeof(double));
-		double* f4 = (double*) alloca(nf * sizeof(double));
+		double* f1 = (double*) alloca(nv * sizeof(double));
+		double* f2 = (double*) alloca(nv * sizeof(double));
+		double* f3 = (double*) alloca(nv * sizeof(double));
+		double* f4 = (double*) alloca(nv * sizeof(double));
 		//setup
 		memcpy(xp, x, nx * sizeof(double));
 		//derivative
@@ -100,9 +122,9 @@ namespace math
 			//derivative
 			xp[i] -= dx;
 			xp[i] -= dx;
-			for(uint32_t j = 0; j < nf; j++)
+			for(uint32_t j = 0; j < nv; j++)
 			{
-				K[j + nf * i] = (8 * f3[j] - 8 * f1[j] + f2[j] - f4[j]) / 12 / dx;
+				K[j + nv * i] = (8 * f3[j] - 8 * f1[j] + f2[j] - f4[j]) / 12 / dx;
 			}
 		}
 	}

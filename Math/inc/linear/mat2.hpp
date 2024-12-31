@@ -4,7 +4,7 @@
 #include <cstdint>
 
 //math
-#include "Math/Math/inc/linear/matrix.hpp"
+#include "Galileo/mat/inc/linear/matrix.hpp"
 
 namespace math
 {
@@ -26,7 +26,7 @@ namespace math
 		mat2(std::initializer_list<double>);
 
 		//destructor
-		virtual ~mat2(void);
+		~mat2(void);
 
 		//operators
 		mat2 operator+(void) const;

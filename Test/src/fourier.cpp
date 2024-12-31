@@ -3,7 +3,7 @@
 #include <vector>
 
 //math
-#include "Math/Math/inc/misc/misc.hpp"
+#include "Math/Math/inc/misc/util.hpp"
 
 //test
 #include "Math/Test/inc/tests.hpp"

@@ -33,7 +33,7 @@ namespace math
 	double funt(double t, uint32_t n)
 	{
 		//data
-		int s = 1;
+		int32_t s = 1;
 		uint32_t k = 0;
 		double v = 0, z = 1, dv;
 		double p = std::tgamma(n + 1);
@@ -58,7 +58,7 @@ namespace math
 	}
 	double cost(double t, uint32_t n)
 	{
-		int s = 1;
+		int32_t s = 1;
 		uint32_t a = 1;
 		double v = 0, p = 1;
 		for(uint32_t k = 0; k < n; k++)
@@ -73,7 +73,7 @@ namespace math
 	}
 	double sint(double t, uint32_t n)
 	{
-		int s = 1;
+		int32_t s = 1;
 		uint32_t a = 1;
 		double v = 0, p = t;
 		for(uint32_t k = 0; k < n; k++)

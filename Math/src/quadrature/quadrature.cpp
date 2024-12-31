@@ -2,109 +2,112 @@
 #include <cstdlib>
 
 //math
-#include "Math/Math/inc/quadrature/rule.hpp"
-#include "Math/Math/inc/quadrature/quadrature.hpp"
+#include "Galileo/mat/inc/Quadrature/Rule.hpp"
+#include "Galileo/mat/inc/Quadrature/Quadrature.hpp"
 
 extern "C"
 {
-	void lobatto_set(int, double[], double[]);
-	void legendre_set(int, double[], double[]);
+	void lobatto_set(int32_t, double[], double[]);
+	void legendre_set(int32_t, double[], double[]);
 }
 
 namespace math
 {
-	//constructor
-	quadrature::quadrature(uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(rule::legendre)
+	namespace quadrature
 	{
-		this->order(order);
-	}
-	quadrature::quadrature(math::rule rule, uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(rule)
-	{
-		this->order(order);
-	}
-
-	//destructor
-	quadrature::~quadrature(void)
-	{
-		delete[] m_points;
-		delete[] m_weights;
-	}
-
-	//serialization
-	void quadrature::load(FILE* file)
-	{
-		uint32_t rule;
-		if(fscanf(file, "%d %d", &rule, &m_order) != 2)
+		//constructor
+		Quadrature::Quadrature(uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(rule::legendre)
 		{
-			printf("\tError: Unable to load Quadrature!\n");
-			exit(EXIT_FAILURE);
+			this->order(order);
 		}
-		m_rule = math::rule(rule);
-	}
-	void quadrature::save(FILE* file) const
-	{
-		fprintf(file, "%02d %02d ", (uint32_t) m_rule, m_order);
-	}
-
-	//data
-	uint32_t quadrature::order(void) const
-	{
-		return m_order;
-	}
-	uint32_t quadrature::order(uint32_t order)
-	{
-		m_order = order;
-		delete[] m_points;
-		delete[] m_weights;
-		m_points = new double[m_order];
-		m_weights = new double[m_order];
-		if(m_rule == math::rule::lobatto)
+		Quadrature::Quadrature(quadrature::rule rule, uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(rule)
 		{
-			lobatto_set(m_order, m_points, m_weights);
+			this->order(order);
 		}
-		else if(m_rule == math::rule::legendre)
+
+		//destructor
+		Quadrature::~Quadrature(void)
 		{
-			legendre_set(m_order, m_points, m_weights);
+			delete[] m_points;
+			delete[] m_weights;
 		}
-		return m_order;
-	}
 
-	math::rule quadrature::rule(void) const
-	{
-		return m_rule;
-	}
-	math::rule quadrature::rule(math::rule rule)
-	{
-		return m_rule = rule;
-	}
+		//serialization
+		void Quadrature::load(FILE* file)
+		{
+			uint32_t rule;
+			if(fscanf(file, "%d %d", &rule, &m_order) != 2)
+			{
+				printf("\tError: Unable to load Quadrature!\n");
+				exit(EXIT_FAILURE);
+			}
+			m_rule = quadrature::rule(rule);
+		}
+		void Quadrature::save(FILE* file) const
+		{
+			fprintf(file, "%02d %02d ", (uint32_t) m_rule, m_order);
+		}
 
-	//name
-	const char* quadrature::rule_name(void) const
-	{
-		return rule_name(m_rule);
-	}
-	const char* quadrature::rule_name(math::rule rule)
-	{
-		return 
-			rule == math::rule::lobatto ? "Lobatto" :
-			rule == math::rule::legendre ? "Legendre" : "Error";
-	}
+		//data
+		uint32_t Quadrature::order(void) const
+		{
+			return m_order;
+		}
+		uint32_t Quadrature::order(uint32_t order)
+		{
+			m_order = order;
+			delete[] m_points;
+			delete[] m_weights;
+			m_points = new double[m_order];
+			m_weights = new double[m_order];
+			if(m_rule == quadrature::rule::lobatto)
+			{
+				lobatto_set(m_order, m_points, m_weights);
+			}
+			else if(m_rule == quadrature::rule::legendre)
+			{
+				legendre_set(m_order, m_points, m_weights);
+			}
+			return m_order;
+		}
 
-	//points
-	const double* quadrature::points(void) const
-	{
-		return m_points;
-	}
-	const double* quadrature::weights(void) const
-	{
-		return m_weights;
-	}
-	double quadrature::point(uint32_t index) const
-	{
-		return m_points[index];
-	}
-	double quadrature::weight(uint32_t index) const
-	{
-		return m_weights[index];
+		quadrature::rule Quadrature::rule(void) const
+		{
+			return m_rule;
+		}
+		quadrature::rule Quadrature::rule(quadrature::rule rule)
+		{
+			return m_rule = rule;
+		}
+
+		//name
+		const char* Quadrature::rule_name(void) const
+		{
+			return rule_name(m_rule);
+		}
+		const char* Quadrature::rule_name(quadrature::rule rule)
+		{
+			return 
+				rule == quadrature::rule::lobatto ? "Lobatto" :
+				rule == quadrature::rule::legendre ? "Legendre" : "Error";
+		}
+
+		//points
+		const double* Quadrature::points(void) const
+		{
+			return m_points;
+		}
+		const double* Quadrature::weights(void) const
+		{
+			return m_weights;
+		}
+		double Quadrature::point(uint32_t index) const
+		{
+			return m_points[index];
+		}
+		double Quadrature::weight(uint32_t index) const
+		{
+			return m_weights[index];
+		}
 	}
 }

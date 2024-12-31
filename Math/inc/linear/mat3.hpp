@@ -1,10 +1,7 @@
 #pragma once
 
-//std
-#include <cstdint>
-
 //math
-#include "Math/Math/inc/linear/matrix.hpp"
+#include "Galileo/mat/inc/linear/matrix.hpp"
 
 namespace math
 {
@@ -27,7 +24,7 @@ namespace math
 		mat3(const double*, const double*, const double*);
 
 		//destructor
-		virtual ~mat3(void);
+		~mat3(void);
 
 		//operators
 		mat3 operator+(void) const;

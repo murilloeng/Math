@@ -4,7 +4,7 @@
 #include <cstdlib>
 
 //math
-#include "Math/Math/inc/misc/misc.hpp"
+#include "Math/Math/inc/misc/util.hpp"
 #include "Math/Math/inc/linear/mat3.hpp"
 #include "Math/Math/inc/linear/vec3.hpp"
 

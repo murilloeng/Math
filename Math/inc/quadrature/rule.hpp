@@ -5,10 +5,13 @@
 
 namespace math
 {
-	enum class rule : uint32_t
+	namespace quadrature
 	{
-		lobatto,
-		legendre,
-		last
-	};
+		enum class rule : uint32_t
+		{
+			lobatto,
+			legendre,
+			last
+		};
+	}
 }
