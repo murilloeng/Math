@@ -11,6 +11,7 @@
 //test
 #include "Math/Test/inc/tests.hpp"
 
+static bool inverse = true;
 static bool transpose = true;
 
 static void function(double* r, const double* v, void** args)
@@ -20,7 +21,9 @@ static void function(double* r, const double* v, void** args)
 	const math::vec3 vm = v;
 	const math::vec3 am = (double*) args[0];
 	//function
-	rm = vm.rotation_gradient(am, transpose);
+	rm = !inverse ? 
+		vm.rotation_gradient(am, transpose) : 
+		vm.rotation_gradient_inverse(am, transpose);
 }
 static void gradient(double* dr, const double* v, void** args)
 {
@@ -29,7 +32,9 @@ static void gradient(double* dr, const double* v, void** args)
 	const math::vec3 vm = v;
 	const math::vec3 am = (double*) args[0];
 	//gradient
-	drm = vm.rotation_hessian(am, transpose);
+	drm = !inverse ? 
+		vm.rotation_hessian(am, transpose) : 
+		vm.rotation_hessian_inverse(am, transpose);
 }
 
 void tests::rotations::vec3_rotation_hessian(void)
