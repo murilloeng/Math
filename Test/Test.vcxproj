@@ -106,6 +106,7 @@ copy ..\..\external\cpp\dll\x64\libquadmath-0.dll dist\$(platform)\$(configurati
     <ClCompile Include="src\misc\fourier.cpp" />
     <ClCompile Include="src\rotations\vec3_rotation_tensor.cpp" />
     <ClCompile Include="src\rotations\quat_rotation_tensor.cpp" />
+    <ClCompile Include="src\rotations\vec3_rotation_gradient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\tests.hpp" />

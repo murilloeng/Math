@@ -7,7 +7,7 @@
 int main(void)
 {
 	//test
-	tests::rotations::quat_rotation_tensor();
+	tests::rotations::vec3_rotation_gradient();
 	//return
 	return EXIT_SUCCESS;
 }

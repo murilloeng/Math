@@ -15,5 +15,6 @@ namespace tests
 	{
 		void vec3_rotation_tensor(void);
 		void quat_rotation_tensor(void);
+		void vec3_rotation_gradient(void);
 	}
 }
