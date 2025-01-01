@@ -11,6 +11,8 @@
 //test
 #include "Math/Test/inc/tests.hpp"
 
+static bool transpose = true;
+
 static void function(double* r, const double* v, void** args)
 {
 	//data
@@ -18,21 +20,19 @@ static void function(double* r, const double* v, void** args)
 	const math::vec3 vm = v;
 	const math::vec3 am = (double*) args[0];
 	//function
-	rm = vm.rotate(am);
+	rm = vm.rotation_gradient(am, transpose);
 }
 static void gradient(double* dr, const double* v, void** args)
 {
 	//data
-	math::vec3 rm;
 	math::mat3 drm = dr;
 	const math::vec3 vm = v;
 	const math::vec3 am = (double*) args[0];
 	//gradient
-	rm = vm.rotate(am);
-	drm = -rm.spin() * vm.rotation_gradient();
+	drm = vm.rotation_hessian(am, transpose);
 }
 
-void tests::rotations::vec3_rotation_gradient(void)
+void tests::rotations::vec3_rotation_hessian(void)
 {
 	//data
 	math::vec3 a, v, r;
@@ -45,11 +45,9 @@ void tests::rotations::vec3_rotation_gradient(void)
 		a.randu();
 		v.randu();
 		bool test = true;
-		dri = v.rotation_gradient_inverse();
 		gradient(dra.data(), v.data(), args);
 		math::ndiff(function, drn.data(), v.data(), args, 3, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
-		test = test && (v.rotation_gradient() * dri - math::mat3::eye()).norm() < 1e-5;
 		printf("Test %04d: %s\n", i, test ? "ok" : "not ok");
 		if(!test) break;
 	}
