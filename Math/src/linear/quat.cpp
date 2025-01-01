@@ -2,10 +2,10 @@
 #include <cmath>
 
 //math
-#include "Galileo/mat/inc/misc/util.hpp"
-#include "Galileo/mat/inc/linear/vec3.hpp"
-#include "Galileo/mat/inc/linear/mat3.hpp"
-#include "Galileo/mat/inc/linear/quat.hpp"
+#include "Math/Math/inc/misc/util.hpp"
+#include "Math/Math/inc/linear/vec3.hpp"
+#include "Math/Math/inc/linear/mat3.hpp"
+#include "Math/Math/inc/linear/quat.hpp"
 
 namespace math
 {
@@ -141,6 +141,11 @@ namespace math
 	}
 
 	//linear
+	quat& quat::normalize(void)
+	{
+		vector::normalize();
+		return *this;
+	}
 	vec3 quat::axial(void) const
 	{
 		//angle
@@ -167,6 +172,11 @@ namespace math
 	double quat::angle(void) const
 	{
 		return 2 * acos(bound(m_ref[0]));
+	}
+	quat& quat::randu(double a, double b)
+	{
+		matrix::randu(a, b);
+		return normalize();
 	}
 
 	quat quat::conjugate(void) const

@@ -1,7 +1,7 @@
 #pragma once
 
 //math
-#include "Galileo/mat/inc/linear/vector.hpp"
+#include "Math/Math/inc/linear/vector.hpp"
 
 namespace math
 {

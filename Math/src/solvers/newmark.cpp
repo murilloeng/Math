@@ -3,8 +3,8 @@
 #include <cstring>
 
 //math
-#include "Galileo/mat/inc/linear/vector.hpp"
-#include "Galileo/mat/inc/solvers/newmark.hpp"
+#include "Math/Math/inc/linear/vector.hpp"
+#include "Math/Math/inc/solvers/newmark.hpp"
 
 namespace math
 {

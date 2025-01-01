@@ -1,5 +1,5 @@
 //math
-#include "Galileo/mat/inc/misc/bits.hpp"
+#include "Math/Math/inc/misc/bits.hpp"
 
 namespace math
 {

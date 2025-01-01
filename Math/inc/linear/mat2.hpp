@@ -4,7 +4,7 @@
 #include <cstdint>
 
 //math
-#include "Galileo/mat/inc/linear/matrix.hpp"
+#include "Math/Math/inc/linear/matrix.hpp"
 
 namespace math
 {

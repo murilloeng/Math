@@ -1,7 +1,10 @@
 #pragma once
 
+//std
+#include <cstdint>
+
 //math
-#include "Galileo/mat/inc/linear/vector.hpp"
+#include "Math/Math/inc/linear/vector.hpp"
 
 namespace math
 {
@@ -48,10 +51,12 @@ namespace math
 		quat& isometric(uint32_t);
 
 		//linear
+		quat& normalize(void);
 		vec3 axial(void) const;
 		vec3 pseudo(void) const;
 		vec3 pseudo(vec3) const;
 		double angle(void) const;
+		quat& randu(double = -1, double = +1);
 
 		quat conjugate(void) const;
 

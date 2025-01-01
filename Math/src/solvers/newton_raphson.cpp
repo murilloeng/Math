@@ -4,11 +4,11 @@
 #include <cstring>
 
 //math
-#include "Galileo/mat/inc/misc/util.hpp"
-#include "Galileo/mat/inc/linear/matrix.hpp"
-#include "Galileo/mat/inc/linear/vector.hpp"
-#include "Galileo/mat/inc/solvers/strategies.hpp"
-#include "Galileo/mat/inc/solvers/newton_raphson.hpp"
+#include "Math/Math/inc/misc/util.hpp"
+#include "Math/Math/inc/linear/matrix.hpp"
+#include "Math/Math/inc/linear/vector.hpp"
+#include "Math/Math/inc/solvers/strategies.hpp"
+#include "Math/Math/inc/solvers/newton_raphson.hpp"
 
 namespace math
 {

@@ -2,7 +2,7 @@
 
 //std
 #include <cstdint>
-#include <complex.h>
+#include <complex>
 
 namespace math
 {

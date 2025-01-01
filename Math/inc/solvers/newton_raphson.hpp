@@ -5,9 +5,9 @@
 #include <functional>
 
 //math
-#include "Galileo/mat/inc/linear/matrix.hpp"
-#include "Galileo/mat/inc/linear/vector.hpp"
-#include "Galileo/mat/inc/solvers/strategies.hpp"
+#include "Math/Math/inc/linear/matrix.hpp"
+#include "Math/Math/inc/linear/vector.hpp"
+#include "Math/Math/inc/solvers/strategies.hpp"
 
 namespace math
 {

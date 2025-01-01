@@ -3,9 +3,9 @@
 #include <cstdlib>
 
 //math
-#include "Galileo/mat/inc/linear/span.hpp"
-#include "Galileo/mat/inc/linear/mat3.hpp"
-#include "Galileo/mat/inc/linear/matrix.hpp"
+#include "Math/Math/inc/linear/span.hpp"
+#include "Math/Math/inc/linear/mat3.hpp"
+#include "Math/Math/inc/linear/matrix.hpp"
 
 namespace math
 {

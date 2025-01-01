@@ -8,8 +8,8 @@
 #include "external/cpp/inc/suitesparse/umfpack.h"
 
 //math
-#include "Galileo/mat/inc/linear/sparse.hpp"
-#include "Galileo/mat/inc/linear/vector.hpp"
+#include "Math/Math/inc/linear/sparse.hpp"
+#include "Math/Math/inc/linear/vector.hpp"
 
 namespace math
 {

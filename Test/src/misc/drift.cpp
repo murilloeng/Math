@@ -48,7 +48,7 @@ static void dfun(math::mat3& Ka, const double* x, void** args)
 	Ka = J * Da + (w.spin() * J - (J * w).spin()) * Dw;
 }
 
-void test_drift(void)
+void tests::misc::drift(void)
 {
 	//test
 	J[0] = 1;

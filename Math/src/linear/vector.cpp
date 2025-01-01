@@ -5,7 +5,7 @@
 #include <cstring>
 
 //math
-#include "Galileo/mat/inc/linear/vector.hpp"
+#include "Math/Math/inc/linear/vector.hpp"
 
 namespace math
 {
@@ -61,6 +61,10 @@ namespace math
 	}
 
 	//linear
+	vector& vector::normalize(void)
+	{
+		return *this /= norm();
+	}
 	vector vector::unit(void) const
 	{
 		return *this / norm();

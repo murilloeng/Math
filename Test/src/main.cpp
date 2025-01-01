@@ -6,7 +6,8 @@
 
 int main(void)
 {
+	//test
+	tests::rotations::quat_rotation_tensor();
 	//return
-	test_joint();
 	return EXIT_SUCCESS;
 }

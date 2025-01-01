@@ -1,7 +1,11 @@
 #pragma once
 
+//std
+#include <cstdint>
+#include <initializer_list>
+
 //math
-#include "Galileo/mat/inc/linear/matrix.hpp"
+#include "Math/Math/inc/linear/matrix.hpp"
 
 namespace math
 {
@@ -24,11 +28,13 @@ namespace math
 		vector& resize(uint32_t, uint32_t);
 
 		//linear
+		vector& normalize(void);
 		vector unit(void) const;
 		matrix outer(void) const;
 		matrix outer(const vector&) const;
 		double inner(const vector&) const;
 		double inner(const double*) const;
+		
 
 		//operators
 		vector operator+(void) const;

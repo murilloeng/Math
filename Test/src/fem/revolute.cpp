@@ -173,7 +173,7 @@ static void test_stiffness(void)
 	}
 }
 
-void test_joint(void)
+void tests::fem::revolute(void)
 {
 	test_stiffness();
 }

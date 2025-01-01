@@ -2,10 +2,10 @@
 #include <cmath>
 
 //math
-#include "Galileo/mat/inc/linear/quat.hpp"
-#include "Galileo/mat/inc/linear/vec3.hpp"
-#include "Galileo/mat/inc/linear/mat3.hpp"
-#include "Galileo/mat/inc/misc/rotations.hpp"
+#include "Math/Math/inc/linear/quat.hpp"
+#include "Math/Math/inc/linear/vec3.hpp"
+#include "Math/Math/inc/linear/mat3.hpp"
+#include "Math/Math/inc/misc/rotations.hpp"
 
 namespace math
 {

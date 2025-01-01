@@ -10,9 +10,9 @@
 #include "external/cpp/inc/fftw3.h"
 
 //math
-#include "Galileo/mat/inc/misc/util.hpp"
-#include "Galileo/mat/inc/linear/vector.hpp"
-#include "Galileo/mat/inc/linear/matrix.hpp"
+#include "Math/Math/inc/misc/util.hpp"
+#include "Math/Math/inc/linear/vector.hpp"
+#include "Math/Math/inc/linear/matrix.hpp"
 
 namespace math
 {

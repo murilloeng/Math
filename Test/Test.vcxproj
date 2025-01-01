@@ -100,10 +100,12 @@ copy ..\..\external\cpp\dll\x64\libquadmath-0.dll dist\$(platform)\$(configurati
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\fem\revolute.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\drift.cpp" />
-    <ClCompile Include="src\joint.cpp" />
-    <ClCompile Include="src\fourier.cpp" />
+    <ClCompile Include="src\misc\drift.cpp" />
+    <ClCompile Include="src\misc\fourier.cpp" />
+    <ClCompile Include="src\rotations\vec3_rotation_tensor.cpp" />
+    <ClCompile Include="src\rotations\quat_rotation_tensor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\tests.hpp" />

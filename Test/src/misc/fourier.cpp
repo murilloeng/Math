@@ -8,7 +8,7 @@
 //test
 #include "Math/Test/inc/tests.hpp"
 
-void test_fft(void)
+void tests::misc::fft(void)
 {
 	//data
 	const uint32_t n = 10000;
