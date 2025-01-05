@@ -1,6 +1,7 @@
 //std
 #include <cmath>
 #include <vector>
+#include <cstdio>
 
 //math
 #include "Math/Math/inc/misc/util.hpp"

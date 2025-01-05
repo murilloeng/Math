@@ -14,15 +14,15 @@ else
 endif
 
 #ouput
-out_lib = dist/$(mode)/libmath.so
 out_exe = Test/dist/$(mode)/test.out
+out_lib = Math/dist/$(mode)/libmath.so
 
 #sources
-src_lib := $(sort $(shell find -path './src/*.cpp'))
+src_lib := $(sort $(shell find -path './Math/src/*.cpp'))
 src_exe := $(sort $(shell find -path './Test/src/*.cpp'))
 
 #objects
-obj_lib = $(sort $(subst ./src/, build/$(mode)/, $(addsuffix .o, $(basename $(src_lib)))))
+obj_lib = $(sort $(subst ./Math/src/, Math/build/$(mode)/, $(addsuffix .o, $(basename $(src_lib)))))
 obj_exe = $(sort $(subst ./Test/src/, Test/build/$(mode)/, $(addsuffix .o, $(basename $(src_exe)))))
 
 #dependencies
@@ -51,10 +51,10 @@ $(out_lib) : $(obj_lib)
 
 $(out_exe) : $(obj_exe)
 	@mkdir -p $(dir $@)
-	@g++ -o $(out_exe) $(obj_exe) dist/$(mode)/libmath.so -l lapack -l quadrule
+	@g++ -o $(out_exe) $(obj_exe) Math/dist/$(mode)/libmath.so -l lapack -l quadrule -l fftw3
 	@echo 'executable - $(mode): $@'
 
-build/$(mode)/%.o : src/%.cpp build/$(mode)/%.d
+Math/build/$(mode)/%.o : Math/src/%.cpp Math/build/$(mode)/%.d
 	@echo 'compiling - $(mode): $<'
 	@mkdir -p $(dir $@) && rm -rf $@
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -73,11 +73,11 @@ $(dep_exe) : ;
 -include $(dep_exe)
 
 clean :
-	@rm -rf dist/$(mode)
-	@rm -rf build/$(mode)
+	@rm -rf Math/dist/$(mode)
 	@rm -rf Test/dist/$(mode)
+	@rm -rf Math/build/$(mode)
 	@rm -rf Test/build/$(mode)
-	@echo 'clean -$(mode): complete!'
+	@echo 'clean - $(mode): complete!'
 
 print-% :
 	@echo $* = $($*)

@@ -2,8 +2,8 @@
 #include <cstdlib>
 
 //math
-#include "Math/Math/inc/Quadrature/Rule.hpp"
-#include "Math/Math/inc/Quadrature/Quadrature.hpp"
+#include "Math/Math/inc/quadrature/rule.hpp"
+#include "Math/Math/inc/quadrature/quadrature.hpp"
 
 extern "C"
 {

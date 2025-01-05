@@ -175,5 +175,5 @@ static void test_stiffness(void)
 
 void tests::fem::revolute(void)
 {
-	test_stiffness();
+	true ? test_force() : test_stiffness();
 }
