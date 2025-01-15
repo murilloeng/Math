@@ -4,7 +4,8 @@
 #include <ctime>
 #include <cstdint>
 
-typedef void(*ndiff_fun)(double*, const double*, void**);
+typedef void(*ndiff_fun_1)(double*, const double*, void**);
+typedef void(*ndiff_fun_2)(double*, const double*, const void**);
 
 namespace math
 {
@@ -22,5 +23,6 @@ namespace math
 
 	char* time_format(char*, const time_t&, bool = true);
 
-	void ndiff(ndiff_fun, double*, const double*, void**, uint32_t, uint32_t, double);
+	void ndiff(ndiff_fun_1, double*, const double*, void**, uint32_t, uint32_t, double);
+	void ndiff(ndiff_fun_2, double*, const double*, const void**, uint32_t, uint32_t, double);
 }
