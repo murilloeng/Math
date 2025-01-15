@@ -29,7 +29,7 @@ namespace math
 		//check
 		if(f1 * f2 > 0)
 		{
-			printf("Initial guess creates outputs with same sign\n");
+			printf("Initial guess creates outputs with the same sign\n");
 			return false;
 		}
 		//loop
