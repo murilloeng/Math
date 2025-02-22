@@ -6,19 +6,30 @@
 //math
 #include "Math/Math/inc/misc/util.hpp"
 #include "Math/Math/inc/linear/vec3.hpp"
+#include "Math/Math/inc/linear/quat.hpp"
 #include "Math/Math/inc/linear/mat3.hpp"
 
 //test
 #include "Math/Test/inc/tests.hpp"
+
+static math::vec3 ar;
+static math::quat qn;
+static bool mode = false;
+
+/*
+	r = exp(vs) * Rn * ar
+	r = Rn * exp(vm) * ar
+	dr = -spin(r) * T(vs) * dvs
+	dr = -spin(r) * Rn * T(vm) * dvm
+*/
 
 static void function(double* r, const double* v, void** args)
 {
 	//data
 	math::vec3 rm = r;
 	const math::vec3 vm = v;
-	const math::vec3 am = (double*) args[0];
 	//function
-	rm = vm.rotate(am);
+	rm = mode ? (vm.quaternion() * qn).rotate(ar) : (qn * vm.quaternion()).rotate(ar);
 }
 static void gradient(double* dr, const double* v, void** args)
 {
@@ -26,28 +37,34 @@ static void gradient(double* dr, const double* v, void** args)
 	math::vec3 rm;
 	math::mat3 drm = dr;
 	const math::vec3 vm = v;
-	const math::vec3 am = (double*) args[0];
+	function(rm.data(), v, args);
 	//gradient
-	rm = vm.rotate(am);
-	drm = -rm.spin() * vm.rotation_gradient();
+	if(mode)
+	{
+		drm = -rm.spin() * vm.rotation_gradient();
+	}
+	else
+	{
+		drm = -rm.spin() * qn.rotation() * vm.rotation_gradient();
+	}
 }
 
 void tests::rotations::vec3_rotation_gradient(void)
 {
 	//data
-	math::vec3 a, v, r;
+	math::vec3 v, r;
 	math::mat3 dra, drn, dri;
 	const uint32_t nt = 10000;
-	void* args[] = {a.data()};
 	//test
 	for(uint32_t i = 0; i < nt; i++)
 	{
-		a.randu();
 		v.randu();
+		ar.randu();
+		qn.randu();
 		bool test = true;
 		dri = v.rotation_gradient_inverse();
-		gradient(dra.data(), v.data(), args);
-		math::ndiff(function, drn.data(), v.data(), args, 3, 3, 1.00e-5);
+		gradient(dra.data(), v.data(), nullptr);
+		math::ndiff(function, drn.data(), v.data(), nullptr, 3, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
 		test = test && (v.rotation_gradient() * dri - math::mat3::eye()).norm() < 1e-5;
 		printf("Test %04d: %s\n", i, test ? "ok" : "not ok");

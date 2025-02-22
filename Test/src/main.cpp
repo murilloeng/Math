@@ -4,10 +4,12 @@
 //test
 #include "Math/Test/inc/tests.hpp"
 
+
+
 int main(void)
 {
 	//test
-	tests::rotations::vec3_rotation_hessian();
+	tests::rotations::vec3_rotation_gradient();
 	//return
 	return EXIT_SUCCESS;
 }
