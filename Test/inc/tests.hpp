@@ -4,7 +4,8 @@ namespace tests
 {
 	namespace fem
 	{
-		void revolute(void);
+		void revolute_fixed(void);
+		void revolute_flexible(void);
 	}
 	namespace misc
 	{

@@ -12,9 +12,9 @@
 //test
 #include "Math/Test/inc/tests.hpp"
 
+static bool mode;
 static math::vec3 ar;
 static math::quat qn;
-static bool mode = false;
 
 /*
 	r = exp(vs) * Rn * ar
@@ -55,6 +55,16 @@ void tests::rotations::vec3_rotation_gradient(void)
 	math::vec3 v, r;
 	math::mat3 dra, drn, dri;
 	const uint32_t nt = 10000;
+	//menu
+	while(true)
+	{
+		uint32_t selection;
+		printf("Update mode:\n");
+		printf("(1) Spatial (2) Material\n");
+		scanf("%d", &selection);
+		if(selection == 1 || selection == 2) {mode = selection == 1; break;}
+		printf("Invalid option!\n");
+	}
 	//test
 	for(uint32_t i = 0; i < nt; i++)
 	{
@@ -67,7 +77,7 @@ void tests::rotations::vec3_rotation_gradient(void)
 		math::ndiff(function, drn.data(), v.data(), nullptr, 3, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
 		test = test && (v.rotation_gradient() * dri - math::mat3::eye()).norm() < 1e-5;
-		printf("Test %04d: %s\n", i, test ? "ok" : "not ok");
+		printf("Test %s %04d: %s\n", mode ? "spatial" : "material", i, test ? "ok" : "not ok");
 		if(!test) break;
 	}
 }

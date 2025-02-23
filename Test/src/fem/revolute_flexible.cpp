@@ -173,7 +173,20 @@ static void test_stiffness(void)
 	}
 }
 
-void tests::fem::revolute(void)
+void tests::fem::revolute_flexible(void)
 {
-	true ? test_force() : test_stiffness();
+	//data
+	uint32_t selection = 0;
+	//menu
+	while(true)
+	{
+		printf("Test what?\n");
+		printf("(1) force (2) stiffness\n");
+		scanf("%d", &selection);
+		if(selection == 1 || selection == 2) break;
+		printf("Invalid option!\n");
+	}
+	//test
+	if(selection == 1) test_force();
+	if(selection == 2) test_stiffness();
 }

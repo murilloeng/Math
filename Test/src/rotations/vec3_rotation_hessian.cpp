@@ -12,8 +12,9 @@
 #include "Math/Test/inc/tests.hpp"
 
 static math::vec3 ar;
-static bool inverse = true;
-static bool transpose = true;
+
+static bool inverse;
+static bool transpose;
 
 static void function(double* r, const double* v, void** args)
 {
@@ -42,6 +43,25 @@ void tests::rotations::vec3_rotation_hessian(void)
 	math::vec3 v, r;
 	math::mat3 dra, drn, dri;
 	const uint32_t nt = 10000;
+	//menu
+	while(true)
+	{
+		uint32_t selection;
+		printf("Inverse?\n");
+		printf("(1) Yes (2) No\n");
+		scanf("%d", &selection);
+		if(selection == 1 || selection == 2) {inverse = selection == 1; break;}
+		printf("Invalid option!\n");
+	}
+	while(true)
+	{
+		uint32_t selection;
+		printf("Transpose?\n");
+		printf("(1) Yes (2) No\n");
+		scanf("%d", &selection);
+		if(selection == 1 || selection == 2) {transpose = selection == 1; break;}
+		printf("Invalid option!\n");
+	}
 	//test
 	for(uint32_t i = 0; i < nt; i++)
 	{
@@ -51,7 +71,7 @@ void tests::rotations::vec3_rotation_hessian(void)
 		gradient(dra.data(), v.data(), nullptr);
 		math::ndiff(function, drn.data(), v.data(), nullptr, 3, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
-		printf("Test %04d: %s\n", i, test ? "ok" : "not ok");
+		printf("Test inverse(%d) transpose(%d) %04d: %s\n", inverse, transpose, i, test ? "ok" : "not ok");
 		if(!test) break;
 	}
 }

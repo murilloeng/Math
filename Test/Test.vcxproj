@@ -100,7 +100,8 @@ copy ..\..\external\cpp\dll\x64\libquadmath-0.dll dist\$(platform)\$(configurati
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\fem\revolute.cpp" />
+    <ClCompile Include="src\fem\revolute_fixed.cpp" />
+    <ClCompile Include="src\fem\revolute_flexible.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\misc\drift.cpp" />
     <ClCompile Include="src\misc\fourier.cpp" />
