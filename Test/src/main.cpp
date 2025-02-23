@@ -9,7 +9,7 @@
 int main(void)
 {
 	//test
-	tests::rotations::vec3_rotation_gradient();
+	tests::rotations::vec3_rotation_hessian();
 	//return
 	return EXIT_SUCCESS;
 }
