@@ -7,8 +7,7 @@
 int main(void)
 {
 	//test
-	// tests::fem::revolute_flexible();
-	tests::rotations::vec3_rotation_hessian();
+	tests::fem::revolute_fixed();
 	//return
 	return EXIT_SUCCESS;
 }
