@@ -111,7 +111,7 @@ void test_gradient(void)
 	{
 		setup();
 		gradient(ga.data(), d.data(), nullptr);
-		math::ndiff(state, gn.data(), d.data(), nullptr, 1, 4, 1.00e-8);
+		math::ndiff(state, gn.data(), d.data(), nullptr, 1, 4, 1.00e-5);
 		const bool test = (ga - gn).norm() < 1e-5;
 		printf("Test %04d: %s\n", i, test ? "ok" : "not ok");
 		if(!test)
