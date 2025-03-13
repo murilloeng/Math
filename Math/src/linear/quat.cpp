@@ -166,8 +166,8 @@ namespace math
 	{
 		const vec3 n = axial();
 		const double t = angle();
-		const double x = (n.inner(r) - t) / (4 * M_PI);
-		return (t + 4 * M_PI * round(x)) * n;
+		const double k = (n.inner(r) - t) / (4 * M_PI);
+		return (t + 4 * M_PI * round(k)) * n;
 	}
 	double quat::angle(void) const
 	{
