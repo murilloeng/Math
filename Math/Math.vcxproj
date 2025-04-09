@@ -27,6 +27,7 @@
     <ClInclude Include="inc\quadrature\rule.hpp" />
     <ClInclude Include="inc\quadrature\quadrature.hpp" />
     <ClInclude Include="inc\solvers\newmark.hpp" />
+    <ClInclude Include="inc\solvers\harmonic.hpp" />
     <ClInclude Include="inc\solvers\bisection.hpp" />
     <ClInclude Include="inc\solvers\strategies.hpp" />
     <ClInclude Include="inc\solvers\runge_kutta.hpp" />
@@ -48,6 +49,7 @@
     <ClCompile Include="src\polynomial\Polynomial.cpp" />
     <ClCompile Include="src\quadrature\quadrature.cpp" />
     <ClCompile Include="src\solvers\newmark.cpp" />
+    <ClCompile Include="src\solvers\harmonic.cpp" />
     <ClCompile Include="src\solvers\bisection.cpp" />
     <ClCompile Include="src\solvers\runge_kutta.cpp" />
     <ClCompile Include="src\solvers\newton_raphson.cpp" />
