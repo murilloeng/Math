@@ -7,7 +7,7 @@
 int main(void)
 {
 	//test
-	tests::fem::revolute_fixed();
+	tests::solvers::harmonic_oscillator();
 	//return
 	return EXIT_SUCCESS;
 }

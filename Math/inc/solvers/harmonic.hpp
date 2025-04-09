@@ -1,8 +1,5 @@
 #pragma once
 
-//std
-#include <functional>
-
 //math
 #include "Math/Math/inc/quadrature/rule.hpp"
 #include "Math/Math/inc/quadrature/quadrature.hpp"
@@ -24,6 +21,9 @@ namespace math
 		void cleanup(void);
 
 		//data
+		const double* amplitudes(void) const;
+
+		//data
 		void** m_args;
 		uint32_t m_size;
 		uint32_t m_harmonics;
@@ -31,12 +31,12 @@ namespace math
 		uint32_t m_quadrature_order;
 		double m_frequency, m_tolerance;
 
-		std::function<void(double*, double, const double*, void**)> m_external_force;
-		std::function<void(double*, const double*, const double*, void**)> m_internal_force;
+		void(*m_external_force)(double*, double, const double*, void**);
+		void(*m_internal_force)(double*, const double*, const double*, void**);
 
-		std::function<void(double*, const double*, void**)> m_inertia;
-		std::function<void(double*, const double*, const double*, void**)> m_damping;
-		std::function<void(double*, double, const double*, const double*, void**)> m_stiffness;
+		void(*m_inertia)(double*, const double*, void**);
+		void(*m_damping)(double*, const double*, const double*, void**);
+		void(*m_stiffness)(double*, double, const double*, const double*, void**);
 
 	private:
 		//solver

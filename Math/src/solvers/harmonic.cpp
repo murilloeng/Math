@@ -1,3 +1,7 @@
+//std
+#include <cmath>
+#include <cstring>
+
 //math
 #include "Math/Math/inc/linear/vector.hpp"
 #include "Math/Math/inc/solvers/harmonic.hpp"
@@ -25,6 +29,7 @@ namespace math
 	bool harmonic::solve(void)
 	{
 		//setup
+		setup();
 		vector dz(m_size * (2 * m_harmonics + 1));
 		vector(m_z, m_size * (2 * m_harmonics + 1)).zeros();
 		matrix At(m_At, m_size * (2 * m_harmonics + 1), m_size * (2 * m_harmonics + 1));
@@ -69,6 +74,7 @@ namespace math
 		delete[] m_v;
 		delete[] m_a;
 		delete[] m_r;
+		delete[] m_z;
 		delete[] m_fi;
 		delete[] m_fe;
 		delete[] m_fr;
@@ -77,6 +83,12 @@ namespace math
 		delete[] m_Mt;
 		delete[] m_At;
 		delete m_quadrature;
+	}
+
+	//data
+	const double* harmonic::amplitudes(void) const
+	{
+		return m_z;
 	}
 
 	//solver
