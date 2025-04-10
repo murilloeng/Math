@@ -6,14 +6,22 @@
 #include "Math/Math/inc/linear/vector.hpp"
 #include "Math/Math/inc/solvers/harmonic.hpp"
 
+extern "C"
+{
+	void legendre_dr_compute(int, double[], double[]);
+}
+
 namespace math
 {
 	//constructors
 	harmonic::harmonic(void) : 
-		m_args(nullptr), m_size(0), m_harmonics(0), m_iteration_max(0), m_quadrature_order(0),
+		m_args(nullptr), m_size(0), m_step_max(0), m_harmonics(0), 
+		m_attempt_max(0), m_iteration_max(0), m_quadrature_order(0),
 		m_frequency(0.0), m_tolerance(0.0), 
-		m_external_force(nullptr), m_internal_force(nullptr), m_inertia(nullptr), m_damping(nullptr), m_stiffness(nullptr),
-		m_quadrature(nullptr), m_d(nullptr), m_v(nullptr), m_a(nullptr), m_r(nullptr),
+		m_internal_force(nullptr), m_external_force(nullptr), 
+		m_inertia(nullptr), m_damping(nullptr), m_stiffness(nullptr),
+		m_s(nullptr), m_w(nullptr), m_z_old(nullptr), m_z_new(nullptr), m_z_data(nullptr),
+		m_d(nullptr), m_v(nullptr), m_a(nullptr), m_r(nullptr),
 		m_fi(nullptr), m_fe(nullptr), m_Kt(nullptr), m_Ct(nullptr), m_Mt(nullptr), m_At(nullptr)
 	{
 		return;
@@ -31,7 +39,7 @@ namespace math
 		//setup
 		setup();
 		vector dz(m_size * (2 * m_harmonics + 1));
-		vector(m_z, m_size * (2 * m_harmonics + 1)).zeros();
+		vector(m_z_new, m_size * (2 * m_harmonics + 1)).zeros();
 		matrix At(m_At, m_size * (2 * m_harmonics + 1), m_size * (2 * m_harmonics + 1));
 		//solve
 		for(uint32_t iteration = 0; iteration < m_iteration_max; iteration++)
@@ -45,7 +53,7 @@ namespace math
 			//update
 			compute_tangent();
 			At.solve(dz, vector(m_r, m_size * (2 * m_harmonics + 1)));
-			vector(m_z, m_size * (2 * m_harmonics + 1)) += dz;
+			vector(m_z_new, m_size * (2 * m_harmonics + 1)) += dz;
 		}
 		//return
 		return false;
@@ -62,19 +70,23 @@ namespace math
 		m_Kt = new double[m_size * m_size];
 		m_Ct = new double[m_size * m_size];
 		m_Mt = new double[m_size * m_size];
-		m_z = new double[m_size * (2 * m_harmonics + 1)];
+		m_s = new double[m_quadrature_order];
+		m_w = new double[m_quadrature_order];
 		m_r = new double[m_size * (2 * m_harmonics + 1)];
+		m_z_old = new double[m_size * (2 * m_harmonics + 1)];
+		m_z_new = new double[m_size * (2 * m_harmonics + 1)];
 		m_At = new double[m_size * m_size * (2 * m_harmonics + 1) * (2 * m_harmonics + 1)];
-		m_quadrature = new quadrature::Quadrature(quadrature::rule::legendre, m_quadrature_order);
+		legendre_dr_compute(m_quadrature_order, m_s, m_w);
 
 	}
 	void harmonic::cleanup(void)
 	{
+		delete[] m_s;
+		delete[] m_w;
 		delete[] m_d;
 		delete[] m_v;
 		delete[] m_a;
 		delete[] m_r;
-		delete[] m_z;
 		delete[] m_fi;
 		delete[] m_fe;
 		delete[] m_fr;
@@ -82,13 +94,15 @@ namespace math
 		delete[] m_Ct;
 		delete[] m_Mt;
 		delete[] m_At;
-		delete m_quadrature;
+		delete[] m_z_old;
+		delete[] m_z_new;
+		delete[] m_z_data;
 	}
 
 	//data
 	const double* harmonic::amplitudes(void) const
 	{
-		return m_z;
+		return m_z_new;
 	}
 
 	//solver
@@ -102,8 +116,8 @@ namespace math
 		for(uint32_t k = 0; k < m_quadrature_order; k++)
 		{
 			//quadrature
-			const double sk = m_quadrature->point(k);
-			const double wk = m_quadrature->weight(k);
+			const double sk = m_s[k];
+			const double wk = m_w[k];
 			const double tk = (1 + sk) * T / 2;
 			//residue
 			compute_residue(tk);
@@ -134,8 +148,8 @@ namespace math
 		for(uint32_t k = 0; k < m_quadrature_order; k++)
 		{
 			//quadrature
-			const double sk = m_quadrature->point(k);
-			const double wk = m_quadrature->weight(k);
+			const double sk = m_s[k];
+			const double wk = m_w[k];
 			const double tk = (1 + sk) * T / 2;
 			//residue
 			compute_residue(tk);
@@ -167,15 +181,15 @@ namespace math
 	void harmonic::compute_state(double t)
 	{
 		const double w = m_frequency;
-		memcpy(m_d, m_z, m_size * sizeof(double));
+		memcpy(m_d, m_z_new, m_size * sizeof(double));
 		for(uint32_t i = 1; i <= m_harmonics; i++)
 		{
 			const double c = cos(i * w * t);
 			const double s = sin(i * w * t);
 			for(uint32_t j = 0; j < m_size; j++)
 			{
-				m_d[j] += c * m_z[(2 * i - 1) * m_size + j];
-				m_d[j] += s * m_z[(2 * i + 0) * m_size + j];
+				m_d[j] += c * m_z_new[(2 * i - 1) * m_size + j];
+				m_d[j] += s * m_z_new[(2 * i + 0) * m_size + j];
 			}
 		}
 	}
@@ -192,8 +206,8 @@ namespace math
 		compute_velocity(t);
 		compute_acceleration(t);
 		m_inertia(m_Mt, m_d, m_args);
-		m_external_force(m_fe, t, m_d, m_args);
 		m_internal_force(m_fi, m_d, m_v, m_args);
+		m_external_force(m_fe, t, 0, m_d, m_args);
 		//compute
 		fr = fe - fi - Mt * a;
 	}
@@ -207,8 +221,8 @@ namespace math
 			const double s = sin(i * w * t);
 			for(uint32_t j = 0; j < m_size; j++)
 			{
-				m_v[j] -= i * w * s * m_z[(2 * i - 1) * m_size + j];
-				m_v[j] += i * w * c * m_z[(2 * i + 0) * m_size + j];
+				m_v[j] -= i * w * s * m_z_new[(2 * i - 1) * m_size + j];
+				m_v[j] += i * w * c * m_z_new[(2 * i + 0) * m_size + j];
 			}
 		}
 	}
@@ -222,8 +236,8 @@ namespace math
 			const double s = sin(i * w * t);
 			for(uint32_t j = 0; j < m_size; j++)
 			{
-				m_a[j] -= i * i * w * w * c * m_z[(2 * i - 1) * m_size + j];
-				m_a[j] -= i * i * w * w * s * m_z[(2 * i + 0) * m_size + j];
+				m_a[j] -= i * i * w * w * c * m_z_new[(2 * i - 1) * m_size + j];
+				m_a[j] -= i * i * w * w * s * m_z_new[(2 * i + 0) * m_size + j];
 			}
 		}
 	}

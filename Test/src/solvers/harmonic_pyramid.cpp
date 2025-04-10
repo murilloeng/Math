@@ -22,26 +22,28 @@ static void damping(double* C, const double* d, const double* v, void** args)
 }
 static void stiffness(double* K, double t, const double* d, const double* v, void** args)
 {
-	K[0] = k;
+	const double z = 1 + d[0];
+	K[0] = k / 2 * (3 * z * z - 1);
 }
 
-static void internal_force(double* fi, const double* d, const double* v, void** args)
-{
-	fi[0] = k * d[0] + c * v[0];
-}
 static void external_force(double* fe, double t, double, const double* d, void** args)
 {
 	//data
 	const double w = ((math::harmonic*) args[0])->m_frequency;
 	//force
-	fe[0] = cos(w * t);
+	fe[0] = 0.05 * k * sqrt(3) / 9 * cos(w * t);
+}
+static void internal_force(double* fi, const double* d, const double* v, void** args)
+{
+	const double z = 1 + d[0];
+	fi[0] = c * v[0] + k / 2 * z * (z * z - 1);
 }
 
-void tests::solvers::harmonic_oscillator(void)
+void tests::solvers::harmonic_pyramid(void)
 {
 	//data
 	math::harmonic solver;
-	const uint32_t nh = 2;
+	const uint32_t nh = 5;
 	const uint32_t nw = 1000;
 	void* args[] = { &solver };
 	FILE* file = fopen("harmonic.txt", "w");
@@ -49,9 +51,9 @@ void tests::solvers::harmonic_oscillator(void)
 	solver.m_size = 1;
 	solver.m_args = args;
 	solver.m_harmonics = nh;
-	solver.m_tolerance = 1e-5;
-	solver.m_iteration_max = 10;
-	solver.m_quadrature_order = 20;
+	solver.m_tolerance = 1e-3;
+	solver.m_iteration_max = 40;
+	solver.m_quadrature_order = 64;
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;
@@ -62,7 +64,7 @@ void tests::solvers::harmonic_oscillator(void)
 	for(uint32_t i = 0; i < nw; i++)
 	{
 		//setup
-		solver.m_frequency = 1 + 2 * double(i) / (nw - 1);
+		solver.m_frequency = (0.1 + 1.8 * i / (nw - 1)) * sqrt(k / m);
 		//solve
 		if(!solver.solve())
 		{

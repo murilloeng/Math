@@ -21,6 +21,7 @@ namespace tests
 	}
 	namespace solvers
 	{
+		void harmonic_pyramid(void);
 		void harmonic_oscillator(void);
 	}
 }

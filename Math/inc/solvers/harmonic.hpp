@@ -2,7 +2,6 @@
 
 //math
 #include "Math/Math/inc/quadrature/rule.hpp"
-#include "Math/Math/inc/quadrature/quadrature.hpp"
 
 namespace math
 {
@@ -26,13 +25,15 @@ namespace math
 		//data
 		void** m_args;
 		uint32_t m_size;
+		uint32_t m_step_max;
 		uint32_t m_harmonics;
+		uint32_t m_attempt_max;
 		uint32_t m_iteration_max;
 		uint32_t m_quadrature_order;
 		double m_frequency, m_tolerance;
 
-		void(*m_external_force)(double*, double, const double*, void**);
 		void(*m_internal_force)(double*, const double*, const double*, void**);
+		void(*m_external_force)(double*, double, double, const double*, void**);
 
 		void(*m_inertia)(double*, const double*, void**);
 		void(*m_damping)(double*, const double*, const double*, void**);
@@ -49,7 +50,7 @@ namespace math
 		void compute_acceleration(double);
 
 		//data
-		quadrature::Quadrature* m_quadrature;
-		double *m_d, *m_v, *m_a, *m_z, *m_r, *m_fi, *m_fe, *m_fr, *m_Kt, *m_Ct, *m_Mt, *m_At;
+		double *m_s, *m_w, *m_z_old, *m_z_new, *m_z_data;
+		double *m_d, *m_v, *m_a, *m_r, *m_fi, *m_fe, *m_fr, *m_Kt, *m_Ct, *m_Mt, *m_At;
 	};
 }
