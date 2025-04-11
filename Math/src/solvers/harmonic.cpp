@@ -545,7 +545,9 @@ namespace math
 		}
 		else
 		{
-			if(m_strategy == harmonic_strategy::uniform_increment) 
+			if(m_strategy == harmonic_strategy::minimal_norm)
+				predictor_minimal_norm();
+			if(m_strategy == harmonic_strategy::uniform_increment)
 				predictor_uniform_increment();
 			if(m_strategy == harmonic_strategy::arc_length_spheric)
 				predictor_arc_length_spheric();
@@ -556,13 +558,38 @@ namespace math
 	}
 	void harmonic::compute_parameter_corrector(void)
 	{
-		if(m_strategy == harmonic_strategy::uniform_increment) 
+		if(m_strategy == harmonic_strategy::minimal_norm)
+			corrector_minimal_norm();
+		if(m_strategy == harmonic_strategy::uniform_increment)
 			corrector_uniform_increment();
 		if(m_strategy == harmonic_strategy::arc_length_spheric)
 			corrector_arc_length_spheric();
 		if(m_strategy == harmonic_strategy::arc_length_cylindric)
 			corrector_arc_length_cylindric();
 		if(isnan(m_ddp)) printf("parameter corrector failed!\n");
+	}
+
+	void harmonic::predictor_minimal_norm(void)
+	{
+		//data
+		const uint32_t nd = m_size;
+		const uint32_t nz = 2 * m_harmonics + 1;
+		//data
+		vector dz(m_dz, nd * nz);
+		vector dz0t(m_dz0t, nd * nz);
+		//predictor
+		m_dp = math::sign(dz.inner(dz0t)) * dz.norm() / dz0t.norm();
+	}
+	void harmonic::corrector_minimal_norm(void)
+	{
+		//data
+		const uint32_t nd = m_size;
+		const uint32_t nz = 2 * m_harmonics + 1;
+		//data
+		vector ddzr(m_ddzr, nd * nz);
+		vector ddzt(m_ddzt, nd * nz);
+		//corrector
+		m_ddp = -ddzt.inner(ddzr) / ddzt.inner(ddzt);
 	}
 
 	void harmonic::predictor_uniform_increment(void)

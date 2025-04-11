@@ -46,7 +46,7 @@ void tests::solvers::harmonic_pyramid(void)
 	math::harmonic solver;
 	//setup
 	solver.m_size = 1;
-	solver.m_l_0 = 0.05;
+	solver.m_l_0 = 0.06;
 	solver.m_w_0 = 1.00;
 	solver.m_harmonics = 2;
 	solver.m_dpg = 2.00e-03;
@@ -55,7 +55,7 @@ void tests::solvers::harmonic_pyramid(void)
 	solver.m_iteration_max = 10;
 	solver.m_quadrature_order = 20;
 	solver.m_control = math::harmonic_control::frequency;
-	solver.m_strategy = math::harmonic_strategy::uniform_increment;
+	solver.m_strategy = math::harmonic_strategy::minimal_norm;
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;

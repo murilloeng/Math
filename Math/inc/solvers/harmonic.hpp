@@ -12,9 +12,10 @@ namespace math
 	};
 	enum class harmonic_strategy
 	{
-		uniform_increment = 0,
-		arc_length_spheric = 1,
-		arc_length_cylindric = 2
+		minimal_norm			= 0,
+		uniform_increment		= 1,
+		arc_length_spheric		= 2,
+		arc_length_cylindric	= 3
 	};
 }
 
@@ -87,6 +88,9 @@ namespace math
 
 		void compute_parameter_predictor(void);
 		void compute_parameter_corrector(void);
+
+		void predictor_minimal_norm(void);
+		void corrector_minimal_norm(void);
 
 		void predictor_uniform_increment(void);
 		void corrector_uniform_increment(void);
