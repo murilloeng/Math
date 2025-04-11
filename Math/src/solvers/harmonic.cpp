@@ -547,16 +547,22 @@ namespace math
 		{
 			if(m_strategy == harmonic_strategy::uniform_increment) 
 				predictor_uniform_increment();
+			if(m_strategy == harmonic_strategy::arc_length_spheric)
+				predictor_arc_length_spheric();
 			if(m_strategy == harmonic_strategy::arc_length_cylindric)
 				predictor_arc_length_cylindric();
+			if(isnan(m_dp)) printf("parameter predictor failed!\n");
 		}
 	}
 	void harmonic::compute_parameter_corrector(void)
 	{
 		if(m_strategy == harmonic_strategy::uniform_increment) 
 			corrector_uniform_increment();
+		if(m_strategy == harmonic_strategy::arc_length_spheric)
+			corrector_arc_length_spheric();
 		if(m_strategy == harmonic_strategy::arc_length_cylindric)
 			corrector_arc_length_cylindric();
+		if(isnan(m_ddp)) printf("parameter corrector failed!\n");
 	}
 
 	void harmonic::predictor_uniform_increment(void)

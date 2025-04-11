@@ -7,7 +7,7 @@
 int main(void)
 {
 	//test
-	tests::solvers::harmonic_oscillator();
+	tests::solvers::harmonic_pyramid();
 	//return
 	return EXIT_SUCCESS;
 }
