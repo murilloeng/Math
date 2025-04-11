@@ -10,6 +10,12 @@ namespace math
 		load = 0,
 		frequency = 1
 	};
+	enum class harmonic_strategy
+	{
+		uniform_increment = 0,
+		arc_length_spheric = 1,
+		arc_length_cylindric = 2
+	};
 }
 
 namespace math
@@ -35,6 +41,7 @@ namespace math
 		uint32_t m_attempt_max;
 		uint32_t m_iteration_max;
 		uint32_t m_quadrature_order;
+		harmonic_strategy m_strategy;
 		harmonic_parameter m_parameter;
 		double m_dpg, m_l_0, m_w_0, m_tolerance;
 
@@ -77,8 +84,17 @@ namespace math
 		void compute_predictor(void);
 		void compute_corrector(void);
 
-		double compute_parameter_predictor(void) const;
-		double compute_parameter_corrector(void) const;
+		void compute_parameter_predictor(void);
+		void compute_parameter_corrector(void);
+
+		void predictor_uniform_increment(void);
+		void corrector_uniform_increment(void);
+
+		void predictor_arc_length_spheric(void);
+		void corrector_arc_length_spheric(void);
+
+		void predictor_arc_length_cylindric(void);
+		void corrector_arc_length_cylindric(void);
 
 		//data
 		uint32_t m_step;

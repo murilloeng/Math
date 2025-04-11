@@ -18,11 +18,11 @@ static void internal_force(double* fi, const double* d, const double* v, void** 
 }
 static void external_force(double* fe, double t, double w, const double* d, void** args)
 {
-	fe[0] = sin(w * t);
+	fe[0] = cos(w * t);
 }
 static void external_force_gradient(double* dfew, double t, double w, const double* d, void** args)
 {
-	dfew[0] = t * cos(w * t);
+	dfew[0] = -t * sin(w * t);
 }
 
 static void inertia(double* M, const double* d, void** args)
@@ -45,14 +45,15 @@ void tests::solvers::harmonic_oscillator(void)
 	//setup
 	solver.m_size = 1;
 	solver.m_l_0 = 1.0;
-	solver.m_w_0 = 0.1;
+	solver.m_w_0 = 1.0;
 	solver.m_harmonics = 1;
-	solver.m_dpg = 1.80e-02;
-	solver.m_step_max = 100;
+	solver.m_dpg = 2.00e-03;
+	solver.m_step_max = 1000;
 	solver.m_tolerance = 1e-5;
 	solver.m_iteration_max = 10;
 	solver.m_quadrature_order = 20;
 	solver.m_parameter = math::harmonic_parameter::frequency;
+	solver.m_strategy = math::harmonic_strategy::arc_length_spheric;
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;
@@ -61,7 +62,5 @@ void tests::solvers::harmonic_oscillator(void)
 	solver.m_external_force = external_force;
 	solver.m_external_force_gradient = external_force_gradient;
 	//solve
-	solver.solve();
-	//save
-	solver.save();
+	if(solver.solve()) solver.save();
 }

@@ -17,16 +17,17 @@ namespace math
 {
 	//constructors
 	harmonic::harmonic(void) : 
-		m_args(nullptr), m_tolerance(0),
-		m_size(0), m_step_max(0), m_harmonics(0), m_attempt_max(0), m_iteration_max(0), 
-		m_quadrature_order(0), m_parameter(harmonic_parameter::load),
+		m_args(nullptr), m_size(0), m_step_max(0), m_harmonics(0), 
+		m_attempt_max(0), m_iteration_max(0), m_quadrature_order(0), 
+		m_dpg(0), m_l_0(0), m_w_0(0), m_tolerance(0),
+		m_strategy(harmonic_strategy::uniform_increment), m_parameter(harmonic_parameter::load),
 		m_internal_force(nullptr), m_external_force(nullptr), m_external_force_gradient(nullptr),
 		m_inertia(nullptr), m_damping(nullptr), m_stiffness(nullptr),
 		m_sq(nullptr), m_wq(nullptr), 
 		m_d(nullptr), m_v(nullptr), m_a(nullptr), m_j(nullptr),
 		m_ddw(nullptr), m_dvw(nullptr), m_daw(nullptr),
 		m_l_data(nullptr), m_w_data(nullptr), m_z_old(nullptr), m_z_new(nullptr), m_z_data(nullptr),
-		m_dp(0), m_dpg(0), m_ddp(0),
+		m_dp(0), m_ddp(0),
 		m_dz(nullptr), m_dz0r(nullptr), m_dz0t(nullptr), m_ddzr(nullptr), m_ddzt(nullptr),
 		m_r(nullptr), m_fi(nullptr), m_fe(nullptr), m_fr(nullptr),
 		m_Kt(nullptr), m_Ct(nullptr), m_Mt(nullptr), m_At(nullptr), m_bt(nullptr), m_dfew(nullptr), m_dfrw(nullptr)
@@ -506,7 +507,7 @@ namespace math
 		//parameter
 		At.solve(dz0r, r);
 		At.solve(dz0t, bt);
-		m_dp = m_step == 0 ? m_dpg : compute_parameter_predictor();
+		compute_parameter_predictor();
 		//state
 		dz = dz0r + m_dp * dz0t;
 		//increment
@@ -528,7 +529,7 @@ namespace math
 		//corrector
 		At.solve(ddzr, r);
 		At.solve(ddzt, bt);
-		m_ddp = compute_parameter_corrector();
+		compute_parameter_corrector();
 		//state
 		m_dp += m_ddp;
 		dz += ddzr + m_ddp * ddzt;
@@ -536,7 +537,73 @@ namespace math
 		increment_state();
 	}
 
-	double harmonic::compute_parameter_predictor(void) const
+	void harmonic::compute_parameter_predictor(void)
+	{
+		if(m_step == 0)
+		{
+			m_dp = m_dpg;
+		}
+		else
+		{
+			if(m_strategy == harmonic_strategy::uniform_increment) 
+				predictor_uniform_increment();
+			if(m_strategy == harmonic_strategy::arc_length_cylindric)
+				predictor_arc_length_cylindric();
+		}
+	}
+	void harmonic::compute_parameter_corrector(void)
+	{
+		if(m_strategy == harmonic_strategy::uniform_increment) 
+			corrector_uniform_increment();
+		if(m_strategy == harmonic_strategy::arc_length_cylindric)
+			corrector_arc_length_cylindric();
+	}
+
+	void harmonic::predictor_uniform_increment(void)
+	{
+		m_dp = m_dpg;
+	}
+	void harmonic::corrector_uniform_increment(void)
+	{
+		m_ddp = 0;
+	}
+
+	void harmonic::predictor_arc_length_spheric(void)
+	{
+		//data
+		const uint32_t nd = m_size;
+		const uint32_t nz = 2 * m_harmonics + 1;
+		//data
+		const vector dz(m_dz, nd * nz);
+		const vector dz0r(m_dz0r, nd * nz);
+		const vector dz0t(m_dz0t, nd * nz);
+		//predictor
+		const double b = dz0t.inner(dz0r);
+		const double a = dz0t.inner(dz0t) + 1;
+		const double s = math::sign(dz0t.inner(dz));
+		const double c = dz0r.inner(dz0r) - dz.inner(dz) - m_dp * m_dp;
+		//predictor
+		m_dp = -b / a + s * sqrt(b * b - a * c) / a;
+	}
+	void harmonic::corrector_arc_length_spheric(void)
+	{
+		//data
+		const uint32_t nd = m_size;
+		const uint32_t nz = 2 * m_harmonics + 1;
+		//data
+		const vector dz(m_dz, nd * nz);
+		const vector ddzr(m_ddzr, nd * nz);
+		const vector ddzt(m_ddzt, nd * nz);
+		//corrector
+		const double a = ddzt.inner(ddzt) + 1;
+		const double c = ddzr.inner(ddzr + 2 * dz);
+		const double s = math::sign(ddzt.inner(dz));
+		const double b = ddzt.inner(ddzr + dz) + m_dp;
+		//corrector
+		m_ddp = -b / a + s * sqrt(b * b - a * c) / a;
+	}
+
+	void harmonic::predictor_arc_length_cylindric(void)
 	{
 		//data
 		const uint32_t nd = m_size;
@@ -550,10 +617,10 @@ namespace math
 		const double b = dz0t.inner(dz0r);
 		const double s = math::sign(dz0t.inner(dz));
 		const double c = dz0r.inner(dz0r) - dz.inner(dz);
-		//return
-		return -b / a + s * sqrt(b * b - a * c) / a;
+		//predictor
+		m_dp = -b / a + s * sqrt(b * b - a * c) / a;
 	}
-	double harmonic::compute_parameter_corrector(void) const
+	void harmonic::corrector_arc_length_cylindric(void)
 	{
 		//data
 		const uint32_t nd = m_size;
@@ -567,7 +634,7 @@ namespace math
 		const double b = ddzt.inner(ddzr + dz);
 		const double c = ddzr.inner(ddzr + 2 * dz);
 		const double s = math::sign(ddzt.inner(dz));
-		//return
-		return -b / a + s * sqrt(b * b - a * c) / a;
+		//corrector
+		m_ddp = -b / a + s * sqrt(b * b - a * c) / a;
 	}
 }
