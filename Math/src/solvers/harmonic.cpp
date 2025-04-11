@@ -25,9 +25,7 @@ namespace math
 		m_sq(nullptr), m_wq(nullptr), 
 		m_d(nullptr), m_v(nullptr), m_a(nullptr), m_j(nullptr),
 		m_ddw(nullptr), m_dvw(nullptr), m_daw(nullptr),
-		m_l_old(0), m_l_new(0), m_l_data(nullptr),
-		m_w_old(0), m_w_new(0), m_w_data(nullptr),
-		m_z_old(nullptr), m_z_new(nullptr), m_z_data(nullptr),
+		m_l_data(nullptr), m_w_data(nullptr), m_z_old(nullptr), m_z_new(nullptr), m_z_data(nullptr),
 		m_dp(0), m_dpg(0), m_ddp(0),
 		m_dz(nullptr), m_dz0r(nullptr), m_dz0t(nullptr), m_ddzr(nullptr), m_ddzt(nullptr),
 		m_r(nullptr), m_fi(nullptr), m_fe(nullptr), m_fr(nullptr),
@@ -43,6 +41,28 @@ namespace math
 	}
 
 	//solve
+	void harmonic::save(void)
+	{
+		//data
+		const uint32_t nd = m_size;
+		const uint32_t ns = m_step_max;
+		const uint32_t nz = 2 * m_harmonics + 1;
+		//open
+		FILE* file = fopen("harmonic.txt", "w");
+		//save
+		for(uint32_t i = 0; i <= ns; i++)
+		{
+			fprintf(file, "%+.6e ", m_l_data[i]);
+			fprintf(file, "%+.6e ", m_w_data[i]);
+			for(uint32_t j = 0; j < nd * nz; j++)
+			{
+				fprintf(file, "%+.6e ", m_z_data[i * nd * nz + j]);
+			}
+			fprintf(file, "\n");
+		}
+		//close
+		fclose(file);
+	}
 	bool harmonic::solve(void)
 	{
 		//data
@@ -50,6 +70,7 @@ namespace math
 		const uint32_t nz = 2 * m_harmonics + 1;
 		//solve
 		setup();
+		record(0);
 		for(m_step = 0; m_step < m_step_max; m_step++)
 		{
 			compute_predictor();
@@ -70,33 +91,21 @@ namespace math
 			}
 			else
 			{
-				record();
 				update();
-				printf("step: %04d : iteration: %02d\n", m_step, m_iteration);
+				record(m_step + 1);
+				printf("step: %04d iteration: %02d\n", m_step, m_iteration);
 			}
 		}
 		//return
 		return true;
 	}
 
-	//data
-	const double* harmonic::amplitudes(void) const
-	{
-		return m_z_new;
-	}
-
 	//solver
 	void harmonic::setup(void)
 	{
-		//data
 		cleanup();
 		allocate();
-		//loop
-		m_step = 0;
-		m_attempt = 0;
-		m_iteration = 0;
-		//quadrature
-		legendre_dr_compute(m_quadrature_order, m_sq, m_wq);
+		initialize();
 	}
 	void harmonic::cleanup(void)
 	{
@@ -129,15 +138,29 @@ namespace math
 		m_Ct = new double[nd * nd];
 		m_Mt = new double[nd * nd];
 		//allocate ns
-		m_l_data = new double[ns];
-		m_w_data = new double[ns];
-		m_z_data = new double[nd * nz * ns];
+		m_l_data = new double[(ns + 1)];
+		m_w_data = new double[(ns + 1)];
+		m_z_data = new double[nd * nz * (ns + 1)];
 		//allocate nd x nz
 		double** data_nd_nz[] = {
 			&m_r, &m_dz, &m_bt, &m_dz0r, &m_dz0t, &m_ddzr, &m_ddzt, &m_z_old, &m_z_new
 		};
 		m_At = new double[nd * nd * nz * nz];
 		for(double** ptr : data_nd_nz) *ptr = new double[nd * nz];
+	}
+	void harmonic::initialize(void)
+	{
+		//data
+		const uint32_t nd = m_size;
+		const uint32_t nq = m_quadrature_order;
+		const uint32_t nz = 2 * m_harmonics + 1;
+		//state
+		m_l_old = m_l_new = m_l_0;
+		m_w_old = m_w_new = m_w_0;
+		memset(m_z_old, 0, nd * nz * sizeof(double));
+		memset(m_z_new, 0, nd * nz * sizeof(double));
+		//quadrature
+		legendre_dr_compute(m_quadrature_order, m_sq, m_wq);
 	}
 
 	//state
@@ -151,12 +174,12 @@ namespace math
 		{
 			const double ci = cos(i * w * t);
 			const double si = sin(i * w * t);
-			const double* ai = m_z_new + (2 * i - 1) * m_size;
-			const double* bi = m_z_new + (2 * i + 0) * m_size;
+			const uint32_t p1 = (2 * i - 1) * m_size;
+			const uint32_t p2 = (2 * i + 0) * m_size;
 			for(uint32_t j = 0; j < m_size; j++)
 			{
-				m_j[j] += i * i * i * w * w * w * si * ai[j];
-				m_j[j] -= i * i * i * w * w * w * ci * bi[j];
+				m_j[j] += i * i * i * w * w * w * si * m_z_new[p1 + j];
+				m_j[j] -= i * i * i * w * w * w * ci * m_z_new[p2 + j];
 			}
 		}
 	}
@@ -170,12 +193,12 @@ namespace math
 		{
 			const double ci = cos(i * w * t);
 			const double si = sin(i * w * t);
-			const double* ai = m_z_new + (2 * i - 1) * m_size;
-			const double* bi = m_z_new + (2 * i + 0) * m_size;
+			const uint32_t p1 = (2 * i - 1) * m_size;
+			const uint32_t p2 = (2 * i + 0) * m_size;
 			for(uint32_t j = 0; j < m_size; j++)
 			{
-				m_d[j] += ci * ai[j];
-				m_d[j] += si * bi[j];
+				m_d[j] += ci * m_z_new[p1 + j];
+				m_d[j] += si * m_z_new[p2 + j];
 			}
 		}
 	}
@@ -200,12 +223,12 @@ namespace math
 		{
 			const double ci = cos(i * w * t);
 			const double si = sin(i * w * t);
-			const double* ai = m_z_new + (2 * i - 1) * m_size;
-			const double* bi = m_z_new + (2 * i + 0) * m_size;
+			const uint32_t p1 = (2 * i - 1) * m_size;
+			const uint32_t p2 = (2 * i + 0) * m_size;
 			for(uint32_t j = 0; j < m_size; j++)
 			{
-				m_v[j] -= i * w * si * ai[j];
-				m_v[j] += i * w * ci * bi[j];
+				m_v[j] -= i * w * si * m_z_new[p1 + j];
+				m_v[j] += i * w * ci * m_z_new[p2 + j];
 			}
 		}
 	}
@@ -219,12 +242,12 @@ namespace math
 		{
 			const double ci = cos(i * w * t);
 			const double si = sin(i * w * t);
-			const double* ai = m_z_new + (2 * i - 1) * m_size;
-			const double* bi = m_z_new + (2 * i + 0) * m_size;
+			const uint32_t p1 = (2 * i - 1) * m_size;
+			const uint32_t p2 = (2 * i + 0) * m_size;
 			for(uint32_t j = 0; j < m_size; j++)
 			{
-				m_a[j] -= i * i * w * w * ci * ai[j];
-				m_a[j] -= i * i * w * w * si * bi[j];
+				m_a[j] -= i * i * w * w * ci * m_z_new[p1 + j];
+				m_a[j] -= i * i * w * w * si * m_z_new[p2 + j];
 			}
 		}
 	}
@@ -232,11 +255,11 @@ namespace math
 	{
 		//data
 		const double w = m_w_new;
-		const uint32_t ns = m_size;
+		const uint32_t nd = m_size;
 		//gradients
-		vector(m_ddw, ns) = t / w * vector(m_v, ns);
-		vector(m_dvw, ns) = t / w * vector(m_a, ns) + vector(m_v, ns) / w;
-		vector(m_daw, ns) = t / w * vector(m_j, ns) + 2 * vector(m_a, ns) / w;
+		vector(m_ddw, nd) = t / w * vector(m_v, nd);
+		vector(m_dvw, nd) = t / w * vector(m_a, nd) + vector(m_v, nd) / w;
+		vector(m_daw, nd) = t / w * vector(m_j, nd) + 2 * vector(m_a, nd) / w;
 	}
 
 	//system
@@ -246,11 +269,11 @@ namespace math
 		const double w = m_w_new;
 		const double T = 2 * M_PI / w;
 		//size
-		const uint32_t ns = m_size;
+		const uint32_t nd = m_size;
 		const uint32_t nz = 2 * m_harmonics + 1;
 		//compute
-		vector fr(m_fr, ns);
-		vector(m_r, ns * nz).zeros();
+		vector fr(m_fr, nd);
+		vector(m_r, nd * nz).zeros();
 		for(uint32_t k = 0; k < m_quadrature_order; k++)
 		{
 			//quadrature
@@ -271,8 +294,8 @@ namespace math
 			{
 				const double ci = cos(i * w * tk);
 				const double si = sin(i * w * tk);
-				const uint32_t p1 = (2 * i - 1) * ns;
-				const uint32_t p2 = (2 * i + 0) * ns;
+				const uint32_t p1 = (2 * i - 1) * nd;
+				const uint32_t p2 = (2 * i + 0) * nd;
 				vector(m_r + p1, m_size) += wk * ci * fr;
 				vector(m_r + p2, m_size) += wk * si * fr;
 			}
@@ -289,11 +312,11 @@ namespace math
 		const double w = m_w_new;
 		const double T = 2 * M_PI / w;
 		//size
-		const uint32_t ns = m_size;
+		const uint32_t nd = m_size;
 		const uint32_t nz = 2 * m_harmonics + 1;
 		//compute
-		vector fe(m_fe, ns);
-		vector(m_bt, ns * nz).zeros();
+		vector fe(m_fe, nd);
+		vector(m_bt, nd * nz).zeros();
 		for(uint32_t k = 0; k < m_quadrature_order; k++)
 		{
 			//quadrature
@@ -302,19 +325,17 @@ namespace math
 			const double tk = (1 + sk) * T / 2;
 			//state
 			compute_state(tk);
-			compute_velocity(tk);
-			compute_acceleration(tk);
-			m_external_force(m_fe, tk, m_w_new, m_d, m_args);
+			m_external_force(m_fe, tk, w, m_d, m_args);
 			//tangent
-			vector(m_bt, ns) += wk * fe;
+			vector(m_bt, nd) += wk * fe;
 			for(uint32_t i = 1; i <= m_harmonics; i++)
 			{
 				const double ci = cos(i * w * tk);
 				const double si = sin(i * w * tk);
-				const uint32_t p1 = (2 * i - 1) * ns;
-				const uint32_t p2 = (2 * i + 0) * ns;
-				vector(m_bt + p1, ns) += wk * ci * fe;
-				vector(m_bt + p2, ns) += wk * si * fe;
+				const uint32_t p1 = (2 * i - 1) * nd;
+				const uint32_t p2 = (2 * i + 0) * nd;
+				vector(m_bt + p1, nd) += wk * ci * fe;
+				vector(m_bt + p2, nd) += wk * si * fe;
 			}
 		}
 	}
@@ -324,20 +345,20 @@ namespace math
 		const double w = m_w_new;
 		const double T = 2 * M_PI / w;
 		//size
-		const uint32_t ns = m_size;
+		const uint32_t nd = m_size;
 		const uint32_t nz = 2 * m_harmonics + 1;
 		//tangent
-		vector fr(m_fr, ns);
-		vector dfrw(m_dfrw, ns);
-		const vector ddw(m_ddw, ns);
-		const vector dvw(m_dvw, ns);
-		const vector daw(m_daw, ns);
-		const vector dfew(m_dfew, ns);
-		const matrix Kt(m_Kt, ns, ns);
-		const matrix Ct(m_Ct, ns, ns);
-		const matrix Mt(m_Mt, ns, ns);
+		vector fr(m_fr, nd);
+		vector dfrw(m_dfrw, nd);
+		const vector ddw(m_ddw, nd);
+		const vector dvw(m_dvw, nd);
+		const vector daw(m_daw, nd);
+		const vector dfew(m_dfew, nd);
+		const matrix Kt(m_Kt, nd, nd);
+		const matrix Ct(m_Ct, nd, nd);
+		const matrix Mt(m_Mt, nd, nd);
 		//compute
-		vector(m_bt, ns * nz).zeros();
+		vector(m_bt, nd * nz).zeros();
 		for(uint32_t k = 0; k < m_quadrature_order; k++)
 		{
 			//quadrature
@@ -359,15 +380,15 @@ namespace math
 			compute_frequency_gradients(tk);
 			dfrw = m_l_new * dfew - Kt * ddw - Ct * dvw - Mt * daw;
 			//tangent
-			vector(m_bt, ns) += wk * dfrw;
+			vector(m_bt, nd) += wk * dfrw;
 			for(uint32_t i = 1; i <= m_harmonics; i++)
 			{
 				const double ci = cos(i * w * tk);
 				const double si = sin(i * w * tk);
-				const uint32_t p1 = (2 * i - 1) * ns;
-				const uint32_t p2 = (2 * i + 0) * ns;
-				vector(m_bt + p1, ns) += wk * (ci * dfrw - i * tk * si * fr);
-				vector(m_bt + p2, ns) += wk * (si * dfrw + i * tk * ci * fr);
+				const uint32_t p1 = (2 * i - 1) * nd;
+				const uint32_t p2 = (2 * i + 0) * nd;
+				vector(m_bt + p1, nd) += wk * (ci * dfrw - i * tk * si * fr);
+				vector(m_bt + p2, nd) += wk * (si * dfrw + i * tk * ci * fr);
 			}
 		}
 	}
@@ -377,14 +398,13 @@ namespace math
 		const double w = m_w_new;
 		const double T = 2 * M_PI / w;
 		//size
-		const uint32_t ns = m_size;
+		const uint32_t nd = m_size;
 		const uint32_t nz = 2 * m_harmonics + 1;
 		//tangent
-		matrix Kj(ns, ns);
-		const matrix Kt(m_Kt, ns, ns);
-		const matrix Ct(m_Ct, ns, ns);
-		const matrix Mt(m_Mt, ns, ns);
-		matrix At(m_At, ns * nz, ns * nz);
+		const matrix Kt(m_Kt, nd, nd);
+		const matrix Ct(m_Ct, nd, nd);
+		const matrix Mt(m_Mt, nd, nd);
+		matrix At(m_At, nd * nz, nd * nz);
 		//compute
 		At.zeros();
 		for(uint32_t k = 0; k < m_quadrature_order; k++)
@@ -399,45 +419,35 @@ namespace math
 			compute_acceleration(tk);
 			m_inertia(m_Mt, m_d, m_args);
 			m_damping(m_Ct, m_d, m_v, m_args);
-			m_stiffness(m_Kt, tk, 0, 0, m_d, m_v, m_a, m_args);
+			m_stiffness(m_Kt, tk, w, m_l_new, m_d, m_v, m_a, m_args);
 			//tangent
-			At.span(0, 0, ns, ns) += wk * Kt;
+			At.span(0, 0, nd, nd) += wk * Kt;
 			for(uint32_t i = 1; i <= m_harmonics; i++)
 			{
 				const double ci = cos(i * w * tk);
 				const double si = sin(i * w * tk);
-				const uint32_t p1 = (2 * i - 1) * ns;
-				const uint32_t p2 = (2 * i + 0) * ns;
-				At.span(p1, 0, ns, ns) += wk * ci * Kt;
-				At.span(p2, 0, ns, ns) += wk * si * Kt;
-				At.span(0, p1, ns, ns) += wk * (ci * (Kt - i * i * w * w * Mt) - i * w * si * Ct);
-				At.span(0, p2, ns, ns) += wk * (si * (Kt - i * i * w * w * Mt) + i * w * ci * Ct);
+				const uint32_t p1 = (2 * i - 1) * nd;
+				const uint32_t p2 = (2 * i + 0) * nd;
+				At.span(p1, 0, nd, nd) += wk * ci * Kt;
+				At.span(p2, 0, nd, nd) += wk * si * Kt;
+				At.span(0, p1, nd, nd) += wk * (ci * (Kt - i * i * w * w * Mt) - i * w * si * Ct);
+				At.span(0, p2, nd, nd) += wk * (si * (Kt - i * i * w * w * Mt) + i * w * ci * Ct);
 				for(uint32_t j = 1; j <= m_harmonics; j++)
 				{
 					const double cj = cos(j * w * tk);
 					const double sj = sin(j * w * tk);
-					const uint32_t q1 = (2 * j - 1) * ns;
-					const uint32_t q2 = (2 * j + 0) * ns;
-					At.span(p1, q1, ns, ns) += wk * ci * (cj * (Kt - j * j * w * w * Mt) - j * w * sj * Ct);
-					At.span(p1, q2, ns, ns) += wk * ci * (sj * (Kt - j * j * w * w * Mt) + j * w * cj * Ct);
-					At.span(p2, q1, ns, ns) += wk * si * (cj * (Kt - j * j * w * w * Mt) - j * w * sj * Ct);
-					At.span(p2, q2, ns, ns) += wk * si * (sj * (Kt - j * j * w * w * Mt) + j * w * cj * Ct);
+					const uint32_t q1 = (2 * j - 1) * nd;
+					const uint32_t q2 = (2 * j + 0) * nd;
+					At.span(p1, q1, nd, nd) += wk * ci * (cj * (Kt - j * j * w * w * Mt) - j * w * sj * Ct);
+					At.span(p1, q2, nd, nd) += wk * ci * (sj * (Kt - j * j * w * w * Mt) + j * w * cj * Ct);
+					At.span(p2, q1, nd, nd) += wk * si * (cj * (Kt - j * j * w * w * Mt) - j * w * sj * Ct);
+					At.span(p2, q2, nd, nd) += wk * si * (sj * (Kt - j * j * w * w * Mt) + j * w * cj * Ct);
 				}
 			}
 		}
 	}
 
 	//solver
-	void harmonic::record(void)
-	{
-		//data
-		const uint32_t nd = m_size;
-		const uint32_t nz = 2 * m_harmonics + 1;
-		//record
-		m_l_data[m_step] = m_l_new;
-		m_w_data[m_step] = m_w_new;
-		memcpy(m_z_data + m_step * nd * nz, m_z_new, nd * nz * sizeof(double));
-	}
 	void harmonic::update(void)
 	{
 		//data
@@ -457,6 +467,16 @@ namespace math
 		m_l_new = m_l_old;
 		m_w_new = m_w_old;
 		memcpy(m_z_new, m_z_old, nd * nz * sizeof(double));
+	}
+	void harmonic::record(uint32_t step)
+	{
+		//data
+		const uint32_t nd = m_size;
+		const uint32_t nz = 2 * m_harmonics + 1;
+		//record
+		m_l_data[step] = m_l_new;
+		m_w_data[step] = m_w_new;
+		memcpy(m_z_data + step * nd * nz, m_z_new, nd * nz * sizeof(double));
 	}
 
 	void harmonic::increment_state(void)

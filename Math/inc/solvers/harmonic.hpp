@@ -24,15 +24,11 @@ namespace math
 		~harmonic(void);
 
 		//solve
+		void save(void);
 		bool solve(void);
 
 		//data
-		const double* amplitudes(void) const;
-
-		//data
 		void** m_args;
-		double m_dpg, m_tolerance;
-
 		uint32_t m_size;
 		uint32_t m_step_max;
 		uint32_t m_harmonics;
@@ -40,6 +36,7 @@ namespace math
 		uint32_t m_iteration_max;
 		uint32_t m_quadrature_order;
 		harmonic_parameter m_parameter;
+		double m_dpg, m_l_0, m_w_0, m_tolerance;
 
 		void(*m_internal_force)(double*, const double*, const double*, void**);
 		void(*m_external_force)(double*, double, double, const double*, void**);
@@ -54,6 +51,7 @@ namespace math
 		void setup(void);
 		void cleanup(void);
 		void allocate(void);
+		void initialize(void);
 
 		//state
 		void compute_jerk(double);
@@ -71,9 +69,9 @@ namespace math
 		void compute_system_tangent_z(void);
 
 		//solver
-		void record(void);
 		void update(void);
 		void restore(void);
+		void record(uint32_t);
 
 		void increment_state(void);
 		void compute_predictor(void);
