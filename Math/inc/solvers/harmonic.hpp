@@ -5,7 +5,7 @@
 
 namespace math
 {
-	enum class harmonic_parameter
+	enum class harmonic_control
 	{
 		load = 0,
 		frequency = 1
@@ -41,9 +41,10 @@ namespace math
 		uint32_t m_attempt_max;
 		uint32_t m_iteration_max;
 		uint32_t m_quadrature_order;
-		harmonic_strategy m_strategy;
-		harmonic_parameter m_parameter;
 		double m_dpg, m_l_0, m_w_0, m_tolerance;
+
+		harmonic_control m_control;
+		harmonic_strategy m_strategy;
 
 		void(*m_internal_force)(double*, const double*, const double*, void**);
 		void(*m_external_force)(double*, double, double, const double*, void**);

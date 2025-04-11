@@ -20,7 +20,7 @@ namespace math
 		m_args(nullptr), m_size(0), m_step_max(0), m_harmonics(0), 
 		m_attempt_max(0), m_iteration_max(0), m_quadrature_order(0), 
 		m_dpg(0), m_l_0(0), m_w_0(0), m_tolerance(0),
-		m_strategy(harmonic_strategy::uniform_increment), m_parameter(harmonic_parameter::load),
+		m_strategy(harmonic_strategy::uniform_increment), m_control(harmonic_control::load),
 		m_internal_force(nullptr), m_external_force(nullptr), m_external_force_gradient(nullptr),
 		m_inertia(nullptr), m_damping(nullptr), m_stiffness(nullptr),
 		m_sq(nullptr), m_wq(nullptr), 
@@ -304,8 +304,8 @@ namespace math
 	}
 	void harmonic::compute_system_tangent_p(void)
 	{
-		if(m_parameter == harmonic_parameter::load) compute_system_tangent_l();
-		if(m_parameter == harmonic_parameter::frequency) compute_system_tangent_w();
+		if(m_control == harmonic_control::load) compute_system_tangent_l();
+		if(m_control == harmonic_control::frequency) compute_system_tangent_w();
 	}
 	void harmonic::compute_system_tangent_l(void)
 	{
@@ -485,8 +485,8 @@ namespace math
 		//data
 		const uint32_t nd = m_size;
 		const uint32_t nz = 2 * m_harmonics + 1;
-		double& p_new = m_parameter == harmonic_parameter::load ? m_l_new : m_w_new;
-		const double& p_old = m_parameter == harmonic_parameter::load ? m_l_old : m_w_old;
+		double& p_new = m_control == harmonic_control::load ? m_l_new : m_w_new;
+		const double& p_old = m_control == harmonic_control::load ? m_l_old : m_w_old;
 		//increment
 		p_new = p_old + m_dp;
 		for(uint32_t i = 0; i < nd * nz; i++) m_z_new[i] = m_z_old[i] + m_dz[i];

@@ -52,7 +52,7 @@ void tests::solvers::harmonic_oscillator(void)
 	solver.m_tolerance = 1e-5;
 	solver.m_iteration_max = 10;
 	solver.m_quadrature_order = 20;
-	solver.m_parameter = math::harmonic_parameter::frequency;
+	solver.m_control = math::harmonic_control::frequency;
 	solver.m_strategy = math::harmonic_strategy::arc_length_spheric;
 	//system
 	solver.m_inertia = inertia;
