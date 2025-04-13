@@ -46,27 +46,6 @@ namespace math
 	}
 
 	//solve
-	void harmonic::save(void)
-	{
-		//data
-		const uint32_t nd = m_size;
-		const uint32_t nz = 2 * m_harmonics + 1;
-		//open
-		FILE* file = fopen("harmonic.txt", "w");
-		//save
-		for(uint32_t i = 0; i <= m_step; i++)
-		{
-			fprintf(file, "%+.6e ", m_l_data[i]);
-			fprintf(file, "%+.6e ", m_w_data[i]);
-			for(uint32_t j = 0; j < nd * nz; j++)
-			{
-				fprintf(file, "%+.6e ", m_z_data[i * nd * nz + j]);
-			}
-			fprintf(file, "\n");
-		}
-		//close
-		fclose(file);
-	}
 	bool harmonic::solve(void)
 	{
 		//data
@@ -103,6 +82,115 @@ namespace math
 		}
 		//return
 		return true;
+	}
+
+	//save
+	void harmonic::save(void) const
+	{
+		//data
+		const uint32_t nd = m_size;
+		const uint32_t nh = m_harmonics;
+		const uint32_t nz = 2 * m_harmonics + 1;
+		//open
+		FILE* file = fopen("harmonic.txt", "w");
+		//save
+		for(uint32_t i = 0; i <= m_step; i++)
+		{
+			fprintf(file, "%+.6e ", m_l_data[i]);
+			fprintf(file, "%+.6e ", m_w_data[i]);
+			for(uint32_t j = 0; j < nd; j++)
+			{
+				double z = m_z_data[nd * nz * i + j];
+				for(uint32_t k = 1; k <= nh; k++)
+				{
+					const double a = m_z_data[nd * nz * i + (2 * k - 1) * nd + j];
+					const double b = m_z_data[nd * nz * i + (2 * k + 0) * nd + j];
+					z += sqrt(a * a + b * b);
+				}
+				fprintf(file, "%+.6e ", z);
+				fprintf(file, "%+.6e ", m_z_data[nd * nz * i + j]);
+				for(uint32_t k = 1; k <= nh; k++)
+				{
+					fprintf(file, "%+.6e ", m_z_data[nd * nz * i + (2 * k - 1) * nd + j]);
+					fprintf(file, "%+.6e ", m_z_data[nd * nz * i + (2 * k + 0) * nd + j]);
+				}
+			}
+			fprintf(file, "\n");
+		}
+		//close
+		fclose(file);
+	}
+
+	//test
+	void harmonic::test_damping(uint32_t nt) const
+	{
+		//data
+		double t;
+		const uint32_t nd = m_size;
+		double* d = (double*) alloca(nd * sizeof(double));
+		double* v = (double*) alloca(nd * sizeof(double));
+		double* a = (double*) alloca(nd * sizeof(double));
+		double* Ca = (double*) alloca(nd * nd * sizeof(double));
+		double* Cn = (double*) alloca(nd * nd * sizeof(double));
+		double* Ce = (double*) alloca(nd * nd * sizeof(double));
+		const void* args[] = {&t, this, d, v, a};
+		//test
+		for(uint32_t i = 0; i < nt; i++)
+		{
+			vector(d, nd).randu();
+			vector(v, nd).randu();
+			vector(a, nd).randu();
+			vector(&t, 1).randu(0, 1);
+			m_damping(Ca, d, v, m_args);
+			ndiff(function_residue_v, Cn, v, args, nd, nd, 1e-5);
+			matrix(Ce, nd, nd) = matrix(Ca, nd, nd) + matrix(Cn, nd, nd);
+			if(matrix(Ce, nd, nd).norm() < 1e-5)
+			{
+				printf("%d ok!\n", i);
+			}
+			else
+			{
+				matrix(Ca, nd, nd).print("Ca");
+				matrix(Cn, nd, nd).print("Cn");
+				matrix(Ce, nd, nd).print("Ce", 1e-5);
+				break;
+			}
+		}
+	}
+	void harmonic::test_stiffness(uint32_t nt) const
+	{
+		//data
+		double t;
+		const uint32_t nd = m_size;
+		double* d = (double*) alloca(nd * sizeof(double));
+		double* v = (double*) alloca(nd * sizeof(double));
+		double* a = (double*) alloca(nd * sizeof(double));
+		double* Ka = (double*) alloca(nd * nd * sizeof(double));
+		double* Kn = (double*) alloca(nd * nd * sizeof(double));
+		double* Ke = (double*) alloca(nd * nd * sizeof(double));
+		const void* args[] = {&t, this, v, a};
+		//test
+		for(uint32_t i = 0; i < nt; i++)
+		{
+			vector(d, nd).randu();
+			vector(v, nd).randu();
+			vector(a, nd).randu();
+			vector(&t, 1).randu(0, 1);
+			m_stiffness(Ka, t, m_w_0, m_l_0, d, v, a, m_args);
+			ndiff(function_residue_d, Kn, d, args, nd, nd, 1e-5);
+			matrix(Ke, nd, nd) = matrix(Ka, nd, nd) + matrix(Kn, nd, nd);
+			if(matrix(Ke, nd, nd).norm() < 1e-5)
+			{
+				printf("%d ok!\n", i);
+			}
+			else
+			{
+				matrix(Ka, nd, nd).print("Ka");
+				matrix(Kn, nd, nd).print("Kn");
+				matrix(Ke, nd, nd).print("Ke", 1e-5);
+				break;
+			}
+		}
 	}
 
 	//solver
@@ -491,6 +579,50 @@ namespace math
 				}
 			}
 		}
+	}
+
+	//test
+	void harmonic::function_residue_d(double* fr, const double* d, const void** args)
+	{
+		//data
+		const double t = *(double*) args[0];
+		harmonic* solver = (harmonic*) args[1];
+		const double* v = (const double*) args[2];
+		const double* a = (const double*) args[3];
+		//data
+		const double l = solver->m_l_0;
+		const double w = solver->m_w_0;
+		const uint32_t nd = solver->m_size;
+		double* fi = (double*) alloca(nd * sizeof(double));
+		double* fe = (double*) alloca(nd * sizeof(double));
+		double* Mt = (double*) alloca(nd * nd * sizeof(double));
+		//system
+		solver->m_inertia(Mt, d, solver->m_args);
+		solver->m_internal_force(fi, d, v, solver->m_args);
+		solver->m_external_force(fe, t, w, d, solver->m_args);
+		//force
+		vector(fr, nd) = l * vector(fe, nd) - vector(fi, nd) - matrix(Mt, nd, nd) * vector(a, nd);
+	}
+	void harmonic::function_residue_v(double* fr, const double* v, const void** args)
+	{
+		//data
+		const double t = *(double*) args[0];
+		harmonic* solver = (harmonic*) args[1];
+		const double* d = (const double*) args[2];
+		const double* a = (const double*) args[3];
+		//data
+		const double l = solver->m_l_0;
+		const double w = solver->m_w_0;
+		const uint32_t nd = solver->m_size;
+		double* fi = (double*) alloca(nd * sizeof(double));
+		double* fe = (double*) alloca(nd * sizeof(double));
+		double* Mt = (double*) alloca(nd * nd * sizeof(double));
+		//system
+		solver->m_inertia(Mt, d, solver->m_args);
+		solver->m_internal_force(fi, d, v, solver->m_args);
+		solver->m_external_force(fe, t, w, d, solver->m_args);
+		//force
+		vector(fr, nd) = l * vector(fe, nd) - vector(fi, nd) - matrix(Mt, nd, nd) * vector(a, nd);
 	}
 
 	//solver

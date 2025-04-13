@@ -31,8 +31,14 @@ namespace math
 		~harmonic(void);
 
 		//solve
-		void save(void);
 		bool solve(void);
+
+		//save
+		void save(void) const;
+
+		//test
+		void test_damping(uint32_t) const;
+		void test_stiffness(uint32_t) const;
 
 		//data
 		void** m_args;
@@ -80,6 +86,10 @@ namespace math
 		void compute_system_tangent_l(void);
 		void compute_system_tangent_w(void);
 		void compute_system_tangent_z(void);
+
+		//test
+		static void function_residue_v(double*, const double*, const void**);
+		static void function_residue_d(double*, const double*, const void**);
 
 		//solver
 		void update(void);
