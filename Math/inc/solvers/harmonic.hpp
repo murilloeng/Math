@@ -123,7 +123,7 @@ namespace math
 		bool* m_stability_data;
 		double *m_dvw, *m_daw, *m_dfrw;
 		double *m_r, *m_fi, *m_fe, *m_fr;
-		double *m_y, *m_y1, *m_y2, *m_y3, *m_y4;
 		double *m_Kt, *m_Ct, *m_Mt, *m_At, *m_bt;
+		double *m_y, *m_y1, *m_y2, *m_y3, *m_y4, *m_St;
 	};
 }

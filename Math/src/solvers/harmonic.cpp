@@ -144,7 +144,7 @@ namespace math
 			m_l_data, m_w_data, m_z_old, m_z_new, m_z_data,
 			m_dz, m_dz0r, m_dz0t, m_ddzr, m_ddzt,
 			m_r, m_fi, m_fe, m_fr, m_Kt, m_Ct, m_Mt, m_At, m_bt, m_dfrw,
-			m_y, m_y1, m_y2, m_y3, m_y4
+			m_y, m_y1, m_y2, m_y3, m_y4, m_St
 		};
 		delete[] m_stability_data;
 		for(double* ptr : data) delete[] ptr;
@@ -171,9 +171,14 @@ namespace math
 		m_z_data = new double[nd * nz * (ns + 1)];
 		//allocate nd x nd
 		double** data_nd_nd[] = {
-			&m_y, &m_y1, &m_y2, &m_y3, &m_y4, &m_Kt, &m_Ct, &m_Mt
+			&m_Kt, &m_Ct, &m_Mt
 		};
 		for(double** ptr : data_nd_nd) *ptr = new double[nd * nd];
+		//allocate 4 x nd x nd
+		double** data_4_nd_nd[] = {
+			&m_y, &m_y1, &m_y2, &m_y3, &m_y4, &m_St
+		};
+		for(double** ptr : data_4_nd_nd) *ptr = new double[4 * nd * nd];
 		//allocate nd x nz
 		double** data_nd_nz[] = {
 			&m_r, &m_dz, &m_bt, &m_dz0r, &m_dz0t, &m_ddzr, &m_ddzt, &m_z_old, &m_z_new
