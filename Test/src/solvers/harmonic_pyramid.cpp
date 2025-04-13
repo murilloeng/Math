@@ -35,10 +35,6 @@ static void external_force(double* fe, double t, double w, const double* d, void
 {
 	fe[0] = k * sqrt(3) / 9 * cos(w * t);
 }
-static void external_force_gradient(double* dfew, double t, double w, const double* d, void** args)
-{
-	dfew[0] = -k * sqrt(3) / 9 * t * sin(w * t);
-}
 
 void tests::solvers::harmonic_pyramid(void)
 {
@@ -46,13 +42,15 @@ void tests::solvers::harmonic_pyramid(void)
 	math::harmonic solver;
 	//setup
 	solver.m_size = 1;
-	solver.m_l_0 = 0.06;
-	solver.m_w_0 = 1.00;
+	solver.m_l_0 = 0.10;
+	solver.m_w_0 = 0.10;
 	solver.m_harmonics = 2;
-	solver.m_dpg = 2.00e-03;
-	solver.m_step_max = 1000;
+	solver.m_dpg = 3.80e-03;
+	solver.m_step_max = 9000;
+	solver.m_w_min = 1.00e-01;
+	solver.m_w_max = 3.90e+00;
 	solver.m_tolerance = 1e-5;
-	solver.m_iteration_max = 10;
+	solver.m_iteration_max = 100;
 	solver.m_quadrature_order = 20;
 	solver.m_control = math::harmonic_control::frequency;
 	solver.m_strategy = math::harmonic_strategy::minimal_norm;
@@ -62,7 +60,9 @@ void tests::solvers::harmonic_pyramid(void)
 	solver.m_stiffness = stiffness;
 	solver.m_internal_force = internal_force;
 	solver.m_external_force = external_force;
-	solver.m_external_force_gradient = external_force_gradient;
 	//solve
+	// solver.test_l(); getchar();
+	// solver.test_w(); getchar();
+	// solver.test_z(); getchar();
 	if(solver.solve()) solver.save();
 }
