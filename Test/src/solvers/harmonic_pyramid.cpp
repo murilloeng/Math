@@ -61,8 +61,5 @@ void tests::solvers::harmonic_pyramid(void)
 	solver.m_internal_force = internal_force;
 	solver.m_external_force = external_force;
 	//solve
-	// solver.test_l(); getchar();
-	// solver.test_w(); getchar();
-	// solver.test_z(); getchar();
 	if(solver.solve()) solver.save();
 }

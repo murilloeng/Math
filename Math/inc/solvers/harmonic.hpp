@@ -30,13 +30,6 @@ namespace math
 		//destructor
 		~harmonic(void);
 
-		void test_l(void);
-		void test_w(void);
-		void test_z(void);
-		static void function_l(double*, const double*, void**);
-		static void function_w(double*, const double*, void**);
-		static void function_z(double*, const double*, void**);
-
 		//solve
 		void save(void);
 		bool solve(void);
