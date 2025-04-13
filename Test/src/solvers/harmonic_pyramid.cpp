@@ -70,6 +70,5 @@ void tests::solvers::harmonic_pyramid(void)
 	solver.m_internal_force = internal_force;
 	solver.m_external_force = external_force;
 	//solve
-	// solver.test_stiffness(10000);
 	if(solver.solve()) solver.save();
 }
