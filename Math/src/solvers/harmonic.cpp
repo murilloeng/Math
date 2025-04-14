@@ -98,6 +98,7 @@ namespace math
 		{
 			fprintf(file, "%+.6e ", m_l_data[i]);
 			fprintf(file, "%+.6e ", m_w_data[i]);
+			fprintf(file, "%d ", m_stability_data[i]);
 			for(uint32_t j = 0; j < nd; j++)
 			{
 				double z = m_z_data[nd * nz * i + j];
@@ -228,10 +229,11 @@ namespace math
 	{
 		double* data[] = {
 			m_sq, m_wq,
-			m_d, m_v, m_a, m_dvw, m_daw,
-			m_l_data, m_w_data, m_z_old, m_z_new, m_z_data,
+			m_d, m_v, m_a, m_dvw, m_daw, m_dfrw,
 			m_dz, m_dz0r, m_dz0t, m_ddzr, m_ddzt,
-			m_r, m_fi, m_fe, m_fr, m_Kt, m_Ct, m_Mt, m_At, m_bt, m_dfrw, m_St
+			m_sd, m_sv, m_sa, m_sr, m_sc, m_St, m_Sm, m_Sz,
+			m_l_data, m_w_data, m_z_old, m_z_new, m_z_data,
+			m_r, m_fi, m_fe, m_fr, m_Kt, m_Ct, m_Mt, m_At, m_bt
 		};
 		delete[] m_stability_data;
 		for(double* ptr : data) delete[] ptr;
@@ -258,8 +260,15 @@ namespace math
 		m_z_data = new double[nd * nz * (ns + 1)];
 		//allocate nd x nd
 		double** data_nd_nd[] = {
-			&m_Kt, &m_Ct, &m_Mt
+			&m_Kt, &m_Ct, &m_Mt, &m_St
 		};
+		m_sr = new double[2 * nd];
+		m_sc = new double[2 * nd];
+		m_sd = new double[2 * nd * nd];
+		m_sv = new double[2 * nd * nd];
+		m_sa = new double[2 * nd * nd];
+		m_Sm = new double[4 * nd * nd];
+		m_Sz = new double[4 * nd * nd];
 		for(double** ptr : data_nd_nd) *ptr = new double[nd * nd];
 		//allocate nd x nz
 		double** data_nd_nz[] = {
@@ -401,7 +410,66 @@ namespace math
 	//system
 	void harmonic::compute_stability(void)
 	{
-
+		//data
+		double t = 0;
+		const uint32_t nd = m_size;
+		const uint32_t ns = m_stability_steps;
+		const double h = 2 * M_PI / m_w_new / ns;
+		vector sr(m_sr, 2 * nd), sc(m_sc, 2 * nd);
+		matrix Sm(m_Sm, 2 * nd, 2 * nd), Sz(m_Sz, 2 * nd, 2 * nd);
+		matrix sd(m_sd, nd, 2 * nd), sv(m_sv, nd, 2 * nd), sa(m_sa, nd, 2 * nd);
+		matrix Mt(m_Mt, nd, nd), Ct(m_Ct, nd, nd), Kt(m_Kt, nd, nd), St(m_St, nd, nd);
+		//setup
+		sd.zeros();
+		sv.zeros();
+		for(uint32_t i = 0; i < nd; i++)
+		{
+			sd(i, i + 0 * nd) = 1;
+			sv(i, i + 1 * nd) = 1;
+		}
+		compute_state(t);
+		compute_velocity(t);
+		compute_acceleration(t);
+		m_inertia(m_Mt, m_d, m_args);
+		m_damping(m_Ct, m_d, m_v, m_args);
+		m_stiffness(m_Kt, 0, m_w_new, m_l_new, m_d, m_v, m_a, m_args);
+		//time loop
+		const double g = 0.50;
+		const double b = 0.25;
+		Mt.solve(sa, -Ct * sv - Kt * sd);
+		for(uint32_t i = 0; i < m_stability_steps; i++)
+		{
+			//time
+			t += h;
+			//predictor
+			sv += h * (1 - g) * sa;
+			sd += h * sv + (g - b - 0.5) * h * h * sa;
+			//system
+			compute_state(t);
+			compute_velocity(t);
+			compute_acceleration(t);
+			m_inertia(m_Mt, m_d, m_args);
+			m_damping(m_Ct, m_d, m_v, m_args);
+			m_stiffness(m_Kt, t, m_w_new, m_l_new, m_d, m_v, m_a, m_args);
+			//corrector
+			St = Mt + g * h * Ct + b * h * h * Kt;
+			St.solve(sa, -Kt * sd - Ct * sv);
+			sv += g * h * sa;
+			sd += b * h * h * sa;
+		}
+		//stability
+		Sm.span(0 * nd, 0, nd, 2 * nd) = sd;
+		Sm.span(1 * nd, 0, nd, 2 * nd) = sv;
+		Sm.eigen(sr, sc, Sz);
+		m_stability_data[m_step] = true;
+		for(uint32_t i = 0; i < 2 * nd; i++)
+		{
+			if(sr[i] * sr[i] + sc[i] * sc[i] > 1)
+			{
+				m_stability_data[m_step] = false;
+				break;
+			}
+		}
 	}
 	void harmonic::compute_system_residue(void)
 	{
