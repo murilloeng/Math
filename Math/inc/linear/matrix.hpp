@@ -120,6 +120,8 @@ namespace math
 		bool svd(matrix&, matrix&, vector&) const;
 
 		//eigen
+		bool eigen(vector&, vector&, matrix&) const;
+
 		bool eigen_sym(vector&, matrix&) const;
 		bool eigen_sym(vector&, matrix&, const matrix&) const;
 

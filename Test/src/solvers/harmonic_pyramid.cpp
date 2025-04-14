@@ -52,7 +52,7 @@ void tests::solvers::harmonic_pyramid(void)
 	math::harmonic solver;
 	//setup
 	solver.m_size = 1;
-	solver.m_l_0 = 0.08;
+	solver.m_l_0 = 0.06;
 	solver.m_w_0 = 0.20;
 	solver.m_harmonics = 2;
 	solver.m_dpg = 1.60e-03;

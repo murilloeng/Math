@@ -24,6 +24,7 @@ extern "C"
 	//eigen
 	void dsyev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, double*, int32_t*, int32_t*);
 	void dsygv_(const uint32_t*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, double*, double*, int32_t*, int32_t*);
+	void dgeev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, double*, double*, const uint32_t*, double*, const uint32_t*, double*, int32_t*, int32_t*);
 }
 
 namespace math
@@ -770,7 +771,25 @@ namespace math
 	}
 
 	//eigen
-	bool matrix::eigen_sym(vector& v, matrix& P) const
+	bool matrix::eigen(vector& vr, vector& vc, matrix& Z) const
+	{
+		//data
+		double query, *work;
+		int32_t status, lwork = -1;
+		//query
+		dgeev_("N", "V", &m_rows, nullptr, &m_rows, nullptr, nullptr, nullptr, &m_rows, nullptr, &m_rows, &query, &lwork, &status);
+		//eigen
+		matrix A(*this);
+		lwork = (int32_t) query;
+		work = new double[lwork];
+		dgeev_("N", "V", &m_rows, A.data(), &m_rows, vr.data(), vc.data(), nullptr, &m_rows, Z.data(), &m_rows, work, &lwork, &status);
+		//delete
+		delete[] work;
+		//return
+		return status == 0;
+	}
+
+	bool matrix::eigen_sym(vector& v, matrix& Z) const
 	{
 		//data
 		double query, *work;
@@ -778,16 +797,16 @@ namespace math
 		//query
 		dsyev_("V", "L", &m_rows, nullptr, &m_rows, nullptr, &query, &lwork, &status);
 		//eigen
-		P = *this;
+		Z = *this;
 		lwork = (int32_t) query;
 		work = new double[lwork];
-		dsyev_("V", "L", &m_rows, P.m_ptr, &m_rows, v.m_ptr, work, &lwork, &status);
+		dsyev_("V", "L", &m_rows, Z.m_ptr, &m_rows, v.m_ptr, work, &lwork, &status);
 		//delete
 		delete[] work;
 		//return
 		return status == 0;
 	}
-	bool matrix::eigen_sym(vector& v, matrix& P, const matrix& B) const
+	bool matrix::eigen_sym(vector& v, matrix& Z, const matrix& B) const
 	{
 		//data
 		double query, *work;
@@ -796,11 +815,11 @@ namespace math
 		//query
 		dsygv_(&type, "V", "L", &m_rows, nullptr, &m_rows, nullptr, &m_rows, nullptr, &query, &lwork, &status);
 		//eigen
-		P = *this;
+		Z = *this;
 		matrix Q = B;
 		lwork = (int32_t) query;
 		work = new double[lwork];
-		dsygv_(&type, "V", "L", &m_rows, P.m_ptr, &m_rows, Q.m_ptr, &m_rows, v.m_ptr, work, &lwork, &status);
+		dsygv_(&type, "V", "L", &m_rows, Z.m_ptr, &m_rows, Q.m_ptr, &m_rows, v.m_ptr, work, &lwork, &status);
 		//delete
 		delete[] work;
 		//return

@@ -45,6 +45,9 @@
     <ClCompile Include="src\rotations\vec3_rotation_gradient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\solvers\harmonic_pyramid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\tests.hpp">

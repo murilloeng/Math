@@ -62,15 +62,11 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>../../external/cpp/lib/x64/libblas.lib;../../external/cpp/lib/x64/liblapack.lib;../../external/cpp/lib/x64/libfftw3-3.lib;../../external/cpp/lib/x64/libquadruled.lib;../dist/$(Platform)/$(Configuration)/Math.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../external/cpp/lib/x64/libfftw3-3.lib;../../external/cpp/lib/x64/libopenblas.lib;../../external/cpp/lib/x64/libquadruled.lib;../dist/$(Platform)/$(Configuration)/Math.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\external\cpp\dll\x64\libblas.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\liblapack.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\libfftw3-3.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\libgfortran-3.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\libquadmath-0.dll dist\$(platform)\$(configuration) &gt; nul</Command>
+      <Command>copy ..\..\external\cpp\dll\x64\libfftw3-3.dll dist\$(platform)\$(configuration) &gt; nul
+copy ..\..\external\cpp\dll\x64\libopenblas.dll dist\$(platform)\$(configuration) &gt; nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -88,15 +84,11 @@ copy ..\..\external\cpp\dll\x64\libquadmath-0.dll dist\$(platform)\$(configurati
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>../../external/cpp/lib/x64/libblas.lib;../../external/cpp/lib/x64/liblapack.lib;../../external/cpp/lib/x64/libfftw3-3.lib;../../external/cpp/lib/x64/libquadrule.lib;../dist/$(Platform)/$(Configuration)/Math.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>../../external/cpp/lib/x64/libfftw3-3.lib;../../external/cpp/lib/x64/libopenblas.lib;../../external/cpp/lib/x64/libquadrule.lib;../dist/$(Platform)/$(Configuration)/Math.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\external\cpp\dll\x64\libblas.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\liblapack.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\libfftw3-3.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\libgfortran-3.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\libgcc_s_sjlj-1.dll dist\$(platform)\$(configuration) &gt; nul
-copy ..\..\external\cpp\dll\x64\libquadmath-0.dll dist\$(platform)\$(configuration) &gt; nul</Command>
+      <Command>copy ..\..\external\cpp\dll\x64\libfftw3-3.dll dist\$(platform)\$(configuration) &gt; nul
+copy ..\..\external\cpp\dll\x64\libopenblas.dll dist\$(platform)\$(configuration) &gt; nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
