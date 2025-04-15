@@ -20,11 +20,11 @@ namespace math
 	//constructors
 	harmonic::harmonic(void) : 
 		m_args(nullptr), m_size(0), m_step_max(0), m_harmonics(0), 
-		m_attempt_max(0), m_iteration_max(0), m_quadrature_order(0), 
+		m_attempt_max(0), m_iteration_max(0), m_amplitude_steps(0), m_stability_steps(0), m_quadrature_order(0), 
+		m_stability(false), m_strategy(harmonic_strategy::uniform_increment), m_control(harmonic_control::load),
 		m_dpg(0), m_tolerance(0), 
 		m_l_0(0), m_l_min(-DBL_MAX), m_l_max(+DBL_MAX), 
 		m_w_0(0), m_w_min(-DBL_MAX), m_w_max(+DBL_MAX),
-		m_strategy(harmonic_strategy::uniform_increment), m_control(harmonic_control::load),
 		m_internal_force(nullptr), m_external_force(nullptr), 
 		m_inertia(nullptr), m_damping(nullptr), m_stiffness(nullptr),
 		m_sq(nullptr), m_wq(nullptr), 
@@ -101,14 +101,7 @@ namespace math
 			fprintf(file, "%d ", m_stability_data[i]);
 			for(uint32_t j = 0; j < nd; j++)
 			{
-				double z = m_z_data[nd * nz * i + j];
-				for(uint32_t k = 1; k <= nh; k++)
-				{
-					const double a = m_z_data[nd * nz * i + (2 * k - 1) * nd + j];
-					const double b = m_z_data[nd * nz * i + (2 * k + 0) * nd + j];
-					z += sqrt(a * a + b * b);
-				}
-				fprintf(file, "%+.6e ", z);
+				fprintf(file, "%+.6e ", m_amplitudes_data[nd * i + j]);
 				fprintf(file, "%+.6e ", m_z_data[nd * nz * i + j]);
 				for(uint32_t k = 1; k <= nh; k++)
 				{
@@ -228,7 +221,7 @@ namespace math
 	void harmonic::cleanup(void)
 	{
 		double* data[] = {
-			m_sq, m_wq,
+			m_sq, m_wq, m_amplitudes_data,
 			m_d, m_v, m_a, m_dvw, m_daw, m_dfrw,
 			m_dz, m_dz0r, m_dz0t, m_ddzr, m_ddzt,
 			m_sd, m_sv, m_sa, m_sr, m_sc, m_St, m_Sm, m_Sz,
@@ -258,6 +251,7 @@ namespace math
 		m_w_data = new double[ns + 1];
 		m_stability_data = new bool[ns + 1];
 		m_z_data = new double[nd * nz * (ns + 1)];
+		m_amplitudes_data = new double[nd * (ns + 1)];
 		//allocate nd x nd
 		double** data_nd_nd[] = {
 			&m_Kt, &m_Ct, &m_Mt, &m_St
@@ -287,6 +281,7 @@ namespace math
 		//quadrature
 		legendre_dr_compute(m_quadrature_order, m_sq, m_wq);
 		//state
+		m_step = 0;
 		m_l_old = m_l_new = m_l_0;
 		m_w_old = m_w_new = m_w_0;
 		matrix At(m_At, nd * nz, nd * nz);
@@ -308,6 +303,7 @@ namespace math
 			printf("Harmonic solver failed to converge at initialization\n");
 			return;
 		}
+		compute_amplitudes();
 		memcpy(m_z_old, m_z_new, nd * nz * sizeof(double));
 	}
 
@@ -720,6 +716,7 @@ namespace math
 		const uint32_t nd = m_size;
 		const uint32_t nz = 2 * m_harmonics + 1;
 		//record
+		compute_amplitudes();
 		m_l_data[step] = m_l_new;
 		m_w_data[step] = m_w_new;
 		memcpy(m_z_data + step * nd * nz, m_z_new, nd * nz * sizeof(double));
@@ -780,6 +777,26 @@ namespace math
 		dz += ddzr + m_ddp * ddzt;
 		//increment
 		increment_state();
+	}
+	void harmonic::compute_amplitudes(void)
+	{
+		//data
+		double t;
+		const uint32_t nd = m_size;
+		const double T = 2 * M_PI / m_w_new;
+		const uint32_t ns = m_amplitude_steps;
+		vector y(m_amplitudes_data + nd * m_step, nd);
+		//compute
+		y.zeros();
+		for(uint32_t i = 0; i < ns; i++)
+		{
+			t = T * i / ns;
+			compute_state(t);
+			for(uint32_t j = 0; j < nd; j++)
+			{
+				y[j] = fmax(y[j], fabs(m_d[j]));
+			}
+		}
 	}
 
 	void harmonic::compute_parameter_predictor(void)

@@ -63,6 +63,7 @@ void tests::solvers::harmonic_pyramid(void)
 	solver.m_tolerance = 1.00e-05;
 	solver.m_quadrature_order = 20;
 	solver.m_stability_steps = 100;
+	solver.m_amplitude_steps = 100;
 	solver.m_control = math::harmonic_control::frequency;
 	solver.m_strategy = math::harmonic_strategy::arc_length_spherical;
 	//system

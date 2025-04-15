@@ -14,7 +14,7 @@ namespace math
 	{
 		minimal_norm			= 0,
 		uniform_increment		= 1,
-		arc_length_spherical		= 2,
+		arc_length_spherical	= 2,
 		arc_length_cylindrical	= 3
 	};
 }
@@ -47,6 +47,7 @@ namespace math
 		uint32_t m_harmonics;
 		uint32_t m_attempt_max;
 		uint32_t m_iteration_max;
+		uint32_t m_amplitude_steps;
 		uint32_t m_stability_steps;
 		uint32_t m_quadrature_order;
 
@@ -96,10 +97,11 @@ namespace math
 		void update(void);
 		void restore(void);
 		void record(uint32_t);
-
+		
 		void increment_state(void);
 		void compute_predictor(void);
 		void compute_corrector(void);
+		void compute_amplitudes(void);
 
 		void compute_parameter_predictor(void);
 		void compute_parameter_corrector(void);
@@ -124,7 +126,7 @@ namespace math
 
 		double *m_sq, *m_wq;
 		double *m_d, *m_v, *m_a;
-
+		
 		double m_dp, m_ddp;
 		double m_l_old, m_l_new, *m_l_data;
 		double m_w_old, m_w_new, *m_w_data;
@@ -132,6 +134,7 @@ namespace math
 		double *m_dz, *m_dz0r, *m_dz0t, *m_ddzr, *m_ddzt;
 
 		bool* m_stability_data;
+		double *m_amplitudes_data;
 		double *m_dvw, *m_daw, *m_dfrw;
 		double *m_r, *m_fi, *m_fe, *m_fr;
 		double *m_Kt, *m_Ct, *m_Mt, *m_At, *m_bt;
