@@ -28,7 +28,7 @@ namespace math
 		m_internal_force(nullptr), m_external_force(nullptr), 
 		m_inertia(nullptr), m_damping(nullptr), m_stiffness(nullptr),
 		m_sq(nullptr), m_wq(nullptr), 
-		m_d(nullptr), m_v(nullptr), m_a(nullptr), m_dvw(nullptr), m_daw(nullptr),
+		m_d(nullptr), m_v(nullptr), m_a(nullptr),
 		m_l_data(nullptr), m_w_data(nullptr), m_z_old(nullptr), m_z_new(nullptr), m_z_data(nullptr),
 		m_dp(0), m_ddp(0),
 		m_dz(nullptr), m_dz0r(nullptr), m_dz0t(nullptr), m_ddzr(nullptr), m_ddzt(nullptr),
@@ -221,8 +221,8 @@ namespace math
 	void harmonic::cleanup(void)
 	{
 		double* data[] = {
+			m_d, m_v, m_a, m_dfrw,
 			m_sq, m_wq, m_amplitudes_data,
-			m_d, m_v, m_a, m_dvw, m_daw, m_dfrw,
 			m_dz, m_dz0r, m_dz0t, m_ddzr, m_ddzt,
 			m_sd, m_sv, m_sa, m_sr, m_sc, m_St, m_Sm, m_Sz,
 			m_l_data, m_w_data, m_z_old, m_z_new, m_z_data,
@@ -240,7 +240,7 @@ namespace math
 		const uint32_t nz = 2 * m_harmonics + 1;
 		//allocate nd
 		double** data_nd[] = {
-			&m_d, &m_v, &m_a, &m_fi, &m_fe, &m_fr, &m_dvw, &m_daw, &m_dfrw
+			&m_d, &m_v, &m_a, &m_fi, &m_fe, &m_fr, &m_dfrw
 		};
 		for(double** ptr : data_nd) *ptr = new double[nd];
 		//allocate nq
@@ -376,29 +376,6 @@ namespace math
 			{
 				m_a[j] -= i * i * w * w * ci * m_z_new[p1 + j];
 				m_a[j] -= i * i * w * w * si * m_z_new[p2 + j];
-			}
-		}
-	}
-	void harmonic::compute_frequency_gradients(double t)
-	{
-		//data
-		const double w = m_w_new;
-		const uint32_t nd = m_size;
-		memset(m_dvw, 0, nd * sizeof(double));
-		memset(m_daw, 0, nd * sizeof(double));
-		//gradients
-		for(uint32_t i = 1; i <= m_harmonics; i++)
-		{
-			const double ci = cos(i * w * t);
-			const double si = sin(i * w * t);
-			const uint32_t p1 = (2 * i - 1) * nd;
-			const uint32_t p2 = (2 * i + 0) * nd;
-			for(uint32_t j = 0; j < nd; j++)
-			{
-				m_dvw[j] -= i * si * m_z_new[p1 + j];
-				m_dvw[j] += i * ci * m_z_new[p2 + j];
-				m_daw[j] -= 2 * i * i * w * ci * m_z_new[p1 + j];
-				m_daw[j] -= 2 * i * i * w * si * m_z_new[p2 + j];
 			}
 		}
 	}
@@ -553,8 +530,8 @@ namespace math
 		const uint32_t nz = 2 * m_harmonics + 1;
 		//tangent
 		vector dfrw(m_dfrw, nd);
-		const vector dvw(m_dvw, nd);
-		const vector daw(m_daw, nd);
+		const vector v(m_v, nd);
+		const vector a(m_a, nd);
 		const matrix Kt(m_Kt, nd, nd);
 		const matrix Ct(m_Ct, nd, nd);
 		const matrix Mt(m_Mt, nd, nd);
@@ -572,9 +549,7 @@ namespace math
 			compute_acceleration(tk);
 			m_inertia(m_Mt, m_d, m_args);
 			m_damping(m_Ct, m_d, m_v, m_args);
-			//gradient
-			compute_frequency_gradients(tk);
-			dfrw = -Ct * dvw - Mt * daw;
+			dfrw = -(Ct * v + 2 * Mt * a) / w;
 			//tangent
 			vector(m_bt, nd) += wk * dfrw;
 			for(uint32_t i = 1; i <= m_harmonics; i++)

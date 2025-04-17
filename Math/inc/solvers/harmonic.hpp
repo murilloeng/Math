@@ -79,7 +79,6 @@ namespace math
 		void compute_residue(void);
 		void compute_velocity(double);
 		void compute_acceleration(double);
-		void compute_frequency_gradients(double);
 
 		//system
 		void compute_stability(void);
@@ -135,9 +134,8 @@ namespace math
 
 		bool* m_stability_data;
 		double *m_amplitudes_data;
-		double *m_dvw, *m_daw, *m_dfrw;
-		double *m_r, *m_fi, *m_fe, *m_fr;
 		double *m_Kt, *m_Ct, *m_Mt, *m_At, *m_bt;
+		double *m_r, *m_fi, *m_fe, *m_fr, *m_dfrw;
 		double *m_sd, *m_sv, *m_sa, *m_sr, *m_sc, *m_St, *m_Sm, *m_Sz;
 	};
 }
