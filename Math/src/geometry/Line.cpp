@@ -1,5 +1,7 @@
 //math
 #include "Math/Math/inc/geometry/Line.hpp"
+#include "Math/Math/inc/geometry/Point.hpp"
+#include "Math/Math/inc/geometry/Segment.hpp"
 
 namespace math
 {
@@ -24,7 +26,7 @@ namespace math
 		}
 		double Line::distance(const Point& point) const
 		{
-			return 0;
+			return point.distance(*this);
 		}
 		double Line::distance(const Segment& segment) const
 		{

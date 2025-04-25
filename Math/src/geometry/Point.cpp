@@ -1,5 +1,7 @@
 //math
+#include "Math/Math/inc/geometry/Line.hpp"
 #include "Math/Math/inc/geometry/Point.hpp"
+#include "Math/Math/inc/geometry/Segment.hpp"
 
 namespace math
 {
