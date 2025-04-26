@@ -7,6 +7,7 @@ namespace math
 	namespace geometry
 	{
 		class Point;
+		class Plane;
 		class Segment;
 
 		class Line
@@ -20,6 +21,7 @@ namespace math
 
 			//distance
 			double distance(const Line&) const;
+			double distance(const Plane&) const;
 			double distance(const Point&) const;
 			double distance(const Segment&) const;
 

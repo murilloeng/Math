@@ -7,23 +7,17 @@ namespace math
 	namespace geometry
 	{
 		class Line;
-		class Plane;
 		class Point;
+		class Segment;
 
-		class Segment
+		class Plane
 		{
 		public:
-			//constructors
-			Segment(vec3 = {0, 0, 0}, vec3 = {1, 0, 0});
+			//constructor
+			Plane(void);
 
 			//destructor
-			~Segment(void);
-
-			//length
-			double length(void) const;
-
-			//direction
-			vec3 direction(void) const;
+			~Plane(void);
 
 			//distance
 			double distance(const Line&) const;
@@ -32,7 +26,17 @@ namespace math
 			double distance(const Segment&) const;
 
 			//data
-			vec3 m_points[2];
+			vec3 m_point;
+			vec3 m_normal;
 		};
+		
+		Plane::Plane(/* args */)
+		{
+		}
+		
+		Plane::~Plane()
+		{
+		}
+		
 	}
 }
