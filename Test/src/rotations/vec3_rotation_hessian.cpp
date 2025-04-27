@@ -49,8 +49,8 @@ void tests::rotations::vec3_rotation_hessian(void)
 		uint32_t selection;
 		printf("Inverse?\n");
 		printf("(1) Yes (2) No\n");
-		scanf("%d", &selection);
-		if(selection == 1 || selection == 2) {inverse = selection == 1; break;}
+		const int args = scanf("%d", &selection);
+		if( args == 1 && (selection == 1 || selection == 2)) {inverse = selection == 1; break;}
 		printf("Invalid option!\n");
 	}
 	while(true)
@@ -58,8 +58,8 @@ void tests::rotations::vec3_rotation_hessian(void)
 		uint32_t selection;
 		printf("Transpose?\n");
 		printf("(1) Yes (2) No\n");
-		scanf("%d", &selection);
-		if(selection == 1 || selection == 2) {transpose = selection == 1; break;}
+		const int args = scanf("%d", &selection);
+		if(args && (selection == 1 || selection == 2)) {transpose = selection == 1; break;}
 		printf("Invalid option!\n");
 	}
 	//test

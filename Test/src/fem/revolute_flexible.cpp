@@ -182,8 +182,8 @@ void tests::fem::revolute_flexible(void)
 	{
 		printf("Test what?\n");
 		printf("(1) force (2) stiffness\n");
-		scanf("%d", &selection);
-		if(selection == 1 || selection == 2) break;
+		const int args = scanf("%d", &selection);
+		if(args == 1 && (selection == 1 || selection == 2)) break;
 		printf("Invalid option!\n");
 	}
 	//test

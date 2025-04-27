@@ -61,8 +61,8 @@ void tests::rotations::vec3_rotation_gradient(void)
 		uint32_t selection;
 		printf("Update mode:\n");
 		printf("(1) Spatial (2) Material\n");
-		scanf("%d", &selection);
-		if(selection == 1 || selection == 2) {mode = selection == 1; break;}
+		const int args = scanf("%d", &selection);
+		if(args == 1 && (selection == 1 || selection == 2)) {mode = selection == 1; break;}
 		printf("Invalid option!\n");
 	}
 	//test

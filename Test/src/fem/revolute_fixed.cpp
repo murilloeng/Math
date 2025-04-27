@@ -87,8 +87,8 @@ static void menu_what(void)
 	{
 		printf("Test what:\n");
 		printf("(1) Energy (2) Dependencies\n");
-		scanf("%d", &what);
-		if(what == 1 || what == 2) break;
+		const int args = scanf("%d", &what);
+		if(args == 1 && (what == 1 || what == 2)) break;
 		printf("Invalid option!\n");
 	}
 }
@@ -98,8 +98,8 @@ static void menu_order(void)
 	{
 		printf("Order:\n");
 		printf("(1) Gradient (2) Hessian\n");
-		scanf("%d", &order);
-		if(order == 1 || order == 2) break;
+		const int args = scanf("%d", &order);
+		if(args == 1 && (order == 1 || order == 2)) break;
 		printf("Invalid option!\n");
 	}
 }

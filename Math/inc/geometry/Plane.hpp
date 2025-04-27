@@ -29,14 +29,5 @@ namespace math
 			vec3 m_point;
 			vec3 m_normal;
 		};
-		
-		Plane::Plane(/* args */)
-		{
-		}
-		
-		Plane::~Plane()
-		{
-		}
-		
 	}
 }
