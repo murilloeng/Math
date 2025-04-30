@@ -2,6 +2,7 @@
 
 //std
 #include <ctime>
+#include <cstdio>
 #include <cstdint>
 
 typedef void(*ndiff_fun_1)(double*, const double*, void**);
@@ -15,6 +16,8 @@ namespace math
 
 	void swap(double&, double&);
 	void swap(uint32_t&, uint32_t&);
+
+	void skip_lines(FILE*, uint32_t);
 
 	double randu(double = 0, double = 1);
 	double bound(double, double = -1, double = +1);

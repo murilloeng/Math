@@ -42,6 +42,19 @@ namespace math
 		a ^= b;
 	}
 
+	void skip_lines(FILE* file, uint32_t lines)
+	{
+		char buffer[2000];
+		for(uint32_t i = 0; i < lines; i++)
+		{
+			if(!fgets(buffer, sizeof(buffer), file))
+			{
+				printf("Error: Unable to skip line from file!\n");
+				exit(EXIT_FAILURE);
+			}
+		}
+	}
+
 	double randu(double a, double b)
 	{
 		return a + rand() * (b - a) / RAND_MAX;
