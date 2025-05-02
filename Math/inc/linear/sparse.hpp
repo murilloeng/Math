@@ -54,9 +54,9 @@ namespace math
 		matrix convert(void) const;
 
 		//span
-		void span(sparse&, uint32_t, uint32_t, uint32_t, uint32_t) const;
-		void span_data(sparse&, uint32_t, uint32_t, uint32_t, uint32_t) const;
-		void span_pattern(sparse&, uint32_t, uint32_t, uint32_t, uint32_t) const;
+		void span(sparse&, uint32_t, uint32_t) const;
+		void span_data(sparse&, uint32_t, uint32_t) const;
+		void span_pattern(sparse&, uint32_t, uint32_t) const;
 
 	private:
 		//data
@@ -65,6 +65,10 @@ namespace math
 		//print
 		void print_dense(void) const;
 		void print_sparse(void) const;
+
+		//span
+		void span_count(sparse&, uint32_t, uint32_t, bool) const;
+		void span_check(sparse&, uint32_t, uint32_t, bool) const;
 
 		//data
 		bool m_own;
