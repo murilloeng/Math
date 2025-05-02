@@ -36,18 +36,18 @@ namespace math
 	}
 	matrix::matrix(const matrix& m) : matrix(m.m_rows, m.m_cols)
 	{
-		memcpy(m_ptr, m.m_ref, m_rows * m_cols * sizeof(double));
+		memcpy(m_data_ptr, m.m_data_ref, m_rows * m_cols * sizeof(double));
 	}
 	matrix::matrix(uint32_t rows, uint32_t cols, mode init) : m_own(true), m_rows(rows), m_cols(cols)
 	{
 		//data
 		if(rows * cols <= MATRIX_STATIC_SIZE)
 		{
-			m_ref = m_ptr = m_mem;
+			m_data_ref = m_data_ptr = m_data_mem;
 		}
 		else
 		{
-			m_ref = m_ptr = new double[rows * cols];
+			m_data_ref = m_data_ptr = new double[rows * cols];
 		}
 		//setup
 		if(init == mode::eye)
@@ -60,7 +60,7 @@ namespace math
 		}
 	}
 	matrix::matrix(double* ptr, uint32_t rows, uint32_t cols, mode init) : 
-		m_own(false), m_ptr(ptr), m_rows(rows), m_cols(cols), m_ref(ptr)
+		m_own(false), m_rows(rows), m_cols(cols), m_data_ptr(ptr), m_data_ref(ptr)
 	{
 		if(init == mode::eye)
 		{
@@ -72,7 +72,7 @@ namespace math
 		}
 	}
 	matrix::matrix(const double* ref, uint32_t rows, uint32_t cols) : 
-		m_own(false), m_ptr(nullptr), m_rows(rows), m_cols(cols), m_ref(ref)
+		m_own(false), m_rows(rows), m_cols(cols), m_data_ptr(nullptr), m_data_ref(ref)
 	{
 		return;
 	}
@@ -96,18 +96,18 @@ namespace math
 		//allocate
 		if(m_rows * m_cols <= MATRIX_STATIC_SIZE)
 		{
-			m_ref = m_ptr = m_mem;
+			m_data_ref = m_data_ptr = m_data_mem;
 		}
 		else
 		{
-			m_ref = m_ptr = new double[m_rows * m_cols];
+			m_data_ref = m_data_ptr = new double[m_rows * m_cols];
 		}
 		//assign
 		if(columns)
 		{
 			for(uint32_t i = 0; i < m_cols; i++)
 			{
-				memcpy(m_ptr + i * m_rows, std::data(data[i]), m_rows * sizeof(double));
+				memcpy(m_data_ptr + i * m_rows, std::data(data[i]), m_rows * sizeof(double));
 			}
 		}
 		else
@@ -117,7 +117,7 @@ namespace math
 				const double* row_data = std::data(data[i]);
 				for(uint32_t j = 0; j < m_cols; j++)
 				{
-					m_ptr[i + m_rows * j] = row_data[j];
+					m_data_ptr[i + m_rows * j] = row_data[j];
 				}
 			}
 		}
@@ -126,9 +126,9 @@ namespace math
 	//destructor
 	matrix::~matrix(void)
 	{
-		if(m_own && m_ptr != m_mem)
+		if(m_own && m_data_ptr != m_data_mem)
 		{
-			delete[] m_ptr;
+			delete[] m_data_ptr;
 		}
 	}
 
@@ -144,18 +144,18 @@ namespace math
 			exit(EXIT_FAILURE);
 		}
 		//allocate
-		if(m_own && m_ptr != m_mem)
+		if(m_own && m_data_ptr != m_data_mem)
 		{
-			delete[] m_ptr;
+			delete[] m_data_ptr;
 		}
-		m_ref = m_ptr = new double[m_rows * m_cols];
+		m_data_ref = m_data_ptr = new double[m_rows * m_cols];
 		//read
 		rewind(file);
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
 			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				if(fscanf(file, "%lf", &m_ptr[i + m_rows * j]) != 1)
+				if(fscanf(file, "%lf", &m_data_ptr[i + m_rows * j]) != 1)
 				{
 					printf("\tError: Unable to load matrix!\n");
 					exit(EXIT_FAILURE);
@@ -176,7 +176,7 @@ namespace math
 		{
 			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				fprintf(file, "%+.6e ", m_ref[i + m_rows * j]);
+				fprintf(file, "%+.6e ", m_data_ref[i + m_rows * j]);
 			}
 			fprintf(file, "\n");
 		}
@@ -228,7 +228,7 @@ namespace math
 				r(i, j) = 0;
 				for(uint32_t k = 0; k < m_cols; k++)
 				{
-					r.m_ptr[i + r.m_rows * j] += m_ref[i + m_rows * k] * m.m_ref[k + m.m_rows * j];
+					r.m_data_ptr[i + r.m_rows * j] += m_data_ref[i + m_rows * k] * m.m_data_ref[k + m.m_rows * j];
 				}
 			}
 		}
@@ -239,7 +239,7 @@ namespace math
 	{
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] = s;
+			m_data_ptr[i] = s;
 		}
 		return *this;
 	}
@@ -252,13 +252,13 @@ namespace math
 			exit(EXIT_FAILURE);
 		}
 		//assign
-		memcpy(m_ptr, m.m_ref, m_rows * m_cols * sizeof(double));
+		memcpy(m_data_ptr, m.m_data_ref, m_rows * m_cols * sizeof(double));
 		//return
 		return *this;
 	}
 	matrix& matrix::operator=(const double* ref)
 	{
-		memcpy(m_ptr, ref, m_rows * m_cols * sizeof(double));
+		memcpy(m_data_ptr, ref, m_rows * m_cols * sizeof(double));
 		return *this;
 	}
 	matrix& matrix::operator=(std::initializer_list<double> list)
@@ -270,7 +270,7 @@ namespace math
 			exit(EXIT_FAILURE);
 		}
 		//assign
-		memcpy(m_ptr, std::data(list), m_rows * m_cols * sizeof(double));
+		memcpy(m_data_ptr, std::data(list), m_rows * m_cols * sizeof(double));
 		//return
 		return *this;
 	}
@@ -294,7 +294,7 @@ namespace math
 		//assign
 		for(uint32_t i = 0; i < m_cols; i++)
 		{
-			memcpy(m_ptr + i * m_rows, std::data(data[i]), m_rows * sizeof(double));
+			memcpy(m_data_ptr + i * m_rows, std::data(data[i]), m_rows * sizeof(double));
 		}
 		//return
 		return *this;
@@ -304,7 +304,7 @@ namespace math
 	{
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] += s;
+			m_data_ptr[i] += s;
 		}
 		return *this;
 	}
@@ -312,7 +312,7 @@ namespace math
 	{
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] -= s;
+			m_data_ptr[i] -= s;
 		}
 		return *this;
 	}
@@ -320,7 +320,7 @@ namespace math
 	{
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] *= s;
+			m_data_ptr[i] *= s;
 		}
 		return *this;
 	}
@@ -328,7 +328,7 @@ namespace math
 	{
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] /= s;
+			m_data_ptr[i] /= s;
 		}
 		return *this;
 	}
@@ -344,7 +344,7 @@ namespace math
 		//compute
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] += m.m_ref[i];
+			m_data_ptr[i] += m.m_data_ref[i];
 		}
 		//return
 		return *this;
@@ -360,7 +360,7 @@ namespace math
 		//compute
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] -= m.m_ref[i];
+			m_data_ptr[i] -= m.m_data_ref[i];
 		}
 		//return
 		return *this;
@@ -370,7 +370,7 @@ namespace math
 	{
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] += ref[i];
+			m_data_ptr[i] += ref[i];
 		}
 		return *this;
 	}
@@ -378,35 +378,35 @@ namespace math
 	{
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] -= ref[i];
+			m_data_ptr[i] -= ref[i];
 		}
 		return *this;
 	}
 
 	double& matrix::operator[](uint32_t i)
 	{
-		return m_ptr[i];
+		return m_data_ptr[i];
 	}
 	double& matrix::operator()(uint32_t i)
 	{
-		return m_ptr[i];
+		return m_data_ptr[i];
 	}
 	double& matrix::operator()(uint32_t i, uint32_t j)
 	{
-		return m_ptr[i + m_rows * j];
+		return m_data_ptr[i + m_rows * j];
 	}
 
 	const double& matrix::operator[](uint32_t i) const
 	{
-		return m_ref[i];
+		return m_data_ref[i];
 	}
 	const double& matrix::operator()(uint32_t i) const
 	{
-		return m_ref[i];
+		return m_data_ref[i];
 	}
 	const double& matrix::operator()(uint32_t i, uint32_t j) const
 	{
-		return m_ref[i + m_rows * j];
+		return m_data_ref[i + m_rows * j];
 	}
 
 	//data
@@ -421,11 +421,11 @@ namespace math
 
 	double* matrix::data(void)
 	{
-		return m_ptr;
+		return m_data_ptr;
 	}
 	const double* matrix::data(void) const
 	{
-		return m_ref;
+		return m_data_ref;
 	}
 
 	//size
@@ -440,17 +440,17 @@ namespace math
 		//memory
 		if(rows * cols != m_rows * m_cols)
 		{
-			if(m_ptr != m_mem)
+			if(m_data_ptr != m_data_mem)
 			{
-				delete[] m_ptr;
+				delete[] m_data_ptr;
 			}
 			if(rows * cols <= MATRIX_STATIC_SIZE)
 			{
-				m_ref = m_ptr = m_mem;
+				m_data_ref = m_data_ptr = m_data_mem;
 			}
 			else
 			{
-				m_ref = m_ptr = new double[rows * cols];
+				m_data_ref = m_data_ptr = new double[rows * cols];
 			}
 		}
 		//setup
@@ -464,10 +464,10 @@ namespace math
 	double matrix::min(bool q, uint32_t* p) const
 	{
 		if(p) *p = 0;
-		double w, v = q ? fabs(m_ref[0]) : m_ref[0];
+		double w, v = q ? fabs(m_data_ref[0]) : m_data_ref[0];
 		for(uint32_t i = 1; i < m_rows * m_cols; i++)
 		{
-			w = q ? fabs(m_ref[i]) : m_ref[i];
+			w = q ? fabs(m_data_ref[i]) : m_data_ref[i];
 			if(w < v)
 			{
 				v = w;
@@ -479,10 +479,10 @@ namespace math
 	double matrix::max(bool q, uint32_t* p) const
 	{
 		if(p) *p = 0;
-		double w, v = q ? fabs(m_ref[0]) : m_ref[0];
+		double w, v = q ? fabs(m_data_ref[0]) : m_data_ref[0];
 		for(uint32_t i = 1; i < m_rows * m_cols; i++)
 		{
-			w = q ? fabs(m_ref[i]) : m_ref[i];
+			w = q ? fabs(m_data_ref[i]) : m_data_ref[i];
 			if(w > v)
 			{
 				v = w;
@@ -499,14 +499,14 @@ namespace math
 		{
 			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				m_ptr[i + m_rows * j] = i == j;
+				m_data_ptr[i + m_rows * j] = i == j;
 			}
 		}
 		return *this;
 	}
 	matrix& matrix::zeros(void)
 	{
-		memset(m_ptr, 0, m_rows * m_cols * sizeof(double));
+		memset(m_data_ptr, 0, m_rows * m_cols * sizeof(double));
 		return *this;
 	}
 	matrix& matrix::swap_rows(uint32_t a, uint32_t b)
@@ -522,7 +522,7 @@ namespace math
 		{
 			for(uint32_t i = 0; i < m_cols; i++)
 			{
-				swap(m_ptr[a + m_rows * i], m_ptr[b + m_rows * i]);
+				swap(m_data_ptr[a + m_rows * i], m_data_ptr[b + m_rows * i]);
 			}
 		}
 		return *this;
@@ -540,7 +540,7 @@ namespace math
 		{
 			for(uint32_t i = 0; i < m_rows; i++)
 			{
-				swap(m_ptr[i + m_rows * a], m_ptr[i + m_rows * b]);
+				swap(m_data_ptr[i + m_rows * a], m_data_ptr[i + m_rows * b]);
 			}
 		}
 		return *this;
@@ -549,7 +549,7 @@ namespace math
 	{
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m_ptr[i] = (b - a) * rand() / RAND_MAX + a;
+			m_data_ptr[i] = (b - a) * rand() / RAND_MAX + a;
 		}
 		return *this;
 	}
@@ -565,13 +565,13 @@ namespace math
 		{
 			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				if(v != 0 && fabs(m_ref[i + m_rows * j]) < v)
+				if(v != 0 && fabs(m_data_ref[i + m_rows * j]) < v)
 				{
 					printf("--------- ");
 				}
 				else
 				{
-					printf("%+.2e ", m_ref[i + m_rows * j]);
+					printf("%+.2e ", m_data_ref[i + m_rows * j]);
 				}
 			}
 			printf("\n");
@@ -584,7 +584,7 @@ namespace math
 		double s = 0;
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			s += m_ref[i] * m_ref[i];
+			s += m_data_ref[i] * m_data_ref[i];
 		}
 		return sqrt(s);
 	}
@@ -597,7 +597,7 @@ namespace math
 			{
 				for(uint32_t j = 0; j < m_cols; j++)
 				{
-					s += m_ref[i + m_rows * j];
+					s += m_data_ref[i + m_rows * j];
 				}
 			}
 			return s;
@@ -617,7 +617,7 @@ namespace math
 			exit(EXIT_FAILURE);
 		}
 		//decompose
-		dgetrf_(&m_rows, &m_cols, M.m_ptr, &m_rows, pivot, &status);
+		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &status);
 		//check
 		if(status != 0)
 		{
@@ -628,7 +628,7 @@ namespace math
 		double d = 1;
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
-			d *= M.m_ptr[i + m_rows * i];
+			d *= M.m_data_ptr[i + m_rows * i];
 			if(i + 1 != pivot[i]) d *= -1;
 		}
 		//return
@@ -650,12 +650,12 @@ namespace math
 			exit(EXIT_FAILURE);
 		}
 		//query
-		dgetrf_(&m_rows, &m_cols, M.m_ptr, &m_rows, pivot, &status);
-		dgetri_(&m_rows, M.m_ptr, &m_rows, pivot, &query, &lwork, &status);
+		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &status);
+		dgetri_(&m_rows, M.m_data_ptr, &m_rows, pivot, &query, &lwork, &status);
 		//inverse
 		lwork = int32_t(query);
 		work = (double*) alloca(lwork * sizeof(double));
-		dgetri_(&m_rows, M.m_ptr, &m_rows, pivot, work, &lwork, &status);
+		dgetri_(&m_rows, M.m_data_ptr, &m_rows, pivot, work, &lwork, &status);
 		//test
 		if(test) *test = status == 0;
 		//return
@@ -668,7 +668,7 @@ namespace math
 		{
 			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				M.m_ptr[j + m_cols * i] = m_ref[i + m_rows * j];
+				M.m_data_ptr[j + m_cols * i] = m_data_ref[i + m_rows * j];
 			}
 		}
 		return M;
@@ -692,7 +692,7 @@ namespace math
 			exit(EXIT_FAILURE);
 		}
 		//solve
-		dgesv_(&m_rows, &x.m_cols, M.m_ptr, &m_rows, pivot, x.m_ptr, &m_rows, &status);
+		dgesv_(&m_rows, &x.m_cols, M.m_data_ptr, &m_rows, pivot, x.m_data_ptr, &m_rows, &status);
 		//return
 		return status == 0;
 	}
@@ -708,12 +708,12 @@ namespace math
 			double s = 0, v = 0;
 			for(uint32_t i = 0; i < m_rows; i++)
 			{
-				s = fmax(s, m_ref[i + m_rows * i]);
+				s = fmax(s, m_data_ref[i + m_rows * i]);
 				for(uint32_t j = i + 1; j < m_cols; j++)
 				{
-					s = fmax(s, m_ref[i + m_rows * j]);
-					s = fmax(s, m_ref[j + m_rows * i]);
-					v = fmax(v, fabs(m_ref[i + m_rows * j] - m_ref[j + m_rows * i]));
+					s = fmax(s, m_data_ref[i + m_rows * j]);
+					s = fmax(s, m_data_ref[j + m_rows * i]);
+					v = fmax(v, fabs(m_data_ref[i + m_rows * j] - m_data_ref[j + m_rows * i]));
 				}
 			}
 			return m_rows == 1 || v < t * s;
@@ -727,7 +727,7 @@ namespace math
 		{
 			for(uint32_t j = 0; j < 3; j++)
 			{
-				m[i + 3 * j] = m_ref[i + r + m_rows * (j + c)];
+				m[i + 3 * j] = m_data_ref[i + r + m_rows * (j + c)];
 			}
 		}
 		return m;
@@ -761,11 +761,11 @@ namespace math
 		const char* jobz = "A";
 		int32_t* iwork = (int32_t*) alloca(8 * std::min(m_rows, m_cols) * sizeof(int32_t));
 		//query
-		dgesdd_(jobz, &m_rows, &m_cols, A.m_ptr, &m_rows, s.m_ptr, U.m_ptr, &m_rows, V.m_ptr, &m_cols, &query, &lwork, iwork, &info);
+		dgesdd_(jobz, &m_rows, &m_cols, A.m_data_ptr, &m_rows, s.m_data_ptr, U.m_data_ptr, &m_rows, V.m_data_ptr, &m_cols, &query, &lwork, iwork, &info);
 		//decompose
 		lwork = (uint32_t) query;
 		double* work = (double*) alloca(lwork * sizeof(double));
-		dgesdd_(jobz, &m_rows, &m_cols, A.m_ptr, &m_rows, s.m_ptr, U.m_ptr, &m_rows, V.m_ptr, &m_cols, work, &lwork, iwork, &info);
+		dgesdd_(jobz, &m_rows, &m_cols, A.m_data_ptr, &m_rows, s.m_data_ptr, U.m_data_ptr, &m_rows, V.m_data_ptr, &m_cols, work, &lwork, iwork, &info);
 		//return
 		return info == 0;
 	}
@@ -800,7 +800,7 @@ namespace math
 		Z = *this;
 		lwork = (int32_t) query;
 		work = new double[lwork];
-		dsyev_("V", "L", &m_rows, Z.m_ptr, &m_rows, v.m_ptr, work, &lwork, &status);
+		dsyev_("V", "L", &m_rows, Z.m_data_ptr, &m_rows, v.m_data_ptr, work, &lwork, &status);
 		//delete
 		delete[] work;
 		//return
@@ -819,7 +819,7 @@ namespace math
 		matrix Q = B;
 		lwork = (int32_t) query;
 		work = new double[lwork];
-		dsygv_(&type, "V", "L", &m_rows, Z.m_ptr, &m_rows, Q.m_ptr, &m_rows, v.m_ptr, work, &lwork, &status);
+		dsygv_(&type, "V", "L", &m_rows, Z.m_data_ptr, &m_rows, Q.m_data_ptr, &m_rows, v.m_data_ptr, work, &lwork, &status);
 		//delete
 		delete[] work;
 		//return
@@ -832,7 +832,7 @@ namespace math
 		double m = 0;
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			m += m_ref[i];
+			m += m_data_ref[i];
 		}
 		return m / m_rows / m_cols;
 	}
@@ -842,7 +842,7 @@ namespace math
 		const double m = mean();
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
 		{
-			s += m_ref[i] * m_ref[i];
+			s += m_data_ref[i] * m_data_ref[i];
 		}
 		return s / m_rows / m_cols - m * m;
 	}

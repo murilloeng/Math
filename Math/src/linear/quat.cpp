@@ -28,17 +28,17 @@ namespace math
 	}
 	quat::quat(double t, uint32_t i) : vector(4)
 	{
-		m_ptr[0] = cos(t / 2);
-		m_ptr[1] = i == 0 ? sin(t / 2) : 0;
-		m_ptr[2] = i == 1 ? sin(t / 2) : 0;
-		m_ptr[3] = i == 2 ? sin(t / 2) : 0;
+		m_data_ptr[0] = cos(t / 2);
+		m_data_ptr[1] = i == 0 ? sin(t / 2) : 0;
+		m_data_ptr[2] = i == 1 ? sin(t / 2) : 0;
+		m_data_ptr[3] = i == 2 ? sin(t / 2) : 0;
 	}
 	quat::quat(double t, const vec3& v) : vector(4)
 	{
-		m_ptr[0] = cos(t / 2);
-		m_ptr[1] = sin(t / 2) * v[0];
-		m_ptr[2] = sin(t / 2) * v[1];
-		m_ptr[3] = sin(t / 2) * v[2];
+		m_data_ptr[0] = cos(t / 2);
+		m_data_ptr[1] = sin(t / 2) * v[0];
+		m_data_ptr[2] = sin(t / 2) * v[1];
+		m_data_ptr[3] = sin(t / 2) * v[2];
 	}
 	quat::quat(double v0, double v1, double v2, double v3) : vector({v0, v1, v2, v3})
 	{
@@ -62,10 +62,10 @@ namespace math
 	//operators
 	quat& quat::operator=(const quat& q)
 	{
-		m_ptr[0] = q.m_ref[0];
-		m_ptr[1] = q.m_ref[1];
-		m_ptr[2] = q.m_ref[2];
-		m_ptr[3] = q.m_ref[3];
+		m_data_ptr[0] = q.m_data_ref[0];
+		m_data_ptr[1] = q.m_data_ref[1];
+		m_data_ptr[2] = q.m_data_ref[2];
+		m_data_ptr[3] = q.m_data_ref[3];
 		return *this;
 	}
 	quat& quat::operator*=(const quat& q)
@@ -76,38 +76,38 @@ namespace math
 	quat quat::operator*(const quat& q) const
 	{
 		quat r;
-		r.m_ptr[0] = m_ref[0] * q.m_ref[0] - m_ref[1] * q.m_ref[1] - m_ref[2] * q.m_ref[2] - m_ref[3] * q.m_ref[3];
-		r.m_ptr[1] = m_ref[0] * q.m_ref[1] + m_ref[1] * q.m_ref[0] + m_ref[2] * q.m_ref[3] - m_ref[3] * q.m_ref[2];
-		r.m_ptr[2] = m_ref[0] * q.m_ref[2] + m_ref[2] * q.m_ref[0] + m_ref[3] * q.m_ref[1] - m_ref[1] * q.m_ref[3];
-		r.m_ptr[3] = m_ref[0] * q.m_ref[3] + m_ref[3] * q.m_ref[0] + m_ref[1] * q.m_ref[2] - m_ref[2] * q.m_ref[1];
+		r.m_data_ptr[0] = m_data_ref[0] * q.m_data_ref[0] - m_data_ref[1] * q.m_data_ref[1] - m_data_ref[2] * q.m_data_ref[2] - m_data_ref[3] * q.m_data_ref[3];
+		r.m_data_ptr[1] = m_data_ref[0] * q.m_data_ref[1] + m_data_ref[1] * q.m_data_ref[0] + m_data_ref[2] * q.m_data_ref[3] - m_data_ref[3] * q.m_data_ref[2];
+		r.m_data_ptr[2] = m_data_ref[0] * q.m_data_ref[2] + m_data_ref[2] * q.m_data_ref[0] + m_data_ref[3] * q.m_data_ref[1] - m_data_ref[1] * q.m_data_ref[3];
+		r.m_data_ptr[3] = m_data_ref[0] * q.m_data_ref[3] + m_data_ref[3] * q.m_data_ref[0] + m_data_ref[1] * q.m_data_ref[2] - m_data_ref[2] * q.m_data_ref[1];
 		return r;
 	}
 
 	double& quat::operator[](uint32_t i)
 	{
-		return m_ptr[i];
+		return m_data_ptr[i];
 	}
 	double& quat::operator()(uint32_t i)
 	{
-		return m_ptr[i];
+		return m_data_ptr[i];
 	}
 
 	const double& quat::operator[](uint32_t i) const
 	{
-		return m_ref[i];
+		return m_data_ref[i];
 	}
 	const double& quat::operator()(uint32_t i) const
 	{
-		return m_ref[i];
+		return m_data_ref[i];
 	}
 
 	//views
 	quat& quat::reset(void)
 	{
-		m_ptr[0] = 1;
-		m_ptr[1] = 0;
-		m_ptr[2] = 0;
-		m_ptr[3] = 0;
+		m_data_ptr[0] = 1;
+		m_data_ptr[1] = 0;
+		m_data_ptr[2] = 0;
+		m_data_ptr[3] = 0;
 		return *this;
 	}
 	quat& quat::view_x(void)
@@ -153,9 +153,9 @@ namespace math
 		const double s = sin(t / 2);
 		//axial
 		vec3 r;
-		r[0] = s ? m_ref[1] / s : 0;
-		r[1] = s ? m_ref[2] / s : 0;
-		r[2] = s ? m_ref[3] / s : 1;
+		r[0] = s ? m_data_ref[1] / s : 0;
+		r[1] = s ? m_data_ref[2] / s : 0;
+		r[2] = s ? m_data_ref[3] / s : 1;
 		return r;
 	}
 	vec3 quat::pseudo(void) const
@@ -171,7 +171,7 @@ namespace math
 	}
 	double quat::angle(void) const
 	{
-		return 2 * acos(bound(m_ref[0]));
+		return 2 * acos(bound(m_data_ref[0]));
 	}
 	quat& quat::randu(double a, double b)
 	{
@@ -182,18 +182,18 @@ namespace math
 	quat quat::conjugate(void) const
 	{
 		quat q;
-		q.m_ptr[0] = +m_ref[0];
-		q.m_ptr[1] = -m_ref[1];
-		q.m_ptr[2] = -m_ref[2];
-		q.m_ptr[3] = -m_ref[3];
+		q.m_data_ptr[0] = +m_data_ref[0];
+		q.m_data_ptr[1] = -m_data_ref[1];
+		q.m_data_ptr[2] = -m_data_ref[2];
+		q.m_data_ptr[3] = -m_data_ref[3];
 		return q;
 	}
 
 	vec3 quat::rotate(const vec3& v) const
 	{
 		vec3 r;
-		const vec3 x(m_ref + 1);
-		const double s = m_ref[0];
+		const vec3 x(m_data_ref + 1);
+		const double s = m_data_ref[0];
 		const double b = 2 * x.inner(v);
 		const double a = s * s - x.inner(x);
 		r[0] = a * v[0] + b * x[0] + 2 * s * (x[1] * v[2] - x[2] * v[1]);
@@ -219,15 +219,15 @@ namespace math
 	mat3 quat::rotation(void) const
 	{
 		mat3 m;
-		m[1 + 3 * 0] = 2 * (m_ref[1] * m_ref[2] + m_ref[0] * m_ref[3]);
-		m[2 + 3 * 0] = 2 * (m_ref[1] * m_ref[3] - m_ref[0] * m_ref[2]);
-		m[0 + 3 * 1] = 2 * (m_ref[1] * m_ref[2] - m_ref[0] * m_ref[3]);
-		m[2 + 3 * 1] = 2 * (m_ref[2] * m_ref[3] + m_ref[0] * m_ref[1]);
-		m[0 + 3 * 2] = 2 * (m_ref[1] * m_ref[3] + m_ref[0] * m_ref[2]);
-		m[1 + 3 * 2] = 2 * (m_ref[2] * m_ref[3] - m_ref[0] * m_ref[1]);
-		m[0 + 3 * 0] = m_ref[0] * m_ref[0] + m_ref[1] * m_ref[1] - m_ref[2] * m_ref[2] - m_ref[3] * m_ref[3];
-		m[1 + 3 * 1] = m_ref[0] * m_ref[0] - m_ref[1] * m_ref[1] + m_ref[2] * m_ref[2] - m_ref[3] * m_ref[3];
-		m[2 + 3 * 2] = m_ref[0] * m_ref[0] - m_ref[1] * m_ref[1] - m_ref[2] * m_ref[2] + m_ref[3] * m_ref[3];
+		m[1 + 3 * 0] = 2 * (m_data_ref[1] * m_data_ref[2] + m_data_ref[0] * m_data_ref[3]);
+		m[2 + 3 * 0] = 2 * (m_data_ref[1] * m_data_ref[3] - m_data_ref[0] * m_data_ref[2]);
+		m[0 + 3 * 1] = 2 * (m_data_ref[1] * m_data_ref[2] - m_data_ref[0] * m_data_ref[3]);
+		m[2 + 3 * 1] = 2 * (m_data_ref[2] * m_data_ref[3] + m_data_ref[0] * m_data_ref[1]);
+		m[0 + 3 * 2] = 2 * (m_data_ref[1] * m_data_ref[3] + m_data_ref[0] * m_data_ref[2]);
+		m[1 + 3 * 2] = 2 * (m_data_ref[2] * m_data_ref[3] - m_data_ref[0] * m_data_ref[1]);
+		m[0 + 3 * 0] = m_data_ref[0] * m_data_ref[0] + m_data_ref[1] * m_data_ref[1] - m_data_ref[2] * m_data_ref[2] - m_data_ref[3] * m_data_ref[3];
+		m[1 + 3 * 1] = m_data_ref[0] * m_data_ref[0] - m_data_ref[1] * m_data_ref[1] + m_data_ref[2] * m_data_ref[2] - m_data_ref[3] * m_data_ref[3];
+		m[2 + 3 * 2] = m_data_ref[0] * m_data_ref[0] - m_data_ref[1] * m_data_ref[1] - m_data_ref[2] * m_data_ref[2] + m_data_ref[3] * m_data_ref[3];
 		return m;
 	}
 	double* quat::rotation(double* m) const
@@ -235,15 +235,15 @@ namespace math
 		m[3 + 4 * 3] = 1;
 		m[3 + 4 * 0] = m[3 + 4 * 1] = m[3 + 4 * 2] = 0;
 		m[0 + 4 * 3] = m[1 + 4 * 3] = m[2 + 4 * 3] = 0;
-		m[1 + 4 * 2] = 2 * (m_ref[2] * m_ref[3] - m_ref[0] * m_ref[1]);
-		m[2 + 4 * 1] = 2 * (m_ref[2] * m_ref[3] + m_ref[0] * m_ref[1]);
-		m[2 + 4 * 0] = 2 * (m_ref[1] * m_ref[3] - m_ref[0] * m_ref[2]);
-		m[0 + 4 * 2] = 2 * (m_ref[1] * m_ref[3] + m_ref[0] * m_ref[2]);
-		m[0 + 4 * 1] = 2 * (m_ref[1] * m_ref[2] - m_ref[0] * m_ref[3]);
-		m[1 + 4 * 0] = 2 * (m_ref[1] * m_ref[2] + m_ref[0] * m_ref[3]);
-		m[0 + 4 * 0] = m_ref[0] * m_ref[0] + m_ref[1] * m_ref[1] - m_ref[2] * m_ref[2] - m_ref[3] * m_ref[3];
-		m[1 + 4 * 1] = m_ref[0] * m_ref[0] - m_ref[1] * m_ref[1] + m_ref[2] * m_ref[2] - m_ref[3] * m_ref[3];
-		m[2 + 4 * 2] = m_ref[0] * m_ref[0] - m_ref[1] * m_ref[1] - m_ref[2] * m_ref[2] + m_ref[3] * m_ref[3];
+		m[1 + 4 * 2] = 2 * (m_data_ref[2] * m_data_ref[3] - m_data_ref[0] * m_data_ref[1]);
+		m[2 + 4 * 1] = 2 * (m_data_ref[2] * m_data_ref[3] + m_data_ref[0] * m_data_ref[1]);
+		m[2 + 4 * 0] = 2 * (m_data_ref[1] * m_data_ref[3] - m_data_ref[0] * m_data_ref[2]);
+		m[0 + 4 * 2] = 2 * (m_data_ref[1] * m_data_ref[3] + m_data_ref[0] * m_data_ref[2]);
+		m[0 + 4 * 1] = 2 * (m_data_ref[1] * m_data_ref[2] - m_data_ref[0] * m_data_ref[3]);
+		m[1 + 4 * 0] = 2 * (m_data_ref[1] * m_data_ref[2] + m_data_ref[0] * m_data_ref[3]);
+		m[0 + 4 * 0] = m_data_ref[0] * m_data_ref[0] + m_data_ref[1] * m_data_ref[1] - m_data_ref[2] * m_data_ref[2] - m_data_ref[3] * m_data_ref[3];
+		m[1 + 4 * 1] = m_data_ref[0] * m_data_ref[0] - m_data_ref[1] * m_data_ref[1] + m_data_ref[2] * m_data_ref[2] - m_data_ref[3] * m_data_ref[3];
+		m[2 + 4 * 2] = m_data_ref[0] * m_data_ref[0] - m_data_ref[1] * m_data_ref[1] - m_data_ref[2] * m_data_ref[2] + m_data_ref[3] * m_data_ref[3];
 		return m;
 	}
 }

@@ -59,65 +59,65 @@ namespace math
 
 	vec2& vec2::operator+=(double s)
 	{
-		m_ptr[0] += s;
-		m_ptr[1] += s;
+		m_data_ptr[0] += s;
+		m_data_ptr[1] += s;
 		return *this;
 	}
 	vec2& vec2::operator-=(double s)
 	{
-		m_ptr[0] -= s;
-		m_ptr[1] -= s;
+		m_data_ptr[0] -= s;
+		m_data_ptr[1] -= s;
 		return *this;
 	}
 	vec2& vec2::operator*=(double s)
 	{
-		m_ptr[0] *= s;
-		m_ptr[1] *= s;
+		m_data_ptr[0] *= s;
+		m_data_ptr[1] *= s;
 		return *this;
 	}
 	vec2& vec2::operator/=(double s)
 	{
-		m_ptr[0] /= s;
-		m_ptr[1] /= s;
+		m_data_ptr[0] /= s;
+		m_data_ptr[1] /= s;
 		return *this;
 	}
 
 	vec2& vec2::operator=(const vec2& v)
 	{
-		m_ptr[0] = v.m_ref[0];
-		m_ptr[1] = v.m_ref[1];
+		m_data_ptr[0] = v.m_data_ref[0];
+		m_data_ptr[1] = v.m_data_ref[1];
 		return *this;
 	}
 
 	vec2& vec2::operator+=(const vec2& v)
 	{
-		m_ptr[0] += v.m_ref[0];
-		m_ptr[1] += v.m_ref[1];
+		m_data_ptr[0] += v.m_data_ref[0];
+		m_data_ptr[1] += v.m_data_ref[1];
 		return *this;
 	}
 	vec2& vec2::operator-=(const vec2& v)
 	{
-		m_ptr[0] -= v.m_ref[0];
-		m_ptr[1] -= v.m_ref[1];
+		m_data_ptr[0] -= v.m_data_ref[0];
+		m_data_ptr[1] -= v.m_data_ref[1];
 		return *this;
 	}
 
 	double& vec2::operator[](uint32_t i)
 	{
-		return m_ptr[i];
+		return m_data_ptr[i];
 	}
 	double& vec2::operator()(uint32_t i)
 	{
-		return m_ptr[i];
+		return m_data_ptr[i];
 	}
 
 	const double& vec2::operator[](uint32_t i) const
 	{
-		return m_ref[i];
+		return m_data_ref[i];
 	}
 	const double& vec2::operator()(uint32_t i) const
 	{
-		return m_ref[i];
+		return m_data_ref[i];
 	}
 
 	//linear
@@ -132,11 +132,11 @@ namespace math
 
 	double vec2::inner(const vec2& v) const
 	{
-		return m_ref[0] * v.m_ref[0] + m_ref[1] * v.m_ref[1];
+		return m_data_ref[0] * v.m_data_ref[0] + m_data_ref[1] * v.m_data_ref[1];
 	}
 	double vec2::cross(const vec2& v) const
 	{
-		return m_ref[0] * v.m_ref[1] - m_ref[1] * v.m_ref[0];
+		return m_data_ref[0] * v.m_data_ref[1] - m_data_ref[1] * v.m_data_ref[0];
 	}
 
 	//friends

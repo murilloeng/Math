@@ -15,7 +15,8 @@ namespace math
 	{
 	public:
 		//constructors
-		sparse(double*, const int32_t*, const int32_t*, uint32_t, uint32_t);
+		sparse(uint32_t, uint32_t);
+		sparse(double*, int32_t*, int32_t*, uint32_t, uint32_t);
 		sparse(const double*, const int32_t*, const int32_t*, uint32_t, uint32_t);
 
 		//destructor
@@ -24,6 +25,18 @@ namespace math
 		//data
 		double* data(void);
 		const double* data(void) const;
+
+		uint32_t rows(void) const;
+		uint32_t cols(void) const;
+
+		int32_t* rows_map(void);
+		int32_t* cols_map(void);
+		const int32_t* rows_map(void) const;
+		const int32_t* cols_map(void) const;
+
+		//pattern
+		void pattern(int32_t*, int32_t*);
+		void pattern(int32_t*&, int32_t*&) const;
 
 		//linear
 		double norm(void) const;
@@ -40,15 +53,29 @@ namespace math
 		//convert
 		matrix convert(void) const;
 
+		//span
+		void span(sparse&, uint32_t, uint32_t, uint32_t, uint32_t) const;
+		void span_data(sparse&, uint32_t, uint32_t, uint32_t, uint32_t) const;
+		void span_pattern(sparse&, uint32_t, uint32_t, uint32_t, uint32_t) const;
+
 	private:
 		//data
+		void cleanup(void);
+
+		//print
+		void print_dense(void) const;
+		void print_sparse(void) const;
+
+		//data
+		bool m_own;
+		double* m_data_ptr;
+		const double* m_data_ref;
+
 		uint32_t m_rows;
 		uint32_t m_cols;
-
-		double* m_ptr;
-		const double* m_ref;
-
-		const int32_t* m_row_map;
-		const int32_t* m_col_map;
+		int32_t* m_rows_map_ptr;
+		int32_t* m_cols_map_ptr;
+		const int32_t* m_rows_map_ref;
+		const int32_t* m_cols_map_ref;
 	};
 }

@@ -141,11 +141,11 @@ namespace math
 	protected:
 		//data
 		bool m_own;
-		double* m_ptr;
 		uint32_t m_rows;
 		uint32_t m_cols;
-		const double* m_ref;
-		double m_mem[MATRIX_STATIC_SIZE];
+		double* m_data_ptr;
+		const double* m_data_ref;
+		double m_data_mem[MATRIX_STATIC_SIZE];
 
 		//friends
 		friend class span;

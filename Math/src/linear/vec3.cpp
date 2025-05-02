@@ -62,53 +62,53 @@ namespace math
 
 	vec3& vec3::operator+=(double s)
 	{
-		m_ptr[0] += s;
-		m_ptr[1] += s;
-		m_ptr[2] += s;
+		m_data_ptr[0] += s;
+		m_data_ptr[1] += s;
+		m_data_ptr[2] += s;
 		return *this;
 	}
 	vec3& vec3::operator-=(double s)
 	{
-		m_ptr[0] -= s;
-		m_ptr[1] -= s;
-		m_ptr[2] -= s;
+		m_data_ptr[0] -= s;
+		m_data_ptr[1] -= s;
+		m_data_ptr[2] -= s;
 		return *this;
 	}
 	vec3& vec3::operator*=(double s)
 	{
-		m_ptr[0] *= s;
-		m_ptr[1] *= s;
-		m_ptr[2] *= s;
+		m_data_ptr[0] *= s;
+		m_data_ptr[1] *= s;
+		m_data_ptr[2] *= s;
 		return *this;
 	}
 	vec3& vec3::operator/=(double s)
 	{
-		m_ptr[0] /= s;
-		m_ptr[1] /= s;
-		m_ptr[2] /= s;
+		m_data_ptr[0] /= s;
+		m_data_ptr[1] /= s;
+		m_data_ptr[2] /= s;
 		return *this;
 	}
 
 	vec3& vec3::operator=(const vec3& v)
 	{
-		m_ptr[0] = v.m_ref[0];
-		m_ptr[1] = v.m_ref[1];
-		m_ptr[2] = v.m_ref[2];
+		m_data_ptr[0] = v.m_data_ref[0];
+		m_data_ptr[1] = v.m_data_ref[1];
+		m_data_ptr[2] = v.m_data_ref[2];
 		return *this;
 	}
 
 	vec3& vec3::operator+=(const vec3& v)
 	{
-		m_ptr[0] += v.m_ref[0];
-		m_ptr[1] += v.m_ref[1];
-		m_ptr[2] += v.m_ref[2];
+		m_data_ptr[0] += v.m_data_ref[0];
+		m_data_ptr[1] += v.m_data_ref[1];
+		m_data_ptr[2] += v.m_data_ref[2];
 		return *this;
 	}
 	vec3& vec3::operator-=(const vec3& v)
 	{
-		m_ptr[0] -= v.m_ref[0];
-		m_ptr[1] -= v.m_ref[1];
-		m_ptr[2] -= v.m_ref[2];
+		m_data_ptr[0] -= v.m_data_ref[0];
+		m_data_ptr[1] -= v.m_data_ref[1];
+		m_data_ptr[2] -= v.m_data_ref[2];
 		return *this;
 	}
 	vec3& vec3::operator*=(const mat3& m)
@@ -118,20 +118,20 @@ namespace math
 
 	double& vec3::operator[](uint32_t i)
 	{
-		return m_ptr[i];
+		return m_data_ptr[i];
 	}
 	double& vec3::operator()(uint32_t i)
 	{
-		return m_ptr[i];
+		return m_data_ptr[i];
 	}
 
 	const double& vec3::operator[](uint32_t i) const
 	{
-		return m_ref[i];
+		return m_data_ref[i];
 	}
 	const double& vec3::operator()(uint32_t i) const
 	{
-		return m_ref[i];
+		return m_data_ref[i];
 	}
 
 	//linear
@@ -150,8 +150,8 @@ namespace math
 		min(true, &i);
 		//axes 2
 		t2[(i + 0) % 3] = 0;
-		t2[(i + 1) % 3] = -m_ref[(i + 2) % 3];
-		t2[(i + 2) % 3] = +m_ref[(i + 1) % 3];
+		t2[(i + 1) % 3] = -m_data_ref[(i + 2) % 3];
+		t2[(i + 2) % 3] = +m_data_ref[(i + 1) % 3];
 		//axes 3
 		t3 = cross(t2.normalize());
 		//rotate
@@ -164,12 +164,12 @@ namespace math
 	mat3 vec3::spin(void) const
 	{
 		mat3 s;
-		s[7] = -m_ref[0];
-		s[2] = -m_ref[1];
-		s[3] = -m_ref[2];
-		s[5] = +m_ref[0];
-		s[6] = +m_ref[1];
-		s[1] = +m_ref[2];
+		s[7] = -m_data_ref[0];
+		s[2] = -m_data_ref[1];
+		s[3] = -m_data_ref[2];
+		s[5] = +m_data_ref[0];
+		s[6] = +m_data_ref[1];
+		s[1] = +m_data_ref[2];
 		s[0] = s[4] = s[8] = 0;
 		return s;
 	}
@@ -182,50 +182,50 @@ namespace math
 		//setup
 		quat q;
 		q[0] = c;
-		q[1] = s * m_ref[0];
-		q[2] = s * m_ref[1];
-		q[3] = s * m_ref[2];
+		q[1] = s * m_data_ref[0];
+		q[2] = s * m_data_ref[1];
+		q[3] = s * m_data_ref[2];
 		return q;
 	}
 	mat3 vec3::projection(void) const
 	{
 		mat3 p;
-		p[0] = 1 - m_ref[0] * m_ref[0];
-		p[4] = 1 - m_ref[1] * m_ref[1];
-		p[8] = 1 - m_ref[2] * m_ref[2];
-		p[1] = p[3] = -m_ref[0] * m_ref[1];
-		p[2] = p[6] = -m_ref[0] * m_ref[2];
-		p[5] = p[7] = -m_ref[1] * m_ref[2];
+		p[0] = 1 - m_data_ref[0] * m_data_ref[0];
+		p[4] = 1 - m_data_ref[1] * m_data_ref[1];
+		p[8] = 1 - m_data_ref[2] * m_data_ref[2];
+		p[1] = p[3] = -m_data_ref[0] * m_data_ref[1];
+		p[2] = p[6] = -m_data_ref[0] * m_data_ref[2];
+		p[5] = p[7] = -m_data_ref[1] * m_data_ref[2];
 		return p;
 	}
 
 	double vec3::inner(const vec3& v) const
 	{
 		return
-			m_ref[0] * v.m_ref[0] +
-			m_ref[1] * v.m_ref[1] +
-			m_ref[2] * v.m_ref[2];
+			m_data_ref[0] * v.m_data_ref[0] +
+			m_data_ref[1] * v.m_data_ref[1] +
+			m_data_ref[2] * v.m_data_ref[2];
 	}
 	mat3 vec3::outer(const vec3& v) const
 	{
 		mat3 m;
-		m[0] = m_ref[0] * v.m_ref[0];
-		m[1] = m_ref[1] * v.m_ref[0];
-		m[2] = m_ref[2] * v.m_ref[0];
-		m[3] = m_ref[0] * v.m_ref[1];
-		m[4] = m_ref[1] * v.m_ref[1];
-		m[5] = m_ref[2] * v.m_ref[1];
-		m[6] = m_ref[0] * v.m_ref[2];
-		m[7] = m_ref[1] * v.m_ref[2];
-		m[8] = m_ref[2] * v.m_ref[2];
+		m[0] = m_data_ref[0] * v.m_data_ref[0];
+		m[1] = m_data_ref[1] * v.m_data_ref[0];
+		m[2] = m_data_ref[2] * v.m_data_ref[0];
+		m[3] = m_data_ref[0] * v.m_data_ref[1];
+		m[4] = m_data_ref[1] * v.m_data_ref[1];
+		m[5] = m_data_ref[2] * v.m_data_ref[1];
+		m[6] = m_data_ref[0] * v.m_data_ref[2];
+		m[7] = m_data_ref[1] * v.m_data_ref[2];
+		m[8] = m_data_ref[2] * v.m_data_ref[2];
 		return m;
 	}
 	vec3 vec3::cross(const vec3& v) const
 	{
 		vec3 r;
-		r.m_ptr[0] = m_ref[1] * v.m_ref[2] - m_ref[2] * v.m_ref[1];
-		r.m_ptr[1] = m_ref[2] * v.m_ref[0] - m_ref[0] * v.m_ref[2];
-		r.m_ptr[2] = m_ref[0] * v.m_ref[1] - m_ref[1] * v.m_ref[0];
+		r.m_data_ptr[0] = m_data_ref[1] * v.m_data_ref[2] - m_data_ref[2] * v.m_data_ref[1];
+		r.m_data_ptr[1] = m_data_ref[2] * v.m_data_ref[0] - m_data_ref[0] * v.m_data_ref[2];
+		r.m_data_ptr[2] = m_data_ref[0] * v.m_data_ref[1] - m_data_ref[1] * v.m_data_ref[0];
 		return r;
 	}
 	vec3 vec3::rotate(const vec3& v) const

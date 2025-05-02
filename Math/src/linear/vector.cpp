@@ -20,7 +20,7 @@ namespace math
 	}
 	vector::vector(const matrix& m) : matrix(m.rows() * m.cols(), 1)
 	{
-		memcpy(m_ptr, m.data(), m_rows * sizeof(double));
+		memcpy(m_data_ptr, m.data(), m_rows * sizeof(double));
 	}
 	vector::vector(const double* ptr, uint32_t rows) : matrix(ptr, rows, 1)
 	{
@@ -28,7 +28,7 @@ namespace math
 	}
 	vector::vector(std::initializer_list<double> list) : matrix(list.size(), 1)
 	{
-		memcpy(m_ptr, std::data(list), list.size() * sizeof(double));
+		memcpy(m_data_ptr, std::data(list), list.size() * sizeof(double));
 	}
 	vector::vector(double* ptr, uint32_t rows, mode init) : matrix(ptr, rows, 1, init)
 	{
@@ -80,7 +80,7 @@ namespace math
 		{
 			for(uint32_t j = 0; j < v.m_rows; j++)
 			{
-				m(i, j) = m_ref[i] * v.m_ref[j];
+				m(i, j) = m_data_ref[i] * v.m_data_ref[j];
 			}
 		}
 		return m;
@@ -90,7 +90,7 @@ namespace math
 		double s = 0;
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
-			s += m_ref[i] * v.m_ref[i];
+			s += m_data_ref[i] * v.m_data_ref[i];
 		}
 		return s;
 	}
@@ -99,7 +99,7 @@ namespace math
 		double s = 0;
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
-			s += m_ref[i] * v[i];
+			s += m_data_ref[i] * v[i];
 		}
 		return s;
 	}
