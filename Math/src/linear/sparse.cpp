@@ -26,6 +26,12 @@ namespace math
 	{
 		return;
 	}
+	sparse::sparse(double* data_ptr, const int32_t* rows_map, const int32_t* cols_map, uint32_t rows, uint32_t cols) : 
+		m_own(false), m_data_ptr(data_ptr), m_data_ref(data_ptr), m_rows(rows), m_cols(cols), 
+		m_rows_map_ptr(nullptr), m_cols_map_ptr(nullptr), m_rows_map_ref(rows_map), m_cols_map_ref(cols_map)
+	{
+		return;
+	}
 	sparse::sparse(const double* data_ref, const int32_t* rows_map, const int32_t* cols_map, uint32_t rows, uint32_t cols) : 
 		m_own(false), m_data_ptr(nullptr), m_data_ref(data_ref), m_rows(rows), m_cols(cols), 
 		m_rows_map_ptr(nullptr), m_cols_map_ptr(nullptr), m_rows_map_ref(rows_map), m_cols_map_ref(cols_map)
@@ -130,6 +136,36 @@ namespace math
 			}
 		}
 		return s;
+	}
+
+	bool sparse::solve(vector& x, const vector& f) const
+	{
+		//check
+		const uint32_t n = m_rows;
+		int32_t test = !UMFPACK_OK;
+		if(m_cols != x.rows() || m_rows != f.rows())
+		{
+			fprintf(stderr, "Error: Sparse solve called with incompatible vectors!\n");
+			exit(EXIT_FAILURE);
+		}
+		//solve
+		double* xd = x.data();
+		const double* fd = f.data();
+		const double* Kd = m_data_ref;
+		const int32_t* r = m_rows_map_ref;
+		const int32_t* c = m_cols_map_ref;
+		if(umfpack_di_symbolic(n, n, c, r, Kd, &m_symbolic, nullptr, nullptr) == UMFPACK_OK)
+		{
+			if(umfpack_di_numeric(c, r, Kd, m_symbolic, &m_numeric, nullptr, nullptr) == UMFPACK_OK)
+			{
+				test = umfpack_di_solve(UMFPACK_A, c, r, Kd, xd, fd, m_numeric, nullptr, nullptr);
+			}
+		}
+		//free memory
+		umfpack_di_free_numeric(&m_numeric);
+		umfpack_di_free_symbolic(&m_symbolic);
+		//return
+		return test == UMFPACK_OK;
 	}
 
 	//print
@@ -241,7 +277,7 @@ namespace math
 			{
 				if(m_rows_map_ref[b] >= int32_t(i) && m_rows_map_ref[b] < int32_t(i + nr))
 				{
-					matrix.m_data_ptr[matrix.m_cols_map_ptr[a] + counter] = m_data_ref[b];
+					matrix.m_data_ptr[matrix.m_cols_map_ref[a] + counter] = m_data_ref[b];
 					counter++;
 				}
 			}

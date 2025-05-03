@@ -17,6 +17,7 @@ namespace math
 		//constructors
 		sparse(uint32_t, uint32_t);
 		sparse(double*, int32_t*, int32_t*, uint32_t, uint32_t);
+		sparse(double*, const int32_t*, const int32_t*, uint32_t, uint32_t);
 		sparse(const double*, const int32_t*, const int32_t*, uint32_t, uint32_t);
 
 		//destructor
@@ -41,6 +42,9 @@ namespace math
 		//linear
 		double norm(void) const;
 		double trace(void) const;
+
+		//solve
+		bool solve(vector&, const vector&) const;
 
 		//print
 		void print(const char* = "", bool = true) const;
@@ -74,6 +78,9 @@ namespace math
 		bool m_own;
 		double* m_data_ptr;
 		const double* m_data_ref;
+
+		mutable void* m_numeric;
+		mutable void* m_symbolic;
 
 		uint32_t m_rows;
 		uint32_t m_cols;
