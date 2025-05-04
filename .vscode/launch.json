@@ -4,6 +4,46 @@
 	[
 		{
 			"args": [],
+			"MIMode": "gdb",
+			"type": "cppdbg",
+			"environment": [],
+			"request": "launch",
+			"stopAtEntry": false,
+			"name": "gdb - debug",
+			"externalConsole": false,
+			"cwd": "${workspaceFolder}",
+			"program": "${workspaceFolder}/Test/dist/debug/test.out",
+			"setupCommands":
+			[
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			]
+		},
+		{
+			"args": [],
+			"MIMode": "gdb",
+			"type": "cppdbg",
+			"environment": [],
+			"request": "launch",
+			"stopAtEntry": false,
+			"name": "gdb - release",
+			"externalConsole": false,
+			"cwd": "${workspaceFolder}",
+			"program": "${workspaceFolder}/Test/dist/release/test.out",
+			"setupCommands":
+			[
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			]
+		},
+		{
+			"args": [],
 			"environment": [],
 			"type": "cppvsdbg",
 			"request": "launch",

@@ -2,6 +2,7 @@
 CXX = g++
 INCS = -I ..
 WARS = -Wall -Werror
+LIBS = -l openblas -l quadrule -l fftw3 -l umfpack
 CXXFLAGS = -std=c++20 -fPIC -pipe -fopenmp -MT $@ -MMD -MP -MF $(subst .o,.d, $@) $(DEFS) $(INCS) $(WARS)
 
 #mode
@@ -51,7 +52,7 @@ $(out_lib) : $(obj_lib)
 
 $(out_exe) : $(obj_exe)
 	@mkdir -p $(dir $@)
-	@g++ -o $(out_exe) $(obj_exe) Math/dist/$(mode)/libmath.so -l lapack -l quadrule -l fftw3
+	@g++ -o $(out_exe) $(obj_exe) Math/dist/$(mode)/libmath.so $(LIBS)
 	@echo 'executable - $(mode): $@'
 
 Math/build/$(mode)/%.o : Math/src/%.cpp Math/build/$(mode)/%.d
