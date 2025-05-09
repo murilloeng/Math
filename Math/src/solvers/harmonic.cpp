@@ -794,9 +794,9 @@ namespace math
 			if(m_strategy == harmonic_strategy::uniform_increment)
 				predictor_uniform_increment();
 			if(m_strategy == harmonic_strategy::arc_length_spherical)
-				predictor_arc_length_spheric();
+				predictor_arc_length_spherical();
 			if(m_strategy == harmonic_strategy::arc_length_cylindrical)
-				predictor_arc_length_cylindric();
+				predictor_arc_length_cylindrical();
 			if(std::isnan(m_dp)) printf("parameter predictor failed!\n");
 		}
 	}
@@ -807,9 +807,9 @@ namespace math
 		if(m_strategy == harmonic_strategy::uniform_increment)
 			corrector_uniform_increment();
 		if(m_strategy == harmonic_strategy::arc_length_spherical)
-			corrector_arc_length_spheric();
+			corrector_arc_length_spherical();
 		if(m_strategy == harmonic_strategy::arc_length_cylindrical)
-			corrector_arc_length_cylindric();
+			corrector_arc_length_cylindrical();
 		if(std::isnan(m_ddp)) printf("parameter corrector failed!\n");
 	}
 
@@ -845,7 +845,7 @@ namespace math
 		m_ddp = 0;
 	}
 
-	void harmonic::predictor_arc_length_spheric(void)
+	void harmonic::predictor_arc_length_spherical(void)
 	{
 		//data
 		const uint32_t nd = m_size;
@@ -862,7 +862,7 @@ namespace math
 		//predictor
 		m_dp = -b / a + s * sqrt(b * b - a * c) / a;
 	}
-	void harmonic::corrector_arc_length_spheric(void)
+	void harmonic::corrector_arc_length_spherical(void)
 	{
 		//data
 		const uint32_t nd = m_size;
@@ -880,7 +880,7 @@ namespace math
 		m_ddp = -b / a + s * sqrt(b * b - a * c) / a;
 	}
 
-	void harmonic::predictor_arc_length_cylindric(void)
+	void harmonic::predictor_arc_length_cylindrical(void)
 	{
 		//data
 		const uint32_t nd = m_size;
@@ -897,7 +897,7 @@ namespace math
 		//predictor
 		m_dp = -b / a + s * sqrt(b * b - a * c) / a;
 	}
-	void harmonic::corrector_arc_length_cylindric(void)
+	void harmonic::corrector_arc_length_cylindrical(void)
 	{
 		//data
 		const uint32_t nd = m_size;

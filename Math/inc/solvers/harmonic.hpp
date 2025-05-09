@@ -111,11 +111,11 @@ namespace math
 		void predictor_uniform_increment(void);
 		void corrector_uniform_increment(void);
 
-		void predictor_arc_length_spheric(void);
-		void corrector_arc_length_spheric(void);
+		void predictor_arc_length_spherical(void);
+		void corrector_arc_length_spherical(void);
 
-		void predictor_arc_length_cylindric(void);
-		void corrector_arc_length_cylindric(void);
+		void predictor_arc_length_cylindrical(void);
+		void corrector_arc_length_cylindrical(void);
 
 		//data
 		uint32_t m_step;
