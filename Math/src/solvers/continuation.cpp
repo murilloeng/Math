@@ -105,8 +105,8 @@ namespace math
 		//data
 		const double dl = *m_dp;
 		const math::vector dx(m_dx, m_size);
-		const math::vector dxr(m_dxt, m_size);
-		const math::vector dxt(m_dxr, m_size);
+		const math::vector dxr(m_dxr, m_size);
+		const math::vector dxt(m_dxt, m_size);
 		//data
 		const double b = dxt.inner(dxr);
 		const double a = dxt.inner(dxt) + 1;
@@ -120,8 +120,8 @@ namespace math
 		//data
 		const double dl = *m_dp;
 		const math::vector dx(m_dx, m_size);
-		const math::vector ddxr(m_ddxt, m_size);
-		const math::vector ddxt(m_ddxr, m_size);
+		const math::vector ddxr(m_ddxr, m_size);
+		const math::vector ddxt(m_ddxt, m_size);
 		//data
 		const double a = ddxt.inner(ddxt) + 1;
 		const double c = ddxr.inner(ddxr + 2 * dx);
@@ -134,8 +134,8 @@ namespace math
 	{
 		//data
 		const math::vector dx(m_dx, m_size);
-		const math::vector dxr(m_dxt, m_size);
-		const math::vector dxt(m_dxr, m_size);
+		const math::vector dxr(m_dxr, m_size);
+		const math::vector dxt(m_dxt, m_size);
 		//data
 		const double a = dxt.inner(dxt);
 		const double b = dxt.inner(dxr);
@@ -148,8 +148,8 @@ namespace math
 	{
 		//data
 		const math::vector dx(m_dx, m_size);
-		const math::vector ddxr(m_ddxt, m_size);
-		const math::vector ddxt(m_ddxr, m_size);
+		const math::vector ddxr(m_ddxr, m_size);
+		const math::vector ddxt(m_ddxt, m_size);
 		//data
 		const double a = ddxt.inner(ddxt);
 		const double b = ddxt.inner(ddxr + dx);
