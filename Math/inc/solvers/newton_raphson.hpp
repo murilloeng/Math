@@ -8,6 +8,7 @@
 #include "Math/Math/inc/linear/matrix.hpp"
 #include "Math/Math/inc/linear/vector.hpp"
 #include "Math/Math/inc/solvers/continuation.hpp"
+#include "Math/Math/inc/solvers/stop_criteria.hpp"
 
 namespace math
 {
@@ -28,6 +29,7 @@ namespace math
 
 		private:
 			//solve
+			bool stop(void);
 			void apply(void);
 			void print(void);
 			void setup(void);
@@ -51,6 +53,7 @@ namespace math
 			bool m_silent;
 			bool m_equilibrium;
 			continuation m_continuation;
+			stop_criteria m_stop_criteria;
 			std::function<bool(void)> m_stop;
 			std::function<void(void)> m_record;
 			std::function<void(void)> m_update;
@@ -63,11 +66,15 @@ namespace math
 			uint32_t m_watch_dof, m_size;
 			uint32_t m_step, m_attempt, m_iteration;
 			uint32_t m_step_max, m_attempt_max, m_iteration_max;
-			double m_dp0, m_tolerance, m_p_new, *m_x_new;
+			double m_dp0, m_tolerance, m_p_new, *m_x_new, m_p_min, m_p_max, m_x_min, m_x_max;
 
-			private:
-				double m_p_old, *m_p_data, *m_x_old, *m_x_data;
-				double *m_r, *m_g, *m_K, m_dp, m_ddp, *m_dx, *m_dxr, *m_dxt, *m_ddxr, *m_ddxt;
+		private:
+			//data
+			double m_p_old, *m_p_data, *m_x_old, *m_x_data;
+			double *m_r, *m_g, *m_K, m_dp, m_ddp, *m_dx, *m_dxr, *m_dxt, *m_ddxr, *m_ddxt;
+
+			//friends
+			friend class stop_criteria;
 		};
 	}
 }

@@ -1,5 +1,6 @@
 //std
 #include <cmath>
+#include <cfloat>
 #include <cstdio>
 #include <cstring>
 
@@ -18,6 +19,7 @@ namespace math
 			m_silent(false), 
 			m_watch_dof(0), m_size(1), m_step_max(100), m_attempt_max(5), m_iteration_max(10),
 			m_dp0(0.01), m_tolerance(1e-5), m_x_new(nullptr), 
+			m_p_min(-DBL_MAX), m_p_max(+DBL_MAX), m_x_min(-DBL_MAX), m_x_max(+DBL_MAX), 
 			m_p_data(nullptr), m_x_old(nullptr), m_x_data(nullptr),
 			m_r(nullptr), m_g(nullptr), m_K(nullptr), 
 			m_dx(nullptr), m_dxr(nullptr), m_dxt(nullptr), m_ddxr(nullptr), m_ddxt(nullptr)
@@ -56,6 +58,10 @@ namespace math
 		}
 
 		//solve
+		bool newton_raphson::stop(void)
+		{
+			return (m_stop && m_stop()) || m_stop_criteria.stop();
+		}
 		void newton_raphson::apply(void)
 		{
 			m_p_new = m_p_old + m_dp;
@@ -85,6 +91,8 @@ namespace math
 			m_tangent_1(m_g, m_p_new, m_x_new);
 			m_tangent_2(m_K, m_p_new, m_x_new);
 			memcpy(m_x_old, m_x_new, m_size * sizeof(double));
+			//stop
+			m_stop_criteria.m_solver = this;
 			//continuation
 			m_continuation.m_dx = m_dx;
 			m_continuation.m_dp = &m_dp;
@@ -185,7 +193,7 @@ namespace math
 			setup();
 			print();
 			record();
-			for(m_step = 1; m_step <= m_step_max && (!m_stop || !m_stop()); m_step++)
+			for(m_step = 1; !stop(); m_step++)
 			{
 				step();
 				print();
