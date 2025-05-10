@@ -7,7 +7,7 @@
 //math
 #include "Math/Math/inc/linear/matrix.hpp"
 #include "Math/Math/inc/linear/vector.hpp"
-#include "Math/Math/inc/solvers/strategies.hpp"
+#include "Math/Math/inc/solvers/continuation.hpp"
 
 namespace math
 {
@@ -28,15 +28,15 @@ namespace math
 
 		private:
 			//solve
-			void clear(void);
 			void apply(void);
 			void print(void);
 			void setup(void);
 			void update(void);
-			void residue(void);
-			void allocate(void);
+			void record(void);
+			void restore(void);
 			void predictor(void);
 			void corrector(void);
+			bool equilibrium(void);
 			void load_predictor(void);
 			void load_corrector(void);
 
@@ -44,23 +44,30 @@ namespace math
 			//solve
 			void step(void);
 			void solve(void);
+			void cleanup(void);
+			void allocate(void);
 
 			//data
 			bool m_silent;
 			bool m_equilibrium;
-			strategy m_strategy;
+			continuation m_continuation;
 			std::function<bool(void)> m_stop;
+			std::function<void(void)> m_record;
 			std::function<void(void)> m_update;
 			std::function<void(void)> m_restore;
 			std::function<void(uint32_t)> m_interface;
-			std::function<void(double*, double*, const double*)> m_system;
+			std::function<void(double*, double, const double*)> m_residue;
+			std::function<void(double*, double, const double*)> m_tangent_1;
+			std::function<void(double*, double, const double*)> m_tangent_2;
 
-			uint32_t m_step, m_attempt, m_iteration, m_watch_dof;
-			uint32_t m_step_max, m_attempt_max, m_iteration_max, m_nd;
-			double m_l_old, m_l_new, m_dl, m_dl0, m_ddl, m_tolerance, *m_data;
+			uint32_t m_watch_dof, m_size;
+			uint32_t m_step, m_attempt, m_iteration;
+			uint32_t m_step_max, m_attempt_max, m_iteration_max;
+			double m_dp0, m_tolerance, m_p_new, *m_x_new;
 
-			matrix m_Kt;
-			vector m_x_old, m_x_new, m_dx, m_dxt, m_ddx, m_ddxr, m_ddxt, m_r, m_fi, m_fe;
+			private:
+				double m_p_old, *m_p_data, *m_x_old, *m_x_data;
+				double *m_r, *m_g, *m_K, m_dp, m_ddp, *m_dx, *m_dxr, *m_dxt, *m_ddxr, *m_ddxt;
 		};
 	}
 }

@@ -34,7 +34,7 @@ static void stiffness(double* K, double t, double w, double l, const double* d, 
 	K[0] = k;
 }
 
-void tests::solvers::harmonic_oscillator(void)
+void tests::solvers::harmonic::oscillator(void)
 {
 	//data
 	math::harmonic solver;

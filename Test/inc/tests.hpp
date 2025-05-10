@@ -21,7 +21,14 @@ namespace tests
 	}
 	namespace solvers
 	{
-		void harmonic_pyramid(void);
-		void harmonic_oscillator(void);
+		namespace harmonic
+		{
+			void pyramid(void);
+			void oscillator(void);
+		}
+		namespace newton_raphson
+		{
+			void truss_von_mises(void);
+		}
 	}
 }

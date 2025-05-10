@@ -7,6 +7,7 @@ namespace math
 {
 	class continuation
 	{
+	public:
 		//types
 		enum class type : uint32_t
 		{
@@ -18,7 +19,6 @@ namespace math
 			last
 		};
 
-	public:
 		//constructor
 		continuation(void);
 		continuation(type);
@@ -46,11 +46,11 @@ namespace math
 		type m_type;
 		uint32_t m_size;
 		uint32_t m_index;
-		const double* m_dl;
-		const double* m_du;
-		const double* m_dur;
-		const double* m_dut;
-		const double* m_ddur;
-		const double* m_ddut;
+		const double* m_dp;
+		const double* m_dx;
+		const double* m_dxr;
+		const double* m_dxt;
+		const double* m_ddxr;
+		const double* m_ddxt;
 	};
 }

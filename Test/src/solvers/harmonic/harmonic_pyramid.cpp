@@ -46,7 +46,7 @@ static void external_force(double* fe, double t, double w, const double* d, void
 	fe[0] = cos(w * t) / 2;
 }
 
-void tests::solvers::harmonic_pyramid(void)
+void tests::solvers::harmonic::pyramid(void)
 {
 	//data
 	math::harmonic solver;

@@ -13,7 +13,9 @@
 int main(void)
 {
 	//test
-	// tests::solvers::harmonic_pyramid();
+	// tests::solvers::harmonic::pyramid();
+	tests::solvers::newton_raphson::truss_von_mises();
+	return EXIT_SUCCESS;
 
 	//data
 	bool test;
