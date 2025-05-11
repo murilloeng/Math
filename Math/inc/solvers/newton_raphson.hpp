@@ -30,12 +30,14 @@ namespace math
 		private:
 			//solve
 			bool stop(void);
+			bool check(void);
 			void apply(void);
 			void print(void);
 			void setup(void);
 			void update(void);
 			void record(void);
 			void restore(void);
+			void compute(void);
 			void predictor(void);
 			void corrector(void);
 			bool equilibrium(void);
@@ -62,6 +64,8 @@ namespace math
 			std::function<void(double*, double, const double*)> m_residue;
 			std::function<void(double*, double, const double*)> m_tangent_1;
 			std::function<void(double*, double, const double*)> m_tangent_2;
+			std::function<void(double*, double*, const double*)> m_system_1;
+			std::function<void(double*, double*, double*, double, const double*)> m_system_2;
 
 			uint32_t m_watch_dof, m_size;
 			uint32_t m_step, m_attempt, m_iteration;

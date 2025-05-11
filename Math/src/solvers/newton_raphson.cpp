@@ -60,6 +60,10 @@ namespace math
 		{
 			return (m_stop && m_stop()) || m_stop_criteria.stop();
 		}
+		bool newton_raphson::check(void)
+		{
+			return m_system_2 || m_system_1 || (m_residue && m_tangent_1 && m_tangent_2);
+		}
 		void newton_raphson::apply(void)
 		{
 			m_p_new = m_p_old + m_dp;
@@ -67,9 +71,7 @@ namespace math
 			{
 				m_x_new[i] = m_x_old[i] + m_dx[i];
 			}
-			m_residue(m_r, m_p_new, m_x_new);
-			m_tangent_1(m_g, m_p_new, m_x_new);
-			m_tangent_2(m_K, m_p_new, m_x_new);
+			compute();
 		}
 		void newton_raphson::print(void)
 		{
@@ -82,12 +84,10 @@ namespace math
 		void newton_raphson::setup(void)
 		{
 			//data
+			compute();
 			m_step = 0;
 			m_dp = m_dp0;
 			m_p_old = m_p_new;
-			m_residue(m_r, m_p_new, m_x_new);
-			m_tangent_1(m_g, m_p_new, m_x_new);
-			m_tangent_2(m_K, m_p_new, m_x_new);
 			memcpy(m_x_old, m_x_new, m_size * sizeof(double));
 			//stop
 			m_stop_criteria.m_solver = this;
@@ -121,6 +121,24 @@ namespace math
 			m_p_new = m_p_old;
 			if(m_restore) m_restore();
 			memcpy(m_x_new, m_x_old, m_size * sizeof(double));
+		}
+		void newton_raphson::compute(void)
+		{
+			if(m_system_2)
+			{
+				m_system_2(m_r, m_g, m_K, m_p_new, m_x_new);
+			}
+			else if(m_system_1)
+			{
+				m_system_1(m_r, m_K, m_x_new);
+				for(uint32_t i = 0; i < m_size; i++) m_r[i] = m_p_new * m_g[i] - m_r[i];
+			}
+			else
+			{
+				m_residue(m_r, m_p_new, m_x_new);
+				m_tangent_1(m_g, m_p_new, m_x_new);
+				m_tangent_2(m_K, m_p_new, m_x_new);
+			}
 		}
 		bool newton_raphson::equilibrium(void)
 		{
@@ -188,14 +206,21 @@ namespace math
 		}
 		void newton_raphson::solve(void)
 		{
-			setup();
-			print();
-			record();
-			for(m_step = 1; !stop(); m_step++)
+			if(check())
 			{
-				step();
+				setup();
 				print();
-				if(!m_equilibrium) break;
+				record();
+				for(m_step = 1; !stop(); m_step++)
+				{
+					step();
+					print();
+					if(!m_equilibrium) break;
+				}
+			}
+			else
+			{
+				printf("Error: Newton-Raphson solver failed because system methods are not set!\n");
 			}
 		}
 		void newton_raphson::cleanup(void)
