@@ -66,11 +66,10 @@ namespace math
 			uint32_t m_watch_dof, m_size;
 			uint32_t m_step, m_attempt, m_iteration;
 			uint32_t m_step_max, m_attempt_max, m_iteration_max;
-			double m_dp0, m_tolerance, m_p_new, *m_x_new, m_p_min, m_p_max, m_x_min, m_x_max;
-
-		private:
-			//data
-			double m_p_old, *m_p_data, *m_x_old, *m_x_data;
+			
+			double m_dp0, m_tolerance;
+			double m_p_old, m_p_new, *m_p_data;
+			double *m_x_old, *m_x_new, *m_x_data;
 			double *m_r, *m_g, *m_K, m_dp, m_ddp, *m_dx, *m_dxr, *m_dxt, *m_ddxr, *m_ddxt;
 
 			//friends

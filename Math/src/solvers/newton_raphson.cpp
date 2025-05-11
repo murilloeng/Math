@@ -1,6 +1,5 @@
 //std
 #include <cmath>
-#include <cfloat>
 #include <cstdio>
 #include <cstring>
 
@@ -18,9 +17,8 @@ namespace math
 		newton_raphson::newton_raphson(void) : 
 			m_silent(false), 
 			m_watch_dof(0), m_size(1), m_step_max(100), m_attempt_max(5), m_iteration_max(10),
-			m_dp0(0.01), m_tolerance(1e-5), m_x_new(nullptr), 
-			m_p_min(-DBL_MAX), m_p_max(+DBL_MAX), m_x_min(-DBL_MAX), m_x_max(+DBL_MAX), 
-			m_p_data(nullptr), m_x_old(nullptr), m_x_data(nullptr),
+			m_dp0(0.01), m_tolerance(1e-5), m_p_old(0), m_p_new(0), m_p_data(nullptr),
+			m_x_old(nullptr), m_x_new(nullptr), m_x_data(nullptr),
 			m_r(nullptr), m_g(nullptr), m_K(nullptr), 
 			m_dx(nullptr), m_dxr(nullptr), m_dxt(nullptr), m_ddxr(nullptr), m_ddxt(nullptr)
 		{
