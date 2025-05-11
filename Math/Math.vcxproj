@@ -31,6 +31,8 @@
     <ClInclude Include="inc\solvers\bisection.hpp" />
     <ClInclude Include="inc\solvers\strategies.hpp" />
     <ClInclude Include="inc\solvers\runge_kutta.hpp" />
+    <ClInclude Include="inc\solvers\continuation.hpp" />
+    <ClInclude Include="inc\solvers\stop_criteria.hpp" />
     <ClInclude Include="inc\solvers\newton_raphson.hpp" />
     <ClInclude Include="inc\geometry\Line.hpp" />
     <ClInclude Include="inc\geometry\Plane.hpp" />
@@ -56,6 +58,8 @@
     <ClCompile Include="src\solvers\harmonic.cpp" />
     <ClCompile Include="src\solvers\bisection.cpp" />
     <ClCompile Include="src\solvers\runge_kutta.cpp" />
+    <ClCompile Include="src\solvers\continuation.cpp" />
+    <ClCompile Include="src\solvers\stop_criteria.cpp" />
     <ClCompile Include="src\solvers\newton_raphson.cpp" />
     <ClInclude Include="inc\geometry\Line.cpp" />
     <ClInclude Include="inc\geometry\Plane.cpp" />
