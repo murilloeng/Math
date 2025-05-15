@@ -3,20 +3,16 @@
 #include <ctime>
 #include <cstdio>
 #include <cstdint>
-#include <cstdlib>
 
-//math
-#include "Math/Math/inc/linear/vector.hpp"
+//Math
+#include "Math/Math/inc/linear/vec3.hpp"
 #include "Math/Math/inc/geometry/Circle.hpp"
 
-//test
+//Tests
 #include "Math/Test/inc/tests.hpp"
 
-int main(void)
+void tests::geometry::circle(void)
 {
-	//test
-	// tests::solvers::harmonic::pyramid();
-
 	srand(time(nullptr));
 	double r, q1, q2, q3;
 	math::vec3 x1, x2, x3, xc, n, t1, t2;
@@ -55,6 +51,4 @@ int main(void)
 		printf("%d: ok\n", i);
 	}
 
-	//return
-	return EXIT_SUCCESS;
 }

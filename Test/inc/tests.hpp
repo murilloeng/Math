@@ -31,4 +31,8 @@ namespace tests
 			void truss_von_mises(void);
 		}
 	}
+	namespace geometry
+	{
+		void circle(void);
+	}
 }
