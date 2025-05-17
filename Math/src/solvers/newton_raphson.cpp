@@ -152,8 +152,10 @@ namespace math
 			const vector r(m_r, m_size), g(m_g, m_size);
 			vector dx(m_dx, m_size), dxr(m_dxr, m_size), dxt(m_dxt, m_size);
 			//predictor
-			K.solve(dxr, r);
-			K.solve(dxt, g);
+			if(!K.solve(dxr, r) || !K.solve(dxt, g))
+			{
+				printf("Unable to decompose stiffness matrix in predictor!\n");
+			}
 			load_predictor();
 			for(uint32_t i = 0; i < m_size; i++) dx[i] = dxr[i] + m_dp * dxt[i];
 			//apply
@@ -169,8 +171,10 @@ namespace math
 				//check
 				if(equilibrium()) break;
 				//corrector
-				K.solve(ddxr, r);
-				K.solve(ddxt, g);
+				if(!K.solve(ddxr, r) || !K.solve(ddxt, g))
+				{
+					printf("Unable to decompose stiffness matrix in corrector!\n");
+				}
 				load_corrector();
 				//update
 				m_dp += m_ddp;
