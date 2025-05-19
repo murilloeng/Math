@@ -76,13 +76,15 @@ namespace math
 			const double l2 = segment.length();
 			const vec3& x2 = segment.m_points[0];
 			const vec3& t2 = segment.direction();
-			//distance
+			//check
 			const double cm = t1.inner(t2);
+			if(1 - cm * cm < 1e-5) return (x2 - x1).norm();
+			//distance
 			const double r1 = (x2 - x1).inner(t1);
 			const double r2 = (x2 - x1).inner(t2);
-			const double s1 = +(r1 - cm * r2) / (1 - cm * cm) / l1;
-			const double s2 = -(r2 - cm * r1) / (1 - cm * cm) / l2;
-			return (x2 + bound(s2, 0, 1) * t2 - x1 - bound(s1, 0, 1) * t1).norm();
+			const double s1 = +(r1 - cm * r2) / (1 - cm * cm);
+			const double s2 = -(r2 - cm * r1) / (1 - cm * cm);
+			return (x2 + bound(s2, 0, l2) * t2 - x1 - bound(s1, 0, l1) * t1).norm();
 		}
 	}
 }
