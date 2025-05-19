@@ -40,7 +40,7 @@ namespace math
 			m_stop = type::last;
 			for(uint32_t i = 0; 1U << i < uint32_t(type::last); i++)
 			{
-				if(m_types & 1 << i && (this->*fun[i])())
+				if((i == 0 || m_types & 1 << i) && (this->*fun[i])())
 				{
 					m_stop = type(1 << i);
 					return true;
