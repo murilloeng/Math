@@ -60,9 +60,13 @@ namespace math
 		{
 			return (m_stop && m_stop()) || m_stop_criteria.stop();
 		}
-		bool newton_raphson::check(void)
+		void newton_raphson::check(void)
 		{
-			return m_system_2 || m_system_1 || (m_residue && m_tangent_1 && m_tangent_2);
+			if(!m_system_1 && !m_system_2 && !(m_residue && m_tangent_1 && m_tangent_2))
+			{
+				printf("Error: Newton-Raphson solver called with methods not set!\n");
+				exit(EXIT_FAILURE);
+			}
 		}
 		void newton_raphson::apply(void)
 		{
@@ -210,21 +214,19 @@ namespace math
 		}
 		void newton_raphson::solve(void)
 		{
-			if(check())
+			check();
+			setup();
+			print();
+			record();
+			for(m_step = 1; !stop(); m_step++)
 			{
-				setup();
+				step();
 				print();
-				record();
-				for(m_step = 1; !stop(); m_step++)
+				if(!m_equilibrium)
 				{
-					step();
-					print();
-					if(!m_equilibrium) break;
+					printf("Newton-Raphson solver failed in step %d!\n", m_step);
+					break;
 				}
-			}
-			else
-			{
-				printf("Error: Newton-Raphson solver failed because system methods are not set!\n");
 			}
 		}
 		void newton_raphson::cleanup(void)

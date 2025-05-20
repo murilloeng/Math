@@ -30,7 +30,7 @@ namespace math
 		private:
 			//solve
 			bool stop(void);
-			bool check(void);
+			void check(void);
 			void apply(void);
 			void print(void);
 			void setup(void);
