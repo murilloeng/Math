@@ -149,7 +149,7 @@ namespace math
 			//predictor
 			if(!K.solve(dxr, r) || !K.solve(dxt, g))
 			{
-				printf("Unable to decompose stiffness matrix in predictor!\n");
+				if(!m_silent) printf("Unable to decompose stiffness matrix in predictor!\n");
 			}
 			load_predictor();
 			for(uint32_t i = 0; i < m_size; i++) dx[i] = dxr[i] + m_dp * dxt[i];
@@ -168,7 +168,7 @@ namespace math
 				//corrector
 				if(!K.solve(ddxr, r) || !K.solve(ddxt, g))
 				{
-					printf("Unable to decompose stiffness matrix in corrector!\n");
+					if(!m_silent) printf("Unable to decompose stiffness matrix in corrector!\n");
 				}
 				load_corrector();
 				//update
