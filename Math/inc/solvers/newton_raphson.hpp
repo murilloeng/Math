@@ -7,6 +7,7 @@
 //math
 #include "Math/Math/inc/linear/matrix.hpp"
 #include "Math/Math/inc/linear/vector.hpp"
+#include "Math/Math/inc/solvers/convergence.hpp"
 #include "Math/Math/inc/solvers/continuation.hpp"
 #include "Math/Math/inc/solvers/stop_criteria.hpp"
 
@@ -24,7 +25,6 @@ namespace math
 			~newton_raphson(void);
 
 			//data
-			void size(uint32_t);
 			void save(const char*) const;
 
 		private:
@@ -54,6 +54,7 @@ namespace math
 			//data
 			bool m_silent;
 			bool m_equilibrium;
+			convergence m_convergence;
 			continuation m_continuation;
 			stop_criteria m_stop_criteria;
 			std::function<bool(void)> m_stop;
@@ -71,7 +72,7 @@ namespace math
 			uint32_t m_step, m_attempt, m_iteration;
 			uint32_t m_step_max, m_attempt_max, m_iteration_max;
 			
-			double m_dp0, m_tolerance;
+			double m_dp0;
 			double m_p_old, m_p_new, *m_p_data;
 			double *m_x_old, *m_x_new, *m_x_data;
 			double *m_r, *m_g, *m_K, m_dp, m_ddp, *m_dx, *m_dxr, *m_dxt, *m_ddxr, *m_ddxt;

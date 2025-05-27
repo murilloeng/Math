@@ -15,9 +15,9 @@ namespace math
 	{
 		//constructors
 		newton_raphson::newton_raphson(void) : 
-			m_silent(false), 
+			m_silent(false), m_convergence(this), 
 			m_watch_dof(0), m_size(1), m_step_max(100), m_attempt_max(5), m_iteration_max(10),
-			m_dp0(0.01), m_tolerance(1e-5), m_p_old(0), m_p_new(0), m_p_data(nullptr),
+			m_dp0(0.01), m_p_old(0), m_p_new(0), m_p_data(nullptr),
 			m_x_old(nullptr), m_x_new(nullptr), m_x_data(nullptr),
 			m_r(nullptr), m_g(nullptr), m_K(nullptr), 
 			m_dx(nullptr), m_dxr(nullptr), m_dxt(nullptr), m_ddxr(nullptr), m_ddxt(nullptr)
@@ -32,14 +32,6 @@ namespace math
 		}
 
 		//data
-		void newton_raphson::size(uint32_t size)
-		{
-			//data
-			m_size = size;
-			//memory
-			cleanup();
-			allocate();
-		}
 		void newton_raphson::save(const char* path) const
 		{
 			FILE* file = fopen(path, "w");
@@ -146,8 +138,7 @@ namespace math
 		}
 		bool newton_raphson::equilibrium(void)
 		{
-			const vector r(m_r, m_size), g(m_g, m_size);
-			return m_equilibrium = r.norm() < m_tolerance * g.norm();
+			return m_equilibrium = m_convergence.check();
 		}
 		void newton_raphson::predictor(void)
 		{
