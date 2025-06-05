@@ -15,21 +15,6 @@ namespace math
 		}
 		Circle::Circle(const vec3& x1, const vec3& x2, const vec3& x3)
 		{
-			// //data
-			// const vec3 t1 = (x2 - x1).normalize();
-			// const vec3 s2 = (x3 - x1).normalize();
-			// //normal
-			// m_normal = t1.cross(s2).normalize();
-			// const vec3 t2 = m_normal.cross(t1);
-			// //center
-			// const double a = (x3 - x1).inner(t1);
-			// const double b = (x3 - x1).inner(t2);
-			// const double m = (x2.inner(x2) - x1.inner(x1)) / (x2 - x1).norm() / 2;
-			// const double n = (x3.inner(x3) - x1.inner(x1)) / 2 / b - a * m / b;
-			// m_center = m * t1 + n * t2;
-			// //radius
-			// m_radius = (x1 - m_center).norm();
-			
 			//normal
 			m_normal = (x2 - x1).cross(x3 - x1).normalize();
 			//center
