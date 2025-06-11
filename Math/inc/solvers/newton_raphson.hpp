@@ -11,6 +11,15 @@
 #include "Math/Math/inc/solvers/continuation.hpp"
 #include "Math/Math/inc/solvers/stop_criteria.hpp"
 
+//x: state vector
+//r: residual force vector
+//p: continuation parameter
+
+//target system: r(x, p) = 0
+
+//tangent on x: K(x, p) = -dr/dx(x, p)
+//tangent on p: g(x, p) = +dr/dp(x, p)
+
 namespace math
 {
 	namespace solvers
@@ -34,8 +43,8 @@ namespace math
 			void apply(void);
 			void print(void);
 			void setup(void);
-			void update(void);
 			void record(void);
+			void update(void);
 			void restore(void);
 			void compute(void);
 			void predictor(void);

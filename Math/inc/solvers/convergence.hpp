@@ -7,14 +7,6 @@ namespace math
 {
 	namespace solvers
 	{
-		class newton_raphson;
-	}
-}
-
-namespace math
-{
-	namespace solvers
-	{
 		class convergence
 		{
 		public:
@@ -27,7 +19,7 @@ namespace math
 			};
 
 			//constructor
-			convergence(const newton_raphson*);
+			convergence(void);
 
 			//destructor
 			~convergence(void);
@@ -37,8 +29,10 @@ namespace math
 
 			//data
 			type m_type;
+			double* m_r;
+			double* m_g;
+			uint32_t m_size;
 			double m_tolerance;
-			const newton_raphson* m_solver;
 		};
 	}
 }

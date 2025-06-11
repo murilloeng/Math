@@ -31,6 +31,7 @@
     <ClInclude Include="inc\solvers\newmark.hpp" />
     <ClInclude Include="inc\solvers\harmonic.hpp" />
     <ClInclude Include="inc\solvers\bisection.hpp" />
+    <ClInclude Include="inc\solvers\nonlinear.hpp" />
     <ClInclude Include="inc\solvers\strategies.hpp" />
     <ClInclude Include="inc\solvers\runge_kutta.hpp" />
     <ClInclude Include="inc\solvers\continuation.hpp" />
@@ -65,6 +66,7 @@
     <ClCompile Include="src\solvers\newmark.cpp" />
     <ClCompile Include="src\solvers\harmonic.cpp" />
     <ClCompile Include="src\solvers\bisection.cpp" />
+    <ClCompile Include="src\solvers\nonlinear.cpp" />
     <ClCompile Include="src\solvers\runge_kutta.cpp" />
     <ClCompile Include="src\solvers\continuation.cpp" />
     <ClCompile Include="src\solvers\stop_criteria.cpp" />

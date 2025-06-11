@@ -15,7 +15,7 @@ namespace math
 	{
 		//constructors
 		newton_raphson::newton_raphson(void) : 
-			m_silent(false), m_convergence(this), 
+			m_silent(false), 
 			m_watch_dof(0), m_size(1), m_step_max(100), m_attempt_max(5), m_iteration_max(10),
 			m_dp0(0.01), m_p_old(0), m_p_new(0), m_p_data(nullptr),
 			m_x_old(nullptr), m_x_new(nullptr), m_x_data(nullptr),
@@ -87,6 +87,9 @@ namespace math
 			memcpy(m_x_old, m_x_new, m_size * sizeof(double));
 			//stop
 			m_stop_criteria.m_solver = this;
+			//convergence
+			m_convergence.m_r = m_r;
+			m_convergence.m_g = m_g;
 			//continuation
 			m_continuation.m_dx = m_dx;
 			m_continuation.m_dp = &m_dp;
