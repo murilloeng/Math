@@ -12,17 +12,17 @@ namespace math
 {
 	namespace solvers
 	{
-		class nonlinear
+		class solver
 		{
 		public:
 			//constructor
-			nonlinear(void);
+			solver(void);
 
 			//destructor
-			virtual ~nonlinear(void);
+			virtual ~solver(void);
 
 			//data
-			virtual void save(const char*) const = 0;
+			virtual void save(const char*) const;
 			virtual uint32_t state_set(void) const = 0;
 			virtual uint32_t force_set(void) const = 0;
 			virtual uint32_t tangent_set(void) const = 0;
@@ -30,7 +30,7 @@ namespace math
 			//enums
 			enum class state : uint32_t
 			{
-				x = 1 << 0, v = 1 << 1, a = 1 << 2, p = 1 << 3
+				x = 1 << 0, v = 1 << 1, a = 1 << 2, p = 1 << 3, t = 1 << 4
 			};
 			enum class force : uint32_t
 			{
@@ -44,17 +44,24 @@ namespace math
 		private:
 			//solve
 			bool stop(void);
-			void check(void);
 			void apply(void);
 			void print(void);
 			void setup(void);
 			void record(void);
 			void update(void);
 			void restore(void);
-			void compute(void);
-			void predictor(void);
-			void corrector(void);
 			bool equilibrium(void);
+
+			//solve
+			virtual void check(void) = 0;
+			virtual void compute(void) = 0;
+			virtual void predictor(void) = 0;
+			virtual void corrector(void) = 0;
+
+			//allocate
+			void allocate_state(void);
+			void allocate_forces(void);
+			void allocate_tangents(void);
 
 		public:
 			//solve
@@ -88,6 +95,7 @@ namespace math
 			double *m_v_old, *m_v_new, *m_v_data, *m_dv;
 			double *m_a_old, *m_a_new, *m_a_data, *m_da;
 			double m_p_old, m_p_new, *m_p_data, m_dp, m_dp0;
+			double m_t_old, m_t_new, *m_t_data, m_dt, m_t_max;
 		};
 	}
 }

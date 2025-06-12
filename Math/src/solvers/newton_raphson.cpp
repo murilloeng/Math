@@ -101,12 +101,6 @@ namespace math
 			m_continuation.m_size = m_size;
 			m_continuation.m_index = m_watch_dof;
 		}
-		void newton_raphson::update(void)
-		{
-			m_p_old = m_p_new;
-			if(m_update) m_update();
-			memcpy(m_x_old, m_x_new, m_size * sizeof(double));
-		}
 		void newton_raphson::record(void)
 		{
 			if(m_record) m_record();
@@ -115,6 +109,12 @@ namespace math
 			{
 				m_x_data[m_step * m_size + i] = m_x_new[i];
 			}
+		}
+		void newton_raphson::update(void)
+		{
+			m_p_old = m_p_new;
+			if(m_update) m_update();
+			memcpy(m_x_old, m_x_new, m_size * sizeof(double));
 		}
 		void newton_raphson::restore(void)
 		{
@@ -139,10 +139,6 @@ namespace math
 				m_tangent_1(m_g, m_p_new, m_x_new);
 				m_tangent_2(m_K, m_p_new, m_x_new);
 			}
-		}
-		bool newton_raphson::equilibrium(void)
-		{
-			return m_equilibrium = m_convergence.check();
 		}
 		void newton_raphson::predictor(void)
 		{
@@ -181,6 +177,10 @@ namespace math
 				//apply
 				apply();
 			}
+		}
+		bool newton_raphson::equilibrium(void)
+		{
+			return m_equilibrium = m_convergence.check();
 		}
 		void newton_raphson::load_predictor(void)
 		{
