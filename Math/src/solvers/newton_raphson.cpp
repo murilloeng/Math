@@ -90,6 +90,7 @@ namespace math
 			//convergence
 			m_convergence.m_r = m_r;
 			m_convergence.m_g = m_g;
+			m_convergence.m_size = m_size;
 			//continuation
 			m_continuation.m_dx = m_dx;
 			m_continuation.m_dp = &m_dp;

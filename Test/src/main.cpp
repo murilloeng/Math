@@ -17,10 +17,10 @@ int main(void)
 	//test
 	// tests::solvers::harmonic::pyramid();
 
-	srand(time(nullptr));
 	double r, q1, q2, q3;
 	math::vec3 x1, x2, x3, xc, n, t1, t2;
-
+	
+	srand(uint32_t(time(nullptr)));
 	for (uint32_t i = 0; i < 1000; i++)
 	{
 		n.randu();
