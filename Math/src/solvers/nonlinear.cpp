@@ -18,10 +18,10 @@ namespace math
 			m_K(nullptr), m_C(nullptr), m_M(nullptr),
 			m_r(nullptr), m_fi(nullptr), m_fe(nullptr), 
 			m_dxr(nullptr), m_dxt(nullptr), m_ddxr(nullptr), m_ddxt(nullptr),
-			m_p_old(0), m_p_new(0), m_p_data(nullptr), m_dp(0),
 			m_x_old(nullptr), m_x_new(nullptr), m_x_data(nullptr), m_dx(nullptr),
 			m_v_old(nullptr), m_v_new(nullptr), m_v_data(nullptr), m_dv(nullptr),
-			m_a_old(nullptr), m_a_new(nullptr), m_a_data(nullptr), m_da(nullptr)
+			m_a_old(nullptr), m_a_new(nullptr), m_a_data(nullptr), m_da(nullptr),
+			m_p_old(0), m_p_new(0), m_p_data(nullptr), m_dp(0), m_dp0(0)
 		{
 			return;
 		}

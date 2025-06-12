@@ -84,10 +84,10 @@ namespace math
 			double *m_K, *m_C, *m_M;
 			double *m_r, *m_fi, *m_fe;
 			double *m_dxr, *m_dxt, *m_ddxr, *m_ddxt;
-			double m_p_old, m_p_new, *m_p_data, m_dp;
 			double *m_x_old, *m_x_new, *m_x_data, *m_dx;
 			double *m_v_old, *m_v_new, *m_v_data, *m_dv;
 			double *m_a_old, *m_a_new, *m_a_data, *m_da;
+			double m_p_old, m_p_new, *m_p_data, m_dp, m_dp0;
 		};
 	}
 }
