@@ -5,8 +5,6 @@
 #include <functional>
 
 //math
-#include "Math/Math/inc/linear/matrix.hpp"
-#include "Math/Math/inc/linear/vector.hpp"
 #include "Math/Math/inc/solvers/convergence.hpp"
 #include "Math/Math/inc/solvers/continuation.hpp"
 #include "Math/Math/inc/solvers/stop_criteria.hpp"

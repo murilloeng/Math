@@ -4,8 +4,6 @@
 #include <cstring>
 
 //math
-#include "Math/Math/inc/misc/util.hpp"
-#include "Math/Math/inc/linear/matrix.hpp"
 #include "Math/Math/inc/linear/vector.hpp"
 #include "Math/Math/inc/solvers/newton_raphson.hpp"
 
