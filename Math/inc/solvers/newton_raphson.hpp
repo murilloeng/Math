@@ -49,9 +49,6 @@ namespace math
 			std::function<void(double*, double, const double*)> m_tangent_2;
 			std::function<void(double*, double*, const double*)> m_system_1;
 			std::function<void(double*, double*, double*, double, const double*)> m_system_2;
-
-			//friends
-			friend class stop_criteria;
 		};
 	}
 }
