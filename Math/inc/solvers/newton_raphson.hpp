@@ -5,9 +5,7 @@
 #include <functional>
 
 //math
-#include "Math/Math/inc/solvers/convergence.hpp"
-#include "Math/Math/inc/solvers/continuation.hpp"
-#include "Math/Math/inc/solvers/stop_criteria.hpp"
+#include "Math/Math/inc/solvers/solver.hpp"
 
 //x: state vector
 //r: residual force vector
@@ -22,7 +20,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class newton_raphson
+		class newton_raphson : public solver
 		{
 		public:
 			//constructors
@@ -33,6 +31,9 @@ namespace math
 
 			//data
 			void save(const char*) const;
+			uint32_t state_set(void) const override;
+			uint32_t force_set(void) const override;
+			uint32_t tangent_set(void) const override;
 
 		private:
 			//solve

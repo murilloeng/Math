@@ -41,7 +41,7 @@ namespace math
 				K = 1 << 0, C = 1 << 1, M = 1 << 2
 			};
 
-		private:
+		protected:
 			//solve
 			bool stop(void);
 			void apply(void);
@@ -94,8 +94,8 @@ namespace math
 			double *m_x_old, *m_x_new, *m_x_data, *m_dx;
 			double *m_v_old, *m_v_new, *m_v_data, *m_dv;
 			double *m_a_old, *m_a_new, *m_a_data, *m_da;
-			double m_p_old, m_p_new, *m_p_data, m_dp, m_dp0;
 			double m_t_old, m_t_new, *m_t_data, m_dt, m_t_max;
+			double m_p_old, m_p_new, *m_p_data, m_dp, m_dp0, m_ddp;
 		};
 	}
 }

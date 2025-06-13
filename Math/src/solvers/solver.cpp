@@ -11,7 +11,7 @@ namespace math
 	{
 		//constructor
 		solver::solver(void) : 
-			m_silent(true), 
+			m_silent(false), 
 			m_equilibrium(false),
 			m_size(0), m_watch_dof(0),
 			m_step(0), m_attempt(0), m_iteration(0),
@@ -22,8 +22,8 @@ namespace math
 			m_x_old(nullptr), m_x_new(nullptr), m_x_data(nullptr), m_dx(nullptr),
 			m_v_old(nullptr), m_v_new(nullptr), m_v_data(nullptr), m_dv(nullptr),
 			m_a_old(nullptr), m_a_new(nullptr), m_a_data(nullptr), m_da(nullptr),
-			m_p_old(0), m_p_new(0), m_p_data(nullptr), m_dp(0), m_dp0(0),
-			m_t_old(0), m_t_new(0), m_t_data(nullptr), m_dt(0), m_t_max(0)
+			m_t_old(0), m_t_new(0), m_t_data(nullptr), m_dt(0), m_t_max(0),
+			m_p_old(0), m_p_new(0), m_p_data(nullptr), m_dp(0), m_dp0(0), m_ddp(0)
 		{
 			return;
 		}
@@ -49,6 +49,7 @@ namespace math
 					if(ss & uint32_t(state::v)) fprintf(file, "%+.6e ", m_v_data[j + m_size * i]);
 					if(ss & uint32_t(state::a)) fprintf(file, "%+.6e ", m_a_data[j + m_size * i]);
 				}
+				if(ss & uint32_t(state::t)) fprintf(file, "%+.6e ", m_t_data[i]);
 				if(ss & uint32_t(state::p)) fprintf(file, "%+.6e ", m_p_data[i]);
 				fprintf(file, "\n");
 			}
@@ -72,8 +73,8 @@ namespace math
 				if(ss & uint32_t(state::v)) m_v_new[i] = m_v_old[i] + m_dv[i];
 				if(ss & uint32_t(state::a)) m_a_new[i] = m_a_old[i] + m_da[i];
 			}
-			if(ss & uint32_t(state::p)) m_p_new = m_p_old + m_dp;
 			if(ss & uint32_t(state::t)) m_t_new = m_t_old + m_dt;
+			if(ss & uint32_t(state::p)) m_p_new = m_p_old + m_dp;
 			//compute
 			compute();
 		}
@@ -85,8 +86,8 @@ namespace math
 			if(!m_silent)
 			{
 				printf("step: %04d ", m_step);
-				if(ss & uint32_t(state::p)) printf("load: %+.6e ", m_p_new);
 				if(ss & uint32_t(state::t)) printf("time: %+.6e ", m_t_new);
+				if(ss & uint32_t(state::p)) printf("load: %+.6e ", m_p_new);
 				if(ss & uint32_t(state::x)) printf("state: %+.6e ", m_x_new[m_watch_dof]);
 				if(ss & uint32_t(state::v)) printf("velocity: %+.6e ", m_v_new[m_watch_dof]);
 				if(ss & uint32_t(state::a)) printf("acceleration: %+.6e ", m_a_new[m_watch_dof]);
@@ -135,8 +136,8 @@ namespace math
 				if(ss & uint32_t(state::v)) m_v_data[m_step * m_size + i] = m_v_new[i];
 				if(ss & uint32_t(state::a)) m_a_data[m_step * m_size + i] = m_a_new[i];
 			}
-			if(ss & uint32_t(state::p)) m_p_data[m_step] = m_p_new;
 			if(ss & uint32_t(state::t)) m_t_data[m_step] = m_t_new;
+			if(ss & uint32_t(state::p)) m_p_data[m_step] = m_p_new;
 		}
 		void solver::update(void)
 		{
@@ -144,8 +145,8 @@ namespace math
 			const uint32_t ss = state_set();
 			//update
 			if(m_update) m_update();
-			if(ss & uint32_t(state::p)) m_p_old = m_p_new;
 			if(ss & uint32_t(state::t)) m_t_old = m_t_new;
+			if(ss & uint32_t(state::p)) m_p_old = m_p_new;
 			if(ss & uint32_t(state::x)) memcpy(m_x_old, m_x_new, m_size * sizeof(double));
 			if(ss & uint32_t(state::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
 			if(ss & uint32_t(state::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
@@ -156,8 +157,8 @@ namespace math
 			const uint32_t ss = state_set();
 			//update
 			if(m_update) m_update();
-			if(ss & uint32_t(state::p)) m_p_new = m_p_old;
 			if(ss & uint32_t(state::t)) m_t_new = m_t_old;
+			if(ss & uint32_t(state::p)) m_p_new = m_p_old;
 			if(ss & uint32_t(state::x)) memcpy(m_x_new, m_x_old, m_size * sizeof(double));
 			if(ss & uint32_t(state::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
 			if(ss & uint32_t(state::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
@@ -192,8 +193,8 @@ namespace math
 			if(ss & uint32_t(state::v)) m_v_new = new double[m_size];
 			if(ss & uint32_t(state::a)) m_a_old = new double[m_size];
 			if(ss & uint32_t(state::a)) m_a_new = new double[m_size];
-			if(ss & uint32_t(state::p)) m_p_data = new double[m_step_max + 1];
 			if(ss & uint32_t(state::t)) m_t_data = new double[m_step_max + 1];
+			if(ss & uint32_t(state::p)) m_p_data = new double[m_step_max + 1];
 			if(ss & uint32_t(state::x)) m_x_data = new double[m_size * (m_step_max + 1)];
 			if(ss & uint32_t(state::v)) m_v_data = new double[m_size * (m_step_max + 1)];
 			if(ss & uint32_t(state::a)) m_a_data = new double[m_size * (m_step_max + 1)];
@@ -253,7 +254,7 @@ namespace math
 				&m_x_old, &m_x_new, &m_x_data, &m_dx,
 				&m_v_old, &m_v_new, &m_v_data, &m_dv,
 				&m_a_old, &m_a_new, &m_a_data, &m_da,
-				&m_p_data, &m_t_data
+				&m_t_data, &m_p_data
 			};
 			//cleanup
 			for(double** ptr : data)

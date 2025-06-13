@@ -44,6 +44,18 @@ namespace math
 				fprintf(file, "\n");
 			}
 		}
+		uint32_t newton_raphson::state_set(void) const
+		{
+			return uint32_t(state::x) | uint32_t(state::p);
+		}
+		uint32_t newton_raphson::force_set(void) const
+		{
+			return uint32_t(force::r) | uint32_t(force::fi) | uint32_t(force::fe);
+		}
+		uint32_t newton_raphson::tangent_set(void) const
+		{
+			return uint32_t(tangent::K);
+		}
 
 		//solve
 		bool newton_raphson::stop(void)
