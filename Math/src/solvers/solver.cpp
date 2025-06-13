@@ -13,17 +13,17 @@ namespace math
 		solver::solver(void) : 
 			m_silent(false), 
 			m_equilibrium(false),
-			m_size(0), m_watch_dof(0),
+			m_size(1), m_watch_dof(0),
 			m_step(0), m_attempt(0), m_iteration(0),
-			m_step_max(0), m_attempt_max(0), m_iteration_max(0),
+			m_step_max(100), m_attempt_max(5), m_iteration_max(10),
 			m_K(nullptr), m_C(nullptr), m_M(nullptr),
 			m_r(nullptr), m_fi(nullptr), m_fe(nullptr), 
 			m_dxr(nullptr), m_dxt(nullptr), m_ddxr(nullptr), m_ddxt(nullptr),
 			m_x_old(nullptr), m_x_new(nullptr), m_x_data(nullptr), m_dx(nullptr),
 			m_v_old(nullptr), m_v_new(nullptr), m_v_data(nullptr), m_dv(nullptr),
 			m_a_old(nullptr), m_a_new(nullptr), m_a_data(nullptr), m_da(nullptr),
-			m_t_old(0), m_t_new(0), m_t_data(nullptr), m_dt(0), m_t_max(0),
-			m_p_old(0), m_p_new(0), m_p_data(nullptr), m_dp(0), m_dp0(0), m_ddp(0)
+			m_t_old(0), m_t_new(0), m_t_data(nullptr), m_dt(0), m_t_max(1.00e+00),
+			m_p_old(0), m_p_new(0), m_p_data(nullptr), m_dp(0), m_dp0(1.00e-01), m_ddp(0)
 		{
 			return;
 		}

@@ -12,13 +12,7 @@ namespace math
 	namespace solvers
 	{
 		//constructors
-		newton_raphson::newton_raphson(void) : 
-			m_silent(false), 
-			m_watch_dof(0), m_size(1), m_step_max(100), m_attempt_max(5), m_iteration_max(10),
-			m_dp0(0.01), m_p_old(0), m_p_new(0), m_p_data(nullptr),
-			m_x_old(nullptr), m_x_new(nullptr), m_x_data(nullptr),
-			m_r(nullptr), m_g(nullptr), m_K(nullptr), 
-			m_dx(nullptr), m_dxr(nullptr), m_dxt(nullptr), m_ddxr(nullptr), m_ddxt(nullptr)
+		newton_raphson::newton_raphson(void)
 		{
 			return;
 		}
@@ -99,7 +93,7 @@ namespace math
 			m_stop_criteria.m_solver = this;
 			//convergence
 			m_convergence.m_r = m_r;
-			m_convergence.m_g = m_g;
+			m_convergence.m_g = m_fe;
 			m_convergence.m_size = m_size;
 			//continuation
 			m_continuation.m_dx = m_dx;
@@ -136,28 +130,28 @@ namespace math
 		{
 			if(m_system_2)
 			{
-				m_system_2(m_r, m_g, m_K, m_p_new, m_x_new);
+				m_system_2(m_r, m_fe, m_K, m_p_new, m_x_new);
 			}
 			else if(m_system_1)
 			{
 				m_system_1(m_r, m_K, m_x_new);
-				for(uint32_t i = 0; i < m_size; i++) m_r[i] = m_p_new * m_g[i] - m_r[i];
+				for(uint32_t i = 0; i < m_size; i++) m_r[i] = m_p_new * m_fe[i] - m_r[i];
 			}
 			else
 			{
 				m_residue(m_r, m_p_new, m_x_new);
-				m_tangent_1(m_g, m_p_new, m_x_new);
 				m_tangent_2(m_K, m_p_new, m_x_new);
+				m_tangent_1(m_fe, m_p_new, m_x_new);
 			}
 		}
 		void newton_raphson::predictor(void)
 		{
 			//data
 			const matrix K(m_K, m_size, m_size);
-			const vector r(m_r, m_size), g(m_g, m_size);
+			const vector r(m_r, m_size), fe(m_fe, m_size);
 			vector dx(m_dx, m_size), dxr(m_dxr, m_size), dxt(m_dxt, m_size);
 			//predictor
-			if(!K.solve(dxr, r) || !K.solve(dxt, g))
+			if(!K.solve(dxr, r) || !K.solve(dxt, fe))
 			{
 				if(!m_silent) printf("Unable to decompose stiffness matrix in predictor!\n");
 			}
@@ -169,14 +163,14 @@ namespace math
 		void newton_raphson::corrector(void)
 		{
 			const matrix K(m_K, m_size, m_size);
-			const vector r(m_r, m_size), g(m_g, m_size);
+			const vector r(m_r, m_size), fe(m_fe, m_size);
 			vector ddxr(m_ddxr, m_size), ddxt(m_ddxt, m_size);
 			for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
 			{
 				//check
 				if(equilibrium()) break;
 				//corrector
-				if(!K.solve(ddxr, r) || !K.solve(ddxt, g))
+				if(!K.solve(ddxr, r) || !K.solve(ddxt, fe))
 				{
 					if(!m_silent) printf("Unable to decompose stiffness matrix in corrector!\n");
 				}
@@ -239,7 +233,7 @@ namespace math
 			//data
 			double** data[] = {
 				&m_p_data, &m_x_old, &m_x_new, &m_x_data, 
-				&m_r, &m_g, &m_K, &m_dx, &m_dxr, &m_dxt, &m_ddxr, &m_ddxt
+				&m_r, &m_fe, &m_K, &m_dx, &m_dxr, &m_dxt, &m_ddxr, &m_ddxt
 			};
 			//delete
 			for(double** ptr : data)
@@ -251,7 +245,7 @@ namespace math
 		void newton_raphson::allocate(void)
 		{
 			m_r = new double[m_size];
-			m_g = new double[m_size];
+			m_fe = new double[m_size];
 			m_dx = new double[m_size];
 			m_dxr = new double[m_size];
 			m_dxt = new double[m_size];
