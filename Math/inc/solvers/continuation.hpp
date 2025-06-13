@@ -7,6 +7,14 @@ namespace math
 {
 	namespace solvers
 	{
+		class solvers;
+	}
+}
+
+namespace math
+{
+	namespace solvers
+	{
 		class continuation
 		{
 		public:
@@ -46,14 +54,7 @@ namespace math
 	
 			//data
 			type m_type;
-			uint32_t m_size;
-			uint32_t m_index;
-			const double* m_dp;
-			const double* m_dx;
-			const double* m_dxr;
-			const double* m_dxt;
-			const double* m_ddxr;
-			const double* m_ddxt;
+			solver* m_solver;
 		};
 	}
 }

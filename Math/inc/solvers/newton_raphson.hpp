@@ -37,13 +37,10 @@ namespace math
 
 		private:
 			//solve
-			void check(void);
-			void setup(void);
-			void compute(void);
-			void predictor(void);
-			void corrector(void);
-			void load_predictor(void);
-			void load_corrector(void);
+			void check(void) override;
+			void compute(void) override;
+			void predictor(void) override;
+			void corrector(void) override;
 
 		public:
 			//data

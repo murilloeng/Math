@@ -106,21 +106,12 @@ namespace math
 			m_p_old = m_p_new;
 			m_t_old = m_t_new;
 			m_dt = m_t_max / m_step_max;
+			m_convergence.m_solver = this;
+			m_continuation.m_solver = this;
+			m_stop_criteria.m_solver = this;
 			if(ss & uint32_t(state::x)) memcpy(m_x_old, m_x_new, m_size * sizeof(double));
 			if(ss & uint32_t(state::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
 			if(ss & uint32_t(state::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
-			//stop
-			m_convergence.m_solver = this;
-			m_stop_criteria.m_solver = this;
-			//continuation
-			m_continuation.m_dx = m_dx; //TODO: continuation should have a solver pointer
-			m_continuation.m_dp = &m_dp;
-			m_continuation.m_dxr = m_dxr;
-			m_continuation.m_dxt = m_dxt;
-			m_continuation.m_ddxr = m_ddxr;
-			m_continuation.m_ddxt = m_ddxt;
-			m_continuation.m_size = m_size;
-			m_continuation.m_index = m_watch_dof;
 		}
 		void solver::record(void)
 		{

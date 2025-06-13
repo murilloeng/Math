@@ -60,28 +60,6 @@ namespace math
 				exit(EXIT_FAILURE);
 			}
 		}
-		void newton_raphson::setup(void)
-		{
-			//data
-			compute();
-			m_step = 0;
-			m_dp = m_dp0;
-			m_p_old = m_p_new;
-			memcpy(m_x_old, m_x_new, m_size * sizeof(double));
-			//stop
-			m_stop_criteria.m_solver = this;
-			//convergence
-			m_convergence.m_solver = this;
-			//continuation
-			m_continuation.m_dx = m_dx;
-			m_continuation.m_dp = &m_dp;
-			m_continuation.m_dxr = m_dxr;
-			m_continuation.m_dxt = m_dxt;
-			m_continuation.m_ddxr = m_ddxr;
-			m_continuation.m_ddxt = m_ddxt;
-			m_continuation.m_size = m_size;
-			m_continuation.m_index = m_watch_dof;
-		}
 		void newton_raphson::compute(void)
 		{
 			if(m_system_2)
@@ -111,7 +89,11 @@ namespace math
 			{
 				if(!m_silent) printf("Unable to decompose stiffness matrix in predictor!\n");
 			}
-			load_predictor();
+			//continuation
+			if(m_step != 1)
+			{
+				m_dp = m_continuation.predictor() / (1 << m_attempt);
+			}
 			for(uint32_t i = 0; i < m_size; i++) dx[i] = dxr[i] + m_dp * dxt[i];
 			//apply
 			apply();
@@ -130,24 +112,14 @@ namespace math
 				{
 					if(!m_silent) printf("Unable to decompose stiffness matrix in corrector!\n");
 				}
-				load_corrector();
+				//continuation
+				m_ddp = m_continuation.corrector();
 				//update
 				m_dp += m_ddp;
 				for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_ddxr[i] + m_ddp * m_ddxt[i];
 				//apply
 				apply();
 			}
-		}
-		void newton_raphson::load_predictor(void)
-		{
-			if(m_step != 1)
-			{
-				m_dp = m_continuation.predictor() / (1 << m_attempt);
-			}
-		}
-		void newton_raphson::load_corrector(void)
-		{
-			m_ddp = m_continuation.corrector();
 		}
 	}
 }
