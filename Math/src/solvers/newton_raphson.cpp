@@ -24,20 +24,6 @@ namespace math
 		}
 
 		//data
-		void newton_raphson::save(const char* path) const
-		{
-			FILE* file = fopen(path, "w");
-			fprintf(file, "%04d\n", m_step);
-			for(uint32_t i = 0; i < m_step; i++)
-			{
-				fprintf(file, "%+.6e ", m_p_data[i]);
-				for(uint32_t j = 0; j < m_size; j++)
-				{
-					fprintf(file, "%+.6e ", m_x_data[j + m_size * i]);
-				}
-				fprintf(file, "\n");
-			}
-		}
 		uint32_t newton_raphson::state_set(void) const
 		{
 			return uint32_t(state::x) | uint32_t(state::p);

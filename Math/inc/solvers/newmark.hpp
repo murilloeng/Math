@@ -4,8 +4,7 @@
 #include <cstdint>
 
 //Math
-#include "Math/Math/inc/solvers/convergence.hpp"
-#include "Math/Math/inc/solvers/stop_criteria.hpp"
+#include "Math/Math/inc/solvers/solver.hpp"
 
 //x: state vector
 //r: residue vector
@@ -27,7 +26,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class newmark
+		class newmark : public solver
 		{
 		public:
 			//constructors
@@ -36,59 +35,28 @@ namespace math
 			//destructor
 			~newmark(void);
 
-		private:
 			//data
-			// void update(void);
-			void residue(void);
-			void inertia(void);
-			void damping(void);
-			void stifness(void);
-			void internal(void);
-			void external(void);
+			uint32_t state_set(void) const override;
+			uint32_t force_set(void) const override;
+			uint32_t tangent_set(void) const override;
 
+		private:
 			//solve
-			bool stop(void);
-			void check(void);
-			void apply(void);
-			void print(void);
-			void setup(void);
-			void record(void);
-			void update(void);
-			void restore(void);
-			void compute(void);
-			void predictor(void);
-			void corrector(void);
-			bool equilibrium(void);
+			void check(void) override;
+			void compute(void) override;
+			void predictor(void) override;
+			void corrector(void) override;
 
 		public:
-			//solve
-			void step(void);
-			void solve(void);
-			void cleanup(void);
-			void allocate(void);
-
 			//data
-			void** m_args;
-			bool m_silent;
-			convergence m_convergence;
-			stop_criteria m_stop_criteria;
+			double m_g, m_b;
 
-			uint32_t m_watch_dof, m_size;
-			uint32_t m_step, m_attempt, m_iteration;
-			uint32_t m_step_max, m_attempt_max, m_iteration_max;
+			std::function<void(double*, const double*, const double*)> m_internal_force;
+			std::function<void(double*, const double*, const double*, double)> m_external_force;
 
-			double m_t, m_T, m_dt, m_g, m_b;
-			double *m_x_old, *m_x_new, *m_x_data, *m_dx;
-			double *m_v_old, *m_v_new, *m_v_data, *m_dv;
-			double *m_a_old, *m_a_new, *m_a_data, *m_da;
-			double *m_r, *m_fe, *m_fi, *m_M, *m_C, *m_K;
-
-			void (*m_internal_force)(double*, const double*, const double*, void**);
-			void (*m_external_force)(double*, const double*, const double*, double, void**);
-
-			void (*m_inertia)(double*, const double*, void**);
-			void (*m_damping)(double*, const double*, const double*, double, void**);
-			void (*m_stiffness)(double*, const double*, const double*, const double*, double, void**);
+			std::function<void(double*, const double*)> m_inertia;
+			std::function<void(double*, const double*, const double*, double)> m_damping;
+			std::function<void(double*, const double*, const double*, const double*, double)> m_stiffness;
 		};
 	}
 }

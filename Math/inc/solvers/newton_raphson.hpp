@@ -30,7 +30,6 @@ namespace math
 			~newton_raphson(void);
 
 			//data
-			void save(const char*) const;
 			uint32_t state_set(void) const override;
 			uint32_t force_set(void) const override;
 			uint32_t tangent_set(void) const override;
