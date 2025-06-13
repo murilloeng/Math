@@ -7,6 +7,14 @@ namespace math
 {
 	namespace solvers
 	{
+		class solver;
+	}
+}
+
+namespace math
+{
+	namespace solvers
+	{
 		class convergence
 		{
 		public:
@@ -29,9 +37,7 @@ namespace math
 
 			//data
 			type m_type;
-			double* m_r;
-			double* m_g;
-			uint32_t m_size;
+			solver* m_solver;
 			double m_tolerance;
 		};
 	}

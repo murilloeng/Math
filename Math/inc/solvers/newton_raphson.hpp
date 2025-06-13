@@ -37,28 +37,15 @@ namespace math
 
 		private:
 			//solve
-			bool stop(void);
 			void check(void);
-			void apply(void);
-			void print(void);
 			void setup(void);
-			void record(void);
-			void update(void);
-			void restore(void);
 			void compute(void);
 			void predictor(void);
 			void corrector(void);
-			bool equilibrium(void);
 			void load_predictor(void);
 			void load_corrector(void);
 
 		public:
-			//solve
-			void step(void);
-			void solve(void);
-			void cleanup(void);
-			void allocate(void);
-
 			//data
 			std::function<void(double*, double, const double*)> m_residue;
 			std::function<void(double*, double, const double*)> m_tangent_1;

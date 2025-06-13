@@ -52,10 +52,6 @@ namespace math
 		}
 
 		//solve
-		bool newton_raphson::stop(void)
-		{
-			return (m_stop && m_stop()) || m_stop_criteria.stop();
-		}
 		void newton_raphson::check(void)
 		{
 			if(!m_system_1 && !m_system_2 && !(m_residue && m_tangent_1 && m_tangent_2))
@@ -63,23 +59,6 @@ namespace math
 				printf("Error: Newton-Raphson solver called with methods not set!\n");
 				exit(EXIT_FAILURE);
 			}
-		}
-		void newton_raphson::apply(void)
-		{
-			m_p_new = m_p_old + m_dp;
-			for(uint32_t i = 0; i < m_size; i++)
-			{
-				m_x_new[i] = m_x_old[i] + m_dx[i];
-			}
-			compute();
-		}
-		void newton_raphson::print(void)
-		{
-			if(!m_silent)
-			{
-				printf("step: %04d load: %+.6e state: %+.6e\n", m_step, m_p_new, m_x_new[m_watch_dof]);
-			}
-			if(m_interface) m_interface(m_step);
 		}
 		void newton_raphson::setup(void)
 		{
@@ -92,9 +71,7 @@ namespace math
 			//stop
 			m_stop_criteria.m_solver = this;
 			//convergence
-			m_convergence.m_r = m_r;
-			m_convergence.m_g = m_fe;
-			m_convergence.m_size = m_size;
+			m_convergence.m_solver = this;
 			//continuation
 			m_continuation.m_dx = m_dx;
 			m_continuation.m_dp = &m_dp;
@@ -104,27 +81,6 @@ namespace math
 			m_continuation.m_ddxt = m_ddxt;
 			m_continuation.m_size = m_size;
 			m_continuation.m_index = m_watch_dof;
-		}
-		void newton_raphson::record(void)
-		{
-			if(m_record) m_record();
-			m_p_data[m_step] = m_p_new;
-			for(uint32_t i = 0; i < m_size; i++)
-			{
-				m_x_data[m_step * m_size + i] = m_x_new[i];
-			}
-		}
-		void newton_raphson::update(void)
-		{
-			m_p_old = m_p_new;
-			if(m_update) m_update();
-			memcpy(m_x_old, m_x_new, m_size * sizeof(double));
-		}
-		void newton_raphson::restore(void)
-		{
-			m_p_new = m_p_old;
-			if(m_restore) m_restore();
-			memcpy(m_x_new, m_x_old, m_size * sizeof(double));
 		}
 		void newton_raphson::compute(void)
 		{
@@ -182,10 +138,6 @@ namespace math
 				apply();
 			}
 		}
-		bool newton_raphson::equilibrium(void)
-		{
-			return m_equilibrium = m_convergence.check();
-		}
 		void newton_raphson::load_predictor(void)
 		{
 			if(m_step != 1)
@@ -196,66 +148,6 @@ namespace math
 		void newton_raphson::load_corrector(void)
 		{
 			m_ddp = m_continuation.corrector();
-		}
-
-		//solve
-		void newton_raphson::step(void)
-		{
-			for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
-			{
-				predictor();
-				corrector();
-				if(m_equilibrium) break;
-				restore();
-			}
-			update();
-			record();
-		}
-		void newton_raphson::solve(void)
-		{
-			check();
-			setup();
-			print();
-			record();
-			for(m_step = 1; !stop(); m_step++)
-			{
-				step();
-				print();
-				if(!m_equilibrium)
-				{
-					printf("Newton-Raphson solver failed in step %d!\n", m_step);
-					break;
-				}
-			}
-		}
-		void newton_raphson::cleanup(void)
-		{
-			//data
-			double** data[] = {
-				&m_p_data, &m_x_old, &m_x_new, &m_x_data, 
-				&m_r, &m_fe, &m_K, &m_dx, &m_dxr, &m_dxt, &m_ddxr, &m_ddxt
-			};
-			//delete
-			for(double** ptr : data)
-			{
-				delete[] *ptr;
-				*ptr = nullptr;
-			}
-		}
-		void newton_raphson::allocate(void)
-		{
-			m_r = new double[m_size];
-			m_fe = new double[m_size];
-			m_dx = new double[m_size];
-			m_dxr = new double[m_size];
-			m_dxt = new double[m_size];
-			m_ddxr = new double[m_size];
-			m_ddxt = new double[m_size];
-			m_x_old = new double[m_size];
-			m_x_new = new double[m_size];
-			m_K = new double[m_size * m_size];
-			m_p_data = new double[m_step_max + 1];
-			m_x_data = new double[m_size * (m_step_max + 1)];
 		}
 	}
 }

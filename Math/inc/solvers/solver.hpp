@@ -43,14 +43,14 @@ namespace math
 
 		protected:
 			//solve
-			bool stop(void);
-			void apply(void);
-			void print(void);
-			void setup(void);
-			void record(void);
-			void update(void);
-			void restore(void);
-			bool equilibrium(void);
+			virtual bool stop(void);
+			virtual void apply(void);
+			virtual void print(void);
+			virtual void setup(void);
+			virtual void record(void);
+			virtual void update(void);
+			virtual void restore(void);
+			virtual bool equilibrium(void);
 
 			//solve
 			virtual void check(void) = 0;

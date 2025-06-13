@@ -2,8 +2,8 @@
 #include <cfloat>
 
 //Math
+#include "Math/Math/inc/solvers/solver.hpp"
 #include "Math/Math/inc/solvers/stop_criteria.hpp"
-#include "Math/Math/inc/solvers/newton_raphson.hpp"
 
 namespace math
 {
@@ -11,7 +11,7 @@ namespace math
 	{
 		//constructor
 		stop_criteria::stop_criteria(void) : 
-			m_stop(type::last), m_types(uint32_t(type::step_maximum)), 
+			m_stop(type::last), m_types(uint32_t(type::step_maximum) & uint32_t(type::time_maximum)), 
 			m_p_min(-DBL_MAX), m_p_max(+DBL_MAX), m_x_min(-DBL_MAX), m_x_max(+DBL_MAX)
 		{
 			return;
@@ -29,6 +29,7 @@ namespace math
 			//data
 			bool(stop_criteria::*fun[])(void) const = {
 				&stop_criteria::stop_step_maximum,
+				&stop_criteria::stop_time_maximum,
 				&stop_criteria::stop_load_limit_minimum, &stop_criteria::stop_load_limit_maximum,
 				&stop_criteria::stop_load_local_minimum, &stop_criteria::stop_load_local_maximum,
 				&stop_criteria::stop_load_value_negative, &stop_criteria::stop_load_value_positive,
@@ -40,7 +41,7 @@ namespace math
 			m_stop = type::last;
 			for(uint32_t i = 0; 1U << i < uint32_t(type::last); i++)
 			{
-				if((i == 0 || m_types & 1 << i) && (this->*fun[i])())
+				if((i < 2 || m_types & 1 << i) && (this->*fun[i])())
 				{
 					m_stop = type(1 << i);
 					return true;
@@ -53,6 +54,10 @@ namespace math
 		bool stop_criteria::stop_step_maximum(void) const
 		{
 			return m_solver->m_step > m_solver->m_step_max;
+		}
+		bool stop_criteria::stop_time_maximum(void) const
+		{
+			return m_solver->m_t_new > m_solver->m_t_max;
 		}
 		bool stop_criteria::stop_load_limit_maximum(void) const
 		{

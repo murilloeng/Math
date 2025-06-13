@@ -110,10 +110,8 @@ namespace math
 			if(ss & uint32_t(state::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
 			if(ss & uint32_t(state::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
 			//stop
-			m_stop_criteria.m_solver = nullptr;  //TODO: stop criteria should have a solver pointer
-			//convergence
-			m_convergence.m_r = m_r; //TODO: convergence should have a solver pointer
-			m_convergence.m_g = m_fe;
+			m_convergence.m_solver = this;
+			m_stop_criteria.m_solver = this;
 			//continuation
 			m_continuation.m_dx = m_dx; //TODO: continuation should have a solver pointer
 			m_continuation.m_dp = &m_dp;
