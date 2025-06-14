@@ -15,7 +15,7 @@
 int main(void)
 {
 	//test
-	tests::solvers::newmark::single_dof();
+	tests::solvers::newmark::single_pendulum();
 	//return
 	return EXIT_SUCCESS;
 }

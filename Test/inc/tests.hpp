@@ -33,6 +33,7 @@ namespace tests
 		namespace newmark
 		{
 			void single_dof(void);
+			void single_pendulum(void);
 		}
 	}
 	namespace geometry

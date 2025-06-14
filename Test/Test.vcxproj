@@ -100,6 +100,7 @@ copy ..\..\external\cpp\dll\x64\libopenblas.dll dist\$(platform)\$(configuration
     <ClCompile Include="src\solvers\harmonic\pyramid.cpp" />
     <ClCompile Include="src\solvers\harmonic\oscilattor.cpp" />
     <ClCompile Include="src\solvers\newmark\single_dof.cpp" />
+    <ClCompile Include="src\solvers\newmark\single_pendulum.cpp" />
     <ClCompile Include="src\solvers\newton_raphson\truss_von_mises.cpp" />
     <ClCompile Include="src\rotations\vec3_rotation_tensor.cpp" />
     <ClCompile Include="src\rotations\quat_rotation_tensor.cpp" />
