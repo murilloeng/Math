@@ -30,6 +30,10 @@ namespace tests
 		{
 			void truss_von_mises(void);
 		}
+		namespace newmark
+		{
+			void single_dof(void);
+		}
 	}
 	namespace geometry
 	{

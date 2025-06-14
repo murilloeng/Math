@@ -33,9 +33,6 @@
     <ClCompile Include="src\fem\revolute_flexible.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\solvers\harmonic_oscilattor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\rotations\quat_rotation_tensor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -45,7 +42,16 @@
     <ClCompile Include="src\rotations\vec3_rotation_gradient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\solvers\harmonic_pyramid.cpp">
+    <ClCompile Include="src\solvers\harmonic\pyramid.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\solvers\harmonic\oscilattor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\solvers\newton_raphson\truss_von_mises.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\solvers\newmark\single_dof.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

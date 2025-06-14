@@ -45,6 +45,25 @@ namespace math
 				exit(EXIT_FAILURE);
 			}
 		}
+		void newmark::setup(void)
+		{
+			//data
+			vector a(m_a_new, m_size);
+			const vector r(m_r, m_size);
+			const matrix M(m_M, m_size, m_size);
+			//setup
+			solver::setup();
+			for(uint32_t i = 0; i < m_size; i++)
+			{
+				m_r[i] = m_fe[i] - m_fi[i];
+			}
+			//check
+			if(!M.solve(a, r))
+			{
+				if(!m_silent) printf("Unable to compute acceleration in setup!\n");
+			}
+			memcpy(m_a_old, m_a_new, m_size * sizeof(double));
+		}
 		void newmark::compute(void)
 		{
 			//forces
@@ -76,22 +95,27 @@ namespace math
 		}
 		void newmark::corrector(void)
 		{
-			//v_new = v_old + dt * a_old + g * dt * (a_new - a_old)
-			//x_new = x_old + dt * v_old + dt * dt / 2 * a_old + b * dt * dt * (a_new - a_old)
-
-			//r(x(t), v(t), a(t)) = fe(x(t), v(t), t) - fi(x(t), v(t)) - M(x(t)) * a(t) = 0
-
-			//dv_new = g * dt * da_new
-			//dx_new = b * dt * dt * da_new
-
-			//r - K * dx - C * dv - M * da = 0
-			//r - (K + g / b / dt * C + 1 / b / dt / dt * M) * dx = 0
-
-			//S = K + g / b / dt * C + 1 / b / dt / dt * M
-
-			//dx = S^{-1} * r
-			//dv = g / b / dt * dx
-			//da = 1 / b / dt / dt * dx
+			//data
+			vector ddxr(m_ddxr, m_size);
+			const vector r(m_r, m_size);
+			const matrix K(m_K, m_size, m_size);
+			//tangent
+			for(uint32_t i = 0; i < m_size * m_size; i++)
+			{
+				m_K[i] += m_g * m_C[i] / m_b / m_dt + m_M[i] / m_b / m_dt / m_dt;
+			}
+			//solve
+			if(!K.solve(ddxr, r))
+			{
+				if(!m_silent) printf("Unable to decompose system matrix in corrector!\n");
+			}
+			//update
+			for(uint32_t i = 0; i < m_size; i++)
+			{
+				m_dx[i] += m_ddxr[i];
+				m_dv[i] += m_g * m_ddxr[i] / m_b / m_dt;
+				m_da[i] += m_ddxr[i] / m_b / m_dt / m_dt;
+			}
 		}
 	}
 }
