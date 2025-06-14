@@ -86,26 +86,20 @@ namespace math
 		}
 		void newton_raphson::corrector(void)
 		{
+			//data
 			const matrix K(m_K, m_size, m_size);
 			const vector r(m_r, m_size), fe(m_fe, m_size);
 			vector ddxr(m_ddxr, m_size), ddxt(m_ddxt, m_size);
-			for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
+			//corrector
+			if(!K.solve(ddxr, r) || !K.solve(ddxt, fe))
 			{
-				//check
-				if(equilibrium()) break;
-				//corrector
-				if(!K.solve(ddxr, r) || !K.solve(ddxt, fe))
-				{
-					if(!m_silent) printf("Unable to decompose stiffness matrix in corrector!\n");
-				}
-				//continuation
-				m_ddp = m_continuation.corrector();
-				//update
-				m_dp += m_ddp;
-				for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_ddxr[i] + m_ddp * m_ddxt[i];
-				//apply
-				apply();
+				if(!m_silent) printf("Unable to decompose stiffness matrix in corrector!\n");
 			}
+			//continuation
+			m_ddp = m_continuation.corrector();
+			//update
+			m_dp += m_ddp;
+			for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_ddxr[i] + m_ddp * m_ddxt[i];
 		}
 	}
 }

@@ -209,7 +209,15 @@ namespace math
 			for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
 			{
 				predictor();
-				corrector();
+				for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
+				{
+					//check
+					if(equilibrium()) break;
+					//corrector
+					corrector();
+					//apply
+					apply();
+				}
 				if(m_equilibrium) break;
 				restore();
 			}
