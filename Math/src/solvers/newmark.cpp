@@ -41,7 +41,7 @@ namespace math
 		{
 			if(!m_internal_force || !m_external_force || !m_inertia || !m_damping || !m_stiffness)
 			{
-				printf("Error: Newmark solver called with methods not set!\n");
+				printf("Error: Newmark solver called with at least one method not set!\n");
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -91,7 +91,6 @@ namespace math
 				m_dv[i] = m_dt * m_a_old[i];
 				m_dx[i] = m_dt * m_v_old[i] + m_dt * m_dt / 2 * m_a_old[i];
 			}
-			apply();
 		}
 		void newmark::corrector(void)
 		{

@@ -42,7 +42,7 @@ namespace math
 		{
 			if(!m_system_1 && !m_system_2 && !(m_residue && m_tangent_1 && m_tangent_2))
 			{
-				printf("Error: Newton-Raphson solver called with methods not set!\n");
+				printf("Error: Newton-Raphson solver called with at least one method not set!\n");
 				exit(EXIT_FAILURE);
 			}
 		}
@@ -81,8 +81,6 @@ namespace math
 				m_dp = m_continuation.predictor() / (1 << m_attempt);
 			}
 			for(uint32_t i = 0; i < m_size; i++) dx[i] = dxr[i] + m_dp * dxt[i];
-			//apply
-			apply();
 		}
 		void newton_raphson::corrector(void)
 		{

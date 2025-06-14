@@ -75,8 +75,6 @@ namespace math
 			}
 			if(ss & uint32_t(state::t)) m_t_new = m_t_old + m_dt;
 			if(ss & uint32_t(state::p)) m_p_new = m_p_old + m_dp;
-			//compute
-			compute();
 		}
 		void solver::print(void)
 		{
@@ -152,14 +150,6 @@ namespace math
 			if(ss & uint32_t(state::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
 			if(ss & uint32_t(state::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
 		}
-		void solver::predictor(void)
-		{
-			return;
-		}
-		void solver::corrector(void)
-		{
-			return;
-		}
 		bool solver::equilibrium(void)
 		{
 			return m_equilibrium = m_convergence.check();
@@ -211,12 +201,9 @@ namespace math
 				predictor();
 				for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
 				{
-					//check
-					if(equilibrium()) break;
-					//corrector
-					corrector();
-					//apply
 					apply();
+					compute();
+					if(equilibrium()) break; else corrector();
 				}
 				if(m_equilibrium) break;
 				restore();

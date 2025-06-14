@@ -28,6 +28,7 @@
     <ClInclude Include="inc\quadrature\rule.hpp" />
     <ClInclude Include="inc\quadrature\quadrature.hpp" />
     <ClInclude Include="inc\solvers\convergence.hpp" />
+    <ClInclude Include="inc\solvers\harmonic2.hpp" />
     <ClInclude Include="inc\solvers\newmark.hpp" />
     <ClInclude Include="inc\solvers\harmonic.hpp" />
     <ClInclude Include="inc\solvers\bisection.hpp" />
@@ -63,6 +64,7 @@
     <ClCompile Include="src\polynomial\Polynomial.cpp" />
     <ClCompile Include="src\quadrature\quadrature.cpp" />
     <ClCompile Include="src\solvers\convergence.cpp" />
+    <ClCompile Include="src\solvers\harmonic2.cpp" />
     <ClCompile Include="src\solvers\newmark.cpp" />
     <ClCompile Include="src\solvers\harmonic.cpp" />
     <ClCompile Include="src\solvers\bisection.cpp" />

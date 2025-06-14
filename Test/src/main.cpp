@@ -15,6 +15,7 @@
 int main(void)
 {
 	//test
+	// tests::solvers::harmonic::pyramid();
 	tests::solvers::newmark::single_pendulum();
 	//return
 	return EXIT_SUCCESS;
