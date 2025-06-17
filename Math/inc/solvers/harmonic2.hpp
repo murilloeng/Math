@@ -40,7 +40,7 @@ namespace math
 
 			//state
 			void compute_state(double);
-			void compute_residue(void);
+			void compute_residue(double);
 			void compute_velocity(double);
 			void compute_acceleration(double);
 
@@ -49,12 +49,12 @@ namespace math
 			void compute_tangent_w(double);
 			void compute_tangent_z(double);
 
-			//system
-			void compute_system_residue(void);
-			void compute_system_tangent_p(void);
-			void compute_system_tangent_l(void);
-			void compute_system_tangent_w(void);
-			void compute_system_tangent_z(void);
+			//harmonic
+			void compute_harmonic_residue(void);
+			void compute_harmonic_tangent_p(void);
+			void compute_harmonic_tangent_l(void);
+			void compute_harmonic_tangent_w(void);
+			void compute_harmonic_tangent_z(void);
 
 		public:
 			//solver

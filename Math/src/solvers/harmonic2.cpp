@@ -54,9 +54,9 @@ static void(*legendre_dr_compute)(int, double[], double[]) = legendre_compute_dr
 
 //target system:
 //tk = pi / w * (1 + sk)
-//ra0(w, l, z) = wk * r(tk, w, l, z) = 0
-//rai(w, l, z) = wk * cos(i * w * tk) * r(tk, w, l, z) = 0
-//rbi(w, l, z) = wk * sin(i * w * tk) * r(tk, w, l, z) = 0
+//u0(w, l, z) = wk * r(tk, w, l, z) = 0
+//ui(w, l, z) = wk * cos(i * w * tk) * r(tk, w, l, z) = 0
+//vi(w, l, z) = wk * sin(i * w * tk) * r(tk, w, l, z) = 0
 
 namespace math
 {
@@ -112,9 +112,9 @@ namespace math
 		}
 		void harmonic2::compute(void)
 		{
-			compute_system_residue();
-			compute_system_tangent_p();
-			compute_system_tangent_z();
+			compute_harmonic_residue();
+			compute_harmonic_tangent_p();
+			compute_harmonic_tangent_z();
 		}
 		void harmonic2::predictor(void)
 		{
@@ -162,15 +162,24 @@ namespace math
 				const double si = sin(i * m_w * t);
 				const uint32_t p1 = (2 * i - 1) * m_dofs;
 				const uint32_t p2 = (2 * i + 0) * m_dofs;
-				for(uint32_t j = 0; j < m_dofs; j++)
+				for (uint32_t j = 0; j < m_dofs; j++)
 				{
 					m_xd[j] += ci * m_x_new[p1 + j];
 					m_xd[j] += si * m_x_new[p2 + j];
 				}
 			}
 		}
-		void harmonic2::compute_residue(void)
+		void harmonic2::compute_residue(double t)
 		{
+			//state
+			compute_state(t);
+			compute_velocity(t);
+			compute_acceleration(t);
+			//state
+			m_inertia(m_Md, m_xd);
+			m_internal_force(m_fid, m_xd, m_vd);
+			m_external_force(m_fed, m_xd, m_vd, t, m_w);
+			//residue
 			for(uint32_t i = 0; i < m_dofs; i++)
 			{
 				m_rd[i] = m_l * m_fed[i] - m_fid[i];
@@ -255,7 +264,7 @@ namespace math
 		}
 
 		//system
-		void harmonic2::compute_system_residue(void)
+		void harmonic2::compute_harmonic_residue(void)
 		{
 			const uint32_t nd = m_dofs;
 			const uint32_t nz = 2 * m_harmonics + 1;
@@ -266,16 +275,8 @@ namespace math
 				const double sk = m_sq[k];
 				const double wk = m_wq[k];
 				const double tk = (1 + sk) * M_PI / m_w;
-				//state
-				compute_state(tk);
-				compute_velocity(tk);
-				compute_acceleration(tk);
-				//state
-				m_inertia(m_Md, m_xd);
-				m_internal_force(m_fid, m_xd, m_vd);
-				m_external_force(m_fed, m_xd, m_vd, tk, m_w);
 				//residue
-				compute_residue();
+				compute_residue(tk);
 				for(uint32_t i = 1; i <= m_harmonics; i++)
 				{
 					const double ci = cos(i * m_w * tk);
@@ -288,12 +289,12 @@ namespace math
 				for(uint32_t i = 0; i < m_dofs; i++) m_r[i] += wk * m_rd[i];
 			}
 		}
-		void harmonic2::compute_system_tangent_p(void)
+		void harmonic2::compute_harmonic_tangent_p(void)
 		{
-			if(m_control == control::load) compute_system_tangent_l();
-			if(m_control == control::frequency) compute_system_tangent_w();
+			if(m_control == control::load) compute_harmonic_tangent_l();
+			if(m_control == control::frequency) compute_harmonic_tangent_w();
 		}
-		void harmonic2::compute_system_tangent_l(void)
+		void harmonic2::compute_harmonic_tangent_l(void)
 		{
 			const uint32_t nd = m_size;
 			const uint32_t nz = 2 * m_harmonics + 1;
@@ -318,7 +319,7 @@ namespace math
 				for(uint32_t i = 0; i < m_dofs; i++) m_fe[i] += wk * m_fed[i];
 			}
 		}
-		void harmonic2::compute_system_tangent_w(void)
+		void harmonic2::compute_harmonic_tangent_w(void)
 		{
 			const uint32_t nd = m_size;
 			const uint32_t nz = 2 * m_harmonics + 1;
@@ -335,15 +336,15 @@ namespace math
 				{
 					const double ci = cos(i * m_w * tk);
 					const double si = sin(i * m_w * tk);
-					const uint32_t p1 = (2 * i - 1) * nd;
-					const uint32_t p2 = (2 * i + 0) * nd;
+					const uint32_t p1 = (2 * i - 1) * m_dofs;
+					const uint32_t p2 = (2 * i + 0) * m_dofs;
 					for(uint32_t j = 0; j < m_dofs; j++) m_fe[p1 + j] += wk * ci * m_fed[j];
 					for(uint32_t j = 0; j < m_dofs; j++) m_fe[p2 + j] += wk * si * m_fed[j];
 				}
 				for(uint32_t j = 0; j < m_dofs; j++) m_fe[j] += wk * m_fed[j];
 			}
 		}
-		void harmonic2::compute_system_tangent_z(void)
+		void harmonic2::compute_harmonic_tangent_z(void)
 		{
 			//data
 			const uint32_t nd = m_size;

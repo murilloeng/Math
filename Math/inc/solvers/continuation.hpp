@@ -7,7 +7,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class solvers;
+		class solver;
 	}
 }
 
