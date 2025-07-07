@@ -30,7 +30,7 @@ static void test_tangent_inverse(double* r, const double* v, const void** args)
 }
 
 //tests
-void tests::groups::gso3_log(void)
+void tests::groups::GSO3::log(void)
 {
 	math::vec3 v, r;
 	const uint32_t nt = 100000;
@@ -51,7 +51,7 @@ void tests::groups::gso3_log(void)
 		}
 	}
 }
-void tests::groups::gso3_inverse(void)
+void tests::groups::GSO3::inverse(void)
 {
 	math::quat q, r;
 	const uint32_t nt = 100000;
@@ -73,7 +73,7 @@ void tests::groups::gso3_inverse(void)
 		}
 	}
 }
-void tests::groups::aso3_tangent(void)
+void tests::groups::GSO3::tangent(void)
 {
 	math::vec3 a, v, r;
 	const uint32_t nt = 100000;
@@ -85,7 +85,7 @@ void tests::groups::aso3_tangent(void)
 		a.randu();
 		v.randu();
 		T = math::groups::ASO3(v).tangent();
-		R = math::groups::ASO3(v).exponential().matrix();
+		R = math::groups::ASO3(v).exponential().matrix_form();
 		Ka = -R * a.spin() * T;
 		math::ndiff(test_exponential, Kn.data(), v.data(), args, 3, 3, 1e-5);
 		Kr = Ka - Kn;
@@ -102,7 +102,7 @@ void tests::groups::aso3_tangent(void)
 		}
 	}
 }
-void tests::groups::aso3_tangent_inverse(void)
+void tests::groups::GSO3::tangent_inverse(void)
 {
 	math::vec3 v;
 	math::mat3 R, T, A;
@@ -127,7 +127,7 @@ void tests::groups::aso3_tangent_inverse(void)
 		}
 	}
 }
-void tests::groups::aso3_tangent_increment(void)
+void tests::groups::GSO3::tangent_increment(void)
 {
 	math::vec3 a, v;
 	math::mat3 Ka, Kn, Kr;
@@ -154,7 +154,7 @@ void tests::groups::aso3_tangent_increment(void)
 		}
 	}
 }
-void tests::groups::aso3_tangent_inverse_increment(void)
+void tests::groups::GSO3::tangent_inverse_increment(void)
 {
 	math::vec3 a, v;
 	math::mat3 Ka, Kn, Kr;

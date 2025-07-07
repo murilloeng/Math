@@ -18,6 +18,7 @@ namespace math
 		mat4(const mat4&);
 		mat4(const double*);
 		mat4(mode = mode::null);
+		mat4(const mat3&, const vec3&);
 		mat4(std::initializer_list<double>);
 
 		//destructor

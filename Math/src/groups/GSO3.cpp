@@ -26,23 +26,6 @@ namespace math
 			return;
 		}
 
-		//matrix
-		mat3 GSO3::matrix(void) const
-		{
-			mat3 matrix;
-			const double* p = m_quaternion.data();
-			matrix[1 + 3 * 0] = 2 * (p[1] * p[2] + p[0] * p[3]);
-			matrix[2 + 3 * 0] = 2 * (p[1] * p[3] - p[0] * p[2]);
-			matrix[0 + 3 * 1] = 2 * (p[1] * p[2] - p[0] * p[3]);
-			matrix[2 + 3 * 1] = 2 * (p[2] * p[3] + p[0] * p[1]);
-			matrix[0 + 3 * 2] = 2 * (p[1] * p[3] + p[0] * p[2]);
-			matrix[1 + 3 * 2] = 2 * (p[2] * p[3] - p[0] * p[1]);
-			matrix[0 + 3 * 0] = p[0] * p[0] + p[1] * p[1] - p[2] * p[2] - p[3] * p[3];
-			matrix[1 + 3 * 1] = p[0] * p[0] - p[1] * p[1] + p[2] * p[2] - p[3] * p[3];
-			matrix[2 + 3 * 2] = p[0] * p[0] - p[1] * p[1] - p[2] * p[2] + p[3] * p[3];
-			return matrix;
-		}
-
 		//inverse
 		GSO3 GSO3::inverse(void) const
 		{
@@ -62,6 +45,23 @@ namespace math
 			algebra[2] = s ? t * m_quaternion[3] / s : 0;
 			//return
 			return algebra;
+		}
+
+		//matrix
+		mat3 GSO3::matrix_form(void) const
+		{
+			mat3 matrix;
+			const double* p = m_quaternion.data();
+			matrix[1 + 3 * 0] = 2 * (p[1] * p[2] + p[0] * p[3]);
+			matrix[2 + 3 * 0] = 2 * (p[1] * p[3] - p[0] * p[2]);
+			matrix[0 + 3 * 1] = 2 * (p[1] * p[2] - p[0] * p[3]);
+			matrix[2 + 3 * 1] = 2 * (p[2] * p[3] + p[0] * p[1]);
+			matrix[0 + 3 * 2] = 2 * (p[1] * p[3] + p[0] * p[2]);
+			matrix[1 + 3 * 2] = 2 * (p[2] * p[3] - p[0] * p[1]);
+			matrix[0 + 3 * 0] = p[0] * p[0] + p[1] * p[1] - p[2] * p[2] - p[3] * p[3];
+			matrix[1 + 3 * 1] = p[0] * p[0] - p[1] * p[1] + p[2] * p[2] - p[3] * p[3];
+			matrix[2 + 3 * 2] = p[0] * p[0] - p[1] * p[1] - p[2] * p[2] + p[3] * p[3];
+			return matrix;
 		}
 
 		//quaternion

@@ -27,7 +27,7 @@ namespace math
 			~ASO3(void);
 
 			//matrix
-			mat3 matrix(void) const;
+			mat3 matrix_form(void) const;
 
 			//vector
 			vec3& vector(void);
@@ -57,6 +57,8 @@ namespace math
 			ASO3 operator*(double) const;
 			ASO3 operator+(const ASO3&) const;
 			ASO3 operator-(const ASO3&) const;
+
+			friend ASO3 operator*(double, const ASO3&);
 
 		private:
 			//rotation

@@ -14,12 +14,24 @@ namespace tests
 	}
 	namespace groups
 	{
-		void gso3_log(void);
-		void gso3_inverse(void);
-		void aso3_tangent(void);
-		void aso3_tangent_inverse(void);
-		void aso3_tangent_increment(void);
-		void aso3_tangent_inverse_increment(void);
+		namespace GSO3
+		{
+			void log(void);
+			void inverse(void);
+			void tangent(void);
+			void tangent_inverse(void);
+			void tangent_increment(void);
+			void tangent_inverse_increment(void);
+		}
+		namespace GSE3
+		{
+			void log(void);
+			void inverse(void);
+			void tangent(void);
+			void tangent_inverse(void);
+			void tangent_increment(void);
+			void tangent_inverse_increment(void);
+		}
 	}
 	namespace rotations
 	{

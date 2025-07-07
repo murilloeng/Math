@@ -7,6 +7,7 @@
 
 //math
 #include "Math/Math/inc/linear/vec3.hpp"
+#include "Math/Math/inc/linear/mat3.hpp"
 #include "Math/Math/inc/linear/mat4.hpp"
 
 namespace math
@@ -27,6 +28,21 @@ namespace math
 	mat4::mat4(const double* ref) : matrix(ref, 4, 4)
 	{
 		return;
+	}
+	mat4::mat4(const mat3& M, const vec3& v) : matrix(4, 4)
+	{
+		m_data_ptr[3 + 4 * 0] = 0;
+		m_data_ptr[3 + 4 * 1] = 0;
+		m_data_ptr[3 + 4 * 2] = 0;
+		m_data_ptr[3 + 4 * 3] = 1;
+		for(uint32_t i = 0; i < 3; i++)
+		{
+			m_data_ptr[i + 4 * 3] = v[i];
+			for(uint32_t j = 0; j < 3; j++)
+			{
+				m_data_ptr[i + 4 * j] = M[i + 3 * j];
+			}
+		}
 	}
 	mat4::mat4(std::initializer_list<double> list) : matrix(4, 4)
 	{

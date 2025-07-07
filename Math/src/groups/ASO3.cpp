@@ -26,21 +26,9 @@ namespace math
 		}
 
 		//matrix
-		mat3 ASO3::matrix(void) const
+		mat3 ASO3::matrix_form(void) const
 		{
-			//data
-			mat3 matrix;
-			const double* p = m_vector.data();
-			//matrix
-			matrix[7] = -p[0];
-			matrix[2] = -p[1];
-			matrix[3] = -p[2];
-			matrix[5] = +p[0];
-			matrix[6] = +p[1];
-			matrix[1] = +p[2];
-			matrix[0] = matrix[4] = matrix[8] = 0;
-			//return
-			return matrix;
+			return m_vector.spin();
 		}
 
 		//vector
@@ -159,15 +147,20 @@ namespace math
 
 		ASO3 ASO3::operator*(double s) const
 		{
-			return s * m_vector;
+			return ASO3(*this) *= s;
 		}
-		ASO3 ASO3::operator+(const ASO3& a) const
+		ASO3 ASO3::operator+(const ASO3& object) const
 		{
-			return m_vector + a.m_vector;
+			return ASO3(*this) += object.m_vector;
 		}
-		ASO3 ASO3::operator-(const ASO3& a) const
+		ASO3 ASO3::operator-(const ASO3& object) const
 		{
-			return m_vector - a.m_vector;
+			return ASO3(*this) -= object;
+		}
+
+		ASO3 operator*(double s, const ASO3& object)
+		{
+			return ASO3(object) *= s;
 		}
 
 		//rotation

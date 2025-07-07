@@ -94,6 +94,7 @@ copy ..\..\external\cpp\dll\x64\libopenblas.dll dist\$(platform)\$(configuration
   <ItemGroup>
     <ClCompile Include="src\fem\revolute_fixed.cpp" />
     <ClCompile Include="src\fem\revolute_flexible.cpp" />
+    <ClCompile Include="src\groups\gse3.cpp" />
     <ClCompile Include="src\groups\gso3.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\misc\drift.cpp" />

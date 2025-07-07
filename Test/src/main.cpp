@@ -15,7 +15,7 @@
 int main(void)
 {
 	//test
-	tests::groups::aso3_tangent_inverse_increment();
+	tests::groups::GSE3::log();
 	// tests::solvers::harmonic::pyramid();
 	// tests::solvers::newmark::single_pendulum();
 	//return

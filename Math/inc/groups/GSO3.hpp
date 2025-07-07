@@ -24,15 +24,15 @@ namespace math
 
 			//destructor
 			~GSO3(void);
-
-			//matrix
-			mat3 matrix(void) const;
-
+			
 			//inverse
 			GSO3 inverse(void) const;
 			
 			//logarithm
 			ASO3 logarithm(void) const;
+
+			//matrix
+			mat3 matrix_form(void) const;
 
 			//quaternion
 			quat& quaternion(void);
