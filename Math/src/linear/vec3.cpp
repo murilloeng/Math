@@ -116,24 +116,6 @@ namespace math
 		return *this = m * *this;
 	}
 
-	double& vec3::operator[](uint32_t i)
-	{
-		return m_data_ptr[i];
-	}
-	double& vec3::operator()(uint32_t i)
-	{
-		return m_data_ptr[i];
-	}
-
-	const double& vec3::operator[](uint32_t i) const
-	{
-		return m_data_ref[i];
-	}
-	const double& vec3::operator()(uint32_t i) const
-	{
-		return m_data_ref[i];
-	}
-
 	//linear
 	vec3& vec3::normalize(void)
 	{

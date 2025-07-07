@@ -43,12 +43,6 @@ namespace math
 		vec3& operator-=(const vec3&);
 		vec3& operator*=(const mat3&);
 
-		double& operator[](uint32_t);
-		double& operator()(uint32_t);
-
-		const double& operator[](uint32_t) const;
-		const double& operator()(uint32_t) const;
-
 		//linear
 		vec3& normalize(void);
 		vec3& project(const vec3&);
