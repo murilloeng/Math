@@ -98,33 +98,46 @@ namespace math
 
 		mat3 ASO3::tangent_increment(const vec3& a) const
 		{
-			const vec3& x = m_vector;
+			const vec3& v = m_vector;
 			const vec3 b = m_vector.cross(a);
 			const vec3 c = m_vector.cross(b);
 			const double t = m_vector.norm();
-			return -dfn(t, 2) / t * b.outer(x) + fn(t, 2) * a.spin() + 
-			dfn(t, 3) / t * c.outer(x) - fn(t, 3) * (x.spin() * a.spin() + b.spin());
+			const double g = 2 * fn(t, 4) - fn(t, 3);
+			const double h = 3 * fn(t, 5) - fn(t, 4);
+			return -g * b.outer(v) + h * c.outer(v) + fn(t, 2) * a.spin() - fn(t, 3) * (b.spin() + v.spin() * a.spin());
 		}
 		vec3 ASO3::tangent_increment(const vec3& a, const vec3& u) const
 		{
-			const vec3& x = m_vector;
+			const vec3& v = m_vector;
 			const vec3 b = m_vector.cross(a);
 			const vec3 c = m_vector.cross(b);
 			const double t = m_vector.norm();
 			const double s = m_vector.inner(u);
-			return -dfn(t, 2) / t * s * b + fn(t, 2) * a.cross(u) + 
-			dfn(t, 3) / t * s * c - fn(t, 3) * (x.spin() * a.cross(u) + b.cross(u));
+			const double g = 2 * fn(t, 4) - fn(t, 3);
+			const double h = 3 * fn(t, 5) - fn(t, 4);
+			return -g * s * b + h * s * c + fn(t, 2) * a.cross(u) - fn(t, 3) * (b.cross(u) + v.cross(a.cross(u)));
 		}
 
 		mat3 ASO3::tangent_inverse_increment(const vec3& a) const
 		{
-			const mat3 s = m_vector.spin();
+			const vec3& v = m_vector;
+			const vec3 b = m_vector.cross(a);
+			const vec3 c = m_vector.cross(b);
 			const double t = m_vector.norm();
-			return mat3::eye() + s / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * s * s;
+			const double g = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
+			const double h = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
+			return -a.spin() / 2 + h * c.outer(v) - g * (b.spin() + v.spin() * a.spin());
 		}
 		vec3 ASO3::tangent_inverse_increment(const vec3& a, const vec3& u) const
 		{
-			return vec3();
+			const vec3& v = m_vector;
+			const vec3 b = m_vector.cross(a);
+			const vec3 c = m_vector.cross(b);
+			const double t = m_vector.norm();
+			const double s = m_vector.inner(u);
+			const double g = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
+			const double h = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
+			return -a.cross(u) / 2 + h * s * c - g * (b.cross(u) + v.cross(a.cross(u)));
 		}
 
 		//operators

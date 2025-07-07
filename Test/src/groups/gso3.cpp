@@ -23,6 +23,11 @@ static void test_tangent(double* r, const double* v, const void** args)
 	const math::vec3 a = (const double*) args[0];
 	math::vec3(r + 0) = math::groups::ASO3(v).tangent(a);
 }
+static void test_tangent_inverse(double* r, const double* v, const void** args)
+{
+	const math::vec3 a = (const double*) args[0];
+	math::vec3(r + 0) = math::groups::ASO3(v).tangent_inverse(a);
+}
 
 //tests
 void tests::groups::gso3_log(void)
@@ -42,7 +47,7 @@ void tests::groups::gso3_log(void)
 		}
 		else
 		{
-			printf("Test %5d: ok!\n", i);
+			printf("Test gso3 logarithm %5d: ok!\n", i);
 		}
 	}
 }
@@ -64,7 +69,7 @@ void tests::groups::gso3_inverse(void)
 		}
 		else
 		{
-			printf("Test %5d: ok!\n", i);
+			printf("Test gso3 inverse %5d: ok!\n", i);
 		}
 	}
 }
@@ -93,7 +98,7 @@ void tests::groups::aso3_tangent(void)
 		}
 		else
 		{
-			printf("Test %5d: ok!\n", i);
+			printf("Test aso3 tangent %5d: ok!\n", i);
 		}
 	}
 }
@@ -118,13 +123,13 @@ void tests::groups::aso3_tangent_inverse(void)
 		}
 		else
 		{
-			printf("Test %5d: ok!\n", i);
+			printf("Test aso3 tangent inverse %5d: ok!\n", i);
 		}
 	}
 }
 void tests::groups::aso3_tangent_increment(void)
 {
-	math::vec3 a, v, r;
+	math::vec3 a, v;
 	math::mat3 Ka, Kn, Kr;
 	const uint32_t nt = 100000;
 	srand(uint32_t(time(nullptr)));
@@ -145,11 +150,34 @@ void tests::groups::aso3_tangent_increment(void)
 		}
 		else
 		{
-			printf("Test %5d: ok!\n", i);
+			printf("Test aso3 tangent increment %5d: ok!\n", i);
 		}
 	}
 }
 void tests::groups::aso3_tangent_inverse_increment(void)
 {
-
+	math::vec3 a, v;
+	math::mat3 Ka, Kn, Kr;
+	const uint32_t nt = 100000;
+	srand(uint32_t(time(nullptr)));
+	const void* args[] = {a.data()};
+	for(uint32_t i = 0; i < nt; i++)
+	{
+		a.randu();
+		v.randu();
+		Ka = math::groups::ASO3(v).tangent_inverse_increment(a);
+		math::ndiff(test_tangent_inverse, Kn.data(), v.data(), args, 3, 3, 1e-5);
+		Kr = Ka - Kn;
+		if(Kr.norm() > 1e-5 * Ka.norm())
+		{
+			Ka.print("Ka");
+			Kn.print("Kn");
+			Kr.print("Kr");
+			break;
+		}
+		else
+		{
+			printf("Test aso3 tangent inverse increment %5d: ok!\n", i);
+		}
+	}
 }
