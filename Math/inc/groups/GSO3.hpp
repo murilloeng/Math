@@ -18,7 +18,7 @@ namespace math
 		class GSO3
 		{
 		public:
-			//constructor
+			//constructors
 			GSO3(void);
 			GSO3(quat);
 
