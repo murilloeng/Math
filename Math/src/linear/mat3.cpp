@@ -82,113 +82,59 @@ namespace math
 	mat3 mat3::operator*(const mat3& m) const
 	{
 		mat3 r;
-		r.m_data_ptr[0] = m_data_ref[0] * m.m_data_ref[0] + m_data_ref[3] * m.m_data_ref[1] + m_data_ref[6] * m.m_data_ref[2];
-		r.m_data_ptr[1] = m_data_ref[1] * m.m_data_ref[0] + m_data_ref[4] * m.m_data_ref[1] + m_data_ref[7] * m.m_data_ref[2];
-		r.m_data_ptr[2] = m_data_ref[2] * m.m_data_ref[0] + m_data_ref[5] * m.m_data_ref[1] + m_data_ref[8] * m.m_data_ref[2];
-		r.m_data_ptr[3] = m_data_ref[0] * m.m_data_ref[3] + m_data_ref[3] * m.m_data_ref[4] + m_data_ref[6] * m.m_data_ref[5];
-		r.m_data_ptr[4] = m_data_ref[1] * m.m_data_ref[3] + m_data_ref[4] * m.m_data_ref[4] + m_data_ref[7] * m.m_data_ref[5];
-		r.m_data_ptr[5] = m_data_ref[2] * m.m_data_ref[3] + m_data_ref[5] * m.m_data_ref[4] + m_data_ref[8] * m.m_data_ref[5];
-		r.m_data_ptr[6] = m_data_ref[0] * m.m_data_ref[6] + m_data_ref[3] * m.m_data_ref[7] + m_data_ref[6] * m.m_data_ref[8];
-		r.m_data_ptr[7] = m_data_ref[1] * m.m_data_ref[6] + m_data_ref[4] * m.m_data_ref[7] + m_data_ref[7] * m.m_data_ref[8];
-		r.m_data_ptr[8] = m_data_ref[2] * m.m_data_ref[6] + m_data_ref[5] * m.m_data_ref[7] + m_data_ref[8] * m.m_data_ref[8];
+		(matrix&) r = (matrix&) *this * m;
 		return r;
 	}
 	vec3 mat3::operator*(const vec3& v) const
 	{
 		vec3 r;
-		r[0] = m_data_ref[0] * v[0] + m_data_ref[3] * v[1] + m_data_ref[6] * v[2];
-		r[1] = m_data_ref[1] * v[0] + m_data_ref[4] * v[1] + m_data_ref[7] * v[2];
-		r[2] = m_data_ref[2] * v[0] + m_data_ref[5] * v[1] + m_data_ref[8] * v[2];
+		(vector&) r = (matrix&) * this * v;
 		return r;
 	}
 
 	mat3& mat3::operator+=(double s)
 	{
-		for(uint32_t i = 0; i < 9; i++)
-		{
-			m_data_ptr[i] += s;
-		}
+		(matrix&) *this += s;
 		return *this;
 	}
 	mat3& mat3::operator-=(double s)
 	{
-		for(uint32_t i = 0; i < 9; i++)
-		{
-			m_data_ptr[i] -= s;
-		}
+		(matrix&) *this -= s;
 		return *this;
 	}
 	mat3& mat3::operator*=(double s)
 	{
-		for(uint32_t i = 0; i < 9; i++)
-		{
-			m_data_ptr[i] *= s;
-		}
+		(matrix&) *this *= s;
 		return *this;
 	}
 	mat3& mat3::operator/=(double s)
 	{
-		for(uint32_t i = 0; i < 9; i++)
-		{
-			m_data_ptr[i] /= s;
-		}
+		(matrix&) *this /= s;
 		return *this;
 	}
 
 	mat3& mat3::operator=(const mat3& m)
 	{
-		memcpy(m_data_ptr, m.m_data_ref, 9 * sizeof(double));
+		(matrix&) *this = m;
 		return *this;
 	}
 
 	mat3& mat3::operator+=(const mat3& m)
 	{
-		for(uint32_t i = 0; i < 9; i++)
-		{
-			m_data_ptr[i] += m.m_data_ref[i];
-		}
+		(matrix&) *this += m;
 		return *this;
 	}
 	mat3& mat3::operator-=(const mat3& m)
 	{
-		for(uint32_t i = 0; i < 9; i++)
-		{
-			m_data_ptr[i] -= m.m_data_ref[i];
-		}
+		(matrix&) *this -= m;
 		return *this;
-	}
-
-	double& mat3::operator[](uint32_t i)
-	{
-		return m_data_ptr[i];
-	}
-	double& mat3::operator()(uint32_t i)
-	{
-		return m_data_ptr[i];
-	}
-	double& mat3::operator()(uint32_t i, uint32_t j)
-	{
-		return m_data_ptr[i + 3 * j];
-	}
-
-	const double& mat3::operator[](uint32_t i) const
-	{
-		return m_data_ref[i];
-	}
-	const double& mat3::operator()(uint32_t i) const
-	{
-		return m_data_ref[i];
-	}
-	const double& mat3::operator()(uint32_t i, uint32_t j) const
-	{
-		return m_data_ref[i + 3 * j];
 	}
 
 	//linear
 	mat3 mat3::eye(void)
 	{
 		mat3 m;
-		m.matrix::eye();
+		((matrix&) m).eye();
 		return m;
 	}
 	vec3 mat3::eigen(void) const
@@ -220,15 +166,7 @@ namespace math
 	mat3 mat3::transpose(void) const
 	{
 		mat3 r;
-		r.m_data_ptr[0] = m_data_ref[0];
-		r.m_data_ptr[1] = m_data_ref[3];
-		r.m_data_ptr[2] = m_data_ref[6];
-		r.m_data_ptr[3] = m_data_ref[1];
-		r.m_data_ptr[4] = m_data_ref[4];
-		r.m_data_ptr[5] = m_data_ref[7];
-		r.m_data_ptr[6] = m_data_ref[2];
-		r.m_data_ptr[7] = m_data_ref[5];
-		r.m_data_ptr[8] = m_data_ref[8];
+		(matrix&) r = ((matrix&) *this).transpose();
 		return r;
 	}
 

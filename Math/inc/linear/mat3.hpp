@@ -46,14 +46,6 @@ namespace math
 		mat3& operator+=(const mat3&);
 		mat3& operator-=(const mat3&);
 
-		double& operator[](uint32_t);
-		double& operator()(uint32_t);
-		double& operator()(uint32_t, uint32_t);
-
-		const double& operator[](uint32_t) const;
-		const double& operator()(uint32_t) const;
-		const double& operator()(uint32_t, uint32_t) const;
-
 		//linear
 		static mat3 eye(void);
 		vec3 eigen(void) const;
