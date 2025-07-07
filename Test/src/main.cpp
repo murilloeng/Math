@@ -15,8 +15,9 @@
 int main(void)
 {
 	//test
+	tests::groups::aso3_tangent_increment();
 	// tests::solvers::harmonic::pyramid();
-	tests::solvers::newmark::single_pendulum();
+	// tests::solvers::newmark::single_pendulum();
 	//return
 	return EXIT_SUCCESS;
 }

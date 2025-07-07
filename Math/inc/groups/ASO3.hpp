@@ -26,6 +26,13 @@ namespace math
 			//destructor
 			~ASO3(void);
 
+			//matrix
+			mat3 matrix(void) const;
+
+			//vector
+			vec3& vector(void);
+			const vec3& vector(void) const;
+
 			//exponential
 			GSO3 exponential(void) const;
 

@@ -16,7 +16,7 @@ namespace math
 		}
 		ASO3::ASO3(vec3 vector) : m_vector{vector}
 		{
-
+			return;
 		}
 
 		//destructor
@@ -25,24 +25,69 @@ namespace math
 			return;
 		}
 
+		//matrix
+		mat3 ASO3::matrix(void) const
+		{
+			//data
+			mat3 matrix;
+			const double* p = m_vector.data();
+			//matrix
+			matrix[7] = -p[0];
+			matrix[2] = -p[1];
+			matrix[3] = -p[2];
+			matrix[5] = +p[0];
+			matrix[6] = +p[1];
+			matrix[1] = +p[2];
+			matrix[0] = matrix[4] = matrix[8] = 0;
+			//return
+			return matrix;
+		}
+
+		//vector
+		vec3& ASO3::vector(void)
+		{
+			return m_vector;
+		}
+		const vec3& ASO3::vector(void) const
+		{
+			return m_vector;
+		}
+
 		//exponential
 		GSO3 ASO3::exponential(void) const
 		{
-			return GSO3();
+			//group
+			GSO3 group;
+			const double t = m_vector.norm();
+			group.m_quaternion[0] = cos(t / 2);
+			group.m_quaternion[1] = t ? sin(t / 2) * m_vector[0] / t : 0;
+			group.m_quaternion[2] = t ? sin(t / 2) * m_vector[1] / t : 0;
+			group.m_quaternion[3] = t ? sin(t / 2) * m_vector[2] / t : 0;
+			//return
+			return group;
 		}
 
 		//tangent
 		mat3 ASO3::tangent(void) const
 		{
-			return mat3();
+			const mat3 s = m_vector.spin();
+			const double t = m_vector.norm();
+			return mat3::eye() - fn(t, 2) * s + fn(t, 3) * s * s;
 		}
 		mat3 ASO3::tangent_inverse(void) const
 		{
-			return mat3();
+			const mat3 s = m_vector.spin();
+			const double t = m_vector.norm();
+			return mat3::eye() + s / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * s * s;
 		}
-		mat3 ASO3::tangent_increment(const vec3&) const
+		mat3 ASO3::tangent_increment(const vec3& a) const
 		{
-			return mat3();
+			const vec3& v = m_vector;
+			const vec3 b = v.cross(a);
+			const vec3 c = v.cross(b);
+			const double t = v.norm();
+			return -dfn(t, 2) / t * b.outer(v) + fn(t, 2) * a.spin() + 
+			dfn(t, 3) / t * c.outer(v) - fn(t, 3) * (v.spin() * a.spin() + b.spin());
 		}
 		mat3 ASO3::tangent_inverse_increment(const vec3&) const
 		{

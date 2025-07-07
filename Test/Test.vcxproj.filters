@@ -57,6 +57,9 @@
     <ClCompile Include="src\solvers\newmark\single_pendulum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\groups\gso3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\tests.hpp">
