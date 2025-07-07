@@ -12,8 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\geometry\Circle.hpp" />
+    <ClInclude Include="inc\groups\ASE3.hpp" />
     <ClInclude Include="inc\groups\ASO3.hpp" />
+    <ClInclude Include="inc\groups\GSE3.hpp" />
     <ClInclude Include="inc\groups\GSO3.hpp" />
+    <ClInclude Include="inc\linear\mat4.hpp" />
     <ClInclude Include="inc\misc\bits.hpp" />
     <ClInclude Include="inc\misc\util.hpp" />
     <ClInclude Include="inc\linear\vec2.hpp" />
@@ -51,8 +54,11 @@
     <ClCompile Include="src\geometry\Plane.cpp" />
     <ClCompile Include="src\geometry\Point.cpp" />
     <ClCompile Include="src\geometry\Segment.cpp" />
+    <ClCompile Include="src\groups\ASE3.cpp" />
     <ClCompile Include="src\groups\ASO3.cpp" />
+    <ClCompile Include="src\groups\GSE3.cpp" />
     <ClCompile Include="src\groups\GSO3.cpp" />
+    <ClCompile Include="src\linear\mat4.cpp" />
     <ClCompile Include="src\misc\bits.cpp" />
     <ClCompile Include="src\misc\util.cpp" />
     <ClCompile Include="src\linear\vec2.cpp" />
