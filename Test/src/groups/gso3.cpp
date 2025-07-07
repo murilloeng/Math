@@ -21,7 +21,7 @@ static void test_exponential(double* r, const double* v, const void** args)
 static void test_tangent(double* r, const double* v, const void** args)
 {
 	const math::vec3 a = (const double*) args[0];
-	math::vec3(r + 0) = math::groups::ASO3(v).tangent() * a;
+	math::vec3(r + 0) = math::groups::ASO3(v).tangent(a);
 }
 
 //tests

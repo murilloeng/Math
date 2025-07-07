@@ -38,9 +38,16 @@ namespace math
 
 			//tangent
 			mat3 tangent(void) const;
+			vec3 tangent(const vec3&) const;
+
 			mat3 tangent_inverse(void) const;
+			vec3 tangent_inverse(const vec3&) const;
+
 			mat3 tangent_increment(const vec3&) const;
+			vec3 tangent_increment(const vec3&, const vec3&) const;
+
 			mat3 tangent_inverse_increment(const vec3&) const;
+			vec3 tangent_inverse_increment(const vec3&, const vec3&) const;
 
 			//operators
 			ASO3& operator*=(double);

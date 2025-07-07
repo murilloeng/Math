@@ -74,24 +74,57 @@ namespace math
 			const double t = m_vector.norm();
 			return mat3::eye() - fn(t, 2) * s + fn(t, 3) * s * s;
 		}
+		vec3 ASO3::tangent(const vec3& a) const
+		{
+			const vec3 b = m_vector.cross(a);
+			const vec3 c = m_vector.cross(b);
+			const double t = m_vector.norm();
+			return a - fn(t, 2) * b + fn(t, 3) * c;
+		}
+
 		mat3 ASO3::tangent_inverse(void) const
 		{
 			const mat3 s = m_vector.spin();
 			const double t = m_vector.norm();
 			return mat3::eye() + s / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * s * s;
 		}
+		vec3 ASO3::tangent_inverse(const vec3& a) const
+		{
+			const vec3 b = m_vector.cross(a);
+			const vec3 c = m_vector.cross(b);
+			const double t = m_vector.norm();
+			return a + b / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * c;
+		}
+
 		mat3 ASO3::tangent_increment(const vec3& a) const
 		{
-			const vec3& v = m_vector;
-			const vec3 b = v.cross(a);
-			const vec3 c = v.cross(b);
-			const double t = v.norm();
-			return -dfn(t, 2) / t * b.outer(v) + fn(t, 2) * a.spin() + 
-			dfn(t, 3) / t * c.outer(v) - fn(t, 3) * (v.spin() * a.spin() + b.spin());
+			const vec3& x = m_vector;
+			const vec3 b = m_vector.cross(a);
+			const vec3 c = m_vector.cross(b);
+			const double t = m_vector.norm();
+			return -dfn(t, 2) / t * b.outer(x) + fn(t, 2) * a.spin() + 
+			dfn(t, 3) / t * c.outer(x) - fn(t, 3) * (x.spin() * a.spin() + b.spin());
 		}
-		mat3 ASO3::tangent_inverse_increment(const vec3&) const
+		vec3 ASO3::tangent_increment(const vec3& a, const vec3& u) const
 		{
-			return mat3();
+			const vec3& x = m_vector;
+			const vec3 b = m_vector.cross(a);
+			const vec3 c = m_vector.cross(b);
+			const double t = m_vector.norm();
+			const double s = m_vector.inner(u);
+			return -dfn(t, 2) / t * s * b + fn(t, 2) * a.cross(u) + 
+			dfn(t, 3) / t * s * c - fn(t, 3) * (x.spin() * a.cross(u) + b.cross(u));
+		}
+
+		mat3 ASO3::tangent_inverse_increment(const vec3& a) const
+		{
+			const mat3 s = m_vector.spin();
+			const double t = m_vector.norm();
+			return mat3::eye() + s / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * s * s;
+		}
+		vec3 ASO3::tangent_inverse_increment(const vec3& a, const vec3& u) const
+		{
+			return vec3();
 		}
 
 		//operators
