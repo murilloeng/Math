@@ -12,6 +12,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\geometry\Circle.hpp" />
+    <ClInclude Include="inc\groups\ASO3.hpp" />
+    <ClInclude Include="inc\groups\GSO3.hpp" />
     <ClInclude Include="inc\misc\bits.hpp" />
     <ClInclude Include="inc\misc\util.hpp" />
     <ClInclude Include="inc\linear\vec2.hpp" />
@@ -49,6 +51,8 @@
     <ClCompile Include="src\geometry\Plane.cpp" />
     <ClCompile Include="src\geometry\Point.cpp" />
     <ClCompile Include="src\geometry\Segment.cpp" />
+    <ClCompile Include="src\groups\ASO3.cpp" />
+    <ClCompile Include="src\groups\GSO3.cpp" />
     <ClCompile Include="src\misc\bits.cpp" />
     <ClCompile Include="src\misc\util.cpp" />
     <ClCompile Include="src\linear\vec2.cpp" />
@@ -113,11 +117,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)dist\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)dist\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>build\$(Platform)\$(Configuration)\</IntDir>
+    <IntDir>$(SolutionDir)build\$(ProjectName)\$(Platform)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
