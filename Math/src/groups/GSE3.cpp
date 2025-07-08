@@ -40,12 +40,6 @@ namespace math
 			return object;
 		}
 
-		//matrix
-		mat4 GSE3::matrix_form(void) const
-		{
-			return mat4(GSO3(m_quaternion).matrix_form(), m_vector);
-		}
-
 		//vector
 		vec3& GSE3::vector(void)
 		{
@@ -67,6 +61,10 @@ namespace math
 		}
 
 		//operators
+		GSE3::operator mat4(void) const
+		{
+			return mat4(GSO3(m_quaternion), m_vector);
+		}
 		vec3 GSE3::operator*(const vec3& v) const
 		{
 			return GSO3(m_quaternion) * v + m_vector;

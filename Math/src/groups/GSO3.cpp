@@ -47,8 +47,18 @@ namespace math
 			return algebra;
 		}
 
-		//matrix
-		mat3 GSO3::matrix_form(void) const
+		//quaternion
+		quat& GSO3::quaternion(void)
+		{
+			return m_quaternion;
+		}
+		const quat& GSO3::quaternion(void) const
+		{
+			return m_quaternion;
+		}
+
+		//operators
+		GSO3::operator mat3(void) const
 		{
 			mat3 matrix;
 			const double* p = m_quaternion.data();
@@ -63,18 +73,6 @@ namespace math
 			matrix[2 + 3 * 2] = p[0] * p[0] - p[1] * p[1] - p[2] * p[2] + p[3] * p[3];
 			return matrix;
 		}
-
-		//quaternion
-		quat& GSO3::quaternion(void)
-		{
-			return m_quaternion;
-		}
-		const quat& GSO3::quaternion(void) const
-		{
-			return m_quaternion;
-		}
-
-		//operators
 		vec3 GSO3::operator*(const vec3& v) const
 		{
 			//data

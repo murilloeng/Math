@@ -26,9 +26,6 @@ namespace math
 			//destructor
 			~ASO3(void);
 
-			//matrix
-			mat3 matrix_form(void) const;
-
 			//vector
 			vec3& vector(void);
 			const vec3& vector(void) const;
@@ -37,24 +34,28 @@ namespace math
 			GSO3 exponential(void) const;
 
 			//tangent
-			mat3 tangent(void) const;
-			vec3 tangent(const vec3&) const;
+			mat3 tangent(bool = false) const;
+			vec3 tangent(const vec3&, bool = false) const;
 
-			mat3 tangent_inverse(void) const;
-			vec3 tangent_inverse(const vec3&) const;
+			mat3 tangent_inverse(bool = false) const;
+			vec3 tangent_inverse(const vec3&, bool = false) const;
 
-			mat3 tangent_increment(const vec3&) const;
-			vec3 tangent_increment(const vec3&, const vec3&) const;
+			mat3 tangent_increment(const vec3&, bool = false) const;
+			vec3 tangent_increment(const vec3&, const vec3&, bool = false) const;
 
-			mat3 tangent_inverse_increment(const vec3&) const;
-			vec3 tangent_inverse_increment(const vec3&, const vec3&) const;
+			mat3 tangent_inverse_increment(const vec3&, bool = false) const;
+			vec3 tangent_inverse_increment(const vec3&, const vec3&, bool = false) const;
 
 			//operators
+			operator mat3(void) const;
+
 			ASO3& operator*=(double);
+			ASO3& operator/=(double);
 			ASO3& operator+=(const ASO3&);
 			ASO3& operator-=(const ASO3&);
 
 			ASO3 operator*(double) const;
+			ASO3 operator/(double) const;
 			ASO3 operator+(const ASO3&) const;
 			ASO3 operator-(const ASO3&) const;
 

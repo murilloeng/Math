@@ -25,12 +25,6 @@ namespace math
 			return;
 		}
 
-		//matrix
-		mat3 ASO3::matrix_form(void) const
-		{
-			return m_vector.spin();
-		}
-
 		//vector
 		vec3& ASO3::vector(void)
 		{
@@ -56,82 +50,100 @@ namespace math
 		}
 
 		//tangent
-		mat3 ASO3::tangent(void) const
+		mat3 ASO3::tangent(bool transpose) const
 		{
 			const mat3 s = m_vector.spin();
 			const double t = m_vector.norm();
-			return mat3::eye() - fn(t, 2) * s + fn(t, 3) * s * s;
+			const double q = transpose ? -1 : +1;
+			return mat3::eye() - q * fn(t, 2) * s + fn(t, 3) * s * s;
 		}
-		vec3 ASO3::tangent(const vec3& a) const
+		vec3 ASO3::tangent(const vec3& a, bool transpose) const
 		{
 			const vec3 b = m_vector.cross(a);
 			const vec3 c = m_vector.cross(b);
 			const double t = m_vector.norm();
-			return a - fn(t, 2) * b + fn(t, 3) * c;
+			const double q = transpose ? -1 : +1;
+			return a - q * fn(t, 2) * b + fn(t, 3) * c;
 		}
 
-		mat3 ASO3::tangent_inverse(void) const
+		mat3 ASO3::tangent_inverse(bool transpose) const
 		{
 			const mat3 s = m_vector.spin();
 			const double t = m_vector.norm();
-			return mat3::eye() + s / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * s * s;
+			const double q = transpose ? -1 : +1;
+			return mat3::eye() + q * s / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * s * s;
 		}
-		vec3 ASO3::tangent_inverse(const vec3& a) const
+		vec3 ASO3::tangent_inverse(const vec3& a, bool transpose) const
 		{
 			const vec3 b = m_vector.cross(a);
 			const vec3 c = m_vector.cross(b);
 			const double t = m_vector.norm();
-			return a + b / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * c;
+			const double q = transpose ? -1 : +1;
+			return a + q * b / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * c;
 		}
 
-		mat3 ASO3::tangent_increment(const vec3& a) const
+		mat3 ASO3::tangent_increment(const vec3& a, bool transpose) const
 		{
 			const vec3& v = m_vector;
 			const vec3 b = m_vector.cross(a);
 			const vec3 c = m_vector.cross(b);
 			const double t = m_vector.norm();
+			const double q = transpose ? -1 : +1;
 			const double g = 2 * fn(t, 4) - fn(t, 3);
 			const double h = 3 * fn(t, 5) - fn(t, 4);
-			return -g * b.outer(v) + h * c.outer(v) + fn(t, 2) * a.spin() - fn(t, 3) * (b.spin() + v.spin() * a.spin());
+			return q * fn(t, 2) * a.spin() - fn(t, 3) * (b.spin() + v.spin() * a.spin()) - q * g * b.outer(v) + h * c.outer(v);
 		}
-		vec3 ASO3::tangent_increment(const vec3& a, const vec3& u) const
+		vec3 ASO3::tangent_increment(const vec3& a, const vec3& u, bool transpose) const
 		{
 			const vec3& v = m_vector;
 			const vec3 b = m_vector.cross(a);
 			const vec3 c = m_vector.cross(b);
 			const double t = m_vector.norm();
 			const double s = m_vector.inner(u);
+			const double q = transpose ? -1 : +1;
 			const double g = 2 * fn(t, 4) - fn(t, 3);
 			const double h = 3 * fn(t, 5) - fn(t, 4);
-			return -g * s * b + h * s * c + fn(t, 2) * a.cross(u) - fn(t, 3) * (b.cross(u) + v.cross(a.cross(u)));
+			return q * fn(t, 2) * a.cross(u) - fn(t, 3) * (b.cross(u) + v.cross(a.cross(u))) - q * g * s * b + h * s * c;
 		}
 
-		mat3 ASO3::tangent_inverse_increment(const vec3& a) const
+		mat3 ASO3::tangent_inverse_increment(const vec3& a, bool transpose) const
 		{
 			const vec3& v = m_vector;
 			const vec3 b = m_vector.cross(a);
 			const vec3 c = m_vector.cross(b);
 			const double t = m_vector.norm();
+			const double q = transpose ? -1 : +1;
 			const double g = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
 			const double h = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
-			return -a.spin() / 2 + h * c.outer(v) - g * (b.spin() + v.spin() * a.spin());
+			return -q * a.spin() / 2 + h * c.outer(v) - g * (b.spin() + v.spin() * a.spin());
 		}
-		vec3 ASO3::tangent_inverse_increment(const vec3& a, const vec3& u) const
+		vec3 ASO3::tangent_inverse_increment(const vec3& a, const vec3& u, bool transpose) const
 		{
 			const vec3& v = m_vector;
 			const vec3 b = m_vector.cross(a);
 			const vec3 c = m_vector.cross(b);
 			const double t = m_vector.norm();
 			const double s = m_vector.inner(u);
+			const double q = transpose ? -1 : +1;
 			const double g = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
 			const double h = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
-			return -a.cross(u) / 2 + h * s * c - g * (b.cross(u) + v.cross(a.cross(u)));
+			return -q * a.cross(u) / 2 + h * s * c - g * (b.cross(u) + v.cross(a.cross(u)));
 		}
 
 		//operators
+		ASO3::operator mat3(void) const
+		{
+			return m_vector.spin();
+		}
+
 		ASO3& ASO3::operator*=(double s)
 		{
 			m_vector *= s;
+			return *this;
+		}
+		ASO3& ASO3::operator/=(double s)
+		{
+			m_vector /= s;
 			return *this;
 		}
 		ASO3& ASO3::operator+=(const ASO3& a)
@@ -148,6 +160,10 @@ namespace math
 		ASO3 ASO3::operator*(double s) const
 		{
 			return ASO3(*this) *= s;
+		}
+		ASO3 ASO3::operator/(double s) const
+		{
+			return ASO3(*this) /= s;
 		}
 		ASO3 ASO3::operator+(const ASO3& object) const
 		{

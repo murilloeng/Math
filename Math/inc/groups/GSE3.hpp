@@ -33,9 +33,6 @@ namespace math
 			//logarithm
 			ASE3 logarithm(void) const;
 
-			//matrix
-			mat4 matrix_form(void) const;
-
 			//vector
 			vec3& vector(void);
 			const vec3& vector(void) const;
@@ -45,6 +42,7 @@ namespace math
 			const quat& quaternion(void) const;
 
 			//operators
+			operator mat4(void) const;
 			vec3 operator*(const vec3&) const;
 			GSE3 operator*(const GSE3&) const;
 

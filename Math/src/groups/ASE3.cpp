@@ -31,12 +31,6 @@ namespace math
 			return;
 		}
 
-		//matrix
-		mat4 ASE3::matrix_form(void) const
-		{
-			return mat4(m_vector_w.spin(), m_vector_u);
-		}
-
 		//vector
 		vec3& ASE3::vector_u(void)
 		{
@@ -68,11 +62,26 @@ namespace math
 		//tangent
 		matrix ASE3::tangent(void) const
 		{
-			return matrix(6, 6);
+			//tangent
+			matrix T(6, 6, mode::zeros);
+			T.span(0, 0, 3, 3) = ASO3(m_vector_w).tangent();
+			T.span(3, 3, 3, 3) = ASO3(m_vector_w).tangent();
+			T.span(0, 3, 3, 3) = mat3(ASO3(-m_vector_w).exponential()) * ASO3(m_vector_w).tangent_increment(m_vector_u, true);
+			//return
+			return T;
 		}
 		matrix ASE3::tangent_inverse(void) const
 		{
-			return matrix(6, 6);
+			//data
+			matrix Ti(6, 6, mode::zeros);
+			const mat3 Twi = ASO3(m_vector_w).tangent_inverse();
+			const mat3 Awu = ASO3(m_vector_w).tangent_increment(m_vector_u, true);
+			//tangent
+			Ti.span(0, 0, 3, 3) = Twi;
+			Ti.span(3, 3, 3, 3) = Twi;
+			Ti.span(0, 3, 3, 3) = -Twi.transpose() * Awu * Twi;
+			//return
+			return Ti;
 		}
 		matrix ASE3::tangent_increment(void) const
 		{
@@ -84,10 +93,21 @@ namespace math
 		}
 
 		//operators
+		ASE3::operator mat4(void) const
+		{
+			return mat4(m_vector_w.spin(), m_vector_u);
+		}
+
 		ASE3& ASE3::operator*=(double s)
 		{
 			m_vector_u *= s;
 			m_vector_w *= s;
+			return *this;
+		}
+		ASE3& ASE3::operator/=(double s)
+		{
+			m_vector_u /= s;
+			m_vector_w /= s;
 			return *this;
 		}
 		ASE3& ASE3::operator+=(const ASE3& object)
@@ -106,6 +126,10 @@ namespace math
 		ASE3 ASE3::operator*(double s) const
 		{
 			return ASE3(*this) *= s;
+		}
+		ASE3 ASE3::operator/(double s) const
+		{
+			return ASE3(*this) /= s;
 		}
 		ASE3 ASE3::operator+(const ASE3& object) const
 		{

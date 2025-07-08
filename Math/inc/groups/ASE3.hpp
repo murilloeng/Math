@@ -27,9 +27,6 @@ namespace math
 			//destructor
 			~ASE3(void);
 
-			//matrix
-			mat4 matrix_form(void) const;
-
 			//vector
 			vec3& vector_u(void);
 			vec3& vector_w(void);
@@ -46,11 +43,15 @@ namespace math
 			matrix tangent_inverse_increment(void) const;
 
 			//operators
+			operator mat4(void) const;
+
 			ASE3& operator*=(double);
+			ASE3& operator/=(double);
 			ASE3& operator+=(const ASE3&);
 			ASE3& operator-=(const ASE3&);
 
 			ASE3 operator*(double) const;
+			ASE3 operator/(double) const;
 			ASE3 operator+(const ASE3&) const;
 			ASE3 operator-(const ASE3&) const;
 

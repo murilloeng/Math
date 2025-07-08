@@ -24,21 +24,19 @@ namespace math
 
 			//destructor
 			~GSO3(void);
-			
+
 			//inverse
 			GSO3 inverse(void) const;
 			
 			//logarithm
 			ASO3 logarithm(void) const;
-
-			//matrix
-			mat3 matrix_form(void) const;
-
+			
 			//quaternion
 			quat& quaternion(void);
 			const quat& quaternion(void) const;
-
+			
 			//operators
+			operator mat3(void) const;
 			vec3 operator*(const vec3&) const;
 			GSO3 operator*(const GSO3&) const;
 

@@ -6,6 +6,7 @@
 //math
 #include "Math/Math/inc/misc/util.hpp"
 #include "Math/Math/inc/linear/vec3.hpp"
+#include "Math/Math/inc/linear/mat3.hpp"
 #include "Math/Math/inc/groups/ASE3.hpp"
 #include "Math/Math/inc/groups/GSE3.hpp"
 
@@ -15,13 +16,17 @@
 //static
 static void test_exponential(double* r, const double* v, const void** args)
 {
-	// const math::vec3 a = (const double*) args[0];
-	// math::vec3(r + 0) = math::groups::ASO3(v).exponential() * a;
+	r[3] = 1;
+	const math::vec3 u(v + 0), w(v + 3);
+	const math::vec3 a = (const double*) args[0];
+	math::vec3(r + 0) = math::groups::ASE3(u, w).exponential() * a;
 }
 static void test_tangent(double* r, const double* v, const void** args)
 {
+	// r[3] = 1;
+	// const math::vec3 u(v + 0), w(v + 3);
 	// const math::vec3 a = (const double*) args[0];
-	// math::vec3(r + 0) = math::groups::ASO3(v).tangent(a);
+	// math::vec3(r + 0) = math::groups::ASE3(u, w).tangent() * a;
 }
 static void test_tangent_inverse(double* r, const double* v, const void** args)
 {
@@ -58,79 +63,84 @@ void tests::groups::GSE3::log(void)
 }
 void tests::groups::GSE3::inverse(void)
 {
-	// math::quat q, r;
-	// const uint32_t nt = 100000;
-	// srand(uint32_t(time(nullptr)));
-	// for(uint32_t i = 0; i < nt; i++)
-	// {
-	// 	q.randu();
-	// 	r = q * math::groups::GSO3(q).inverse().quaternion();
-	// 	r[0] -= 1;
-	// 	if(r.norm() > 1e-5)
-	// 	{
-	// 		q.print("v");
-	// 		r.print("r");
-	// 		break;
-	// 	}
-	// 	else
-	// 	{
-	// 		printf("Test GSE3 inverse %5d: ok!\n", i);
-	// 	}
-	// }
+	math::groups::GSE3 g, r;
+	const uint32_t nt = 100000;
+	srand(uint32_t(time(nullptr)));
+	for(uint32_t i = 0; i < nt; i++)
+	{
+		g.vector().randu();
+		g.quaternion().randu();
+		r = g * g.inverse();
+		r.quaternion()[0] -= 1;
+		if(r.vector().norm() > 1e-5 || r.quaternion().norm() > 1e-5)
+		{
+			r.vector().print("rv");
+			r.quaternion().print("rq");
+			break;
+		}
+		else
+		{
+			printf("Test GSE3 inverse %5d: ok!\n", i);
+		}
+	}
 }
 void tests::groups::GSE3::tangent(void)
 {
-	// math::vec3 a, v, r;
-	// const uint32_t nt = 100000;
-	// math::mat3 Ka, Kn, Kr, R, T;
-	// srand(uint32_t(time(nullptr)));
-	// const void* args[] = {a.data()};
-	// for(uint32_t i = 0; i < nt; i++)
-	// {
-	// 	a.randu();
-	// 	v.randu();
-	// 	T = math::groups::ASO3(v).tangent();
-	// 	R = math::groups::ASO3(v).exponential().matrix_form();
-	// 	Ka = -R * a.spin() * T;
-	// 	math::ndiff(test_exponential, Kn.data(), v.data(), args, 3, 3, 1e-5);
-	// 	Kr = Ka - Kn;
-	// 	if(Kr.norm() > 1e-5 * Ka.norm())
-	// 	{
-	// 		Ka.print("Ka");
-	// 		Kn.print("Kn");
-	// 		Kr.print("Kr");
-	// 		break;
-	// 	}
-	// 	else
-	// 	{
-	// 		printf("Test aso3 tangent %5d: ok!\n", i);
-	// 	}
-	// }
+	const uint32_t nt = 100000;
+	math::vector a(3), v(6), r(4);
+	srand(uint32_t(time(nullptr)));
+	const void* args[] = {a.data()};
+	math::matrix Ka(4, 6), Kn(4, 6), Kr(4, 6), A(4, 6, math::mode::zeros);
+	for(uint32_t i = 0; i < nt; i++)
+	{
+		a.randu();
+		v.randu();
+		const math::vec3 u = v.data() + 0;
+		const math::vec3 w = v.data() + 3;
+		A.span(0, 0, 3, 3) = math::matrix::eye(3, 3);
+		A.span(0, 3, 3, 3) = -((math::matrix&) math::vec3(a.data()).spin());
+		const math::matrix T = math::groups::ASE3(u, w).tangent();
+		const math::mat4 H = math::groups::ASE3(u, w).exponential();
+		Ka = ((math::matrix&) H) * A * T;
+		math::ndiff(test_exponential, Kn.data(), v.data(), args, 4, 6, 1e-5);
+		Kr = Ka - Kn;
+		if(Kr.norm() > 1e-5 * Ka.norm())
+		{
+			Ka.print("Ka");
+			Kn.print("Kn");
+			Kr.print("Kr", 1e-5);
+			break;
+		}
+		else
+		{
+			printf("Test GSE3 tangent %5d: ok!\n", i);
+		}
+	}
 }
 void tests::groups::GSE3::tangent_inverse(void)
 {
-	// math::vec3 v;
-	// math::mat3 R, T, A;
-	// const uint32_t nt = 100000;
-	// srand(uint32_t(time(nullptr)));
-	// for(uint32_t i = 0; i < nt; i++)
-	// {
-	// 	v.randu();
-	// 	T = math::groups::ASO3(v).tangent();
-	// 	A = math::groups::ASO3(v).tangent_inverse();
-	// 	R = T * A - math::mat3::eye();
-	// 	if(R.norm() > 1e-5)
-	// 	{
-	// 		T.print("T");
-	// 		A.print("A");
-	// 		R.print("R");
-	// 		break;
-	// 	}
-	// 	else
-	// 	{
-	// 		printf("Test aso3 tangent inverse %5d: ok!\n", i);
-	// 	}
-	// }
+	math::groups::ASE3 object;
+	const uint32_t nt = 100000;
+	srand(uint32_t(time(nullptr)));
+	for(uint32_t i = 0; i < nt; i++)
+	{
+		object.vector_u().randu();
+		object.vector_w().randu();
+		const math::matrix T = object.tangent();
+		const math::matrix Ti = object.tangent_inverse();
+		const math::matrix Tr = Ti * T - math::matrix::eye(6, 6);
+		if(Tr.norm() > 1e-5)
+		{
+			T.print("T");
+			Ti.print("Ti");
+			Tr.print("Tr");
+			break;
+		}
+		else
+		{
+			printf("Test GSE3 tangent inverse %5d: ok!\n", i);
+		}
+	}
 }
 void tests::groups::GSE3::tangent_increment(void)
 {
@@ -155,7 +165,7 @@ void tests::groups::GSE3::tangent_increment(void)
 	// 	}
 	// 	else
 	// 	{
-	// 		printf("Test aso3 tangent increment %5d: ok!\n", i);
+	// 		printf("Test GSE3 tangent increment %5d: ok!\n", i);
 	// 	}
 	// }
 }
@@ -182,7 +192,7 @@ void tests::groups::GSE3::tangent_inverse_increment(void)
 	// 	}
 	// 	else
 	// 	{
-	// 		printf("Test aso3 tangent inverse increment %5d: ok!\n", i);
+	// 		printf("Test GSE3 tangent inverse increment %5d: ok!\n", i);
 	// 	}
 	// }
 }

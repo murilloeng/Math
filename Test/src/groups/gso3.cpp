@@ -85,7 +85,7 @@ void tests::groups::GSO3::tangent(void)
 		a.randu();
 		v.randu();
 		T = math::groups::ASO3(v).tangent();
-		R = math::groups::ASO3(v).exponential().matrix_form();
+		R = math::groups::ASO3(v).exponential();
 		Ka = -R * a.spin() * T;
 		math::ndiff(test_exponential, Kn.data(), v.data(), args, 3, 3, 1e-5);
 		Kr = Ka - Kn;
@@ -98,7 +98,7 @@ void tests::groups::GSO3::tangent(void)
 		}
 		else
 		{
-			printf("Test aso3 tangent %5d: ok!\n", i);
+			printf("Test GSO3 tangent %5d: ok!\n", i);
 		}
 	}
 }
@@ -123,7 +123,29 @@ void tests::groups::GSO3::tangent_inverse(void)
 		}
 		else
 		{
-			printf("Test aso3 tangent inverse %5d: ok!\n", i);
+			printf("Test GSO3 tangent inverse %5d: ok!\n", i);
+		}
+	}
+}
+void tests::groups::GSO3::tangent_indentity(void)
+{
+	math::mat3 Kr;
+	math::groups::ASO3 object;
+	const uint32_t nt = 100000;
+	srand(uint32_t(time(nullptr)));
+	for(uint32_t i = 0; i < nt; i++)
+	{
+		object.vector().randu();
+		Kr = math::mat3(object.exponential()) * object.tangent() - object.tangent().transpose();
+		if(Kr.norm() > 1e-5)
+		{
+			object.vector().print("v");
+			Kr.print("Kr");
+			break;
+		}
+		else
+		{
+			printf("Test GSO3 tangent identity %5d: ok!\n", i);
 		}
 	}
 }
@@ -150,7 +172,7 @@ void tests::groups::GSO3::tangent_increment(void)
 		}
 		else
 		{
-			printf("Test aso3 tangent increment %5d: ok!\n", i);
+			printf("Test GSO3 tangent increment %5d: ok!\n", i);
 		}
 	}
 }
@@ -177,7 +199,7 @@ void tests::groups::GSO3::tangent_inverse_increment(void)
 		}
 		else
 		{
-			printf("Test aso3 tangent inverse increment %5d: ok!\n", i);
+			printf("Test GSO3 tangent inverse increment %5d: ok!\n", i);
 		}
 	}
 }
