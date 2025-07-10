@@ -60,24 +60,26 @@ static void strains_gradient(double* Bs, const double* d, void**)
 	const math::quat q2 = q2n * v2.quaternion();
 	//rotation
 	strains(es, d, nullptr);
+	const math::vec3 xr = q1.conjugate(x2 - x1) / l0;
 	const math::mat3 T1 = v1.rotation_gradient(true);
 	const math::mat3 T2 = v2.rotation_gradient(true);
 	const math::mat3 Twi = (l0 * ws).rotation_gradient_inverse(true);
-	const math::mat3 Awi = (l0 * ws).rotation_hessian_inverse(q1.conjugate(x2 - x1), false);
+	const math::mat3 Awi = (l0 * ws).rotation_hessian_inverse(xr, false);
 	//gradient
 	Bm.zeros();
 	Bm.span(3, 9) = +Twi * T2 / l0;
 	Bm.span(3, 3) = -Twi.transpose() * T1 / l0;
 	Bm.span(0, 0) = -Twi.transpose() * q1.conjugate().rotation() / l0;
 	Bm.span(0, 6) = +Twi.transpose() * q1.conjugate().rotation() / l0;
-	Bm.span(0, 9) = +Awi * T2 / l0;
+	Bm.span(0, 9) = +Awi * Twi * T2;
+	Bm.span(0, 3) = -Awi * Twi.transpose() * T1 + Twi.transpose() * xr.spin() * T1;
 }
 
-void tests::fem::beam::dynamics::section_strains(void)
+void tests::fem::beam::dynamics::section_strains_gradient(void)
 {
 	//data
 	double d[12];
-	const uint32_t nt = 1000;
+	const uint32_t nt = 100000;
 	srand(uint32_t(time(nullptr)));
 	math::matrix Ba(6, 12), Bn(6, 12), Br(6, 12);
 	//test

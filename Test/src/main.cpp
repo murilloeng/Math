@@ -15,7 +15,7 @@
 int main(void)
 {
 	//test
-	tests::fem::beam::dynamics::section_strains();
+	tests::fem::beam::dynamics::section_strains_gradient();
 	//return
 	return EXIT_SUCCESS;
 }
