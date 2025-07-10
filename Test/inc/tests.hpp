@@ -4,6 +4,13 @@ namespace tests
 {
 	namespace fem
 	{
+		namespace beam
+		{
+			namespace dynamics
+			{
+				void section_strains(void);
+			}
+		}
 		void revolute_fixed(void);
 		void revolute_flexible(void);
 	}

@@ -63,6 +63,9 @@
     <ClCompile Include="src\groups\gse3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\fem\beam\dynamics.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\tests.hpp">

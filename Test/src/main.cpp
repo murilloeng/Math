@@ -15,9 +15,7 @@
 int main(void)
 {
 	//test
-	tests::groups::GSE3::log();
-	// tests::solvers::harmonic::pyramid();
-	// tests::solvers::newmark::single_pendulum();
+	tests::fem::beam::dynamics::section_strains();
 	//return
 	return EXIT_SUCCESS;
 }

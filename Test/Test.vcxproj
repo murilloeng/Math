@@ -92,6 +92,7 @@ copy ..\..\external\cpp\dll\x64\libopenblas.dll dist\$(platform)\$(configuration
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\fem\beam\dynamics.cpp" />
     <ClCompile Include="src\fem\revolute_fixed.cpp" />
     <ClCompile Include="src\fem\revolute_flexible.cpp" />
     <ClCompile Include="src\groups\gse3.cpp" />
