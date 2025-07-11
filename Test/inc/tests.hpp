@@ -8,7 +8,8 @@ namespace tests
 		{
 			namespace dynamics
 			{
-				void section_strains_gradient(void);
+				void strains(void);
+				void rotation(void);
 			}
 		}
 		void revolute_fixed(void);
