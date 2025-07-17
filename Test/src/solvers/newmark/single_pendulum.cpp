@@ -1,4 +1,5 @@
-#pragma once
+//std
+#include <cmath>
 
 //math
 #include "Math/Math/inc/solvers/newmark.hpp"

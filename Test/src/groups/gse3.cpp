@@ -21,18 +21,6 @@ static void test_exponential(double* r, const double* v, const void** args)
 	const math::vec3 a = (const double*) args[0];
 	math::vec3(r + 0) = math::groups::ASE3(u, w).exponential() * a;
 }
-static void test_tangent(double* r, const double* v, const void** args)
-{
-	// r[3] = 1;
-	// const math::vec3 u(v + 0), w(v + 3);
-	// const math::vec3 a = (const double*) args[0];
-	// math::vec3(r + 0) = math::groups::ASE3(u, w).tangent() * a;
-}
-static void test_tangent_inverse(double* r, const double* v, const void** args)
-{
-	// const math::vec3 a = (const double*) args[0];
-	// math::vec3(r + 0) = math::groups::ASO3(v).tangent_inverse(a);
-}
 
 //tests
 void tests::groups::GSE3::log(void)
@@ -98,7 +86,7 @@ void tests::groups::GSE3::tangent(void)
 		const math::vec3 u = v.data() + 0;
 		const math::vec3 w = v.data() + 3;
 		A.span(0, 0, 3, 3) = math::matrix::eye(3, 3);
-		A.span(0, 3, 3, 3) = -((math::matrix&) math::vec3(a.data()).spin());
+		// A.span(0, 3, 3, 3) = -((math::matrix&) math::vec3(a.data()).spin());
 		const math::matrix T = math::groups::ASE3(u, w).tangent();
 		const math::mat4 H = math::groups::ASE3(u, w).exponential();
 		Ka = ((math::matrix&) H) * A * T;
