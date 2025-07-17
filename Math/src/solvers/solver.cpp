@@ -253,5 +253,10 @@ namespace math
 			allocate_forces();
 			allocate_tangents();
 		}
+		void solver::allocate(uint32_t size)
+		{
+			m_size = size;
+			allocate();
+		}
 	}
 }

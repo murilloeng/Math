@@ -69,6 +69,7 @@ namespace math
 			virtual void solve(void);
 			virtual void cleanup(void);
 			virtual void allocate(void);
+			virtual void allocate(uint32_t);
 
 			//data
 			bool m_silent;
