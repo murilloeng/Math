@@ -177,4 +177,40 @@ namespace math
 			}
 		}
 	}
+	void ndiff(std::function<void(double*, const double*)> fun, double* K, const double* x, uint32_t nv, uint32_t nx, double dx)
+	{
+		//data
+		double* xp = (double*) alloca(nx * sizeof(double));
+		double* f1 = (double*) alloca(nv * sizeof(double));
+		double* f2 = (double*) alloca(nv * sizeof(double));
+		double* f3 = (double*) alloca(nv * sizeof(double));
+		double* f4 = (double*) alloca(nv * sizeof(double));
+		//setup
+		memcpy(xp, x, nx * sizeof(double));
+		//derivative
+		for(uint32_t i = 0; i < nx; i++)
+		{
+			//1st state
+			xp[i] -= dx;
+			fun(f1, xp);
+			//2nd state
+			xp[i] -= dx;
+			fun(f2, xp);
+			//3rd state
+			xp[i] += dx;
+			xp[i] += dx;
+			xp[i] += dx;
+			fun(f3, xp);
+			//4th state
+			xp[i] += dx;
+			fun(f4, xp);
+			//derivative
+			xp[i] -= dx;
+			xp[i] -= dx;
+			for(uint32_t j = 0; j < nv; j++)
+			{
+				K[j + nv * i] = (8 * f3[j] - 8 * f1[j] + f2[j] - f4[j]) / 12 / dx;
+			}
+		}
+	}
 }

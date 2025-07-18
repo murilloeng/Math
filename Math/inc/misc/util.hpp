@@ -4,6 +4,7 @@
 #include <ctime>
 #include <cstdio>
 #include <cstdint>
+#include <functional>
 
 typedef void(*ndiff_fun_1)(double*, const double*, void**);
 typedef void(*ndiff_fun_2)(double*, const double*, const void**);
@@ -28,4 +29,5 @@ namespace math
 
 	void ndiff(ndiff_fun_1, double*, const double*, void**, uint32_t, uint32_t, double);
 	void ndiff(ndiff_fun_2, double*, const double*, const void**, uint32_t, uint32_t, double);
+	void ndiff(std::function<void(double*, const double*)>, double*, const double*, uint32_t, uint32_t, double);
 }
