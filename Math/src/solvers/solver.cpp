@@ -223,7 +223,7 @@ namespace math
 				print();
 				if(!m_equilibrium)
 				{
-					printf("Solver failed in step %d!\n", m_step);
+					if(!m_silent) printf("Solver failed in step %d!\n", m_step);
 					break;
 				}
 			}
