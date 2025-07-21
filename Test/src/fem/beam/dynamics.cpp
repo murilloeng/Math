@@ -168,7 +168,7 @@ void tests::fem::beam::dynamics::rotation(void)
 		math::vector(d, 12).randu();
 		compute_rotation_gradient(Bd.data(), s, d);
 		math::ndiff(test_rotation, Bn.data(), d, args, 3, 12, 1e-9);
-		Ba = ((math::matrix&) -R * a.spin()) * Bd;
+		// Ba = ((math::matrix&) (-R * a.spin())) * Bd;
 		//check
 		Br = Ba - Bn;
 		if(Br.norm() > 1e-5)
