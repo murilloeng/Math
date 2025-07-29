@@ -142,6 +142,7 @@
       <DisableSpecificWarnings>4146;4267</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -164,6 +165,7 @@
       <DisableSpecificWarnings>4146;4267</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
+      <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
     </ClCompile>
     <Link>
       <SubSystem>
