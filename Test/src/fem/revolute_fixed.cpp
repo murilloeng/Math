@@ -10,7 +10,7 @@
 #include "Math/Math/inc/linear/quat.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/fem.hpp"
 
 static math::vec3 s1, ar;
 static math::quat q1r, q2r;

@@ -10,7 +10,7 @@
 #include "Math/Math/inc/linear/mat3.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/rotations.hpp"
 
 static bool mode;
 static math::vec3 ar;
@@ -49,7 +49,7 @@ static void gradient(double* dr, const double* v, void** args)
 	}
 }
 
-void tests::rotations::vec3_rotation_gradient(void)
+void tests::rotations::vec3::rotation_gradient(void)
 {
 	//data
 	math::vec3 v, r;

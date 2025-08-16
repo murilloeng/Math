@@ -1,21 +1,21 @@
 //std
-#include <ctime>
 #include <cstdio>
 #include <stdexcept>
 
-//math
-#include "Math/Math/inc/linear/vector.hpp"
-#include "Math/Math/inc/geometry/Circle.hpp"
-
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/fem.hpp"
+#include "Math/Test/inc/groups.hpp"
+#include "Math/Test/inc/solvers.hpp"
+#include "Math/Test/inc/geometry.hpp"
+#include "Math/Test/inc/rotations.hpp"
+#include "Math/Test/inc/miscellaneous.hpp"
 
 int main(void)
 {
 	try
 	{
 		//test
-		tests::fem::beam::dynamics::rotation();
+		tests::solvers::gradient_descent::exponential_smooth();
 	}
 	catch(const std::exception& exception)
 	{

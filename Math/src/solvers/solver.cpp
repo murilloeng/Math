@@ -144,7 +144,7 @@ namespace math
 			//data
 			const uint32_t ss = state_set();
 			//update
-			if(m_update) m_update();
+			if(m_restore) m_restore();
 			if(ss & uint32_t(state::t)) m_t_new = m_t_old;
 			if(ss & uint32_t(state::p)) m_p_new = m_p_old;
 			if(ss & uint32_t(state::x)) memcpy(m_x_new, m_x_old, m_size * sizeof(double));

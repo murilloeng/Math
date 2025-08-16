@@ -7,9 +7,9 @@
 #include "Math/Math/inc/misc/util.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/miscellaneous.hpp"
 
-void tests::misc::fft(void)
+void tests::miscellaneous::fft(void)
 {
 	//data
 	const uint32_t n = 10000;

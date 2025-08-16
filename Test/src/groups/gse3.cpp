@@ -11,7 +11,7 @@
 #include "Math/Math/inc/groups/GSE3.hpp"
 
 //tests
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/groups.hpp"
 
 //static
 static void test_exponential(double* r, const double* v, const void** args)

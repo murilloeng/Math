@@ -9,9 +9,9 @@
 #include "Math/Math/inc/linear/mat3.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/rotations.hpp"
 
-void tests::rotations::quat_rotation_tensor(void)
+void tests::rotations::quat::rotation_tensor(void)
 {
 	//data
 	math::quat q;

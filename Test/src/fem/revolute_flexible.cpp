@@ -10,7 +10,7 @@
 #include "Math/Math/inc/linear/quat.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/fem.hpp"
 
 static const uint32_t nt = 10000;
 static const double s = 4.00e-02;

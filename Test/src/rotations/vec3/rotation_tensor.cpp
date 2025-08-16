@@ -8,9 +8,9 @@
 #include "Math/Math/inc/linear/mat3.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/rotations.hpp"
 
-void tests::rotations::vec3_rotation_tensor(void)
+void tests::rotations::vec3::rotation_tensor(void)
 {
 	//data
 	const uint32_t nt = 10000;

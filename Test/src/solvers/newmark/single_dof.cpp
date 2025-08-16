@@ -5,7 +5,7 @@
 #include "Math/Math/inc/solvers/newmark.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/solvers.hpp"
 
 void tests::solvers::newmark::single_dof(void)
 {

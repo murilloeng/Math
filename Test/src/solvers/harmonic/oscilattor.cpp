@@ -6,7 +6,7 @@
 #include "Math/Math/inc/solvers/harmonic.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/solvers.hpp"
 
 static const double k = 4.00e+00;
 static const double c = 1.00e-01;

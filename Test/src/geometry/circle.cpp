@@ -9,7 +9,7 @@
 #include "Math/Math/inc/geometry/Circle.hpp"
 
 //Tests
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/geometry.hpp"
 
 void tests::geometry::circle(void)
 {

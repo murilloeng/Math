@@ -9,7 +9,7 @@
 #include "Math/Math/inc/linear/vec3.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/miscellaneous.hpp"
 
 static double h = 0.01;
 static const double g = 0.50;
@@ -48,7 +48,7 @@ static void dfun(math::mat3& Ka, const double* x, void** args)
 	Ka = J * Da + (w.spin() * J - (J * w).spin()) * Dw;
 }
 
-void tests::misc::drift(void)
+void tests::miscellaneous::drift(void)
 {
 	//test
 	J[0] = 1;

@@ -9,7 +9,7 @@
 #include "Math/Math/inc/linear/mat3.hpp"
 
 //test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/rotations.hpp"
 
 static math::vec3 ar;
 
@@ -37,7 +37,7 @@ static void gradient(double* dr, const double* v, void** args)
 		vm.rotation_hessian_inverse(ar, transpose);
 }
 
-void tests::rotations::vec3_rotation_hessian(void)
+void tests::rotations::vec3::rotation_hessian(void)
 {
 	//data
 	math::vec3 v, r;

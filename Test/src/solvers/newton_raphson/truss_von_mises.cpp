@@ -2,7 +2,7 @@
 #include "Math/Math/inc/solvers/newton_raphson.hpp"
 
 //Test
-#include "Math/Test/inc/tests.hpp"
+#include "Math/Test/inc/solvers.hpp"
 
 void tests::solvers::newton_raphson::truss_von_mises(void)
 {
