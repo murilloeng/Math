@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <stdexcept>
 
 //math
 #include "Math/Math/inc/linear/vec2.hpp"
@@ -42,8 +43,7 @@ namespace math
 	{
 		if(list.size() != 4)
 		{
-			fprintf(stderr, "Error: mat2 constructor with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("mat2 constructor has incompatible dimensions!");
 		}
 		memcpy(m_data_ptr, std::data(list), list.size() * sizeof(double));
 	}

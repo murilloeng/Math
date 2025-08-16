@@ -2,6 +2,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
 //math
 #include "Math/Math/inc/linear/vector.hpp"
@@ -42,8 +43,7 @@ namespace math
 		{
 			if(!m_system_1 && !m_system_2 && !(m_residue && m_tangent_1 && m_tangent_2))
 			{
-				printf("Error: Newton-Raphson solver called with at least one method not set!\n");
-				exit(EXIT_FAILURE);
+				throw std::runtime_error("Newton-Raphson solver called with at least one method not set!");
 			}
 		}
 		void newton_raphson::compute(void)

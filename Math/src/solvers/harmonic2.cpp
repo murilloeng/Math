@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstring>
 #include <malloc.h>
+#include <stdexcept>
 
 //math
 #include "Math/Math/inc/misc/util.hpp"
@@ -101,8 +102,7 @@ namespace math
 		{
 			if(!m_internal_force || !m_external_force || !m_inertia || !m_damping || !m_stiffness)
 			{
-				printf("Error: Harmonic solver called with at least one method not set!\n");
-				exit(EXIT_FAILURE);
+				throw std::runtime_error("Harmonic solver called with at least one method not set!");
 			}
 		}
 		void harmonic2::setup(void)

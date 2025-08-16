@@ -1,6 +1,7 @@
 //std
 #include <cstdio>
 #include <cstdlib>
+#include <stdexcept>
 
 //math
 #include "Math/Math/inc/linear/span.hpp"
@@ -38,8 +39,7 @@ namespace math
 	{
 		if(m_rows != s.m_rows || m_cols != s.m_cols)
 		{
-			fprintf(stderr, "Error: Span assign with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("span assign has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -54,8 +54,7 @@ namespace math
 	{
 		if(m_rows != k.m_rows || m_cols != k.m_cols)
 		{
-			fprintf(stderr, "Error: Span assign with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("span assign has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -82,8 +81,7 @@ namespace math
 	{
 		if(m_rows != s.m_rows || m_cols != s.m_cols)
 		{
-			fprintf(stderr, "Error: Span increment with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("span increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -98,8 +96,7 @@ namespace math
 	{
 		if(m_rows != k.m_rows || m_cols != k.m_cols)
 		{
-			fprintf(stderr, "Error: Span increment with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("span increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -126,8 +123,7 @@ namespace math
 	{
 		if(s.m_rows != m_rows || s.m_cols != m_cols)
 		{
-			fprintf(stderr, "Error: Span increment with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("span increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -142,8 +138,7 @@ namespace math
 	{
 		if(m_rows != k.m_rows || m_cols != k.m_cols)
 		{
-			fprintf(stderr, "Error: Span increment with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("span increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -165,8 +160,7 @@ namespace math
 	{
 		if(s.m_cols != k.m_rows)
 		{
-			fprintf(stderr, "Error: Span-Matrix product with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("span-matrix product has incompatible dimensions!");
 		}
 		matrix r(s.m_rows, k.m_cols);
 		for(uint32_t i = 0; i < s.m_rows; i++)
@@ -186,8 +180,7 @@ namespace math
 	{
 		if(k.m_cols != s.m_rows)
 		{
-			fprintf(stderr, "Error: Matrix-Span product with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("span-matrix product has incompatible dimensions!");
 		}
 		matrix r(k.m_rows, s.m_cols);
 		for(uint32_t i = 0; i < k.m_rows; i++)

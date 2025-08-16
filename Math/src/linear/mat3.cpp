@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <stdexcept>
 
 //math
 #include "Math/Math/inc/linear/quat.hpp"
@@ -33,8 +34,7 @@ namespace math
 	{
 		if(list.size() != 9)
 		{
-			fprintf(stderr, "Error: mat3 constructor with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("mat3 constructor has incompatible dimensions!");
 		}
 		memcpy(m_data_ptr, std::data(list), list.size() * sizeof(double));
 	}

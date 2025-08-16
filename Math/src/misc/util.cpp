@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cstring>
 #include <malloc.h>
+#include <stdexcept>
 
 //ext
 #include "external/cpp/inc/fftw3.h"
@@ -49,8 +50,7 @@ namespace math
 		{
 			if(!fgets(buffer, sizeof(buffer), file))
 			{
-				printf("Error: Unable to skip line from file!\n");
-				exit(EXIT_FAILURE);
+				throw std::runtime_error("Unable to skip line from file!");
 			}
 		}
 	}

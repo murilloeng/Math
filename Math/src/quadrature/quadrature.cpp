@@ -1,5 +1,6 @@
 //std
 #include <cstdlib>
+#include <stdexcept>
 
 //math
 #include "Math/Math/inc/quadrature/rule.hpp"
@@ -38,8 +39,7 @@ namespace math
 			uint32_t rule;
 			if(fscanf(file, "%d %d", &rule, &m_order) != 2)
 			{
-				printf("\tError: Unable to load Quadrature!\n");
-				exit(EXIT_FAILURE);
+				throw std::runtime_error("quadrature loading error!");
 			}
 			m_rule = quadrature::rule(rule);
 		}

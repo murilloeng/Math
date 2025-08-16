@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstring>
 #include <malloc.h>
+#include <stdexcept>
 
 //ext
 #include "external/cpp/inc/suitesparse/umfpack.h"
@@ -87,8 +88,7 @@ namespace math
 		//check
 		if(!m_own)
 		{
-			printf("Error: Sparse matrix pattern change called on an object that don owns its data!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("sparse pattern change called on matrix that does not own its memory!");
 		}
 		//setup
 		cleanup();
@@ -145,8 +145,7 @@ namespace math
 		int32_t test = !UMFPACK_OK;
 		if(m_cols != x.rows() || m_rows != f.rows())
 		{
-			fprintf(stderr, "Error: Sparse solve called with incompatible vectors!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("sparse solve has incompatible vectors!");
 		}
 		//solve
 		double* xd = x.data();
@@ -186,8 +185,7 @@ namespace math
 		//check
 		if(m_cols != v.rows())
 		{
-			fprintf(stderr, "Error: Incompatible multiplication of sparse matrix and vector!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("sparse vector product has incompatible dimentions!");
 		}
 		//vector
 		vector r(v.rows(), mode::zeros);
@@ -209,8 +207,7 @@ namespace math
 				return m_data_ptr[k];
 			}
 		}
-		fprintf(stderr, "Error: Sparse matrix operator() called with out of range index!\n");
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("sparse operator() has index out of range!");
 	}
 	const double& sparse::operator()(uint32_t i, uint32_t j) const
 	{
@@ -221,8 +218,7 @@ namespace math
 				return m_data_ref[p];
 			}
 		}
-		fprintf(stderr, "Error: Sparse matrix operator() called with out of range index!\n");
-		exit(EXIT_FAILURE);
+		throw std::runtime_error("sparse operator() has index out of range!");
 	}
 
 	//convert
@@ -371,13 +367,11 @@ namespace math
 	{
 		if(owner_check && !matrix.m_own)
 		{
-			printf("Error: Sparse matrix span called on a matrix that don't owns data!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("sparse span called on matrix that does not own its memory!");
 		}
 		if(i + matrix.m_rows > m_rows || j + matrix.m_cols > m_cols)
 		{
-			printf("Error: Sparse matrix span called with uncompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("sparse span has incompatible dimensions!");
 		}
 	}
 }

@@ -4,6 +4,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <stdexcept>
 
 //math
 #include "Math/Math/inc/misc/util.hpp"
@@ -86,8 +87,7 @@ namespace math
 		{
 			if(data[i].size() != data[0].size())
 			{
-				fprintf(stderr, "\tError: Matrix constructor with incompatible dimensions!\n");
-				exit(EXIT_FAILURE);
+				throw std::runtime_error("matrix constructor has incompatible dimensions!");
 			}
 		}
 		//sizes
@@ -140,8 +140,7 @@ namespace math
 		//sizes
 		if(fscanf(file, "%d %d", &m_rows, &m_cols) != 2)
 		{
-			printf("\tError: Unable to load matrix!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix loading error!\n");
 		}
 		//allocate
 		if(m_own && m_data_ptr != m_data_mem)
@@ -157,8 +156,7 @@ namespace math
 			{
 				if(fscanf(file, "%lf", &m_data_ptr[i + m_rows * j]) != 1)
 				{
-					printf("\tError: Unable to load matrix!\n");
-					exit(EXIT_FAILURE);
+					throw std::runtime_error("matrix loading error!\n");
 				}
 			}
 		}
@@ -216,8 +214,7 @@ namespace math
 		//check
 		if(m_cols != m.m_rows)
 		{
-			fprintf(stderr, "Error: Matrix product with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix product has incompatible dimensions!");
 		}
 		//compute
 		matrix r(m_rows, m.m_cols);
@@ -248,8 +245,7 @@ namespace math
 		//check
 		if(m_rows != m.m_rows || m_cols != m.m_cols)
 		{
-			fprintf(stderr, "Error: Matrix assign with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix assign has incompatible dimensions!");
 		}
 		//assign
 		memcpy(m_data_ptr, m.m_data_ref, m_rows * m_cols * sizeof(double));
@@ -266,8 +262,7 @@ namespace math
 		//check
 		if(list.size() != m_rows * m_cols)
 		{
-			fprintf(stderr, "Error: Matrix assign with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix assign has incompatible dimensions!");
 		}
 		//assign
 		memcpy(m_data_ptr, std::data(list), m_rows * m_cols * sizeof(double));
@@ -279,16 +274,14 @@ namespace math
 		//check
 		if(list.size() != m_cols)
 		{
-			fprintf(stderr, "Error: Matrix assign with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix assign has incompatible dimensions!");
 		}
 		const std::initializer_list<double> *data = std::data(list);
 		for(uint32_t i = 0; i < list.size(); i++)
 		{
 			if(data[i].size() != m_rows)
 			{
-				fprintf(stderr, "Error: Matrix assign with incompatible dimensions!\n");
-				exit(EXIT_FAILURE);
+				throw std::runtime_error("matrix assign has incompatible dimensions!");
 			}
 		}
 		//assign
@@ -338,8 +331,7 @@ namespace math
 		//check
 		if(m_rows != m.m_rows || m_cols != m.m_cols)
 		{
-			fprintf(stderr, "Error: Matrix increment with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix increment has incompatible dimensions!");
 		}
 		//compute
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
@@ -354,8 +346,7 @@ namespace math
 		//check
 		if(m_rows != m.m_rows || m_cols != m.m_cols)
 		{
-			fprintf(stderr, "Error: Matrix increment with incompatible dimensions!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix increment has incompatible dimensions!");
 		}
 		//compute
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
@@ -434,8 +425,7 @@ namespace math
 		//check
 		if(!m_own)
 		{
-			fprintf(stderr, "Error: Resize called on matrix that does not own memory!");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix resize called on a matrix that does not own its memory!");
 		}
 		//memory
 		if(rows * cols != m_rows * m_cols)
@@ -514,8 +504,7 @@ namespace math
 		//check
 		if(a >= m_rows || b >= m_rows)
 		{
-			fprintf(stderr, "Matrix: swap_rows called with index out of range!");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix swap_rows called with index out of range!");
 		}
 		//swap
 		if(a != b)
@@ -532,8 +521,7 @@ namespace math
 		//check
 		if(a >= m_cols || b >= m_cols)
 		{
-			fprintf(stderr, "Matrix: swap_cols called with index out of range!");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix swap_cols called with index out of range!");
 		}
 		//swap
 		if(a != b)
@@ -613,16 +601,14 @@ namespace math
 		//check
 		if(m_rows != m_cols)
 		{
-			fprintf(stderr, "Error: Determinant called on non-square matrix!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix determinant called on non-square matrix!");
 		}
 		//decompose
 		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &status);
 		//check
 		if(status != 0)
 		{
-			fprintf(stderr, "Error: Determinant failed!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix determinant computation failed!");
 		}
 		//determinant
 		double d = 1;
@@ -645,9 +631,7 @@ namespace math
 		//check
 		if(m_rows != m_cols)
 		{
-			if(test) *test = false;
-			fprintf(stderr, "Error: Inverse called on non-square system!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix inverse called on a non-square matrix!");
 		}
 		//query
 		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &status);
@@ -683,13 +667,11 @@ namespace math
 		//check
 		if(m_rows != m_cols)
 		{
-			fprintf(stderr, "Error: solve called on non-square matrix!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix solve called on a non-square matrix!");
 		}
 		if(m_cols != x.m_rows || x.m_rows != f.m_rows || x.m_cols != f.m_cols)
 		{
-			fprintf(stderr, "Error: solve called with incompatible matrices!\n");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("matrix solve called with incompatible matrices!");
 		}
 		//solve
 		dgesv_(&m_rows, &x.m_cols, M.m_data_ptr, &m_rows, pivot, x.m_data_ptr, &m_rows, &status);

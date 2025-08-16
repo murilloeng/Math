@@ -3,6 +3,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <stdexcept>
 
 //math
 #include "Math/Math/inc/linear/vector.hpp"
@@ -52,8 +53,7 @@ namespace math
 		//check
 		if(cols != 1)
 		{
-			fprintf(stderr, "Error: Resize called on vector with number of columns not equal to 1!");
-			exit(EXIT_FAILURE);
+			throw std::runtime_error("vector resize called with number of columns not equal to 1!");
 		}
 		//resize
 		matrix::resize(rows, 1);

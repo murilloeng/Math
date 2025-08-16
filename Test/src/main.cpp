@@ -1,9 +1,7 @@
 //std
-#include <cmath>
 #include <ctime>
 #include <cstdio>
-#include <cstdint>
-#include <cstdlib>
+#include <stdexcept>
 
 //math
 #include "Math/Math/inc/linear/vector.hpp"
@@ -14,8 +12,15 @@
 
 int main(void)
 {
-	//test
-	tests::fem::beam::dynamics::rotation();
+	try
+	{
+		//test
+		tests::fem::beam::dynamics::rotation();
+	}
+	catch(const std::exception& exception)
+	{
+		printf("%s\n", exception.what());
+	}
 	//return
 	return EXIT_SUCCESS;
 }
