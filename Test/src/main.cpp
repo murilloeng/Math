@@ -15,7 +15,7 @@ int main(void)
 	try
 	{
 		//test
-		tests::solvers::gradient_descent::exponential_smooth();
+		tests::solvers::gradient_descent::rosenbrock_function();
 	}
 	catch(const std::exception& exception)
 	{
