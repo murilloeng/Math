@@ -58,6 +58,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../..</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -78,6 +79,7 @@ copy ..\..\external\cpp\dll\x64\libopenblas.dll dist\$(platform)\$(configuration
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;_USE_MATH_DEFINES;_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>../..</AdditionalIncludeDirectories>
+      <ObjectFileName>$(IntDir)%(RelativeDir)</ObjectFileName>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -95,22 +97,35 @@ copy ..\..\external\cpp\dll\x64\libopenblas.dll dist\$(platform)\$(configuration
     <ClCompile Include="src\fem\beam\dynamics.cpp" />
     <ClCompile Include="src\fem\revolute_fixed.cpp" />
     <ClCompile Include="src\fem\revolute_flexible.cpp" />
+    <ClCompile Include="src\geometry\circle.cpp" />
     <ClCompile Include="src\groups\gse3.cpp" />
     <ClCompile Include="src\groups\gso3.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\misc\drift.cpp" />
-    <ClCompile Include="src\misc\fourier.cpp" />
+    <ClCompile Include="src\miscellaneous\drift.cpp" />
+    <ClCompile Include="src\miscellaneous\fourier.cpp" />
+    <ClCompile Include="src\rotations\quat\rotation_tensor.cpp" />
+    <ClCompile Include="src\rotations\vec3\rotation_gradient.cpp" />
+    <ClCompile Include="src\rotations\vec3\rotation_hessian.cpp" />
+    <ClCompile Include="src\rotations\vec3\rotation_tensor.cpp" />
+    <ClCompile Include="src\solvers\gradient_descent\double_quadratic.cpp" />
+    <ClCompile Include="src\solvers\gradient_descent\exponential_smooth.cpp" />
+    <ClCompile Include="src\solvers\gradient_descent\himmelblau_function.cpp" />
+    <ClCompile Include="src\solvers\gradient_descent\rosenbrock_function.cpp" />
+    <ClCompile Include="src\solvers\gradient_descent\single_quadratic.cpp" />
+    <ClCompile Include="src\solvers\gradient_descent\single_quartic.cpp" />
     <ClCompile Include="src\solvers\harmonic\pyramid.cpp" />
     <ClCompile Include="src\solvers\harmonic\oscilattor.cpp" />
     <ClCompile Include="src\solvers\newmark\single_dof.cpp" />
     <ClCompile Include="src\solvers\newmark\single_pendulum.cpp" />
     <ClCompile Include="src\solvers\newton_raphson\truss_von_mises.cpp" />
-    <ClCompile Include="src\rotations\vec3_rotation_tensor.cpp" />
-    <ClCompile Include="src\rotations\quat_rotation_tensor.cpp" />
-    <ClCompile Include="src\rotations\vec3_rotation_hessian.cpp" />
-    <ClCompile Include="src\rotations\vec3_rotation_gradient.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\fem.hpp" />
+    <ClInclude Include="inc\geometry.hpp" />
+    <ClInclude Include="inc\groups.hpp" />
+    <ClInclude Include="inc\miscellaneous.hpp" />
+    <ClInclude Include="inc\rotations.hpp" />
+    <ClInclude Include="inc\solvers.hpp" />
     <ClInclude Include="inc\tests.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
