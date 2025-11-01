@@ -620,17 +620,16 @@ namespace math
 		//return
 		return d;
 	}
+	double matrix::bilinear(const double* v) const
+	{
+		return bilinear(v, v);
+	}
 	double matrix::bilinear(const vector& v) const
 	{
 		return bilinear(v, v);
 	}
-	double matrix::bilinear(const vector& v1, const vector& v2) const
+	double matrix::bilinear(const double* v1, const double* v2) const
 	{
-		//check
-		if(m_rows != v1.m_rows || m_cols != v2.m_rows)
-		{
-			throw std::runtime_error("matrix bilinear called with inconsistent dimensions!");
-		}
 		//compute
 		double s = 0;
 		for(uint32_t i = 0; i < m_rows; i++)
@@ -642,6 +641,16 @@ namespace math
 		}
 		//return
 		return s;
+	}
+	double matrix::bilinear(const vector& v1, const vector& v2) const
+	{
+		//check
+		if(m_rows != v1.m_rows || m_cols != v2.m_rows)
+		{
+			throw std::runtime_error("matrix bilinear called with inconsistent dimensions!");
+		}
+		//return
+		return bilinear(v1.m_data_ref, v2.m_data_ref);
 	}
 
 	matrix matrix::inverse(bool* test) const
