@@ -620,6 +620,29 @@ namespace math
 		//return
 		return d;
 	}
+	double matrix::bilinear(const vector& v) const
+	{
+		return bilinear(v, v);
+	}
+	double matrix::bilinear(const vector& v1, const vector& v2) const
+	{
+		//check
+		if(m_rows != v1.m_rows || m_cols != v2.m_rows)
+		{
+			throw std::runtime_error("matrix bilinear called with inconsistent dimensions!");
+		}
+		//compute
+		double s = 0;
+		for(uint32_t i = 0; i < m_rows; i++)
+		{
+			for(uint32_t j = 0; j < m_cols; j++)
+			{
+				s += v1[i] * m_data_ref[i + m_rows * j] * v2[j];
+			}
+		}
+		//return
+		return s;
+	}
 
 	matrix matrix::inverse(bool* test) const
 	{

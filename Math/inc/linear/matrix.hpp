@@ -106,6 +106,8 @@ namespace math
 		double norm(void) const;
 		double trace(void) const;
 		double determinant(void) const;
+		double bilinear(const vector&) const;
+		double bilinear(const vector&, const vector&) const;
 
 		matrix transpose(void) const;
 		matrix inverse(bool* = nullptr) const;
