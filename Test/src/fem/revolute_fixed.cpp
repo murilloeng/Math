@@ -104,7 +104,7 @@ static void menu_order(void)
 	}
 }
 
-void test_gradient(void)
+static void test_gradient(void)
 {
 	srand((uint32_t) time(nullptr));
 	for(uint32_t i = 0; i < nt; i++)
@@ -123,7 +123,7 @@ void test_gradient(void)
 		}
 	}
 }
-void test_hessian(void)
+static void test_hessian(void)
 {
 	srand((uint32_t) time(nullptr));
 	for(uint32_t i = 0; i < nt; i++)

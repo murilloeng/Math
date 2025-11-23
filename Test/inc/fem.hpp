@@ -12,6 +12,7 @@ namespace tests
 				void rotation(void);
 			}
 		}
+		void beam3D(void);
 		void revolute_fixed(void);
 		void revolute_flexible(void);
 	}

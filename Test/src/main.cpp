@@ -14,8 +14,7 @@ int main(void)
 {
 	try
 	{
-		//test
-		tests::solvers::gradient_descent::rosenbrock_function();
+		tests::fem::beam3D();
 	}
 	catch(const std::exception& exception)
 	{
