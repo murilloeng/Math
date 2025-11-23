@@ -356,7 +356,6 @@ namespace math
 		const mat3 S = spin();
 		const mat3 U = u.spin();
 		const mat3 V = v.spin();
-		const vec3 w = u.cross(v);
 		//third
 		if(flag)
 		{
