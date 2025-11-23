@@ -20,9 +20,9 @@ static math::vector eh(9);
 static math::vector sh(9);
 static math::vector d(12);
 static uint32_t what, order;
-static math::matrix A(9, 6);
-static math::matrix B(6, 12);
-static math::matrix Kh(9, 9);
+static math::matrix A(9, 6, math::mode::zeros);
+static math::matrix B(6, 12, math::mode::zeros);
+static math::matrix Kh(9, 9, math::mode::zeros);
 
 static double lr;
 static math::vec3 g0, w0;
@@ -100,6 +100,10 @@ void local_ss(void)
 	ss[4] = (1 + g[0]) * sh[4] + w[2] * sh[6] + w[1] * sh[8];
 	ss[5] = (1 + g[0]) * sh[5] + w[1] * sh[6] + w[2] * sh[7];
 	ss[3] = sh[3] - g[1] * sh[4] - g[2] * sh[5] + w[0] * (sh[7] + sh[8]);
+}
+void local_A(void)
+{
+
 }
 void local_B(void)
 {
