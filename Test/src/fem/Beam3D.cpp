@@ -35,7 +35,6 @@ static void setup(void)
 {
 	//data
 	d.randu();
-	ss.randu();
 	Kh.randu();
 	x10.randu();
 	x20.randu();
