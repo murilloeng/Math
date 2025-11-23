@@ -45,6 +45,7 @@ void tests::rotations::vec3::rotation_third(void)
 	math::vec3 t, r;
 	math::mat3 dra, drn, dri;
 	const uint32_t nt = 10000;
+	srand(uint32_t(time(nullptr)));
 	const char* format = "Test inverse(%d) variable(%s) transpose(%d) %d: %s\n";
 	//menu
 	while(true)
@@ -79,6 +80,7 @@ void tests::rotations::vec3::rotation_third(void)
 	{
 		u.randu();
 		v.randu();
+		t.randu();
 		bool test = true;
 		gradient(dra.data(), t.data(), nullptr);
 		math::ndiff(function, drn.data(), t.data(), nullptr, 3, 3, 1.00e-5);
