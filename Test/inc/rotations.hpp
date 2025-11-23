@@ -6,6 +6,7 @@ namespace tests
 	{
 		namespace vec3
 		{
+			void rotation_third(void);
 			void rotation_tensor(void);
 			void rotation_hessian(void);
 			void rotation_gradient(void);

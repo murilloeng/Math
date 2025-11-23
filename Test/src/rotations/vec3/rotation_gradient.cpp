@@ -77,7 +77,7 @@ void tests::rotations::vec3::rotation_gradient(void)
 		math::ndiff(function, drn.data(), v.data(), nullptr, 3, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
 		test = test && (v.rotation_gradient() * dri - math::mat3::eye()).norm() < 1e-5;
-		printf("Test %s %04d: %s\n", mode ? "spatial" : "material", i, test ? "ok" : "not ok");
+		printf("Test %s %d: %s\n", mode ? "spatial" : "material", i, test ? "ok" : "not ok");
 		if(!test) break;
 	}
 }

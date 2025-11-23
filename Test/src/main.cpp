@@ -14,7 +14,8 @@ int main(void)
 {
 	try
 	{
-		tests::fem::beam3D();
+		// tests::fem::beam3D();
+		tests::rotations::vec3::rotation_third();
 	}
 	catch(const std::exception& exception)
 	{

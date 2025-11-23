@@ -77,7 +77,6 @@ static void strains_gradient(double* des, const double* d, void** args)
 }
 // static void strains_hessian(double* d2es, double* d, void** args)
 // {
-
 // }
 
 // static void menu_what(void)

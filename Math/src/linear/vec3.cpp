@@ -233,11 +233,11 @@ namespace math
 		const int32_t s = q ? -1 : +1;
 		return mat3::eye() + s * fn(t, 2) * spin() + fn(t, 3) * spin() * spin();
 	}
-	vec3 vec3::rotation_gradient(const vec3& v, bool q) const
+	vec3 vec3::rotation_gradient(const vec3& u, bool q) const
 	{
 		const double t = norm();
 		const int32_t s = q ? -1 : +1;
-		return v + s * fn(t, 2) * cross(v) + fn(t, 3) * cross(cross(v));
+		return u + s * fn(t, 2) * cross(u) + fn(t, 3) * cross(cross(u));
 	}
 
 	mat3 vec3::rotation_class(uint32_t n, bool q) const
@@ -265,48 +265,48 @@ namespace math
 		const int32_t s = q ? -1 : +1;
 		return mat3::eye() - s * spin() / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * spin() * spin();
 	}
-	vec3 vec3::rotation_gradient_inverse(const vec3& v, bool q) const
+	vec3 vec3::rotation_gradient_inverse(const vec3& u, bool q) const
 	{
 		const double t = norm();
 		const int32_t s = q ? -1 : +1;
-		return v - s * cross(v) / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * cross(cross(v));
+		return u - s * cross(u) / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * cross(cross(u));
 	}
 
-	mat3 vec3::rotation_hessian(const vec3& v, bool q) const
+	mat3 vec3::rotation_hessian(const vec3& u, bool q) const
 	{
 		const double t = norm();
 		const int32_t s = q ? -1 : +1;
 		const double a = 2 * fn(t, 4) - fn(t, 3);
 		const double b = 3 * fn(t, 5) - fn(t, 4);
-		return s * a * cross(v).outer(*this) + b * cross(cross(v)).outer(*this) - s * fn(t, 2) * v.spin() - fn(t, 3) * (cross(v).spin() + spin() * v.spin());
+		return s * a * cross(u).outer(*this) + b * cross(cross(u)).outer(*this) - s * fn(t, 2) * u.spin() - fn(t, 3) * (cross(u).spin() + spin() * u.spin());
 	}
-	vec3 vec3::rotation_hessian(const vec3& v, const vec3& u, bool q) const
+	vec3 vec3::rotation_hessian(const vec3& u, const vec3& v, bool q) const
 	{
 		const double t = norm();
 		const int32_t s = q ? -1 : +1;
 		const double a = 2 * fn(t, 4) - fn(t, 3);
 		const double b = 3 * fn(t, 5) - fn(t, 4);
-		return s * a * inner(u) * cross(v) + b * inner(u) * cross(cross(v)) - s * fn(t, 2) * v.cross(u) - fn(t, 3) * (cross(v).cross(u) + cross(v.cross(u)));
+		return s * a * inner(v) * cross(u) + b * inner(v) * cross(cross(u)) - s * fn(t, 2) * u.cross(v) - fn(t, 3) * (cross(u).cross(v) + cross(u.cross(v)));
 	}
 
-	mat3 vec3::rotation_hessian_inverse(const vec3& v, bool q) const
+	mat3 vec3::rotation_hessian_inverse(const vec3& u, bool q) const
 	{
 		const double t = norm();
 		const int32_t s = q ? -1 : +1;
 		const double a = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
 		const double b = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
-		return s * v.spin() / 2 - a * (cross(v).spin() + spin() * v.spin()) + b * cross(cross(v)).outer(*this);
+		return s * u.spin() / 2 - a * (cross(u).spin() + spin() * u.spin()) + b * cross(cross(u)).outer(*this);
 	}
-	vec3 vec3::rotation_hessian_inverse(const vec3& v, const vec3& u, bool q) const
+	vec3 vec3::rotation_hessian_inverse(const vec3& u, const vec3& v, bool q) const
 	{
 		const double t = norm();
 		const int32_t s = q ? -1 : +1;
 		const double a = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
 		const double b = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
-		return s * v.cross(u) / 2 - a * (cross(v).cross(u) + cross(v.cross(u))) + b * inner(u) * cross(cross(v));
+		return s * u.cross(v) / 2 - a * (cross(u).cross(v) + cross(u.cross(v))) + b * inner(v) * cross(cross(u));
 	}
 
-	mat3 vec3::rotation_class_increment(const vec3& v, uint32_t n, bool q) const
+	mat3 vec3::rotation_class_increment(const vec3& u, uint32_t n, bool q) const
 	{
 		const double t = norm();
 		const int32_t s = q ? -1 : +1;
@@ -314,9 +314,9 @@ namespace math
 		const double f2 = fn(t, n + 2);
 		const double df1 = (n + 1) * fn(t, n + 3) - fn(t, n + 2);
 		const double df2 = (n + 2) * fn(t, n + 4) - fn(t, n + 3);
-		return (s * df1 * cross(v) + df2 * cross(cross(v))).outer(*this) - s * f1 * v.spin() - f2 * (cross(v).spin() + spin() * v.spin());
+		return (s * df1 * cross(u) + df2 * cross(cross(u))).outer(*this) - s * f1 * u.spin() - f2 * (cross(u).spin() + spin() * u.spin());
 	}
-	vec3 vec3::rotation_class_increment(const vec3& v, const vec3& u, uint32_t n, bool q) const
+	vec3 vec3::rotation_class_increment(const vec3& u, const vec3& v, uint32_t n, bool q) const
 	{
 		const double t = norm();
 		const int32_t s = q ? -1 : +1;
@@ -324,10 +324,10 @@ namespace math
 		const double f2 = fn(t, n + 2);
 		const double df1 = (n + 1) * fn(t, n + 3) - fn(t, n + 2);
 		const double df2 = (n + 2) * fn(t, n + 4) - fn(t, n + 3);
-		return inner(u) * (s * df1 * cross(v) + df2 * cross(cross(v))) - s * f1 * v.cross(u) - f2 * (cross(v).cross(u) + cross(v.cross(u)));
+		return inner(v) * (s * df1 * cross(u) + df2 * cross(cross(u))) - s * f1 * u.cross(v) - f2 * (cross(u).cross(v) + cross(u.cross(v)));
 	}
 
-	mat3 vec3::rotation_higher(const vec3& v, const vec3& u, bool q, bool x) const
+	mat3 vec3::rotation_third(const vec3& u, const vec3& v, bool q, bool x) const
 	{
 		if(x)
 		{
@@ -337,9 +337,9 @@ namespace math
 			const double b = 3 * fn(t, 5) - fn(t, 4);
 			const double da = 8 * fn(t, 6) - 5 * fn(t, 5) + fn(t, 4);
 			const double db = 15 * fn(t, 7) - 7 * fn(t, 6) + fn(t, 5);
-			return s * da * inner(u) * cross(v).outer(*this) + s * a * (cross(v).outer(u) - inner(u) * v.spin()) +
-			db * inner(u) * cross(cross(v)).outer(*this) + b * cross(cross(v)).outer(u) - b * inner(u) * (spin() * v.spin() + cross(v).spin()) -
-			s * a * v.cross(u).outer(*this) - b * (cross(v).cross(u) + cross(v.cross(u))).outer(*this) - fn(t, 3) * (u.spin() * v.spin() - v.cross(u).spin());
+			return s * da * inner(v) * cross(u).outer(*this) + s * a * (cross(u).outer(v) - inner(v) * u.spin()) +
+			db * inner(v) * cross(cross(u)).outer(*this) + b * cross(cross(u)).outer(v) - b * inner(v) * (spin() * u.spin() + cross(u).spin()) -
+			s * a * u.cross(v).outer(*this) - b * (cross(u).cross(v) + cross(u.cross(v))).outer(*this) - fn(t, 3) * (v.spin() * u.spin() - u.cross(v).spin());
 		}
 		else
 		{
@@ -347,29 +347,37 @@ namespace math
 			const int32_t s = q ? -1 : +1;
 			const double a = 2 * fn(t, 4) - fn(t, 3);
 			const double b = 3 * fn(t, 5) - fn(t, 4);
-			return inner(u) * (s * a * spin() + b * spin() * spin()) + s * fn(t, 2) * u.spin() + fn(t, 3) * (u.spin() * spin() + spin() * u.spin());
+			return inner(v) * (s * a * spin() + b * spin() * spin()) + s * fn(t, 2) * v.spin() + fn(t, 3) * (v.spin() * spin() + spin() * v.spin());
 		}
 	}
-	mat3 vec3::rotation_higher_inverse(const vec3& v, const vec3& u, bool q, bool x) const
+	mat3 vec3::rotation_third_inverse(const vec3& u, const vec3& v, bool q, bool flag) const
 	{
-		if(x)
+		//data
+		const mat3 S = spin();
+		const mat3 U = u.spin();
+		const mat3 V = v.spin();
+		const vec3 w = u.cross(v);
+		//third
+		if(flag)
 		{
 			const double t = norm();
 			const double a = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
 			const double b = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
 			const double c = (9 * fn(t, 7) - fn(t, 6) - 24 * fn(t, 8)) / fn(t, 2) / 2 + 2 * a * b;
 			return
-				a * (u.spin() * v.spin() + v.spin() * u.spin()) +
-				b * (cross(v).cross(u) - v.cross(cross(u))).outer(*this) - c * cross(v).inner(cross(u)) * outer(*this) +
-				b * (outer(cross(u)) * v.spin() + outer(cross(v)) * u.spin() - cross(v).inner(cross(u)) * mat3::eye());
+				a * (U * V - 2 * V * U) -
+				b * (cross(u).cross(v) + cross(u.cross(v))).outer(*this) +
+				b * inner(v) * (U * S - 2 * S * U) + b * cross(cross(u)).outer(v) + 
+				c * inner(v) * cross(cross(u)).outer(*this);
 		}
 		else
 		{
+			const mat3 S = spin();
 			const double t = norm();
 			const int32_t s = q ? -1 : +1;
 			const double a = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
 			const double b = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
-			return s * u.spin() / 2 + a * (cross(u).spin() - u.spin() * spin()) - b * outer(cross(u)) * spin();
+			return -s * V / 2 + a * (V * S + S * V) + b * inner(v) * S * S;
 		}
 	}
 

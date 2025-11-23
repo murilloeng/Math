@@ -79,8 +79,8 @@ namespace math
 		mat3 rotation_class_increment(const vec3&, uint32_t, bool = false) const;
 		vec3 rotation_class_increment(const vec3&, const vec3&, uint32_t, bool = false) const;
 
-		mat3 rotation_higher(const vec3&, const vec3&, bool = false, bool = true) const;
-		mat3 rotation_higher_inverse(const vec3&, const vec3&, bool = false, bool = true) const;
+		mat3 rotation_third(const vec3&, const vec3&, bool = false, bool = true) const;
+		mat3 rotation_third_inverse(const vec3&, const vec3&, bool = false, bool = true) const;
 
 		//friends
 		friend vec3 operator*(double, const vec3&);
