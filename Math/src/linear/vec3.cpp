@@ -327,7 +327,7 @@ namespace math
 		return inner(v) * (s * df1 * cross(u) + df2 * cross(cross(u))) - s * f1 * u.cross(v) - f2 * (cross(u).cross(v) + cross(u.cross(v)));
 	}
 
-	mat3 vec3::rotation_third(const vec3& u, const vec3& v, bool q, bool x) const
+	mat3 vec3::rotation_higher(const vec3& v, const vec3& u, bool q, bool x) const
 	{
 		if(x)
 		{
@@ -337,9 +337,9 @@ namespace math
 			const double b = 3 * fn(t, 5) - fn(t, 4);
 			const double da = 8 * fn(t, 6) - 5 * fn(t, 5) + fn(t, 4);
 			const double db = 15 * fn(t, 7) - 7 * fn(t, 6) + fn(t, 5);
-			return s * da * inner(v) * cross(u).outer(*this) + s * a * (cross(u).outer(v) - inner(v) * u.spin()) +
-			db * inner(v) * cross(cross(u)).outer(*this) + b * cross(cross(u)).outer(v) - b * inner(v) * (spin() * u.spin() + cross(u).spin()) -
-			s * a * u.cross(v).outer(*this) - b * (cross(u).cross(v) + cross(u.cross(v))).outer(*this) - fn(t, 3) * (v.spin() * u.spin() - u.cross(v).spin());
+			return s * da * inner(u) * cross(v).outer(*this) + s * a * (cross(v).outer(u) - inner(u) * v.spin()) +
+			db * inner(u) * cross(cross(v)).outer(*this) + b * cross(cross(v)).outer(u) - b * inner(u) * (spin() * v.spin() + cross(v).spin()) -
+			s * a * v.cross(u).outer(*this) - b * (cross(v).cross(u) + cross(v.cross(u))).outer(*this) - fn(t, 3) * (u.spin() * v.spin() - v.cross(u).spin());
 		}
 		else
 		{
@@ -347,36 +347,29 @@ namespace math
 			const int32_t s = q ? -1 : +1;
 			const double a = 2 * fn(t, 4) - fn(t, 3);
 			const double b = 3 * fn(t, 5) - fn(t, 4);
-			return inner(v) * (s * a * spin() + b * spin() * spin()) + s * fn(t, 2) * v.spin() + fn(t, 3) * (v.spin() * spin() + spin() * v.spin());
+			return inner(u) * (s * a * spin() + b * spin() * spin()) + s * fn(t, 2) * u.spin() + fn(t, 3) * (u.spin() * spin() + spin() * u.spin());
 		}
 	}
-	mat3 vec3::rotation_third_inverse(const vec3& u, const vec3& v, bool q, bool flag) const
+	mat3 vec3::rotation_higher_inverse(const vec3& v, const vec3& u, bool q, bool x) const
 	{
-		//data
-		const mat3 S = spin();
-		const mat3 U = u.spin();
-		const mat3 V = v.spin();
-		//third
-		if(flag)
+		if(x)
 		{
 			const double t = norm();
 			const double a = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
 			const double b = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
 			const double c = (9 * fn(t, 7) - fn(t, 6) - 24 * fn(t, 8)) / fn(t, 2) / 2 + 2 * a * b;
 			return
-				a * (U * V - 2 * V * U) -
-				b * (cross(u).cross(v) + cross(u.cross(v))).outer(*this) +
-				b * inner(v) * (U * S - 2 * S * U) + b * cross(cross(u)).outer(v) + 
-				c * inner(v) * cross(cross(u)).outer(*this);
+				a * (u.spin() * v.spin() + v.spin() * u.spin()) +
+				b * (cross(v).cross(u) - v.cross(cross(u))).outer(*this) - c * cross(v).inner(cross(u)) * outer(*this) +
+				b * (outer(cross(u)) * v.spin() + outer(cross(v)) * u.spin() - cross(v).inner(cross(u)) * mat3::eye());
 		}
 		else
 		{
-			const mat3 S = spin();
 			const double t = norm();
 			const int32_t s = q ? -1 : +1;
 			const double a = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
 			const double b = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
-			return -s * V / 2 + a * (V * S + S * V) + b * inner(v) * S * S;
+			return s * u.spin() / 2 + a * (cross(u).spin() - u.spin() * spin()) - b * outer(cross(u)) * spin();
 		}
 	}
 

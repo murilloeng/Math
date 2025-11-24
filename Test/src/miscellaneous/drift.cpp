@@ -41,8 +41,8 @@ static void dfun(math::mat3& Ka, const double* x, void** args)
 	const math::mat3 Dw = Dw_Dt + g / (h * b) * Dw_Ddt;
 	//acceleration
 	const math::mat3 Da_Dddt = t.rotation_gradient(true);
-	const math::mat3 Da_Dt = t.rotation_hessian(ddt, true) + t.rotation_third(dt, dt, true, true);
-	const math::mat3 Da_Ddt = t.rotation_hessian(dt, true) + t.rotation_third(dt, dt, true, false);
+	const math::mat3 Da_Dt = t.rotation_hessian(ddt, true) + t.rotation_higher(dt, dt, true, true);
+	const math::mat3 Da_Ddt = t.rotation_hessian(dt, true) + t.rotation_higher(dt, dt, true, false);
 	const math::mat3 Da = Da_Dt + g / (h * b) * Da_Ddt + 1 / (h * h * b) * Da_Dddt;
 	//system
 	Ka = J * Da + (w.spin() * J - (J * w).spin()) * Dw;

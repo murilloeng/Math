@@ -35,8 +35,9 @@ static void gradient(double* dr, const double* x, void** args)
 	const math::vec3 am = variable ? u : x;
 	//gradient
 	drm = !inverse ? 
-		tm.rotation_third(am, v, transpose, variable) : 
-		tm.rotation_third_inverse(am, v, transpose, variable);
+		tm.rotation_higher(
+		am, v, transpose, variable) : 
+		tm.rotation_higher(am, v, transpose, variable);
 }
 
 void tests::rotations::vec3::rotation_third(void)
