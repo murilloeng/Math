@@ -34,22 +34,6 @@ static math::quat q10, q20;
 static math::quat q1n, q2n;
 static const uint32_t nt = 10000;
 
-[[maybe_unused]] static void parametrization(math::vector& f)
-{
-	//data
-	math::vec3 m1(f.data() + 3);
-	math::vec3 m2(f.data() + 9);
-	const math::vec3 t1(d.data() + 3);
-	const math::vec3 t2(d.data() + 9);
-	const math::mat3 T1 = t1.rotation_gradient(true);
-	const math::mat3 T2 = t2.rotation_gradient(true);
-	const math::mat3 R1 = (q10 * q1n).conjugate().rotation();
-	const math::mat3 R2 = (q20 * q2n).conjugate().rotation();
-	//transform
-	m1 = T1 * R1 * m1;
-	m2 = T2 * R2 * m2;
-}
-
 static void setup(void)
 {
 	//data
@@ -448,42 +432,6 @@ static void test_energy_hessian(void)
 		}
 	}
 }
-
-// static void fun_test_eh(double* f, const double* x, void** args)
-// {
-// 	es = x;
-// 	local_eh();
-// 	math::vector(f, 9) = eh;
-// }
-// static void fun_test_A(double* df, const double* x, void** args)
-// {
-// 	es = x;
-// 	local_A();
-// 	math::matrix(df, 9, 6) = A;
-// }
-// static void test_A(void)
-// {
-// 	math::matrix Aa(12, 12);
-// 	math::matrix An(12, 12);
-// 	math::matrix Ae(12, 12);
-// 	srand(uint32_t(time(nullptr)));
-// 	for(uint32_t i = 0; i < nt; i++)
-// 	{
-// 		setup();
-// 		fun_test_A(Aa.data(), d.data(), nullptr);
-// 		math::ndiff(fun_test_eh, An.data(), d.data(), nullptr, 9, 6, 1.00e-5);
-// 		Ae = Aa - An;
-// 		const bool test = Ae.norm() < 1e-5 * Aa.norm();
-// 		printf("Test %d: %s\n", i, test ? "ok" : "not ok");
-// 		if(!test)
-// 		{
-// 			Aa.print("Aa");
-// 			An.print("An");
-// 			Ae.print("Ae", 1e-5);
-// 			break;
-// 		}
-// 	}
-// }
 
 void tests::fem::beam3D(void)
 {
