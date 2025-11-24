@@ -23,6 +23,7 @@ static math::vector f(12);
 static uint32_t what, order;
 static math::matrix A(9, 6, math::mode::zeros);
 static math::matrix B(6, 12, math::mode::zeros);
+static math::matrix Ks(6, 6, math::mode::zeros);
 static math::matrix Kh(9, 9, math::mode::zeros);
 static math::matrix Kg(12, 12, math::mode::zeros);
 
@@ -71,7 +72,7 @@ static void setup(void)
 	g0 = (lr * w0).rotation_gradient_inverse(xr0) / lr - math::vec3(1, 0, 0);
 }
 
-void local_A(void)
+static void local_A(void)
 {
 	//data
 	const math::vec3 g(es.data() + 0);
@@ -88,7 +89,24 @@ void local_A(void)
 	A(5, 0) = A(6, 4) = A(7, 5) = w[2];
 	A(0, 0) = A(4, 4) = A(5, 5) = 1 + g[0];
 }
-void local_B(void)
+static void local_Ks(void)
+{
+	//material
+	Ks = A.transpose() * Kh * A;
+	//geometric
+	Ks(0, 0) += sh[0];
+	Ks(1, 1) += sh[0];
+	Ks(2, 2) += sh[0];
+	Ks(4, 4) += sh[8];
+	Ks(5, 5) += sh[7];
+	Ks(3, 3) += sh[7] + sh[8];
+	Ks(0, 4) = Ks(4, 0) += sh[4];
+	Ks(0, 5) = Ks(5, 0) += sh[5];
+	Ks(4, 5) = Ks(5, 4) += sh[6];
+	Ks(1, 3) = Ks(3, 1) -= sh[4];
+	Ks(2, 3) = Ks(3, 2) -= sh[5];
+}
+static void local_B(void)
 {
 	//data
 	const math::vec3 x1 = x10 + math::vec3(d.data() + 0);
@@ -100,20 +118,16 @@ void local_B(void)
 	const math::vec3 xr = q1.conjugate(x2 - x1) / lr;
 	//data
 	const math::mat3 Xr = xr.spin();
-	const math::mat3 R1 = (q10 * q1n).rotation();
-	const math::mat3 R2 = (q20 * q2n).rotation();
 	const math::mat3 At = q1.conjugate().rotation();
 	const math::mat3 Ti = tr.rotation_gradient_inverse();
 	const math::mat3 Hi = tr.rotation_hessian_inverse(xr);
-	const math::mat3 T1 = math::vec3(d.data() + 3).rotation_gradient();
-	const math::mat3 T2 = math::vec3(d.data() + 9).rotation_gradient();
 	//gradient
 	B.span(0, 0, 3, 3) = -Ti * At / lr;
 	B.span(0, 6, 3, 3) = +Ti * At / lr;
-	B.span(3, 3, 3, 3) = -Ti * At * R1 * T1 / lr;
-	B.span(3, 9, 3, 3) = +Ti * At * R2 * T2 / lr;
-	B.span(0, 9, 3, 3) = +Hi * Ti * At * R2 * T2;
-	B.span(0, 3, 3, 3) = -Hi * Ti * At * R1 * T1 + Ti * Xr * At * R1 * T1;
+	B.span(3, 3, 3, 3) = -Ti * At / lr;
+	B.span(3, 9, 3, 3) = +Ti * At / lr;
+	B.span(0, 9, 3, 3) = +Hi * Ti * At;
+	B.span(0, 3, 3, 3) = -Hi * Ti * At + Ti * Xr * At;
 }
 void local_dB(void)
 {
@@ -125,45 +139,37 @@ void local_dB(void)
 	const math::quat q1 = q10 * q1n * math::vec3(d.data() + 3).quaternion();
 	const math::quat q2 = q20 * q2n * math::vec3(d.data() + 9).quaternion();
 	//data
-	const math::vec3 t1(d.data() + 3);
-	const math::vec3 t2(d.data() + 9);
 	const math::vec3 tr = q1.conjugate(q2).pseudo();
 	const math::vec3 xr = q1.conjugate(x2 - x1) / lr;
 	//data
 	const math::mat3 Xr = xr.spin();
 	const math::mat3 A1 = q1.rotation();
-	const math::mat3 R1 = (q10 * q1n).rotation();
-	const math::mat3 R2 = (q20 * q2n).rotation();
-	const math::mat3 T1 = t1.rotation_gradient();
-	const math::mat3 T2 = t2.rotation_gradient();
+	const math::mat3 Xd = (x2 - x1).spin();
 	const math::mat3 At = q1.conjugate().rotation();
 	const math::mat3 Ti = tr.rotation_gradient_inverse();
-	const math::mat3 Hi = tr.rotation_hessian_inverse(xr);
 	const math::mat3 Tt = tr.rotation_gradient_inverse(true);
 	const math::mat3 Hf = tr.rotation_hessian_inverse(fs, true);
 	const math::mat3 Ht = tr.rotation_hessian_inverse(xr).transpose();
+	const math::mat3 Pi = tr.rotation_higher_inverse(xr, fs, false, true);
 	const math::mat3 Qi = tr.rotation_higher_inverse(xr, fs, false, false);
+	const math::mat3 Hm = tr.rotation_hessian_inverse(ms / lr + Ht * fs, true);
+	const math::mat3 F2 = +A1 * (Tt * fs).spin() * At / lr;
 	//hessian
-	// B.span(0, 0, 3, 3) = -Ti * At / lr;
-	// B.span(0, 6, 3, 3) = +Ti * At / lr;
-	// B.span(3, 3, 3, 3) = -Ti * At * R1 * T1 / lr;
-	// B.span(3, 9, 3, 3) = +Ti * At * R2 * T2 / lr;
-	// B.span(0, 9, 3, 3) = +Hi * Ti * At * R2 * T2;
-	// B.span(0, 3, 3, 3) = -Hi * Ti * At * R1 * T1 + Ti * Xr * At * R1 * T1;
-
-	-T1.transpose() * R1.transpose() * A1 * Tt * ms / lr; //3
-	+T2.transpose() * R2.transpose() * A1 * Tt * ms / lr; //9
-	+T2.transpose() * R2.transpose() * A1 * Tt * Ht * fs; // 9
-	-T1.transpose() * R1.transpose() * A1 * (Tt * Ht + Xr * Tt) * fs; //3
-
-	Kg.span(0, 9) = -A1 * Hf * Ti * At * R2 * T2 / lr;
-	Kg.span(6, 9) = +A1 * Hf * Ti * At * R2 * T2 / lr;
-	Kg.span(0, 3) = +A1 * (Hf * Ti + (Tt * fs).spin()) * At * R1 * T1 / lr;
-	Kg.span(6, 3) = -A1 * (Hf * Ti + (Tt * fs).spin()) * At * R1 * T1 / lr;
-	Kg.span(9, 6) = +T2.transpose() * R2.transpose() * A1 * Tt * Qi * At / lr;
-	Kg.span(9, 0) = -T2.transpose() * R2.transpose() * A1 * Tt * Qi * At / lr;
-	Kg.span(3, 6) = -T1.transpose() * R1.transpose() * A1 * (Tt * Qi - (Tt * fs).spin()) * At / lr;
-	Kg.span(3, 0) = +T1.transpose() * R1.transpose() * A1 * (Tt * Qi - (Tt * fs).spin()) * At / lr;
+	Kg.span(6, 9) = +A1 * Hf * Ti * At / lr;
+	Kg.span(9, 6) = +A1 * Tt * Qi * At / lr;
+	Kg.span(9, 0) = -A1 * Tt * Qi * At / lr;
+	Kg.span(9, 9) = +A1 * (Hm + Tt * Pi) * Ti * At;
+	Kg.span(6, 3) = -A1 * (Hf * Ti + (Tt * fs).spin()) * At / lr;
+	Kg.span(9, 3) = -A1 * ((Hm + Tt * Pi) * Ti - Tt * Qi * Xr + (Tt * (ms / lr + Ht * fs)).spin()) * At;
+	//equilibrium
+	Kg.span(0, 0) = -Kg.span3(6, 0);
+	Kg.span(0, 3) = -Kg.span3(6, 3);
+	Kg.span(0, 6) = -Kg.span3(6, 6);
+	Kg.span(0, 9) = -Kg.span3(6, 9);
+	Kg.span(3, 3) = -Kg.span3(9, 3) - Xd * Kg.span3(6, 3);
+	Kg.span(3, 9) = -Kg.span3(9, 9) - Xd * Kg.span3(6, 9);
+	Kg.span(3, 0) = -Kg.span3(9, 0) - Xd * Kg.span3(6, 0) - F2;
+	Kg.span(3, 6) = -Kg.span3(9, 6) - Xd * Kg.span3(6, 6) + F2;
 }
 
 static void local_es(void)
@@ -226,21 +232,54 @@ static void strains(double* fun_es, const double* x, void** args)
 }
 static void strains_gradient(double* fun_des, const double* x, void** args)
 {
+	//data
 	d = x;
+	const math::vec3 t1 = x + 3;
+	const math::vec3 t2 = x + 9;
+	math::matrix T(12, 12, math::mode::eye);
+	const math::mat3 T1 = (q10 * q1n).rotation() * t1.rotation_gradient();
+	const math::mat3 T2 = (q20 * q2n).rotation() * t2.rotation_gradient();
+	//gradient
 	local_B();
-	math::matrix(fun_des, 6, 12) = B;
+	T.span(3, 3) = T1;
+	T.span(9, 9) = T2;
+	math::matrix(fun_des, 6, 12) = B * T;
 }
 static void strains_hessian(double* d2es, double* x, void** args)
 {
+	//data
 	d = x;
+	local_B();
+	const math::vec3 t1 = x + 3;
+	const math::vec3 t2 = x + 9;
+	math::matrix T(12, 12, math::mode::eye);
+	const math::vector f = B.transpose() * ss;
+	const math::mat3 T1 = (q10 * q1n).rotation() * t1.rotation_gradient();
+	const math::mat3 T2 = (q20 * q2n).rotation() * t2.rotation_gradient();
+	//hessian
 	local_dB();
-	math::matrix(d2es, 12, 12) = Kg;
+	T.span(3, 3) = T1;
+	T.span(9, 9) = T2;
+	const math::vec3 m1(f.data() + 3);
+	const math::vec3 m2(f.data() + 9);
+	math::matrix(d2es, 12, 12) = T.transpose() * Kg * T;
+	math::matrix(d2es, 12, 12).span(3, 3) += t1.rotation_hessian((q10 * q1n).conjugate(m1), true);
+	math::matrix(d2es, 12, 12).span(9, 9) += t2.rotation_hessian((q20 * q2n).conjugate(m2), true);
 }
 static void strains_hessian_function(double* r, const double* x, void** args)
 {
+	//data
 	d = x;
+	const math::vec3 t1 = x + 3;
+	const math::vec3 t2 = x + 9;
+	math::matrix T(12, 12, math::mode::eye);
+	const math::mat3 T1 = (q10 * q1n).rotation() * t1.rotation_gradient();
+	const math::mat3 T2 = (q20 * q2n).rotation() * t2.rotation_gradient();
+	//gradient
 	local_B();
-	math::vector(r, 12) = B.transpose() * ss;
+	T.span(3, 3) = T1;
+	T.span(9, 9) = T2;
+	math::vector(r, 12) = T.transpose() * B.transpose() * ss;
 }
 
 static void energy(double* U, const double* x, void** args)
@@ -252,22 +291,45 @@ static void energy(double* U, const double* x, void** args)
 }
 static void energy_gradient(double* dU, const double* x, void** args)
 {
+	//data
 	d = x;
+	const math::vec3 t1(x + 3);
+	const math::vec3 t2(x + 9);
+	math::matrix T(12, 12, math::mode::eye);
+	T.span(3, 3) = (q10 * q1n).rotation() * t1.rotation_gradient();
+	T.span(9, 9) = (q20 * q2n).rotation() * t2.rotation_gradient();
+	//gradient
 	local_B();
 	local_es();
 	local_eh();
 	local_sh();
 	local_ss();
-	math::vector(dU, 12) = lr * B.transpose() * ss;
+	math::vector(dU, 12) = lr * T.transpose() * B.transpose() * ss;
 }
 static void energy_hessian(double* d2U, const double* x, void** args)
 {
+	//data
 	d = x;
+	const math::vec3 t1(x + 3);
+	const math::vec3 t2(x + 9);
+	math::matrix T(12, 12, math::mode::eye);
+	T.span(3, 3) = (q10 * q1n).rotation() * t1.rotation_gradient();
+	T.span(9, 9) = (q20 * q2n).rotation() * t2.rotation_gradient();
+	//hessian
 	local_B();
 	local_es();
+	local_A();
 	local_eh();
 	local_sh();
 	local_ss();
+	local_dB();
+	local_Ks();
+	const math::vector f = B.transpose() * ss;
+	const math::vec3 m1(f.data() + 3);
+	const math::vec3 m2(f.data() + 9);
+	math::matrix(d2U, 12, 12) = lr * (T.transpose() * (B.transpose() * Ks * B + Kg) * T);
+	math::matrix(d2U, 12, 12).span(3, 3) += lr * t1.rotation_hessian((q10 * q1n).conjugate(m1), true);
+	math::matrix(d2U, 12, 12).span(9, 9) += lr * t2.rotation_hessian((q20 * q2n).conjugate(m2), true);
 }
 
 static void menu_what(void)
