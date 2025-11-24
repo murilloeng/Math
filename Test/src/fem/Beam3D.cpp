@@ -125,6 +125,8 @@ void local_dB(void)
 	const math::quat q1 = q10 * q1n * math::vec3(d.data() + 3).quaternion();
 	const math::quat q2 = q20 * q2n * math::vec3(d.data() + 9).quaternion();
 	//data
+	const math::vec3 t1(d.data() + 3);
+	const math::vec3 t2(d.data() + 9);
 	const math::vec3 tr = q1.conjugate(q2).pseudo();
 	const math::vec3 xr = q1.conjugate(x2 - x1) / lr;
 	//data
@@ -132,14 +134,15 @@ void local_dB(void)
 	const math::mat3 A1 = q1.rotation();
 	const math::mat3 R1 = (q10 * q1n).rotation();
 	const math::mat3 R2 = (q20 * q2n).rotation();
+	const math::mat3 T1 = t1.rotation_gradient();
+	const math::mat3 T2 = t2.rotation_gradient();
 	const math::mat3 At = q1.conjugate().rotation();
 	const math::mat3 Ti = tr.rotation_gradient_inverse();
 	const math::mat3 Hi = tr.rotation_hessian_inverse(xr);
 	const math::mat3 Tt = tr.rotation_gradient_inverse(true);
 	const math::mat3 Hf = tr.rotation_hessian_inverse(fs, true);
 	const math::mat3 Ht = tr.rotation_hessian_inverse(xr).transpose();
-	const math::mat3 T1 = math::vec3(d.data() + 3).rotation_gradient();
-	const math::mat3 T2 = math::vec3(d.data() + 9).rotation_gradient();
+	const math::mat3 Qi = tr.rotation_higher_inverse(xr, fs, false, false);
 	//hessian
 	// B.span(0, 0, 3, 3) = -Ti * At / lr;
 	// B.span(0, 6, 3, 3) = +Ti * At / lr;
@@ -155,10 +158,12 @@ void local_dB(void)
 
 	Kg.span(0, 9) = -A1 * Hf * Ti * At * R2 * T2 / lr;
 	Kg.span(6, 9) = +A1 * Hf * Ti * At * R2 * T2 / lr;
-	Kg.span(0, 3) = +(A1 * Hf * Ti * At + (A1 * Tt * fs).spin()) * R1 * T1 / lr;
-	Kg.span(6, 3) = -(A1 * Hf * Ti * At + (A1 * Tt * fs).spin()) * R1 * T1 / lr;
-
-	Kg.span(9, 6) = +T2.transpose() * R2.transpose() * A1 * Tt * Ht * fs; // 9
+	Kg.span(0, 3) = +A1 * (Hf * Ti + (Tt * fs).spin()) * At * R1 * T1 / lr;
+	Kg.span(6, 3) = -A1 * (Hf * Ti + (Tt * fs).spin()) * At * R1 * T1 / lr;
+	Kg.span(9, 6) = +T2.transpose() * R2.transpose() * A1 * Tt * Qi * At / lr;
+	Kg.span(9, 0) = -T2.transpose() * R2.transpose() * A1 * Tt * Qi * At / lr;
+	Kg.span(3, 6) = -T1.transpose() * R1.transpose() * A1 * (Tt * Qi - (Tt * fs).spin()) * At / lr;
+	Kg.span(3, 0) = +T1.transpose() * R1.transpose() * A1 * (Tt * Qi - (Tt * fs).spin()) * At / lr;
 }
 
 static void local_es(void)

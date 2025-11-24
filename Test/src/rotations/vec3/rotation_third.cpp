@@ -25,7 +25,7 @@ static void function(double* r, const double* x, void** args)
 	//function
 	rm = !inverse ? 
 		tm.rotation_hessian(am, v, transpose) : 
-		tm.rotation_hessian_inverse(am, v, transpose);
+		tm.rotation_hessian_inverse(am, transpose).transpose() * v;
 }
 static void gradient(double* dr, const double* x, void** args)
 {
@@ -35,9 +35,8 @@ static void gradient(double* dr, const double* x, void** args)
 	const math::vec3 am = variable ? u : x;
 	//gradient
 	drm = !inverse ? 
-		tm.rotation_higher(
-		am, v, transpose, variable) : 
-		tm.rotation_higher(am, v, transpose, variable);
+		tm.rotation_higher(am, v, transpose, variable) : 
+		tm.rotation_higher_inverse(am, v, transpose, variable);
 }
 
 void tests::rotations::vec3::rotation_third(void)
