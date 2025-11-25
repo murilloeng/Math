@@ -175,8 +175,6 @@ static void local_eh(void)
 {
 	//data
 	const math::vec3 e1(1, 0, 0);
-	const math::vec3 e2(0, 1, 0);
-	const math::vec3 e3(0, 0, 1);
 	const math::vec3 g(es.data() + 0);
 	const math::vec3 w(es.data() + 3);
 	//strains
@@ -271,7 +269,7 @@ static void energy(double* U, const double* x, void** args)
 	d = x;
 	local_es();
 	local_eh();
-	U[0] = lr * Kh.bilinear(eh, eh) / 2;
+	U[0] = lr / 2 * Kh.bilinear(eh, eh);
 }
 static void energy_gradient(double* dU, const double* x, void** args)
 {
