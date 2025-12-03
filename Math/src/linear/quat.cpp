@@ -148,11 +148,10 @@ namespace math
 	}
 	vec3 quat::axial(void) const
 	{
-		//angle
-		const double t = angle();
-		const double s = sin(t / 2);
-		//axial
+		//data
 		vec3 r;
+		const double s = math::vec3(m_data_ref + 1).norm();
+		//axial
 		r[0] = s ? m_data_ref[1] / s : 0;
 		r[1] = s ? m_data_ref[2] / s : 0;
 		r[2] = s ? m_data_ref[3] / s : 1;
@@ -162,13 +161,6 @@ namespace math
 	{
 		return angle() * axial();
 	}
-	vec3 quat::pseudo(vec3 r) const
-	{
-		const vec3 n = axial();
-		const double t = angle();
-		const double k = (n.inner(r) - t) / (4 * M_PI);
-		return (t + 4 * M_PI * round(k)) * n;
-	}
 	double quat::angle(void) const
 	{
 		return 2 * acos(bound(m_data_ref[0]));
@@ -177,6 +169,17 @@ namespace math
 	{
 		matrix::randu(a, b);
 		return normalize();
+	}
+	vec3 quat::pseudo(const vec3& r) const
+	{
+		const vec3 n = axial();
+		const double t = angle();
+		const double k = (n.inner(r) - t) / (2 * M_PI);
+		return (t + 2 * M_PI * round(k)) * n;
+	}
+	vec3 quat::pseudo(const quat& q) const
+	{
+		return pseudo(q.pseudo());
 	}
 
 	quat quat::conjugate(void) const
