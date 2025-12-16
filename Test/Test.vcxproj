@@ -21,13 +21,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -94,6 +94,7 @@ copy ..\..\external\cpp\dll\x64\libopenblas.dll dist\$(platform)\$(configuration
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\fem\Beam3D.cpp" />
     <ClCompile Include="src\fem\beam\dynamics.cpp" />
     <ClCompile Include="src\fem\revolute_fixed.cpp" />
     <ClCompile Include="src\fem\revolute_flexible.cpp" />
@@ -107,6 +108,7 @@ copy ..\..\external\cpp\dll\x64\libopenblas.dll dist\$(platform)\$(configuration
     <ClCompile Include="src\rotations\vec3\rotation_gradient.cpp" />
     <ClCompile Include="src\rotations\vec3\rotation_hessian.cpp" />
     <ClCompile Include="src\rotations\vec3\rotation_tensor.cpp" />
+    <ClCompile Include="src\rotations\vec3\rotation_third.cpp" />
     <ClCompile Include="src\solvers\gradient_descent\double_quadratic.cpp" />
     <ClCompile Include="src\solvers\gradient_descent\exponential_smooth.cpp" />
     <ClCompile Include="src\solvers\gradient_descent\himmelblau_function.cpp" />
