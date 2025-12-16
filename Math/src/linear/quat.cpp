@@ -159,7 +159,13 @@ namespace math
 	}
 	vec3 quat::pseudo(void) const
 	{
-		return angle() * axial();
+		//data
+		const double a = m_data_ref[0];
+		const double b = vec3(m_data_ref + 1).norm();
+		//check
+		if(b < 1e-12) return 2 * vec3(m_data_ref + 1);
+		//return
+		return 2 * atan2(b, a) / b * vec3(m_data_ref + 1);
 	}
 	double quat::angle(void) const
 	{
