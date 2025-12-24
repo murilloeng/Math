@@ -87,6 +87,12 @@
     <ClCompile Include="src\solvers\gradient_descent\single_quartic.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\fem\Beam3D.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\rotations\vec3\rotation_third.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\tests.hpp">
