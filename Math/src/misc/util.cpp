@@ -45,7 +45,7 @@ namespace math
 
 	void skip_lines(FILE* file, uint32_t lines)
 	{
-		char buffer[2000];
+		char buffer[2048];
 		for(uint32_t i = 0; i < lines; i++)
 		{
 			if(!fgets(buffer, sizeof(buffer), file))
