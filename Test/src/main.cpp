@@ -14,7 +14,7 @@ int main(void)
 {
 	try
 	{
-		tests::fem::beam3D();
+		tests::fem::beam3DCR();
 	}
 	catch(const std::exception& exception)
 	{

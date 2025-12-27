@@ -29,7 +29,7 @@ static math::matrix Kg(12, 12, math::mode::zeros);
 
 static double lr;
 static math::vec3 g0, w0;
-static math::vec3 x10, x20;
+static math::vec3 z1, z2;
 static math::quat q10, q20;
 static math::quat q1n, q2n;
 static const uint32_t nt = 10000;
@@ -39,15 +39,15 @@ static void setup(void)
 	//data
 	d.randu();
 	Kh.randu();
-	x10.randu();
-	x20.randu();
+	z1.randu();
+	z2.randu();
 	q10.randu();
 	q20.randu();
 	q1n.randu();
 	q2n.randu();
 	Kh = (Kh + Kh.transpose()) / 2;
 	//data
-	const math::vec3 xr0 = q10.conjugate(x20 - x10);
+	const math::vec3 xr0 = q10.conjugate(z2 - z1);
 	const math::vec3 tr0 = q10.conjugate(q20).pseudo();
 	//length
 	lr = tr0.rotation_gradient_inverse(xr0).norm();
@@ -93,8 +93,8 @@ static void local_Ks(void)
 static void local_B(void)
 {
 	//data
-	const math::vec3 x1 = x10 + math::vec3(d.data() + 0);
-	const math::vec3 x2 = x20 + math::vec3(d.data() + 6);
+	const math::vec3 x1 = z1 + math::vec3(d.data() + 0);
+	const math::vec3 x2 = z2 + math::vec3(d.data() + 6);
 	const math::quat q1 = q10 * q1n * math::vec3(d.data() + 3).quaternion();
 	const math::quat q2 = q20 * q2n * math::vec3(d.data() + 9).quaternion();
 	//data
@@ -113,13 +113,13 @@ static void local_B(void)
 	B.span(0, 9, 3, 3) = +Hi * Ti * At;
 	B.span(0, 3, 3, 3) = -Hi * Ti * At + Ti * Xr * At;
 }
-void local_dB(void)
+static void local_dB(void)
 {
 	//data
 	const math::vec3 fs(ss.data() + 0);
 	const math::vec3 ms(ss.data() + 3);
-	const math::vec3 x1 = x10 + math::vec3(d.data() + 0);
-	const math::vec3 x2 = x20 + math::vec3(d.data() + 6);
+	const math::vec3 x1 = z1 + math::vec3(d.data() + 0);
+	const math::vec3 x2 = z2 + math::vec3(d.data() + 6);
 	const math::quat q1 = q10 * q1n * math::vec3(d.data() + 3).quaternion();
 	const math::quat q2 = q20 * q2n * math::vec3(d.data() + 9).quaternion();
 	//data
@@ -160,8 +160,8 @@ static void local_es(void)
 {
 	//data
 	math::vec3 g(es.data() + 0), w(es.data() + 3);
-	const math::vec3 x1 = x10 + math::vec3(d.data() + 0);
-	const math::vec3 x2 = x20 + math::vec3(d.data() + 6);
+	const math::vec3 x1 = z1 + math::vec3(d.data() + 0);
+	const math::vec3 x2 = z2 + math::vec3(d.data() + 6);
 	const math::quat q1 = q10 * q1n * math::vec3(d.data() + 3).quaternion();
 	const math::quat q2 = q20 * q2n * math::vec3(d.data() + 9).quaternion();
 	//data
@@ -188,11 +188,11 @@ static void local_eh(void)
 	eh[7] = (w[0] * w[0] + w[2] * w[2]) / 2 - (w0[0] * w0[0] + w0[2] * w0[2]) / 2;
 	eh[8] = (w[0] * w[0] + w[1] * w[1]) / 2 - (w0[0] * w0[0] + w0[1] * w0[1]) / 2;
 }
-void local_sh(void)
+static void local_sh(void)
 {
 	sh = Kh * eh;
 }
-void local_ss(void)
+static void local_ss(void)
 {
 	//data
 	const math::vec3 g(es.data() + 0);
@@ -431,11 +431,9 @@ static void test_energy_hessian(void)
 	}
 }
 
-void tests::fem::beam3D(void)
+void tests::fem::beam3DTL(void)
 {
 
-	// test_A();
-	// return;
 	menu_what();
 	menu_order();
 	what == 1 ? 
