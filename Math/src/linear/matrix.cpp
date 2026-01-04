@@ -83,7 +83,7 @@ namespace math
 		//data
 		const std::initializer_list<double>* data = std::data(list);
 		//check
-		for(uint32_t i = 0; i < list.size(); i++)
+		for(uint32_t i = 1; i < list.size(); i++)
 		{
 			if(data[i].size() != data[0].size())
 			{
