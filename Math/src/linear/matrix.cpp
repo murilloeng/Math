@@ -16,10 +16,11 @@
 extern "C"
 {
 	//inverse
-	void dgetrf_(const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*, int32_t*);
 	void dgetri_(const uint32_t*, double*, const uint32_t*, const uint32_t*, double*, const int32_t*, int32_t*);
 	//solve
+	void dgetrf_(const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*, int32_t*);
 	void dgesv_(const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*, double*, const uint32_t*, int32_t*);
+	void dgetrs_(const char*, const uint32_t*, const uint32_t*, double*, const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*);
 	//svd
 	void dgesdd_(const char*, const uint32_t*, const uint32_t*, double*, const uint32_t*, double*, double*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, int32_t*, int32_t*);
 	//eigen
@@ -709,6 +710,59 @@ namespace math
 		dgesv_(&m_rows, &x.m_cols, M.m_data_ptr, &m_rows, pivot, x.m_data_ptr, &m_rows, &status);
 		//return
 		return status == 0;
+	}
+
+	bool matrix::solve_decompose(uint32_t* pivot)
+	{
+		//check
+		if(m_rows != m_cols)
+		{
+			throw std::runtime_error("matrix decompose called on a non-square matrix!");
+		}
+		//decompose
+		int32_t status;
+		dgetrf_(&m_rows, &m_cols, m_data_ptr, &m_cols, pivot, &status);
+		//return
+		return status == 0;
+	}
+	bool matrix::solve_substitute(const uint32_t* pivot, math::matrix& x)
+	{
+		//check
+		if(x.m_rows != m_cols)
+		{
+			throw std::runtime_error("matrix substitute called with incompatible matrices!");
+		}
+		//return
+		return solve_substitute(pivot, x.m_data_ptr, x.m_cols);
+	}
+	bool matrix::solve_substitute(const uint32_t* pivot, double* x, uint32_t nhrs)
+	{
+		//check
+		if(m_rows != m_cols)
+		{
+			throw std::runtime_error("matrix substitute called on a non-square matrix!");
+		}
+		//substitute
+		uint32_t status;
+		dgetrs_("N", &m_rows, &nhrs, m_data_ptr, &m_cols, pivot, x, &m_cols, &status);
+		//return
+		return status;
+	}
+	bool matrix::solve_substitute(const uint32_t* pivot, const math::matrix& f, math::matrix& x)
+	{
+		//check
+		if(f.m_rows != m_rows || x.m_rows != m_cols || f.m_cols != x.m_cols)
+		{
+			throw std::runtime_error("matrix substitute called with incompatible matrices!");
+		}
+		//return
+		x = f.m_data_ref;
+		return solve_substitute(pivot, x.m_data_ptr, x.m_cols);
+	}
+	bool matrix::solve_substitute(const uint32_t* pivot, const double* f, double* x, uint32_t nrhs)
+	{
+		matrix(x, m_cols, nrhs) = f;
+		return solve_substitute(pivot, x, nrhs);
 	}
 
 	bool matrix::symmetric(double t) const

@@ -115,6 +115,12 @@ namespace math
 		matrix inverse(bool* = nullptr) const;
 		bool solve(matrix&, const matrix&) const;
 
+		bool solve_decompose(uint32_t*);
+		bool solve_substitute(const uint32_t*, matrix&);
+		bool solve_substitute(const uint32_t*, double*, uint32_t);
+		bool solve_substitute(const uint32_t*, const matrix&, matrix&);
+		bool solve_substitute(const uint32_t*, const double*, double*, uint32_t);
+
 		bool symmetric(double = 1e-5) const;
 
 		mat3 span3(uint32_t, uint32_t) const;
