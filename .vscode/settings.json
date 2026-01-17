@@ -1,7 +1,0 @@
-{
-	"files.associations": {
-		"*.dat": "plaintext",
-		"cstdint": "cpp",
-		"functional": "cpp"
-	}
-}
