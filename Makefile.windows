@@ -1,0 +1,110 @@
+#options
+INCS = -I ..
+WARS = -Wall -Werror
+DEFS = -D _USE_MATH_DEFINES
+LIBSPATH = -L ../external/cpp/lib/mingw -L Math/dist/$(mode)
+LIBS = -l umfpack -l cholmod -l suitesparseconfig -l amd -l colamd -l openblas -l fftw3-3 -l quadrule
+
+#compiler
+CXX = C:\Qt\Tools\mingw1310_64\bin\g++.exe
+CXXFLAGS = -std=c++20 -fPIC -pipe -fopenmp
+CXXFLAGS += -MT $@ -MMD -MP -MF $(subst .o,.d, $@) $(DEFS) $(INCS) $(WARS)
+
+#mode
+ifneq ($(m), r)
+	mode = debug
+	CXXFLAGS += -ggdb3
+else
+	mode = release
+	CXXFLAGS += -Ofast
+endif
+
+#ouput
+out_exe = Test/dist/$(mode)/test.exe
+out_lib = Math/dist/$(mode)/libmath.dll
+
+#sources
+src_lib := $(subst $(CURDIR)/,,$(subst \,/,$(shell dir /b /s Math\src\*.cpp)))
+src_exe := $(subst $(CURDIR)/,,$(subst \,/,$(shell dir /b /s Test\src\*.cpp)))
+
+#objects
+obj_lib = $(subst Math/src/,Math/build/$(mode)/,$(subst .cpp,.o,$(src_lib)))
+obj_exe = $(subst Test/src/,Test/build/$(mode)/,$(subst .cpp,.o,$(src_exe)))
+
+#dependencies
+dep_lib = $(subst .o,.d, $(obj_lib))
+dep_exe = $(subst .o,.d, $(obj_exe))
+
+#libraries
+dll_rep = \
+	../external/cpp/dll/mingw/libfftw3-3.dll\
+	../external/cpp/dll/mingw/libopenblas.dll\
+	../external/cpp/dll/mingw/libquadrule.dll
+
+dll_exe = Test/dist/$(mode)/libmath.dll
+dll_exe += $(subst ../external/cpp/dll/mingw,Test/dist/$(mode),$(dll_rep))
+
+#rules
+all : exe
+
+run : exe
+	./$(out_exe)
+
+debug : exe
+	gdb ./$(out_exe)
+
+lib : $(out_lib)
+	@echo library build - $(mode): complete!
+
+exe : lib $(dll_exe) $(out_exe)
+	@echo executable build - $(mode): complete!
+
+$(out_lib) : $(obj_lib)
+	@echo library - $(mode): $@
+	@if not exist $(subst /,\,$(dir $@)) mkdir $(subst /,\,$(dir $@))
+	@$(CXX) -shared -o $(out_lib) $(obj_lib) $(LIBSPATH) $(LIBS)
+
+$(out_exe) : $(obj_exe)
+	@echo executable - $(mode): $@
+	@if not exist $(subst /,\,$(dir $@)) mkdir $(subst /,\,$(dir $@))
+	@$(CXX) -o $(out_exe) $(obj_exe) -L Math/dist/$(mode) -l math
+
+Math/build/$(mode)/%.o : Math/src/%.cpp Math/build/$(mode)/%.d
+	@echo compiling - $(mode): $<
+	@if not exist $(subst /,\,$(dir $@)) mkdir $(subst /,\,$(dir $@))
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+Test/build/$(mode)/%.o : Test/src/%.cpp Test/build/$(mode)/%.d
+	@echo compiling - $(mode): $<
+	@if not exist $(subst /,\,$(dir $@)) mkdir $(subst /,\,$(dir $@))
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+
+Test/dist/$(mode)/%.dll : ../external/cpp/dll/mingw/%.dll
+	@echo copying dll - $(mode): $@
+	@if not exist $(subst /,\,$(dir $@)) mkdir $(subst /,\,$(dir $@))
+	@copy /y $(subst /,\, $<) $(subst /,\, $@) > nul
+
+Test/dist/$(mode)/libmath.dll : $(out_lib)
+	@echo copying dll - $(mode): $@
+	@if not exist $(subst /,\,$(dir $@)) mkdir $(subst /,\,$(dir $@))
+	@copy /y $(subst /,\, $<) $(subst /,\, $@) > nul
+
+$(dep_lib) : ;
+
+$(dep_exe) : ;
+
+-include $(dep_lib)
+
+-include $(dep_exe)
+
+clean :
+	@echo clean - $(mode): complete!
+	@if exist Math\dist\$(mode) rmdir /s /q Math\dist\$(mode)
+	@if exist Test\dist\$(mode) rmdir /s /q Test\dist\$(mode)
+	@if exist Math\build\$(mode) rmdir /s /q Math\build\$(mode)
+	@if exist Test\build\$(mode) rmdir /s /q Test\build\$(mode)
+
+print-% :
+	@echo $* = $($*)
+
+.PHONY : all clean print-%
