@@ -5,8 +5,8 @@
 #include <malloc.h>
 #include <stdexcept>
 
-//ext
-#include "external/cpp/inc/suitesparse/umfpack.h"
+//umfpack
+#include <suitesparse/umfpack.h>
 
 //math
 #include "Math/Math/inc/linear/sparse.hpp"

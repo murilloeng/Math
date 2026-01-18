@@ -7,8 +7,8 @@
 #include <malloc.h>
 #include <stdexcept>
 
-//ext
-#include "external/cpp/inc/fftw3.h"
+//fftw
+#include <fftw3.h>
 
 //math
 #include "Math/Math/inc/misc/util.hpp"
