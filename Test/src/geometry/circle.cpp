@@ -5,8 +5,8 @@
 #include <cstdint>
 
 //Math
-#include "Math/Math/inc/linear/vec3.hpp"
-#include "Math/Math/inc/geometry/Circle.hpp"
+#include "Math/inc/linear/vec3.hpp"
+#include "Math/inc/geometry/Circle.hpp"
 
 //Tests
 #include "Math/Test/inc/geometry.hpp"

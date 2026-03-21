@@ -15,20 +15,20 @@ else
 endif
 
 #ouput
+out_lib = dist/$(mode)/libmath.so
 out_exe = Test/dist/$(mode)/test.out
-out_lib = Math/dist/$(mode)/libmath.so
 
 #sources
-src_lib := $(sort $(shell find -path './Math/src/*.cpp'))
+src_lib := $(sort $(shell find -path './src/*.cpp'))
 src_exe := $(sort $(shell find -path './Test/src/*.cpp'))
 
 #objects
-obj_lib = $(sort $(subst ./Math/src/, Math/build/$(mode)/, $(subst .cpp,.o,$(src_lib))))
-obj_exe = $(sort $(subst ./Test/src/, Test/build/$(mode)/, $(subst .cpp,.o,$(src_exe))))
+obj_lib = $(sort $(subst ./src/,build/$(mode)/,$(subst .cpp,.o,$(src_lib))))
+obj_exe = $(sort $(subst ./Test/src/,Test/build/$(mode)/, $(subst .cpp,.o,$(src_exe))))
 
 #dependencies
-dep_lib = $(subst .o,.d, $(obj_lib))
-dep_exe = $(subst .o,.d, $(obj_exe))
+dep_lib = $(subst .o,.d,$(obj_lib))
+dep_exe = $(subst .o,.d,$(obj_exe))
 
 #rules
 all : exe
@@ -52,10 +52,10 @@ $(out_lib) : $(obj_lib)
 
 $(out_exe) : $(obj_exe)
 	@mkdir -p $(dir $@)
-	@g++ -o $(out_exe) $(obj_exe) Math/dist/$(mode)/libmath.so $(LIBS)
+	@g++ -o $(out_exe) $(obj_exe) dist/$(mode)/libmath.so $(LIBS)
 	@echo 'linking - $(mode): $@'
 
-Math/build/$(mode)/%.o : Math/src/%.cpp Math/build/$(mode)/%.d
+build/$(mode)/%.o : src/%.cpp build/$(mode)/%.d
 	@mkdir -p $(dir $@)
 	@echo 'compiling - $(mode): $<'
 	@$(CXX) $(CXXFLAGS) -c $< -o $@
@@ -74,9 +74,9 @@ $(dep_exe) : ;
 -include $(dep_exe)
 
 clean :
-	@rm -rf Math/dist/$(mode)
+	@rm -rf dist/$(mode)
+	@rm -rf build/$(mode)
 	@rm -rf Test/dist/$(mode)
-	@rm -rf Math/build/$(mode)
 	@rm -rf Test/build/$(mode)
 	@echo 'clean - $(mode): complete!'
 

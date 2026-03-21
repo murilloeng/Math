@@ -1,5 +1,5 @@
 //Math
-#include "Math/Math/inc/solvers/newton_raphson.hpp"
+#include "Math/inc/solvers/newton_raphson.hpp"
 
 //Test
 #include "Math/Test/inc/solvers.hpp"

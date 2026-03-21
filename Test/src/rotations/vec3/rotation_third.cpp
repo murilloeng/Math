@@ -4,9 +4,9 @@
 #include <cstdio>
 
 //math
-#include "Math/Math/inc/misc/util.hpp"
-#include "Math/Math/inc/linear/vec3.hpp"
-#include "Math/Math/inc/linear/mat3.hpp"
+#include "Math/inc/misc/util.hpp"
+#include "Math/inc/linear/vec3.hpp"
+#include "Math/inc/linear/mat3.hpp"
 
 //test
 #include "Math/Test/inc/rotations.hpp"

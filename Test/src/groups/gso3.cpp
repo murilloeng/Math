@@ -4,10 +4,10 @@
 #include <cstdio>
 
 //math
-#include "Math/Math/inc/misc/util.hpp"
-#include "Math/Math/inc/linear/vec3.hpp"
-#include "Math/Math/inc/groups/ASO3.hpp"
-#include "Math/Math/inc/groups/GSO3.hpp"
+#include "Math/inc/misc/util.hpp"
+#include "Math/inc/linear/vec3.hpp"
+#include "Math/inc/groups/ASO3.hpp"
+#include "Math/inc/groups/GSO3.hpp"
 
 //tests
 #include "Math/Test/inc/groups.hpp"

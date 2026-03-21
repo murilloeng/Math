@@ -2,7 +2,7 @@
 #include <cmath>
 
 //math
-#include "Math/Math/inc/solvers/newmark.hpp"
+#include "Math/inc/solvers/newmark.hpp"
 
 //test
 #include "Math/Test/inc/solvers.hpp"

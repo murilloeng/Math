@@ -1,6 +1,6 @@
 //math
-#include "Math/Math/inc/linear/vector.hpp"
-#include "Math/Math/inc/solvers/gradient_descent.hpp"
+#include "Math/inc/linear/vector.hpp"
+#include "Math/inc/solvers/gradient_descent.hpp"
 
 //test
 #include "Math/Test/inc/solvers.hpp"
