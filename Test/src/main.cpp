@@ -14,7 +14,8 @@ int main(void)
 {
 	try
 	{
-		tests::fem::beam3DCR();
+		// tests::fem::beam3DCR();
+		tests::rotations::vec3::rotation_hessian();
 	}
 	catch(const std::exception& exception)
 	{

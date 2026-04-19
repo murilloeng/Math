@@ -11,51 +11,76 @@
 //test
 #include "Math/Test/inc/rotations.hpp"
 
-static math::vec3 ar;
-
+static bool mode;
 static bool inverse;
 static bool transpose;
+static math::vec3 u, v;
 
-static void function(double* r, const double* v, void** args)
+static void function(double* r, const double* t, void** args)
 {
 	//data
-	math::vec3 rm = r;
-	const math::vec3 vm = v;
+	const math::vec3 tm = t;
+	const math::mat3 Tm = tm.rotation_gradient(transpose);
+	const math::vec3 Tv = tm.rotation_gradient(v, transpose);
+	const math::mat3 Tmi = tm.rotation_gradient_inverse(transpose);
+	const math::vec3 Tvi = tm.rotation_gradient_inverse(v, transpose);
 	//function
-	rm = !inverse ? 
-		vm.rotation_gradient(ar, transpose) : 
-		vm.rotation_gradient_inverse(ar, transpose);
+	r[0] = !inverse ? 
+		mode ? Tm.bilinear(u, v) : Tv.inner(u) : 
+		mode ? Tmi.bilinear(u, v) : Tvi.inner(u);
 }
-static void gradient(double* dr, const double* v, void** args)
+static void gradient(double* dr, const double* t, void** args)
 {
 	//data
-	math::mat3 drm = dr;
-	const math::vec3 vm = v;
+	math::vec3 drm = dr;
+	const math::vec3 tm = t;
+	const math::mat3 H0 = tm.rotation_hessian(0, transpose);
+	const math::mat3 H1 = tm.rotation_hessian(1, transpose);
+	const math::mat3 H2 = tm.rotation_hessian(2, transpose);
+	const math::mat3 Hv = tm.rotation_hessian(v, transpose);
+	const math::mat3 Hi0 = tm.rotation_hessian_inverse(0, transpose);
+	const math::mat3 Hi1 = tm.rotation_hessian_inverse(1, transpose);
+	const math::mat3 Hi2 = tm.rotation_hessian_inverse(2, transpose);
+	const math::mat3 Hiv = tm.rotation_hessian_inverse(v, transpose);
 	//gradient
-	drm = !inverse ? 
-		vm.rotation_hessian(ar, transpose) : 
-		vm.rotation_hessian_inverse(ar, transpose);
+	if(!mode)
+	{
+		drm = (!inverse ? Hv.transpose() : Hiv.transpose()) * u;
+	}
+	else
+	{
+		dr[0] = !inverse ? H0.bilinear(u, v) : Hi0.bilinear(u, v);
+		dr[1] = !inverse ? H1.bilinear(u, v) : Hi1.bilinear(u, v);
+		dr[2] = !inverse ? H2.bilinear(u, v) : Hi2.bilinear(u, v);
+	}
 }
 
 void tests::rotations::vec3::rotation_hessian(void)
 {
 	//data
-	math::vec3 v, r;
+	math::vec3 t, r;
+	uint32_t selection;
 	math::mat3 dra, drn, dri;
 	const uint32_t nt = 10000;
 	//menu
 	while(true)
 	{
-		uint32_t selection;
-		printf("Inverse?\n");
+		printf("Mode?\n");
 		printf("(1) Yes (2) No\n");
 		const int args = scanf("%d", &selection);
-		if( args == 1 && (selection == 1 || selection == 2)) {inverse = selection == 1; break;}
+		if(args == 1 && (selection == 1 || selection == 2)) {mode = selection == 1; break;}
 		printf("Invalid option!\n");
 	}
 	while(true)
 	{
-		uint32_t selection;
+		printf("Inverse?\n");
+		printf("(1) Yes (2) No\n");
+		const int args = scanf("%d", &selection);
+		if(args == 1 && (selection == 1 || selection == 2)) {inverse = selection == 1; break;}
+		printf("Invalid option!\n");
+	}
+	while(true)
+	{
 		printf("Transpose?\n");
 		printf("(1) Yes (2) No\n");
 		const int args = scanf("%d", &selection);
@@ -65,13 +90,14 @@ void tests::rotations::vec3::rotation_hessian(void)
 	//test
 	for(uint32_t i = 0; i < nt; i++)
 	{
+		t.randu();
+		u.randu();
 		v.randu();
-		ar.randu();
 		bool test = true;
-		gradient(dra.data(), v.data(), nullptr);
-		math::ndiff(function, drn.data(), v.data(), nullptr, 3, 3, 1.00e-5);
+		gradient(dra.data(), t.data(), nullptr);
+		math::ndiff(function, drn.data(), t.data(), nullptr, 1, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
-		printf("Test inverse(%d) transpose(%d) %04d: %s\n", inverse, transpose, i, test ? "ok" : "not ok");
+		printf("Test mode(%d) inverse(%d) transpose(%d) %04d: %s\n", mode, inverse, transpose, i, test ? "ok" : "not ok");
 		if(!test) break;
 	}
 }

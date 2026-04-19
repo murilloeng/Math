@@ -26,6 +26,11 @@ static void function(double* r, const double* x, void** args)
 	rm = !inverse ? 
 		tm.rotation_hessian(am, v, transpose) : 
 		tm.rotation_hessian_inverse(am, transpose).transpose() * v;
+
+	// if(!inverse && variable)
+	// {
+	// 	rm[0] = u.inner(tm.rotation_hessian())
+	// }
 }
 static void gradient(double* dr, const double* x, void** args)
 {
@@ -35,8 +40,13 @@ static void gradient(double* dr, const double* x, void** args)
 	const math::vec3 am = variable ? u : x;
 	//gradient
 	drm = !inverse ? 
-		tm.rotation_higher(am, v, transpose, variable) : 
-		tm.rotation_higher_inverse(am, v, transpose, variable);
+		tm.rotation_third(am, v, transpose, variable) : 
+		tm.rotation_third_inverse(am, v, transpose, variable);
+	
+	if(!inverse && variable)
+	{
+		math::mat3 A;
+	}
 }
 
 void tests::rotations::vec3::rotation_third(void)
@@ -54,7 +64,7 @@ void tests::rotations::vec3::rotation_third(void)
 		printf("Inverse?\n");
 		printf("(1) Yes (2) No\n");
 		const int args = scanf("%d", &selection);
-		if( args == 1 && (selection == 1 || selection == 2)) {inverse = selection == 1; break;}
+		if(args == 1 && (selection == 1 || selection == 2)) {inverse = selection == 1; break;}
 		printf("Invalid option!\n");
 	}
 	while(true)
@@ -63,7 +73,7 @@ void tests::rotations::vec3::rotation_third(void)
 		printf("Variable?\n");
 		printf("(1) t (2) u\n");
 		const int args = scanf("%d", &selection);
-		if( args == 1 && (selection == 1 || selection == 2)) {variable = selection == 1; break;}
+		if(args == 1 && (selection == 1 || selection == 2)) {variable = selection == 1; break;}
 		printf("Invalid option!\n");
 	}
 	while(true)

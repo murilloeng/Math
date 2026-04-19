@@ -221,6 +221,21 @@ namespace math
 		return (1 - s) * *this + s * v;
 	}
 
+	//static
+	vec3 vec3::base(uint32_t index)
+	{
+		//data
+		const double data[] = {
+			1, 0, 0,
+			0, 1, 0,
+			0, 0, 1
+		};
+		const double* v = data + 3 * index;
+		//return
+		return vec3(v[0], v[1], v[2]);
+	}
+
+	//rotation
 	mat3 vec3::rotation_tensor(void) const
 	{
 		const double t = norm();
@@ -272,6 +287,21 @@ namespace math
 		return u - s * cross(u) / 2 + (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2 * cross(cross(u));
 	}
 
+	mat3 vec3::rotation_hessian(uint32_t index, bool q) const
+	{
+		//data
+		const mat3 St = spin();
+		const double t = norm();
+		const double f2 = fn(t, 2);
+		const double f3 = fn(t, 3);
+		const int32_t s = q ? -1 : +1;
+		const double tk = m_data_ref[index];
+		const math::mat3 Sk = base(index).spin();
+		const double df2 = 2 * fn(t, 4) - fn(t, 3);
+		const double df3 = 3 * fn(t, 5) - fn(t, 4);
+		//return
+		return s * df2 * tk * St + df3 * tk * St * St + s * f2 * Sk + f3 * (St * Sk + Sk * St);
+	}
 	mat3 vec3::rotation_hessian(const vec3& u, bool q) const
 	{
 		const double t = norm();
@@ -289,6 +319,19 @@ namespace math
 		return s * a * inner(v) * cross(u) + b * inner(v) * cross(cross(u)) - s * fn(t, 2) * u.cross(v) - fn(t, 3) * (cross(u).cross(v) + cross(u.cross(v)));
 	}
 
+	mat3 vec3::rotation_hessian_inverse(uint32_t k, bool q) const
+	{
+		//data
+		const double t = norm();
+		const double s = q ? -1 : +1;
+		const double tk = m_data_ref[k];
+		const double at = (fn(t, 3) - 2 * fn(t, 4)) / fn(t, 2) / 2;
+		const double bt = (fn(t, 5) - 4 * fn(t, 6)) / fn(t, 2) / 2;
+		//hessian
+		const mat3 St = spin();
+		const mat3 Sk = vec3::base(k).spin();
+		return -s / 2 * Sk + at * (St * Sk + Sk * St) + bt * tk * St * St;
+	}
 	mat3 vec3::rotation_hessian_inverse(const vec3& u, bool q) const
 	{
 		const double t = norm();
@@ -327,7 +370,33 @@ namespace math
 		return inner(v) * (s * df1 * cross(u) + df2 * cross(cross(u))) - s * f1 * u.cross(v) - f2 * (cross(u).cross(v) + cross(u.cross(v)));
 	}
 
-	mat3 vec3::rotation_higher(const vec3& v, const vec3& u, bool q, bool x) const
+	mat3 vec3::rotation_third(uint32_t k, uint32_t p, bool q) const
+	{
+		//data
+		const double t = norm();
+		const double f3 = fn(t, 3);
+		const vec3 ek = vec3::base(k);
+		const vec3 ep = vec3::base(p);
+		const int32_t s = q ? -1 : +1;
+		const double tk = m_data_ref[k];
+		const double tp = m_data_ref[p];
+		const vec3 ea = tk * ep + tp * ek;
+		const double df2 = 2 * fn(t, 4) - fn(t, 3);
+		const double df3 = 3 * fn(t, 5) - fn(t, 4);
+		const double ddf2 = 8 * fn(t, 6) - 5 * fn(t, 5) + fn(t, 4);
+		const double ddf3 = 15 * fn(t, 7) - 7 * fn(t, 6) + fn(t, 5);
+		//third
+		const mat3 St = spin();
+		const mat3 Sk = ek.spin();
+		const mat3 Sp = ep.spin();
+		const mat3 Sa = ea.spin();
+		return 
+			f3 * (Sk * Sp + Sp * Sk) + 
+			(k == p) * (df2 * St + df3 * St * St) +
+			s * df2 * Sa + df3 * (St * Sa + Sa * St) + 
+			tk * tp * (s * ddf2 * St + ddf3 * St * St);
+	}
+	mat3 vec3::rotation_third(const vec3& v, const vec3& u, bool q, bool x) const
 	{
 		if(x)
 		{
@@ -350,7 +419,7 @@ namespace math
 			return inner(u) * (s * a * spin() + b * spin() * spin()) + s * fn(t, 2) * u.spin() + fn(t, 3) * (u.spin() * spin() + spin() * u.spin());
 		}
 	}
-	mat3 vec3::rotation_higher_inverse(const vec3& v, const vec3& u, bool q, bool x) const
+	mat3 vec3::rotation_third_inverse(const vec3& v, const vec3& u, bool q, bool x) const
 	{
 		if(x)
 		{

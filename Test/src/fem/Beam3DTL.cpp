@@ -134,8 +134,8 @@ static void local_dB(void)
 	const math::mat3 Tt = tr.rotation_gradient_inverse(true);
 	const math::mat3 Hf = tr.rotation_hessian_inverse(fs, true);
 	const math::mat3 Ht = tr.rotation_hessian_inverse(xr).transpose();
-	const math::mat3 Pi = tr.rotation_higher_inverse(xr, fs, false, true);
-	const math::mat3 Qi = tr.rotation_higher_inverse(xr, fs, false, false);
+	const math::mat3 Pi = tr.rotation_third_inverse(xr, fs, false, true);
+	const math::mat3 Qi = tr.rotation_third_inverse(xr, fs, false, false);
 	const math::mat3 Hm = tr.rotation_hessian_inverse(ms / lr + Ht * fs, true);
 	const math::mat3 F2 = +A1 * (Tt * fs).spin() * At / lr;
 	//hessian

@@ -47,7 +47,7 @@ namespace math
 		vec3& normalize(void);
 		vec3& project(const vec3&);
 		const vec3& triad(vec3&, vec3&, double = 0) const;
-
+		
 		mat3 spin(void) const;
 		quat quaternion(void) const;
 		mat3 projection(void) const;
@@ -59,6 +59,10 @@ namespace math
 
 		vec3 lerp(const vec3&, double) const;
 
+		//static
+		static vec3 base(uint32_t);
+
+		//rotation
 		mat3 rotation_tensor(void) const;
 
 		mat3 rotation_gradient(bool = false) const;
@@ -70,17 +74,20 @@ namespace math
 		mat3 rotation_gradient_inverse(bool = false) const;
 		vec3 rotation_gradient_inverse(const vec3&, bool = false) const;
 
+		mat3 rotation_hessian(uint32_t, bool = false) const;
 		mat3 rotation_hessian(const vec3&, bool = false) const;
 		vec3 rotation_hessian(const vec3&, const vec3&, bool = false) const;
 
+		mat3 rotation_hessian_inverse(uint32_t, bool = false) const;
 		mat3 rotation_hessian_inverse(const vec3&, bool = false) const;
 		vec3 rotation_hessian_inverse(const vec3&, const vec3&, bool = false) const;
 
 		mat3 rotation_class_increment(const vec3&, uint32_t, bool = false) const;
 		vec3 rotation_class_increment(const vec3&, const vec3&, uint32_t, bool = false) const;
 
-		mat3 rotation_higher(const vec3&, const vec3&, bool = false, bool = true) const;
-		mat3 rotation_higher_inverse(const vec3&, const vec3&, bool = false, bool = true) const;
+		mat3 rotation_third(uint32_t, uint32_t, bool = false) const;
+		mat3 rotation_third(const vec3&, const vec3&, bool = false, bool = true) const;
+		mat3 rotation_third_inverse(const vec3&, const vec3&, bool = false, bool = true) const;
 
 		//friends
 		friend vec3 operator*(double, const vec3&);
