@@ -11,7 +11,7 @@
 //test
 #include "Math/Test/inc/rotations.hpp"
 
-static bool mode;
+static bool coupled;
 static bool inverse;
 static bool transpose;
 static math::vec3 u, v;
@@ -26,8 +26,8 @@ static void function(double* r, const double* t, void** args)
 	const math::vec3 Tvi = tm.rotation_gradient_inverse(v, transpose);
 	//function
 	r[0] = !inverse ? 
-		mode ? Tm.bilinear(u, v) : Tv.inner(u) : 
-		mode ? Tmi.bilinear(u, v) : Tvi.inner(u);
+		coupled ? Tm.bilinear(u, v) : Tv.inner(u) : 
+		coupled ? Tmi.bilinear(u, v) : Tvi.inner(u);
 }
 static void gradient(double* dr, const double* t, void** args)
 {
@@ -43,7 +43,7 @@ static void gradient(double* dr, const double* t, void** args)
 	const math::mat3 Hi2 = tm.rotation_hessian_inverse(2, transpose);
 	const math::mat3 Hiv = tm.rotation_hessian_inverse(v, transpose);
 	//gradient
-	if(!mode)
+	if(!coupled)
 	{
 		drm = (!inverse ? Hv.transpose() : Hiv.transpose()) * u;
 	}
@@ -66,9 +66,9 @@ void tests::rotations::vec3::rotation_hessian(void)
 	while(true)
 	{
 		printf("Mode?\n");
-		printf("(1) Yes (2) No\n");
+		printf("(1) Coupled (2) Uncoupled\n");
 		const int args = scanf("%d", &selection);
-		if(args == 1 && (selection == 1 || selection == 2)) {mode = selection == 1; break;}
+		if(args == 1 && (selection == 1 || selection == 2)) {coupled = selection == 2; break;}
 		printf("Invalid option!\n");
 	}
 	while(true)
@@ -97,7 +97,8 @@ void tests::rotations::vec3::rotation_hessian(void)
 		gradient(dra.data(), t.data(), nullptr);
 		math::ndiff(function, drn.data(), t.data(), nullptr, 1, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
-		printf("Test mode(%d) inverse(%d) transpose(%d) %04d: %s\n", mode, inverse, transpose, i, test ? "ok" : "not ok");
+		printf("Test - Mode: %s, Inverse: %s, Transpose: %s, Step: %04d, Status: %s\n", 
+				coupled ? "Uncoupled" : "Coupled", inverse ? "Yes" : "No", transpose ? "Yes" : "No", i, test ? "ok" : "not ok");
 		if(!test) break;
 	}
 }

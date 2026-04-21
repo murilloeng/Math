@@ -12,7 +12,7 @@
 //test
 #include "Math/Test/inc/rotations.hpp"
 
-static bool mode;
+static bool coupled;
 static math::vec3 ar;
 static math::quat qn;
 
@@ -29,7 +29,7 @@ static void function(double* r, const double* v, void** args)
 	math::vec3 rm = r;
 	const math::vec3 vm = v;
 	//function
-	rm = mode ? (vm.quaternion() * qn).rotate(ar) : (qn * vm.quaternion()).rotate(ar);
+	rm = coupled ? (vm.quaternion() * qn).rotate(ar) : (qn * vm.quaternion()).rotate(ar);
 }
 static void gradient(double* dr, const double* v, void** args)
 {
@@ -39,7 +39,7 @@ static void gradient(double* dr, const double* v, void** args)
 	const math::vec3 vm = v;
 	function(rm.data(), v, args);
 	//gradient
-	if(mode)
+	if(coupled)
 	{
 		drm = -rm.spin() * vm.rotation_gradient();
 	}
@@ -62,7 +62,7 @@ void tests::rotations::vec3::rotation_gradient(void)
 		printf("Update mode:\n");
 		printf("(1) Spatial (2) Material\n");
 		const int args = scanf("%d", &selection);
-		if(args == 1 && (selection == 1 || selection == 2)) {mode = selection == 1; break;}
+		if(args == 1 && (selection == 1 || selection == 2)) {coupled = selection == 1; break;}
 		printf("Invalid option!\n");
 	}
 	//test
@@ -77,7 +77,7 @@ void tests::rotations::vec3::rotation_gradient(void)
 		math::ndiff(function, drn.data(), v.data(), nullptr, 3, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
 		test = test && (v.rotation_gradient() * dri - math::mat3::eye()).norm() < 1e-5;
-		printf("Test %s %d: %s\n", mode ? "spatial" : "material", i, test ? "ok" : "not ok");
+		printf("Test %s %d: %s\n", coupled ? "spatial" : "material", i, test ? "ok" : "not ok");
 		if(!test) break;
 	}
 }

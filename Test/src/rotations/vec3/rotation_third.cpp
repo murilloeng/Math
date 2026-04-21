@@ -11,6 +11,7 @@
 //test
 #include "Math/Test/inc/rotations.hpp"
 
+static bool coupled;
 static bool inverse;
 static bool variable;
 static bool transpose;
@@ -26,11 +27,6 @@ static void function(double* r, const double* x, void** args)
 	rm = !inverse ? 
 		tm.rotation_hessian(am, v, transpose) : 
 		tm.rotation_hessian_inverse(am, transpose).transpose() * v;
-
-	// if(!inverse && variable)
-	// {
-	// 	rm[0] = u.inner(tm.rotation_hessian())
-	// }
 }
 static void gradient(double* dr, const double* x, void** args)
 {
@@ -42,25 +38,28 @@ static void gradient(double* dr, const double* x, void** args)
 	drm = !inverse ? 
 		tm.rotation_third(am, v, transpose, variable) : 
 		tm.rotation_third_inverse(am, v, transpose, variable);
-	
-	if(!inverse && variable)
-	{
-		math::mat3 A;
-	}
 }
 
 void tests::rotations::vec3::rotation_third(void)
 {
 	//data
 	math::vec3 t, r;
+	uint32_t selection;
 	math::mat3 dra, drn, dri;
 	const uint32_t nt = 10000;
 	srand(uint32_t(time(nullptr)));
-	const char* format = "Test inverse(%d) variable(%s) transpose(%d) %d: %s\n";
+	const char* format = "Test - Mode: %s, Inverse: %s, Variable: %s, Transpose: %s, Step: %d, Status: %s\n";
 	//menu
 	while(true)
 	{
-		uint32_t selection;
+		printf("Mode?\n");
+		printf("(1) Coupled (2) Uncoupled\n");
+		const int args = scanf("%d", &selection);
+		if(args == 1 && (selection == 1 || selection == 2)) {coupled = selection == 2; break;}
+		printf("Invalid option!\n");
+	}
+	while(true)
+	{
 		printf("Inverse?\n");
 		printf("(1) Yes (2) No\n");
 		const int args = scanf("%d", &selection);
@@ -69,7 +68,6 @@ void tests::rotations::vec3::rotation_third(void)
 	}
 	while(true)
 	{
-		uint32_t selection;
 		printf("Variable?\n");
 		printf("(1) t (2) u\n");
 		const int args = scanf("%d", &selection);
@@ -78,7 +76,6 @@ void tests::rotations::vec3::rotation_third(void)
 	}
 	while(true)
 	{
-		uint32_t selection;
 		printf("Transpose?\n");
 		printf("(1) Yes (2) No\n");
 		const int args = scanf("%d", &selection);
@@ -95,7 +92,8 @@ void tests::rotations::vec3::rotation_third(void)
 		gradient(dra.data(), t.data(), nullptr);
 		math::ndiff(function, drn.data(), t.data(), nullptr, 3, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
-		printf(format, inverse, variable ? "t" : "u", transpose, i, test ? "ok" : "not ok");
+		printf(format, 
+			coupled ? "Uncoupled" : "Coupled", inverse ? "Yes" : "No", variable ? "t" : "u", transpose ? "Yes" : "No", i, test ? "ok" : "not ok");
 		if(!test) break;
 	}
 }
