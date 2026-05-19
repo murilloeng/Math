@@ -24,7 +24,7 @@ namespace math
 			m_v_old(nullptr), m_v_new(nullptr), m_v_data(nullptr), m_dv(nullptr),
 			m_a_old(nullptr), m_a_new(nullptr), m_a_data(nullptr), m_da(nullptr),
 			m_t_old(0), m_t_new(0), m_t_data(nullptr), m_dt(0), m_t_max(1.00e+00),
-			m_p_old(0), m_p_new(0), m_p_data(nullptr), m_dp(0), m_dp0(1.00e-01), m_ddp(0)
+			m_p_old(0), m_p_new(0), m_p_data(nullptr), m_dp(0), m_dp0(1.00e-02), m_ddp(0)
 		{
 			return;
 		}
