@@ -6,7 +6,7 @@
 #include <cstring>
 #include <stdexcept>
 
-//math
+//Math
 #include "Math/inc/linear/vec2.hpp"
 #include "Math/inc/linear/mat2.hpp"
 

@@ -1,7 +1,7 @@
 //std
 #include <cmath>
 
-//math
+//Math
 #include "Math/inc/polynomial/Polynomial.hpp"
 
 namespace math

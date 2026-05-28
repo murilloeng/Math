@@ -1,7 +1,7 @@
 //std
 #include <cmath>
 
-//math
+//Math
 #include "Math/Test/inc/solvers.hpp"
 #include "Math/inc/solvers/Newmark.hpp"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-//math
+//Math
 #include "Math/inc/linear/vec3.hpp"
 #include "Math/inc/linear/mat3.hpp"
 

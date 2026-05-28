@@ -1,7 +1,7 @@
 //std
 #include <cmath>
 
-//math
+//Math
 #include "Math/inc/linear/vec2.hpp"
 
 namespace math

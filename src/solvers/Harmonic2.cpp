@@ -6,7 +6,7 @@
 #include <malloc.h>
 #include <stdexcept>
 
-//math
+//Math
 #include "Math/inc/misc/util.hpp"
 #include "Math/inc/linear/vector.hpp"
 #include "Math/inc/solvers/Harmonic.hpp"

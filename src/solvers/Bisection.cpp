@@ -2,7 +2,7 @@
 #include <cmath>
 #include <stdexcept>
 
-//math
+//Math
 #include "Math/inc/solvers/Bisection.hpp"
 
 namespace math

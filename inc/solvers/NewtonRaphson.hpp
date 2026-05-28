@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <functional>
 
-//math
+//Math
 #include "Math/inc/solvers/Solver.hpp"
 
 //x: state vector

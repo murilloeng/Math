@@ -3,10 +3,10 @@
 #include <vector>
 #include <cstdio>
 
-//math
+//Math
 #include "Math/inc/misc/util.hpp"
 
-//test
+//Test
 #include "Math/Test/inc/miscellaneous.hpp"
 
 void tests::miscellaneous::fft(void)

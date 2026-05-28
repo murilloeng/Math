@@ -1,8 +1,8 @@
-//math
+//Math
 #include "Math/inc/linear/vector.hpp"
 #include "Math/inc/solvers/GradientDescent.hpp"
 
-//test
+//Test
 #include "Math/Test/inc/solvers.hpp"
 
 void tests::solvers::gradient_descent::double_quadratic(void)

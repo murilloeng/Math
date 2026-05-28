@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstring>
 
-//math
+//Math
 #include "Math/inc/linear/vector.hpp"
 #include "Math/inc/solvers/Solver.hpp"
 

@@ -1,7 +1,7 @@
 //std
 #include <stdexcept>
 
-//math
+//Math
 #include "Math/inc/linear/vector.hpp"
 #include "Math/inc/solvers/GradientDescent.hpp"
 

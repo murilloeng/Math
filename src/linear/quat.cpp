@@ -1,7 +1,7 @@
 //std
 #include <cmath>
 
-//math
+//Math
 #include "Math/inc/misc/util.hpp"
 #include "Math/inc/linear/vec3.hpp"
 #include "Math/inc/linear/mat3.hpp"

@@ -3,7 +3,7 @@
 //std
 #include <functional>
 
-//math
+//Math
 #include "Math/inc/solvers/Convergence.hpp"
 #include "Math/inc/solvers/Continuation.hpp"
 #include "Math/inc/solvers/StopCriteria.hpp"

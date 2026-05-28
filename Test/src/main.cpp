@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <stdexcept>
 
-//test
+//Test
 #include "Math/Test/inc/fem.hpp"
 #include "Math/Test/inc/groups.hpp"
 #include "Math/Test/inc/solvers.hpp"

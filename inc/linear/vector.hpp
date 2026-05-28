@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <initializer_list>
 
-//math
+//Math
 #include "Math/inc/linear/matrix.hpp"
 
 namespace math

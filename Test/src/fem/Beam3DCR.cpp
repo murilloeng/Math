@@ -4,13 +4,13 @@
 #include <cstdio>
 #include <cstdlib>
 
-//math
+//Math
 #include "Math/inc/misc/util.hpp"
 #include "Math/inc/linear/vec3.hpp"
 #include "Math/inc/linear/mat3.hpp"
 #include "Math/inc/linear/quat.hpp"
 
-//test
+//Test
 #include "Math/Test/inc/fem.hpp"
 
 //data

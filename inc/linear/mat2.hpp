@@ -3,7 +3,7 @@
 //std
 #include <cstdint>
 
-//math
+//Math
 #include "Math/inc/linear/matrix.hpp"
 
 namespace math

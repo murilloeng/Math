@@ -2,7 +2,7 @@
 #include <cstdlib>
 #include <stdexcept>
 
-//math
+//Math
 #include "Math/inc/quadrature/rule.hpp"
 #include "Math/inc/quadrature/quadrature.hpp"
 

@@ -8,7 +8,7 @@
 //umfpack
 #include <suitesparse/umfpack.h>
 
-//math
+//Math
 #include "Math/inc/linear/sparse.hpp"
 #include "Math/inc/linear/vector.hpp"
 

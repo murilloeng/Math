@@ -3,12 +3,12 @@
 #include <cstdio>
 #include <cstdlib>
 
-//math
+//Math
 #include "Math/inc/misc/util.hpp"
 #include "Math/inc/linear/mat3.hpp"
 #include "Math/inc/linear/vec3.hpp"
 
-//test
+//Test
 #include "Math/Test/inc/miscellaneous.hpp"
 
 static double h = 0.01;

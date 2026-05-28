@@ -10,7 +10,7 @@
 //fftw
 #include <fftw3.h>
 
-//math
+//Math
 #include "Math/inc/misc/util.hpp"
 #include "Math/inc/linear/vector.hpp"
 #include "Math/inc/linear/matrix.hpp"

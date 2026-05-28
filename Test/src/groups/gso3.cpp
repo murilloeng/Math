@@ -3,7 +3,7 @@
 #include <ctime>
 #include <cstdio>
 
-//math
+//Math
 #include "Math/inc/misc/util.hpp"
 #include "Math/inc/linear/vec3.hpp"
 #include "Math/inc/groups/ASO3.hpp"

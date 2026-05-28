@@ -1,7 +1,7 @@
 //std
 #include <cmath>
 
-//math
+//Math
 #include "Math/inc/groups/ASO3.hpp"
 #include "Math/inc/groups/GSO3.hpp"
 

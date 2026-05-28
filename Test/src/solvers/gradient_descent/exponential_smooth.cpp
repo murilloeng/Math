@@ -1,10 +1,10 @@
 //std
 #include <cmath>
 
-//math
+//Math
 #include "Math/inc/solvers/GradientDescent.hpp"
 
-//test
+//Test
 #include "Math/Test/inc/solvers.hpp"
 
 void tests::solvers::gradient_descent::exponential_smooth(void)

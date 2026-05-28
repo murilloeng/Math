@@ -1,4 +1,4 @@
-//math
+//Math
 #include "Math/inc/misc/bits.hpp"
 
 namespace math

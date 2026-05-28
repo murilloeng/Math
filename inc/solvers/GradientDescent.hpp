@@ -1,6 +1,6 @@
 #pragma once
 
-//math
+//Math
 #include "Math/inc/solvers/Solver.hpp"
 
 namespace math

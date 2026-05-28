@@ -1,4 +1,4 @@
-//math
+//Math
 #include "Math/inc/linear/mat3.hpp"
 #include "Math/inc/groups/ASO3.hpp"
 #include "Math/inc/groups/ASE3.hpp"

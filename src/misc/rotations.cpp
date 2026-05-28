@@ -1,7 +1,7 @@
 //std
 #include <cmath>
 
-//math
+//Math
 #include "Math/inc/misc/rotations.hpp"
 
 namespace math

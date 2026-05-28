@@ -1,7 +1,7 @@
 //std
 #include <cmath>
 
-//math
+//Math
 #include "Math/inc/geometry/Line.hpp"
 #include "Math/inc/geometry/Point.hpp"
 #include "Math/inc/geometry/Plane.hpp"

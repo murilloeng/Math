@@ -3,7 +3,7 @@
 #include <cstdlib>
 #include <stdexcept>
 
-//math
+//Math
 #include "Math/inc/linear/span.hpp"
 #include "Math/inc/linear/mat3.hpp"
 #include "Math/inc/linear/matrix.hpp"

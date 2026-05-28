@@ -2,10 +2,10 @@
 #include <cmath>
 #include <cstdio>
 
-//math
+//Math
 #include "Math/inc/solvers/harmonic.hpp"
 
-//test
+//Test
 #include "Math/Test/inc/solvers.hpp"
 
 static const double ap = 8.00e+00;

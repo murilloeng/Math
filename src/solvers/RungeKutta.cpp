@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <cstring>
 
-//math
+//Math
 #include "Math/inc/solvers/RungeKutta.hpp"
 
 namespace math
