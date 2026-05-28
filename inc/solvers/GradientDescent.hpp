@@ -7,14 +7,14 @@ namespace math
 {
 	namespace solvers
 	{
-		class gradient_descent : public Solver
+		class GradientDescent : public Solver
 		{
 		public:
 			//constructor
-			gradient_descent(void);
+			GradientDescent(void);
 
 			//destructor
-			~gradient_descent(void);
+			~GradientDescent(void);
 
 			//data
 			uint32_t state_set(void) const override;

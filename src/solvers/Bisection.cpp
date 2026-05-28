@@ -8,19 +8,19 @@
 namespace math
 {
 	//constructors
-	bisection::bisection(void) : m_tolerance(1e-5), m_iteration_max(100), m_system_1(nullptr), m_system_2(nullptr)
+	Bisection::Bisection(void) : m_tolerance(1e-5), m_iteration_max(100), m_system_1(nullptr), m_system_2(nullptr)
 	{
 		return;
 	}
 
 	//destructor
-	bisection::~bisection(void)
+	Bisection::~Bisection(void)
 	{
 		return;
 	}
 	
 	//solve
-	bool bisection::solve(void** args)
+	bool Bisection::solve(void** args)
 	{
 		//data
 		double fs;
@@ -44,7 +44,7 @@ namespace math
 		}
 		return false;
 	}
-	bool bisection::solve(const void** args)
+	bool Bisection::solve(const void** args)
 	{
 		//data
 		double fs;

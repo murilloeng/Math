@@ -10,7 +10,7 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		stop_criteria::stop_criteria(void) : 
+		StopCriteria::StopCriteria(void) : 
 			m_stop(type::last), m_types(uint32_t(type::step_maximum) & uint32_t(type::time_maximum)), 
 			m_p_min(-DBL_MAX), m_p_max(+DBL_MAX), m_x_min(-DBL_MAX), m_x_max(+DBL_MAX)
 		{
@@ -18,24 +18,24 @@ namespace math
 		}
 
 		//destructor
-		stop_criteria::~stop_criteria(void)
+		StopCriteria::~StopCriteria(void)
 		{
 			return;
 		}
 
 		//stop
-		bool stop_criteria::stop(void)
+		bool StopCriteria::stop(void)
 		{
 			//data
-			bool(stop_criteria::*fun[])(void) const = {
-				&stop_criteria::stop_step_maximum,
-				&stop_criteria::stop_time_maximum,
-				&stop_criteria::stop_load_limit_minimum, &stop_criteria::stop_load_limit_maximum,
-				&stop_criteria::stop_load_local_minimum, &stop_criteria::stop_load_local_maximum,
-				&stop_criteria::stop_load_value_negative, &stop_criteria::stop_load_value_positive,
-				&stop_criteria::stop_state_limit_minimum, &stop_criteria::stop_state_limit_maximum,
-				&stop_criteria::stop_state_local_minimum, &stop_criteria::stop_state_local_maximum,
-				&stop_criteria::stop_state_value_negative, &stop_criteria::stop_state_value_positive
+			bool(StopCriteria::*fun[])(void) const = {
+				&StopCriteria::stop_step_maximum,
+				&StopCriteria::stop_time_maximum,
+				&StopCriteria::stop_load_limit_minimum, &StopCriteria::stop_load_limit_maximum,
+				&StopCriteria::stop_load_local_minimum, &StopCriteria::stop_load_local_maximum,
+				&StopCriteria::stop_load_value_negative, &StopCriteria::stop_load_value_positive,
+				&StopCriteria::stop_state_limit_minimum, &StopCriteria::stop_state_limit_maximum,
+				&StopCriteria::stop_state_local_minimum, &StopCriteria::stop_state_local_maximum,
+				&StopCriteria::stop_state_value_negative, &StopCriteria::stop_state_value_positive
 			};
 			//stop
 			m_stop = type::last;
@@ -51,55 +51,55 @@ namespace math
 		}
 
 		//stop
-		bool stop_criteria::stop_step_maximum(void) const
+		bool StopCriteria::stop_step_maximum(void) const
 		{
 			return m_solver->m_step > m_solver->m_step_max;
 		}
-		bool stop_criteria::stop_time_maximum(void) const
+		bool StopCriteria::stop_time_maximum(void) const
 		{
 			return m_solver->m_t_new > m_solver->m_t_max;
 		}
-		bool stop_criteria::stop_load_limit_maximum(void) const
+		bool StopCriteria::stop_load_limit_maximum(void) const
 		{
 			return m_solver->m_p_new > m_p_max;
 		}
-		bool stop_criteria::stop_load_limit_minimum(void) const
+		bool StopCriteria::stop_load_limit_minimum(void) const
 		{
 			return m_solver->m_p_new < m_p_min;
 		}
-		bool stop_criteria::stop_load_local_minimum(void) const
+		bool StopCriteria::stop_load_local_minimum(void) const
 		{
 			const uint32_t s = m_solver->m_step;
 			const double* p = m_solver->m_p_data;
 			return s >= 3 && p[s - 2] < p[s - 3] && p[s - 2] < p[s - 1];
 		}
-		bool stop_criteria::stop_load_local_maximum(void) const
+		bool StopCriteria::stop_load_local_maximum(void) const
 		{
 			const uint32_t s = m_solver->m_step;
 			const double* p = m_solver->m_p_data;
 			return s >= 3 && p[s - 2] > p[s - 3] && p[s - 2] > p[s - 1];
 		}
-		bool stop_criteria::stop_load_value_negative(void) const
+		bool StopCriteria::stop_load_value_negative(void) const
 		{
 			const uint32_t s = m_solver->m_step;
 			const double* p = m_solver->m_p_data;
 			return s >= 2 && p[s - 1] < 0 && p[s - 2] > 0;
 		}
-		bool stop_criteria::stop_load_value_positive(void) const
+		bool StopCriteria::stop_load_value_positive(void) const
 		{
 			const uint32_t s = m_solver->m_step;
 			const double* p = m_solver->m_p_data;
 			return s >= 2 && p[s - 1] > 0 && p[s - 2] < 0;
 		}
-		bool stop_criteria::stop_state_limit_minimum(void) const
+		bool StopCriteria::stop_state_limit_minimum(void) const
 		{
 			return m_solver->m_x_new[m_solver->m_watch_dof] < m_x_min;
 		}
-		bool stop_criteria::stop_state_limit_maximum(void) const
+		bool StopCriteria::stop_state_limit_maximum(void) const
 		{
 			return m_solver->m_x_new[m_solver->m_watch_dof] > m_x_max;
 		}
-		bool stop_criteria::stop_state_local_minimum(void) const
+		bool StopCriteria::stop_state_local_minimum(void) const
 		{
 			const uint32_t s = m_solver->m_step;
 			const uint32_t n = m_solver->m_size;
@@ -107,7 +107,7 @@ namespace math
 			const double* x = m_solver->m_x_data + w;
 			return s >= 3 && x[(s - 2) * n] < x[(s - 3) * n] && x[(s - 2) * n] < x[(s - 1) * n];
 		}
-		bool stop_criteria::stop_state_local_maximum(void) const
+		bool StopCriteria::stop_state_local_maximum(void) const
 		{
 			const uint32_t s = m_solver->m_step;
 			const uint32_t n = m_solver->m_size;
@@ -115,7 +115,7 @@ namespace math
 			const double* x = m_solver->m_x_data + w;
 			return s >= 3 && x[(s - 2) * n] > x[(s - 3) * n] && x[(s - 2) * n] > x[(s - 1) * n];
 		}
-		bool stop_criteria::stop_state_value_negative(void) const
+		bool StopCriteria::stop_state_value_negative(void) const
 		{
 			const uint32_t s = m_solver->m_step;
 			const uint32_t n = m_solver->m_size;
@@ -123,7 +123,7 @@ namespace math
 			const double* x = m_solver->m_x_data + w;
 			return s >= 2 && x[(s - 1) * n] < 0 && x[(s - 2) * n] > 0;
 		}
-		bool stop_criteria::stop_state_value_positive(void) const
+		bool StopCriteria::stop_state_value_positive(void) const
 		{
 			const uint32_t s = m_solver->m_step;
 			const uint32_t n = m_solver->m_size;

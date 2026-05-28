@@ -10,7 +10,7 @@ namespace math
 	namespace solvers
 	{
 		//constructors
-		runge_kutta::runge_kutta(uint32_t nd, bool mem) : m_mem(mem), m_type(true), m_nd(nd), m_ns(100), m_T(100)
+		RungeKutta::RungeKutta(uint32_t nd, bool mem) : m_mem(mem), m_type(true), m_nd(nd), m_ns(100), m_T(100)
 		{
 			m_x = m_mem ? new double[m_nd] : nullptr;
 			m_v = m_mem ? new double[m_nd] : nullptr;
@@ -22,7 +22,7 @@ namespace math
 		}
 
 		//destructor
-		runge_kutta::~runge_kutta(void)
+		RungeKutta::~RungeKutta(void)
 		{
 			if(m_mem)
 			{
@@ -37,11 +37,11 @@ namespace math
 		}
 
 		//data
-		void runge_kutta::update(void)
+		void RungeKutta::update(void)
 		{
 			!m_type ? m_system_1(m_v, m_x, m_t) : m_system_2(m_a, m_x, m_v, m_t);
 		}
-		void runge_kutta::state(double f)
+		void RungeKutta::state(double f)
 		{
 			if(!m_type)
 			{
@@ -59,7 +59,7 @@ namespace math
 				}
 			}
 		}
-		void runge_kutta::increment(double f)
+		void RungeKutta::increment(double f)
 		{
 			if(!m_type)
 			{
@@ -79,7 +79,7 @@ namespace math
 		}
 
 		//solve
-		void runge_kutta::setup(void)
+		void RungeKutta::setup(void)
 		{
 			m_t = 0;
 			m_s = 0;
@@ -87,13 +87,13 @@ namespace math
 			memcpy(m_xn, m_x, m_nd * sizeof(double));
 			memcpy(m_vn, m_v, m_nd * sizeof(double));
 		}
-		void runge_kutta::tangent_1(void)
+		void RungeKutta::tangent_1(void)
 		{
 			memset(m_dx, 0, m_nd * sizeof(double));
 			memset(m_dv, 0, m_nd * sizeof(double));
 			increment(m_dt / 6);
 		}
-		void runge_kutta::tangent_2(void)
+		void RungeKutta::tangent_2(void)
 		{
 			//time
 			m_t += m_dt / 2;
@@ -103,7 +103,7 @@ namespace math
 			update();
 			increment(m_dt / 3);
 		}
-		void runge_kutta::tangent_3(void)
+		void RungeKutta::tangent_3(void)
 		{
 			//update state
 			state(m_dt / 2);
@@ -111,7 +111,7 @@ namespace math
 			update();
 			increment(m_dt / 3);
 		}
-		void runge_kutta::tangent_4(void)
+		void RungeKutta::tangent_4(void)
 		{
 			//time
 			m_t += m_dt / 2;
@@ -121,7 +121,7 @@ namespace math
 			update();
 			increment(m_dt / 6);
 		}
-		void runge_kutta::corrector(void)
+		void RungeKutta::corrector(void)
 		{
 			//update state
 			for(uint32_t i = 0; i < m_nd; i++)
@@ -134,13 +134,13 @@ namespace math
 		}
 
 		//solve
-		void runge_kutta::init(void)
+		void RungeKutta::init(void)
 		{
 			setup();
 			update();
 			serialize();
 		}
-		void runge_kutta::step(void)
+		void RungeKutta::step(void)
 		{
 			tangent_1();
 			tangent_2();
@@ -148,7 +148,7 @@ namespace math
 			tangent_4();
 			corrector();
 		}
-		void runge_kutta::solve(void)
+		void RungeKutta::solve(void)
 		{
 			init();
 			while(m_s < m_ns)
@@ -157,7 +157,7 @@ namespace math
 				serialize();
 			}
 		}
-		void runge_kutta::serialize(void)
+		void RungeKutta::serialize(void)
 		{
 			m_s++;
 			printf("%04d %+.6e ", m_s, m_t);

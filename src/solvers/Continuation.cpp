@@ -12,31 +12,31 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		continuation::continuation(void) : m_type(type::arc_length_cylindrical)
+		Continuation::Continuation(void) : m_type(type::arc_length_cylindrical)
 		{
 			return;
 		}
-		continuation::continuation(type type) : m_type(type)
+		Continuation::Continuation(type type) : m_type(type)
 		{
 			return;
 		}
 
 		//destructor
-		continuation::~continuation(void)
+		Continuation::~Continuation(void)
 		{
 			return;
 		}
 
 		//continuation
-		double continuation::predictor(void) const
+		double Continuation::predictor(void) const
 		{
 			//data
-			double(continuation::*pfun[])(void) const = {
-				&continuation::predictor_minimal_norm, 
-				&continuation::predictor_control_load, 
-				&continuation::predictor_control_state, 
-				&continuation::predictor_arc_length_spherical, 
-				&continuation::predictor_arc_length_cylindrical
+			double(Continuation::*pfun[])(void) const = {
+				&Continuation::predictor_minimal_norm, 
+				&Continuation::predictor_control_load, 
+				&Continuation::predictor_control_state, 
+				&Continuation::predictor_arc_length_spherical, 
+				&Continuation::predictor_arc_length_cylindrical
 			};
 			//predictor
 			for(uint32_t i = 0; 1U << i < uint32_t(type::last); i++)
@@ -48,15 +48,15 @@ namespace math
 			}
 			return 0;
 		}
-		double continuation::corrector(void) const
+		double Continuation::corrector(void) const
 		{
 			//data
-			double(continuation::*cfun[])(void) const = {
-				&continuation::corrector_minimal_norm, 
-				&continuation::corrector_control_load, 
-				&continuation::corrector_control_state, 
-				&continuation::corrector_arc_length_spherical, 
-				&continuation::corrector_arc_length_cylindrical
+			double(Continuation::*cfun[])(void) const = {
+				&Continuation::corrector_minimal_norm, 
+				&Continuation::corrector_control_load, 
+				&Continuation::corrector_control_state, 
+				&Continuation::corrector_arc_length_spherical, 
+				&Continuation::corrector_arc_length_cylindrical
 			};
 			//corrector
 			for(uint32_t i = 0; 1U << i < uint32_t(type::last); i++)
@@ -70,7 +70,7 @@ namespace math
 		}
 
 		//types
-		double continuation::predictor_minimal_norm(void) const
+		double Continuation::predictor_minimal_norm(void) const
 		{
 			//data
 			const math::vector dx(m_solver->m_dx, m_solver->m_size);
@@ -79,7 +79,7 @@ namespace math
 			//predictor
 			return (dx - dxr).inner(dxt) / dxt.inner(dxt);
 		}
-		double continuation::corrector_minimal_norm(void) const
+		double Continuation::corrector_minimal_norm(void) const
 		{
 			//data
 			const math::vector ddxr(m_solver->m_ddxr, m_solver->m_size);
@@ -87,25 +87,25 @@ namespace math
 			//corrector
 			return -ddxr.inner(ddxt) / ddxt.inner(ddxt);
 		}
-		double continuation::predictor_control_load(void) const
+		double Continuation::predictor_control_load(void) const
 		{
 			return m_solver->m_dp;
 		}
-		double continuation::corrector_control_load(void) const
+		double Continuation::corrector_control_load(void) const
 		{
 			return 0;
 		}
-		double continuation::predictor_control_state(void) const
+		double Continuation::predictor_control_state(void) const
 		{
 			const uint32_t index = m_solver->m_watch_dof;
 			return (m_solver->m_dx[index] - m_solver->m_dxr[index]) / m_solver->m_dxt[index];
 		}
-		double continuation::corrector_control_state(void) const
+		double Continuation::corrector_control_state(void) const
 		{
 			const uint32_t index = m_solver->m_watch_dof;
 			return -m_solver->m_ddxr[index] / m_solver->m_ddxt[index];
 		}
-		double continuation::predictor_arc_length_spherical(void) const
+		double Continuation::predictor_arc_length_spherical(void) const
 		{
 			//data
 			const double dl = m_solver->m_dp;
@@ -120,7 +120,7 @@ namespace math
 			//predictor
 			return -b / a + s * sqrt(b * b - c * a) / a;
 		}
-		double continuation::corrector_arc_length_spherical(void) const
+		double Continuation::corrector_arc_length_spherical(void) const
 		{
 			//data
 			const double dl = m_solver->m_dp;
@@ -135,7 +135,7 @@ namespace math
 			//predictor
 			return -b / a + s * sqrt(b * b - c * a) / a;
 		}
-		double continuation::predictor_arc_length_cylindrical(void) const
+		double Continuation::predictor_arc_length_cylindrical(void) const
 		{
 			//data
 			const math::vector dx(m_solver->m_dx, m_solver->m_size);
@@ -149,7 +149,7 @@ namespace math
 			//predictor
 			return -b / a + s * sqrt(b * b - c * a) / a;
 		}
-		double continuation::corrector_arc_length_cylindrical(void) const
+		double Continuation::corrector_arc_length_cylindrical(void) const
 		{
 			//data
 			const math::vector dx(m_solver->m_dx, m_solver->m_size);

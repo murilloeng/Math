@@ -13,40 +13,40 @@ namespace math
 	namespace solvers
 	{
 		//constructors
-		newton_raphson::newton_raphson(void)
+		NewtonRaphson::NewtonRaphson(void)
 		{
 			return;
 		}
 
 		//destructor
-		newton_raphson::~newton_raphson(void)
+		NewtonRaphson::~NewtonRaphson(void)
 		{
 			cleanup();
 		}
 
 		//data
-		uint32_t newton_raphson::state_set(void) const
+		uint32_t NewtonRaphson::state_set(void) const
 		{
 			return uint32_t(state::x) | uint32_t(state::p);
 		}
-		uint32_t newton_raphson::force_set(void) const
+		uint32_t NewtonRaphson::force_set(void) const
 		{
 			return uint32_t(force::r) | uint32_t(force::fi) | uint32_t(force::fe);
 		}
-		uint32_t newton_raphson::tangent_set(void) const
+		uint32_t NewtonRaphson::tangent_set(void) const
 		{
 			return uint32_t(tangent::K);
 		}
 
 		//solve
-		void newton_raphson::check(void)
+		void NewtonRaphson::check(void)
 		{
 			if(!m_system_1 && !m_system_2 && !(m_residue && m_tangent_1 && m_tangent_2))
 			{
 				throw std::runtime_error("Newton-Raphson solver called with at least one method not set!");
 			}
 		}
-		void newton_raphson::compute(void)
+		void NewtonRaphson::compute(void)
 		{
 			if(m_system_2)
 			{
@@ -64,7 +64,7 @@ namespace math
 				m_tangent_1(m_fe, m_p_new, m_x_new);
 			}
 		}
-		void newton_raphson::predictor(void)
+		void NewtonRaphson::predictor(void)
 		{
 			//data
 			const matrix K(m_K, m_size, m_size);
@@ -82,7 +82,7 @@ namespace math
 			}
 			for(uint32_t i = 0; i < m_size; i++) dx[i] = dxr[i] + m_dp * dxt[i];
 		}
-		void newton_raphson::corrector(void)
+		void NewtonRaphson::corrector(void)
 		{
 			//data
 			const matrix K(m_K, m_size, m_size);

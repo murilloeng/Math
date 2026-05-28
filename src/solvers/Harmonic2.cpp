@@ -64,7 +64,7 @@ namespace math
 	namespace solvers
 	{
 		//constructors
-		harmonic2::harmonic2(void) : 
+		Harmonic::Harmonic(void) : 
 			m_sq(nullptr), m_wq(nullptr),
 			m_xd(nullptr), m_vd(nullptr), m_ad(nullptr),
 			m_Kd(nullptr), m_Cd(nullptr), m_Md(nullptr)
@@ -73,50 +73,50 @@ namespace math
 		}
 
 		//destructor
-		harmonic2::~harmonic2(void)
+		Harmonic::~Harmonic(void)
 		{
 			cleanup();
 		}
 
 		//data
-		uint32_t harmonic2::state_set(void) const
+		uint32_t Harmonic::state_set(void) const
 		{
 			return uint32_t(state::x) | uint32_t(state::p);
 		}
-		uint32_t harmonic2::force_set(void) const
+		uint32_t Harmonic::force_set(void) const
 		{
 			return uint32_t(force::r) | uint32_t(force::fe);
 		}
-		uint32_t harmonic2::tangent_set(void) const
+		uint32_t Harmonic::tangent_set(void) const
 		{
 			return uint32_t(tangent::K);
 		}
 
 		//solve
-		void harmonic2::apply(void)
+		void Harmonic::apply(void)
 		{
 			Solver::apply();
 			(m_control == control::load ? m_l : m_w) = m_p_new;
 		}
-		void harmonic2::check(void)
+		void Harmonic::check(void)
 		{
 			if(!m_internal_force || !m_external_force || !m_inertia || !m_damping || !m_stiffness)
 			{
 				throw std::runtime_error("Harmonic solver called with at least one method not set!");
 			}
 		}
-		void harmonic2::setup(void)
+		void Harmonic::setup(void)
 		{
 			Solver::setup();
 			legendre_dr_compute(m_quadrature_order, m_sq, m_wq);
 		}
-		void harmonic2::compute(void)
+		void Harmonic::compute(void)
 		{
 			compute_harmonic_residue();
 			compute_harmonic_tangent_p();
 			compute_harmonic_tangent_z();
 		}
-		void harmonic2::predictor(void)
+		void Harmonic::predictor(void)
 		{
 			//data
 			const matrix K(m_K, m_size, m_size);
@@ -134,7 +134,7 @@ namespace math
 			}
 			for(uint32_t i = 0; i < m_size; i++) dx[i] = dxr[i] + m_dp * dxt[i];
 		}
-		void harmonic2::corrector(void)
+		void Harmonic::corrector(void)
 		{
 			//data
 			const matrix K(m_K, m_size, m_size);
@@ -153,7 +153,7 @@ namespace math
 		}
 
 		//state
-		void harmonic2::compute_state(double t)
+		void Harmonic::compute_state(double t)
 		{
 			memcpy(m_xd, m_x_new, m_dofs * sizeof(double));
 			for(uint32_t i = 1; i <= m_harmonics; i++)
@@ -169,7 +169,7 @@ namespace math
 				}
 			}
 		}
-		void harmonic2::compute_residue(double t)
+		void Harmonic::compute_residue(double t)
 		{
 			//state
 			compute_state(t);
@@ -189,7 +189,7 @@ namespace math
 				}
 			}
 		}
-		void harmonic2::compute_velocity(double t)
+		void Harmonic::compute_velocity(double t)
 		{
 			memset(m_vd, 0, m_dofs * sizeof(double));
 			for(uint32_t i = 1; i <= m_harmonics; i++)
@@ -205,7 +205,7 @@ namespace math
 				}
 			}
 		}
-		void harmonic2::compute_acceleration(double t)
+		void Harmonic::compute_acceleration(double t)
 		{
 			memset(m_ad, 0, m_dofs * sizeof(double));
 			for(uint32_t i = 1; i <= m_harmonics; i++)
@@ -223,7 +223,7 @@ namespace math
 		}
 
 		//state
-		void harmonic2::compute_tangent_l(double t)
+		void Harmonic::compute_tangent_l(double t)
 		{
 			//state
 			compute_state(t);
@@ -231,7 +231,7 @@ namespace math
 			//system
 			m_external_force(m_fed, m_xd, m_vd, t, m_w);
 		}
-		void harmonic2::compute_tangent_w(double t)
+		void Harmonic::compute_tangent_w(double t)
 		{
 			//state
 			compute_state(t);
@@ -251,7 +251,7 @@ namespace math
 				}
 			}
 		}
-		void harmonic2::compute_tangent_z(double t)
+		void Harmonic::compute_tangent_z(double t)
 		{
 			//state
 			compute_state(t);
@@ -264,7 +264,7 @@ namespace math
 		}
 
 		//system
-		void harmonic2::compute_harmonic_residue(void)
+		void Harmonic::compute_harmonic_residue(void)
 		{
 			const uint32_t nd = m_dofs;
 			const uint32_t nz = 2 * m_harmonics + 1;
@@ -289,12 +289,12 @@ namespace math
 				for(uint32_t i = 0; i < m_dofs; i++) m_r[i] += wk * m_rd[i];
 			}
 		}
-		void harmonic2::compute_harmonic_tangent_p(void)
+		void Harmonic::compute_harmonic_tangent_p(void)
 		{
 			if(m_control == control::load) compute_harmonic_tangent_l();
 			if(m_control == control::frequency) compute_harmonic_tangent_w();
 		}
-		void harmonic2::compute_harmonic_tangent_l(void)
+		void Harmonic::compute_harmonic_tangent_l(void)
 		{
 			const uint32_t nd = m_size;
 			const uint32_t nz = 2 * m_harmonics + 1;
@@ -319,7 +319,7 @@ namespace math
 				for(uint32_t i = 0; i < m_dofs; i++) m_fe[i] += wk * m_fed[i];
 			}
 		}
-		void harmonic2::compute_harmonic_tangent_w(void)
+		void Harmonic::compute_harmonic_tangent_w(void)
 		{
 			const uint32_t nd = m_size;
 			const uint32_t nz = 2 * m_harmonics + 1;
@@ -344,7 +344,7 @@ namespace math
 				for(uint32_t j = 0; j < m_dofs; j++) m_fe[j] += wk * m_fed[j];
 			}
 		}
-		void harmonic2::compute_harmonic_tangent_z(void)
+		void Harmonic::compute_harmonic_tangent_z(void)
 		{
 			//data
 			const uint32_t nd = m_size;
@@ -397,7 +397,7 @@ namespace math
 		}
 
 		//solver
-		void harmonic2::cleanup(void)
+		void Harmonic::cleanup(void)
 		{
 			//harmonic
 			double* data[] = {
@@ -410,7 +410,7 @@ namespace math
 			//solver
 			Solver::cleanup();
 		}
-		void harmonic2::allocate(void)
+		void Harmonic::allocate(void)
 		{
 			//harmonic
 			m_xd = new double[m_dofs];

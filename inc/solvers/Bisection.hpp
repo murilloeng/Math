@@ -5,14 +5,14 @@
 
 namespace math
 {
-	class bisection
+	class Bisection
 	{
 	public:
 		//constructors
-		bisection(void);
+		Bisection(void);
 
 		//destructor
-		virtual ~bisection(void);
+		virtual ~Bisection(void);
 
 	public:
 		//solve

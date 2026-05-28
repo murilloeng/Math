@@ -7,14 +7,14 @@ namespace math
 {
 	namespace solvers
 	{
-		class runge_kutta
+		class RungeKutta
 		{
 		public:
 			//constructors
-			runge_kutta(uint32_t, bool);
+			RungeKutta(uint32_t, bool);
 
 			//destructor
-			~runge_kutta(void);
+			~RungeKutta(void);
 
 		private:
 			//data

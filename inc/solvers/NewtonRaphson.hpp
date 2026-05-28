@@ -20,14 +20,14 @@ namespace math
 {
 	namespace solvers
 	{
-		class newton_raphson : public Solver
+		class NewtonRaphson : public Solver
 		{
 		public:
 			//constructors
-			newton_raphson(void);
+			NewtonRaphson(void);
 
 			//destructor
-			~newton_raphson(void);
+			~NewtonRaphson(void);
 
 			//data
 			uint32_t state_set(void) const override;

@@ -10,7 +10,7 @@
 void tests::solvers::gradient_descent::exponential_smooth(void)
 {
 	//data
-	math::solvers::gradient_descent solver;
+	math::solvers::GradientDescent solver;
 
 	//solver
 	solver.m_size = 1;

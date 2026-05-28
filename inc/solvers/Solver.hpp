@@ -75,9 +75,9 @@ namespace math
 			bool m_silent;
 			bool m_equilibrium;
 
-			convergence m_convergence;
-			continuation m_continuation;
-			stop_criteria m_stop_criteria;
+			Convergence m_convergence;
+			Continuation m_continuation;
+			StopCriteria m_stop_criteria;
 
 			std::function<bool(void)> m_stop;
 			std::function<void(void)> m_record;

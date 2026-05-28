@@ -5,7 +5,7 @@
 void tests::solvers::newton_raphson::truss_von_mises(void)
 {
 	//data
-	math::solvers::newton_raphson solver;
+	math::solvers::NewtonRaphson solver;
 	//setup
 	solver.m_size = 1;
 	solver.m_dp0 = 1.00e-02;
@@ -22,7 +22,7 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	{
 		K[0] = 3 * x[0] * x[0] - 1;
 	};
-	solver.m_continuation.m_type = math::solvers::continuation::type::arc_length_spherical;
+	solver.m_continuation.m_type = math::solvers::Continuation::type::arc_length_spherical;
 	//setup
 	solver.allocate();
 	solver.m_p_new = 0;

@@ -17,12 +17,12 @@ void tests::solvers::newmark::single_dof(void)
 	const double x0 = 1.00e+00;
 	const double v0 = 0.00e+00;
 	const double w0 = sqrt(k / m);
-	math::solvers::newmark solver;
+	math::solvers::Newmark solver;
 	//setup
 	solver.m_size = 1;
 	solver.m_step_max = 2000;
 	solver.m_t_max = 2 * M_PI * n / w0;
-	solver.m_convergence.m_type = math::solvers::convergence::type::fixed;
+	solver.m_convergence.m_type = math::solvers::Convergence::type::fixed;
 	//initials
 	solver.allocate();
 	solver.m_x_new[0] = x0;

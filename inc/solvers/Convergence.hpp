@@ -15,7 +15,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class convergence
+		class Convergence
 		{
 		public:
 			//types
@@ -27,10 +27,10 @@ namespace math
 			};
 
 			//constructor
-			convergence(void);
+			Convergence(void);
 
 			//destructor
-			~convergence(void);
+			~Convergence(void);
 
 			//check
 			bool check(void) const;

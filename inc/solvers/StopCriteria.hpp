@@ -15,7 +15,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class stop_criteria
+		class StopCriteria
 		{
 		public:
 			//types
@@ -39,10 +39,10 @@ namespace math
 			};
 
 			//constructor
-			stop_criteria(void);
+			StopCriteria(void);
 
 			//destructor
-			~stop_criteria(void);
+			~StopCriteria(void);
 
 			//stop
 			bool stop(void);

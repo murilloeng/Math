@@ -26,14 +26,14 @@ namespace math
 {
 	namespace solvers
 	{
-		class newmark : public Solver
+		class Newmark : public Solver
 		{
 		public:
 			//constructors
-			newmark(void);
+			Newmark(void);
 
 			//destructor
-			~newmark(void);
+			~Newmark(void);
 
 			//data
 			uint32_t state_set(void) const override;

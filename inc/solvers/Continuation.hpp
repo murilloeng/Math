@@ -15,7 +15,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class continuation
+		class Continuation
 		{
 		public:
 			//types
@@ -30,11 +30,11 @@ namespace math
 			};
 	
 			//constructor
-			continuation(void);
-			continuation(type);
+			Continuation(void);
+			Continuation(type);
 	
 			//destructor
-			~continuation(void);
+			~Continuation(void);
 	
 			//continuation
 			double predictor(void) const;

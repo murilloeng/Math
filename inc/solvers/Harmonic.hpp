@@ -8,14 +8,14 @@ namespace math
 {
 	namespace solvers
 	{
-		class harmonic2 : public Solver
+		class Harmonic : public Solver
 		{
 		public:
 			//constructors
-			harmonic2(void);
+			Harmonic(void);
 
 			//destructor
-			~harmonic2(void);
+			~Harmonic(void);
 
 			//data
 			uint32_t state_set(void) const override;

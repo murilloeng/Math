@@ -12,40 +12,40 @@ namespace math
 	namespace solvers
 	{
 		//constructors
-		newmark::newmark(void) : m_g(0.50), m_b(0.25)
+		Newmark::Newmark(void) : m_g(0.50), m_b(0.25)
 		{
 			return;
 		}
 
 		//destructor
-		newmark::~newmark(void)
+		Newmark::~Newmark(void)
 		{
 			cleanup();
 		}
 
 		//data
-		uint32_t newmark::state_set(void) const
+		uint32_t Newmark::state_set(void) const
 		{
 			return uint32_t(state::x) | uint32_t(state::v) | uint32_t(state::a) | uint32_t(state::t);
 		}
-		uint32_t newmark::force_set(void) const
+		uint32_t Newmark::force_set(void) const
 		{
 			return uint32_t(force::r) | uint32_t(force::fi) | uint32_t(force::fe);
 		}
-		uint32_t newmark::tangent_set(void) const
+		uint32_t Newmark::tangent_set(void) const
 		{
 			return uint32_t(tangent::K) | uint32_t(tangent::C) | uint32_t(tangent::M);
 		}
 
 		//solve
-		void newmark::check(void)
+		void Newmark::check(void)
 		{
 			if(!m_internal_force || !m_external_force || !m_inertia || !m_damping || !m_stiffness)
 			{
 				throw std::runtime_error("Newmark solver called with at least one method not set!");
 			}
 		}
-		void newmark::setup(void)
+		void Newmark::setup(void)
 		{
 			//data
 			vector a(m_a_new, m_size);
@@ -64,7 +64,7 @@ namespace math
 			}
 			memcpy(m_a_old, m_a_new, m_size * sizeof(double));
 		}
-		void newmark::compute(void)
+		void Newmark::compute(void)
 		{
 			//forces
 			m_internal_force(m_fi, m_x_new, m_v_new);
@@ -83,7 +83,7 @@ namespace math
 				}
 			}
 		}
-		void newmark::predictor(void)
+		void Newmark::predictor(void)
 		{
 			for(uint32_t i = 0; i < m_size; i++)
 			{
@@ -92,7 +92,7 @@ namespace math
 				m_dx[i] = m_dt * m_v_old[i] + m_dt * m_dt / 2 * m_a_old[i];
 			}
 		}
-		void newmark::corrector(void)
+		void Newmark::corrector(void)
 		{
 			//data
 			vector ddxr(m_ddxr, m_size);
