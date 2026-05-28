@@ -1,6 +1,6 @@
 //std
 #include <cmath>
-#include <cstdio>
+#include <stdexcept>
 
 //math
 #include "Math/inc/solvers/Bisection.hpp"
@@ -29,8 +29,7 @@ namespace math
 		//check
 		if(f1 * f2 > 0)
 		{
-			printf("Initial guess creates outputs with the same sign\n");
-			return false;
+			throw std::runtime_error("Initial guess creates outputs with the same sign!");
 		}
 		//loop
 		for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
@@ -54,8 +53,7 @@ namespace math
 		//check
 		if(f1 * f2 > 0)
 		{
-			printf("Initial guess creates outputs with the same sign\n");
-			return false;
+			throw std::runtime_error("Initial guess creates outputs with the same sign!");
 		}
 		//loop
 		for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
