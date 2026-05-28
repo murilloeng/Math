@@ -7,6 +7,22 @@
 #include "Math/inc/linear/vector.hpp"
 #include "Math/inc/solvers/Newmark.hpp"
 
+//x: state vector
+//r: residue vector
+//v: velocity vector
+//a: acceleration vector
+//p: continuation parameter
+
+//target system: r(x(t), v(t), a(t)) = fe(x(t), v(t), t) - fi(x(t), v(t)) - M(x(t)) * a(t) = 0
+
+//tangent on a: M(x) = -dr/da(x)
+//tangent on v: C(x, v, t) = -dr/dv(x, v, t) = dfi/dv(x, v) - dfe/dv(x, v, t)
+//tangent on x: K(x, v, a) = -dr/dx(x, v, a, t) = dfi/dx(x, v) - dfe/dx(x, v, t) + dM/dx(x) : a
+
+//time interpolation:
+//v_new = v_old + dt * a_old + g * dt * (a_new - a_old)
+//x_new = x_old + dt * v_old + dt * dt / 2 * a_old + b * dt * dt * (a_new - a_old)
+
 namespace math
 {
 	namespace solvers
@@ -26,15 +42,15 @@ namespace math
 		//data
 		uint32_t Newmark::state_set(void) const
 		{
-			return uint32_t(state::x) | uint32_t(state::v) | uint32_t(state::a) | uint32_t(state::t);
+			return uint32_t(State::x) | uint32_t(State::v) | uint32_t(State::a) | uint32_t(State::t);
 		}
 		uint32_t Newmark::force_set(void) const
 		{
-			return uint32_t(force::r) | uint32_t(force::fi) | uint32_t(force::fe);
+			return uint32_t(Force::r) | uint32_t(Force::fi) | uint32_t(Force::fe);
 		}
 		uint32_t Newmark::tangent_set(void) const
 		{
-			return uint32_t(tangent::K) | uint32_t(tangent::C) | uint32_t(tangent::M);
+			return uint32_t(Tangent::K) | uint32_t(Tangent::C) | uint32_t(Tangent::M);
 		}
 
 		//solve

@@ -8,6 +8,15 @@
 #include "Math/inc/linear/vector.hpp"
 #include "Math/inc/solvers/NewtonRaphson.hpp"
 
+//x: state vector
+//r: residual force vector
+//p: continuation parameter
+
+//target system: r(x, p) = 0
+
+//tangent on x: K(x, p) = -dr/dx(x, p)
+//tangent on p: fe(x, p) = +dr/dp(x, p)
+
 namespace math
 {
 	namespace solvers
@@ -27,15 +36,15 @@ namespace math
 		//data
 		uint32_t NewtonRaphson::state_set(void) const
 		{
-			return uint32_t(state::x) | uint32_t(state::p);
+			return uint32_t(State::x) | uint32_t(State::p);
 		}
 		uint32_t NewtonRaphson::force_set(void) const
 		{
-			return uint32_t(force::r) | uint32_t(force::fi) | uint32_t(force::fe);
+			return uint32_t(Force::r) | uint32_t(Force::fi) | uint32_t(Force::fe);
 		}
 		uint32_t NewtonRaphson::tangent_set(void) const
 		{
-			return uint32_t(tangent::K);
+			return uint32_t(Tangent::K);
 		}
 
 		//solve

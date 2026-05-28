@@ -27,11 +27,11 @@ namespace math
 		//data
 		uint32_t GradientDescent::state_set(void) const
 		{
-			return uint32_t(state::x);
+			return uint32_t(State::x);
 		}
 		uint32_t GradientDescent::force_set(void) const
 		{
-			return uint32_t(force::r);
+			return uint32_t(Force::r);
 		}
 		uint32_t GradientDescent::tangent_set(void) const
 		{

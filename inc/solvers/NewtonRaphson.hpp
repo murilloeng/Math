@@ -7,15 +7,6 @@
 //Math
 #include "Math/inc/solvers/Solver.hpp"
 
-//x: state vector
-//r: residual force vector
-//p: continuation parameter
-
-//target system: r(x, p) = 0
-
-//tangent on x: K(x, p) = -dr/dx(x, p)
-//tangent on p: fe(x, p) = +dr/dp(x, p)
-
 namespace math
 {
 	namespace solvers

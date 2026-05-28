@@ -81,15 +81,15 @@ namespace math
 		//data
 		uint32_t Harmonic::state_set(void) const
 		{
-			return uint32_t(state::x) | uint32_t(state::p);
+			return uint32_t(State::x) | uint32_t(State::p);
 		}
 		uint32_t Harmonic::force_set(void) const
 		{
-			return uint32_t(force::r) | uint32_t(force::fe);
+			return uint32_t(Force::r) | uint32_t(Force::fe);
 		}
 		uint32_t Harmonic::tangent_set(void) const
 		{
-			return uint32_t(tangent::K);
+			return uint32_t(Tangent::K);
 		}
 
 		//solve

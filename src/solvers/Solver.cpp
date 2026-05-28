@@ -46,12 +46,12 @@ namespace math
 			{
 				for(uint32_t j = 0; j < m_size; j++)
 				{
-					if(ss & uint32_t(state::x)) fprintf(file, "%+.6e ", m_x_data[j + m_size * i]);
-					if(ss & uint32_t(state::v)) fprintf(file, "%+.6e ", m_v_data[j + m_size * i]);
-					if(ss & uint32_t(state::a)) fprintf(file, "%+.6e ", m_a_data[j + m_size * i]);
+					if(ss & uint32_t(State::x)) fprintf(file, "%+.6e ", m_x_data[j + m_size * i]);
+					if(ss & uint32_t(State::v)) fprintf(file, "%+.6e ", m_v_data[j + m_size * i]);
+					if(ss & uint32_t(State::a)) fprintf(file, "%+.6e ", m_a_data[j + m_size * i]);
 				}
-				if(ss & uint32_t(state::t)) fprintf(file, "%+.6e ", m_t_data[i]);
-				if(ss & uint32_t(state::p)) fprintf(file, "%+.6e ", m_p_data[i]);
+				if(ss & uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
+				if(ss & uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
 				fprintf(file, "\n");
 			}
 			//close
@@ -70,12 +70,12 @@ namespace math
 			//apply
 			for(uint32_t i = 0; i < m_size; i++)
 			{
-				if(ss & uint32_t(state::x)) m_x_new[i] = m_x_old[i] + m_dx[i];
-				if(ss & uint32_t(state::v)) m_v_new[i] = m_v_old[i] + m_dv[i];
-				if(ss & uint32_t(state::a)) m_a_new[i] = m_a_old[i] + m_da[i];
+				if(ss & uint32_t(State::x)) m_x_new[i] = m_x_old[i] + m_dx[i];
+				if(ss & uint32_t(State::v)) m_v_new[i] = m_v_old[i] + m_dv[i];
+				if(ss & uint32_t(State::a)) m_a_new[i] = m_a_old[i] + m_da[i];
 			}
-			if(ss & uint32_t(state::t)) m_t_new = m_t_old + m_dt;
-			if(ss & uint32_t(state::p)) m_p_new = m_p_old + m_dp;
+			if(ss & uint32_t(State::t)) m_t_new = m_t_old + m_dt;
+			if(ss & uint32_t(State::p)) m_p_new = m_p_old + m_dp;
 		}
 		void Solver::print(void)
 		{
@@ -85,11 +85,11 @@ namespace math
 			if(!m_silent)
 			{
 				printf("step: %04d ", m_step);
-				if(ss & uint32_t(state::t)) printf("time: %+.6e ", m_t_new);
-				if(ss & uint32_t(state::p)) printf("load: %+.6e ", m_p_new);
-				if(ss & uint32_t(state::x)) printf("state: %+.6e ", m_x_new[m_watch_dof]);
-				if(ss & uint32_t(state::v)) printf("velocity: %+.6e ", m_v_new[m_watch_dof]);
-				if(ss & uint32_t(state::a)) printf("acceleration: %+.6e ", m_a_new[m_watch_dof]);
+				if(ss & uint32_t(State::t)) printf("time: %+.6e ", m_t_new);
+				if(ss & uint32_t(State::p)) printf("load: %+.6e ", m_p_new);
+				if(ss & uint32_t(State::x)) printf("state: %+.6e ", m_x_new[m_watch_dof]);
+				if(ss & uint32_t(State::v)) printf("velocity: %+.6e ", m_v_new[m_watch_dof]);
+				if(ss & uint32_t(State::a)) printf("acceleration: %+.6e ", m_a_new[m_watch_dof]);
 				printf("\n");
 			}
 			if(m_interface) m_interface(m_step);
@@ -108,9 +108,9 @@ namespace math
 			m_convergence.m_solver = this;
 			m_continuation.m_solver = this;
 			m_stop_criteria.m_solver = this;
-			if(ss & uint32_t(state::x)) memcpy(m_x_old, m_x_new, m_size * sizeof(double));
-			if(ss & uint32_t(state::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
-			if(ss & uint32_t(state::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
+			if(ss & uint32_t(State::x)) memcpy(m_x_old, m_x_new, m_size * sizeof(double));
+			if(ss & uint32_t(State::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
+			if(ss & uint32_t(State::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
 		}
 		void Solver::record(void)
 		{
@@ -120,12 +120,12 @@ namespace math
 			if(m_record) m_record();
 			for(uint32_t i = 0; i < m_size; i++)
 			{
-				if(ss & uint32_t(state::x)) m_x_data[m_step * m_size + i] = m_x_new[i];
-				if(ss & uint32_t(state::v)) m_v_data[m_step * m_size + i] = m_v_new[i];
-				if(ss & uint32_t(state::a)) m_a_data[m_step * m_size + i] = m_a_new[i];
+				if(ss & uint32_t(State::x)) m_x_data[m_step * m_size + i] = m_x_new[i];
+				if(ss & uint32_t(State::v)) m_v_data[m_step * m_size + i] = m_v_new[i];
+				if(ss & uint32_t(State::a)) m_a_data[m_step * m_size + i] = m_a_new[i];
 			}
-			if(ss & uint32_t(state::t)) m_t_data[m_step] = m_t_new;
-			if(ss & uint32_t(state::p)) m_p_data[m_step] = m_p_new;
+			if(ss & uint32_t(State::t)) m_t_data[m_step] = m_t_new;
+			if(ss & uint32_t(State::p)) m_p_data[m_step] = m_p_new;
 		}
 		void Solver::update(void)
 		{
@@ -133,11 +133,11 @@ namespace math
 			const uint32_t ss = state_set();
 			//update
 			if(m_update) m_update();
-			if(ss & uint32_t(state::t)) m_t_old = m_t_new;
-			if(ss & uint32_t(state::p)) m_p_old = m_p_new;
-			if(ss & uint32_t(state::x)) memcpy(m_x_old, m_x_new, m_size * sizeof(double));
-			if(ss & uint32_t(state::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
-			if(ss & uint32_t(state::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
+			if(ss & uint32_t(State::t)) m_t_old = m_t_new;
+			if(ss & uint32_t(State::p)) m_p_old = m_p_new;
+			if(ss & uint32_t(State::x)) memcpy(m_x_old, m_x_new, m_size * sizeof(double));
+			if(ss & uint32_t(State::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
+			if(ss & uint32_t(State::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
 		}
 		void Solver::restore(void)
 		{
@@ -145,11 +145,11 @@ namespace math
 			const uint32_t ss = state_set();
 			//update
 			if(m_restore) m_restore();
-			if(ss & uint32_t(state::t)) m_t_new = m_t_old;
-			if(ss & uint32_t(state::p)) m_p_new = m_p_old;
-			if(ss & uint32_t(state::x)) memcpy(m_x_new, m_x_old, m_size * sizeof(double));
-			if(ss & uint32_t(state::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
-			if(ss & uint32_t(state::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
+			if(ss & uint32_t(State::t)) m_t_new = m_t_old;
+			if(ss & uint32_t(State::p)) m_p_new = m_p_old;
+			if(ss & uint32_t(State::x)) memcpy(m_x_new, m_x_old, m_size * sizeof(double));
+			if(ss & uint32_t(State::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
+			if(ss & uint32_t(State::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
 		}
 		bool Solver::equilibrium(void)
 		{
@@ -160,38 +160,38 @@ namespace math
 		void Solver::allocate_state(void)
 		{
 			const uint32_t ss = state_set();
-			if(ss & uint32_t(state::x)) m_dx = new double[m_size];
-			if(ss & uint32_t(state::v)) m_dv = new double[m_size];
-			if(ss & uint32_t(state::a)) m_da = new double[m_size];
-			if(ss & uint32_t(state::x)) m_dxr = new double[m_size];
-			if(ss & uint32_t(state::x)) m_dxt = new double[m_size];
-			if(ss & uint32_t(state::x)) m_ddxr = new double[m_size];
-			if(ss & uint32_t(state::x)) m_ddxt = new double[m_size];
-			if(ss & uint32_t(state::x)) m_x_old = new double[m_size];
-			if(ss & uint32_t(state::x)) m_x_new = new double[m_size];
-			if(ss & uint32_t(state::v)) m_v_old = new double[m_size];
-			if(ss & uint32_t(state::v)) m_v_new = new double[m_size];
-			if(ss & uint32_t(state::a)) m_a_old = new double[m_size];
-			if(ss & uint32_t(state::a)) m_a_new = new double[m_size];
-			if(ss & uint32_t(state::t)) m_t_data = new double[m_step_max + 1];
-			if(ss & uint32_t(state::p)) m_p_data = new double[m_step_max + 1];
-			if(ss & uint32_t(state::x)) m_x_data = new double[m_size * (m_step_max + 1)];
-			if(ss & uint32_t(state::v)) m_v_data = new double[m_size * (m_step_max + 1)];
-			if(ss & uint32_t(state::a)) m_a_data = new double[m_size * (m_step_max + 1)];
+			if(ss & uint32_t(State::x)) m_dx = new double[m_size];
+			if(ss & uint32_t(State::v)) m_dv = new double[m_size];
+			if(ss & uint32_t(State::a)) m_da = new double[m_size];
+			if(ss & uint32_t(State::x)) m_dxr = new double[m_size];
+			if(ss & uint32_t(State::x)) m_dxt = new double[m_size];
+			if(ss & uint32_t(State::x)) m_ddxr = new double[m_size];
+			if(ss & uint32_t(State::x)) m_ddxt = new double[m_size];
+			if(ss & uint32_t(State::x)) m_x_old = new double[m_size];
+			if(ss & uint32_t(State::x)) m_x_new = new double[m_size];
+			if(ss & uint32_t(State::v)) m_v_old = new double[m_size];
+			if(ss & uint32_t(State::v)) m_v_new = new double[m_size];
+			if(ss & uint32_t(State::a)) m_a_old = new double[m_size];
+			if(ss & uint32_t(State::a)) m_a_new = new double[m_size];
+			if(ss & uint32_t(State::t)) m_t_data = new double[m_step_max + 1];
+			if(ss & uint32_t(State::p)) m_p_data = new double[m_step_max + 1];
+			if(ss & uint32_t(State::x)) m_x_data = new double[m_size * (m_step_max + 1)];
+			if(ss & uint32_t(State::v)) m_v_data = new double[m_size * (m_step_max + 1)];
+			if(ss & uint32_t(State::a)) m_a_data = new double[m_size * (m_step_max + 1)];
 		}
 		void Solver::allocate_forces(void)
 		{
 			const uint32_t fs = force_set();
-			if(fs & uint32_t(force::r)) m_r = new double[m_size];
-			if(fs & uint32_t(force::fi)) m_fi = new double[m_size];
-			if(fs & uint32_t(force::fe)) m_fe = new double[m_size];
+			if(fs & uint32_t(Force::r)) m_r = new double[m_size];
+			if(fs & uint32_t(Force::fi)) m_fi = new double[m_size];
+			if(fs & uint32_t(Force::fe)) m_fe = new double[m_size];
 		}
 		void Solver::allocate_tangents(void)
 		{
 			const uint32_t ts = tangent_set();
-			if(ts & uint32_t(tangent::K)) m_K = new double[m_size * m_size];
-			if(ts & uint32_t(tangent::C)) m_C = new double[m_size * m_size];
-			if(ts & uint32_t(tangent::M)) m_M = new double[m_size * m_size];
+			if(ts & uint32_t(Tangent::K)) m_K = new double[m_size * m_size];
+			if(ts & uint32_t(Tangent::C)) m_C = new double[m_size * m_size];
+			if(ts & uint32_t(Tangent::M)) m_M = new double[m_size * m_size];
 		}
 
 		//solve
@@ -257,7 +257,9 @@ namespace math
 		void Solver::allocate(uint32_t size)
 		{
 			m_size = size;
-			allocate();
+			allocate_state();
+			allocate_forces();
+			allocate_tangents();
 		}
 	}
 }

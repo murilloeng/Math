@@ -28,15 +28,15 @@ namespace math
 			virtual uint32_t tangent_set(void) const = 0;
 
 			//enums
-			enum class state : uint32_t
+			enum class State : uint32_t
 			{
 				x = 1 << 0, v = 1 << 1, a = 1 << 2, p = 1 << 3, t = 1 << 4
 			};
-			enum class force : uint32_t
+			enum class Force : uint32_t
 			{
 				r = 1 << 0, fi = 1 << 1, fe = 1 << 2
 			};
-			enum class tangent : uint32_t
+			enum class Tangent : uint32_t
 			{
 				K = 1 << 0, C = 1 << 1, M = 1 << 2
 			};
