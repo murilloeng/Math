@@ -4,7 +4,7 @@
 #include <cstdint>
 
 //Math
-#include "Math/inc/solvers/solver.hpp"
+#include "Math/inc/solvers/Solver.hpp"
 
 //x: state vector
 //r: residue vector
@@ -26,7 +26,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class newmark : public solver
+		class newmark : public Solver
 		{
 		public:
 			//constructors

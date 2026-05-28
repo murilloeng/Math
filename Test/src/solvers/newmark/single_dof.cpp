@@ -1,11 +1,9 @@
 //std
 #include <cmath>
 
-//math
-#include "Math/inc/solvers/newmark.hpp"
-
-//test
+//Math
 #include "Math/Test/inc/solvers.hpp"
+#include "Math/inc/solvers/Newmark.hpp"
 
 void tests::solvers::newmark::single_dof(void)
 {

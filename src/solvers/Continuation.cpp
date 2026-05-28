@@ -4,8 +4,8 @@
 //Math
 #include "Math/inc/misc/util.hpp"
 #include "Math/inc/linear/vector.hpp"
-#include "Math/inc/solvers/solver.hpp"
-#include "Math/inc/solvers/continuation.hpp"
+#include "Math/inc/solvers/Solver.hpp"
+#include "Math/inc/solvers/Continuation.hpp"
 
 namespace math
 {

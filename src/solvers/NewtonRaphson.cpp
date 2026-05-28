@@ -6,7 +6,7 @@
 
 //math
 #include "Math/inc/linear/vector.hpp"
-#include "Math/inc/solvers/newton_raphson.hpp"
+#include "Math/inc/solvers/NewtonRaphson.hpp"
 
 namespace math
 {

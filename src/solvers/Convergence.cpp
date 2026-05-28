@@ -1,7 +1,7 @@
 //Math
 #include "Math/inc/linear/vector.hpp"
-#include "Math/inc/solvers/solver.hpp"
-#include "Math/inc/solvers/convergence.hpp"
+#include "Math/inc/solvers/Solver.hpp"
+#include "Math/inc/solvers/Convergence.hpp"
 
 namespace math
 {

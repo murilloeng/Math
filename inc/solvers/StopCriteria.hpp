@@ -7,7 +7,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class solver;
+		class Solver;
 	}
 }
 
@@ -68,7 +68,7 @@ namespace math
 			//data
 			type m_stop;
 			uint32_t m_types;
-			solver* m_solver;
+			Solver* m_solver;
 			double m_p_min, m_p_max;
 			double m_x_min, m_x_max;
 		};

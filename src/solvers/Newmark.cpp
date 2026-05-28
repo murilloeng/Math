@@ -5,7 +5,7 @@
 
 //math
 #include "Math/inc/linear/vector.hpp"
-#include "Math/inc/solvers/newmark.hpp"
+#include "Math/inc/solvers/Newmark.hpp"
 
 namespace math
 {
@@ -52,7 +52,7 @@ namespace math
 			const vector r(m_r, m_size);
 			const matrix M(m_M, m_size, m_size);
 			//setup
-			solver::setup();
+			Solver::setup();
 			for(uint32_t i = 0; i < m_size; i++)
 			{
 				m_r[i] = m_fe[i] - m_fi[i];

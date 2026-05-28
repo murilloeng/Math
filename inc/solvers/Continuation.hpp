@@ -7,7 +7,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class solver;
+		class Solver;
 	}
 }
 
@@ -54,7 +54,7 @@ namespace math
 	
 			//data
 			type m_type;
-			solver* m_solver;
+			Solver* m_solver;
 		};
 	}
 }

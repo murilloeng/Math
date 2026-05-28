@@ -2,8 +2,8 @@
 #include <cfloat>
 
 //Math
-#include "Math/inc/solvers/solver.hpp"
-#include "Math/inc/solvers/stop_criteria.hpp"
+#include "Math/inc/solvers/Solver.hpp"
+#include "Math/inc/solvers/StopCriteria.hpp"
 
 namespace math
 {

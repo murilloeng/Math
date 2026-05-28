@@ -1,14 +1,14 @@
 #pragma once
 
 //math
-#include "Math/inc/solvers/solver.hpp"
+#include "Math/inc/solvers/Solver.hpp"
 #include "Math/inc/quadrature/rule.hpp"
 
 namespace math
 {
 	namespace solvers
 	{
-		class harmonic2 : public solver
+		class harmonic2 : public Solver
 		{
 		public:
 			//constructors

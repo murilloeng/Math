@@ -5,7 +5,7 @@
 #include <functional>
 
 //math
-#include "Math/inc/solvers/solver.hpp"
+#include "Math/inc/solvers/Solver.hpp"
 
 //x: state vector
 //r: residual force vector
@@ -20,7 +20,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class newton_raphson : public solver
+		class newton_raphson : public Solver
 		{
 		public:
 			//constructors

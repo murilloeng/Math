@@ -4,14 +4,14 @@
 
 //math
 #include "Math/inc/linear/vector.hpp"
-#include "Math/inc/solvers/solver.hpp"
+#include "Math/inc/solvers/Solver.hpp"
 
 namespace math
 {
 	namespace solvers
 	{
 		//constructor
-		solver::solver(void) : 
+		Solver::Solver(void) : 
 			m_silent(false), 
 			m_equilibrium(false),
 			m_size(1), m_watch_dof(0),
@@ -30,13 +30,13 @@ namespace math
 		}
 
 		//destructor
-		solver::~solver(void)
+		Solver::~Solver(void)
 		{
-			solver::cleanup();
+			Solver::cleanup();
 		}
 
 		//data
-		void solver::save(const char* path) const
+		void Solver::save(const char* path) const
 		{
 			//file
 			FILE* file = fopen(path, "w");
@@ -59,11 +59,11 @@ namespace math
 		}
 
 		//solve
-		bool solver::stop(void)
+		bool Solver::stop(void)
 		{
 			return m_stop_criteria.stop() || (m_stop && m_stop());
 		}
-		void solver::apply(void)
+		void Solver::apply(void)
 		{
 			//data
 			const uint32_t ss = state_set();
@@ -77,7 +77,7 @@ namespace math
 			if(ss & uint32_t(state::t)) m_t_new = m_t_old + m_dt;
 			if(ss & uint32_t(state::p)) m_p_new = m_p_old + m_dp;
 		}
-		void solver::print(void)
+		void Solver::print(void)
 		{
 			//data
 			const uint32_t ss = state_set();
@@ -94,7 +94,7 @@ namespace math
 			}
 			if(m_interface) m_interface(m_step);
 		}
-		void solver::setup(void)
+		void Solver::setup(void)
 		{
 			//data
 			compute();
@@ -112,7 +112,7 @@ namespace math
 			if(ss & uint32_t(state::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
 			if(ss & uint32_t(state::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
 		}
-		void solver::record(void)
+		void Solver::record(void)
 		{
 			//data
 			const uint32_t ss = state_set();
@@ -127,7 +127,7 @@ namespace math
 			if(ss & uint32_t(state::t)) m_t_data[m_step] = m_t_new;
 			if(ss & uint32_t(state::p)) m_p_data[m_step] = m_p_new;
 		}
-		void solver::update(void)
+		void Solver::update(void)
 		{
 			//data
 			const uint32_t ss = state_set();
@@ -139,7 +139,7 @@ namespace math
 			if(ss & uint32_t(state::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
 			if(ss & uint32_t(state::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
 		}
-		void solver::restore(void)
+		void Solver::restore(void)
 		{
 			//data
 			const uint32_t ss = state_set();
@@ -151,13 +151,13 @@ namespace math
 			if(ss & uint32_t(state::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
 			if(ss & uint32_t(state::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
 		}
-		bool solver::equilibrium(void)
+		bool Solver::equilibrium(void)
 		{
 			return m_equilibrium = m_convergence.check();
 		}
 
 		//allocate
-		void solver::allocate_state(void)
+		void Solver::allocate_state(void)
 		{
 			const uint32_t ss = state_set();
 			if(ss & uint32_t(state::x)) m_dx = new double[m_size];
@@ -179,14 +179,14 @@ namespace math
 			if(ss & uint32_t(state::v)) m_v_data = new double[m_size * (m_step_max + 1)];
 			if(ss & uint32_t(state::a)) m_a_data = new double[m_size * (m_step_max + 1)];
 		}
-		void solver::allocate_forces(void)
+		void Solver::allocate_forces(void)
 		{
 			const uint32_t fs = force_set();
 			if(fs & uint32_t(force::r)) m_r = new double[m_size];
 			if(fs & uint32_t(force::fi)) m_fi = new double[m_size];
 			if(fs & uint32_t(force::fe)) m_fe = new double[m_size];
 		}
-		void solver::allocate_tangents(void)
+		void Solver::allocate_tangents(void)
 		{
 			const uint32_t ts = tangent_set();
 			if(ts & uint32_t(tangent::K)) m_K = new double[m_size * m_size];
@@ -195,7 +195,7 @@ namespace math
 		}
 
 		//solve
-		void solver::step(void)
+		void Solver::step(void)
 		{
 			for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
 			{
@@ -212,7 +212,7 @@ namespace math
 			update();
 			record();
 		}
-		void solver::solve(void)
+		void Solver::solve(void)
 		{
 			check();
 			setup();
@@ -229,7 +229,7 @@ namespace math
 				}
 			}
 		}
-		void solver::cleanup(void)
+		void Solver::cleanup(void)
 		{
 			//data
 			double** data[] = {
@@ -248,13 +248,13 @@ namespace math
 				*ptr = nullptr;
 			}
 		}
-		void solver::allocate(void)
+		void Solver::allocate(void)
 		{
 			allocate_state();
 			allocate_forces();
 			allocate_tangents();
 		}
-		void solver::allocate(uint32_t size)
+		void Solver::allocate(uint32_t size)
 		{
 			m_size = size;
 			allocate();

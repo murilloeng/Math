@@ -4,22 +4,22 @@
 #include <functional>
 
 //math
-#include "Math/inc/solvers/convergence.hpp"
-#include "Math/inc/solvers/continuation.hpp"
-#include "Math/inc/solvers/stop_criteria.hpp"
+#include "Math/inc/solvers/Convergence.hpp"
+#include "Math/inc/solvers/Continuation.hpp"
+#include "Math/inc/solvers/StopCriteria.hpp"
 
 namespace math
 {
 	namespace solvers
 	{
-		class solver
+		class Solver
 		{
 		public:
 			//constructor
-			solver(void);
+			Solver(void);
 
 			//destructor
-			virtual ~solver(void);
+			virtual ~Solver(void);
 
 			//data
 			virtual void save(const char*) const;

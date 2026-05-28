@@ -1,8 +1,6 @@
 //Math
-#include "Math/inc/solvers/newton_raphson.hpp"
-
-//Test
 #include "Math/Test/inc/solvers.hpp"
+#include "Math/inc/solvers/NewtonRaphson.hpp"
 
 void tests::solvers::newton_raphson::truss_von_mises(void)
 {

@@ -9,7 +9,7 @@
 //math
 #include "Math/inc/misc/util.hpp"
 #include "Math/inc/linear/vector.hpp"
-#include "Math/inc/solvers/harmonic2.hpp"
+#include "Math/inc/solvers/Harmonic.hpp"
 
 extern "C"
 {
@@ -39,7 +39,7 @@ static void(*legendre_dr_compute)(int, double[], double[]) = legendre_compute_dr
 //M(t, w, l, x(t), v(t)) = M(x(t))
 
 //tangent on v:
-//C(t, w, l, x(t), v(t)) = dfi/dc(x(t), v(t)) - l * dfv/dx(t, w, x(t), v(t))
+//C(t, w, l, x(t), v(t)) = dfi/dv(x(t), v(t)) - l * dfe/dv(t, w, x(t), v(t))
 
 //tangent on x:
 //K(t, w, l, x(t), v(t), a(t)) = dfi/dx(x(t), v(t)) - l * dfe/dx(t, w, x(t), v(t)) - dM/dx(x(t)) : a(t)
@@ -95,7 +95,7 @@ namespace math
 		//solve
 		void harmonic2::apply(void)
 		{
-			solver::apply();
+			Solver::apply();
 			(m_control == control::load ? m_l : m_w) = m_p_new;
 		}
 		void harmonic2::check(void)
@@ -107,7 +107,7 @@ namespace math
 		}
 		void harmonic2::setup(void)
 		{
-			solver::setup();
+			Solver::setup();
 			legendre_dr_compute(m_quadrature_order, m_sq, m_wq);
 		}
 		void harmonic2::compute(void)
@@ -408,7 +408,7 @@ namespace math
 				delete[] ptr;
 			}
 			//solver
-			solver::cleanup();
+			Solver::cleanup();
 		}
 		void harmonic2::allocate(void)
 		{
@@ -426,7 +426,7 @@ namespace math
 			m_wq = new double[m_quadrature_order];
 			m_size = (1 + 2 * m_harmonics) * m_dofs;
 			//solver
-			solver::allocate();
+			Solver::allocate();
 		}
 	}
 }

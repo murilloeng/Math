@@ -2,10 +2,8 @@
 #include <cmath>
 
 //math
-#include "Math/inc/solvers/newmark.hpp"
-
-//test
 #include "Math/Test/inc/solvers.hpp"
+#include "Math/inc/solvers/Newmark.hpp"
 
 void tests::solvers::newmark::single_pendulum(void)
 {

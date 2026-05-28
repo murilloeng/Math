@@ -3,7 +3,7 @@
 #include <cstdio>
 
 //math
-#include "Math/inc/solvers/bisection.hpp"
+#include "Math/inc/solvers/Bisection.hpp"
 
 namespace math
 {

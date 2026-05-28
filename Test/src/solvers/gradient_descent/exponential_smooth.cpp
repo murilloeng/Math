@@ -2,7 +2,7 @@
 #include <cmath>
 
 //math
-#include "Math/inc/solvers/gradient_descent.hpp"
+#include "Math/inc/solvers/GradientDescent.hpp"
 
 //test
 #include "Math/Test/inc/solvers.hpp"
