@@ -96,10 +96,7 @@ namespace math
 		}
 		void Solver::setup(void)
 		{
-			//data
 			compute();
-			const uint32_t ss = state_set();
-			//setup
 			m_step = 0;
 			m_dp = m_dp0;
 			m_p_old = m_p_new;
@@ -108,9 +105,9 @@ namespace math
 			m_convergence.m_solver = this;
 			m_continuation.m_solver = this;
 			m_stop_criteria.m_solver = this;
-			if(ss & uint32_t(State::x)) memcpy(m_x_old, m_x_new, m_size * sizeof(double));
-			if(ss & uint32_t(State::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
-			if(ss & uint32_t(State::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
+			if(state_set() & uint32_t(State::x)) memcpy(m_x_old, m_x_new, m_size * sizeof(double));
+			if(state_set() & uint32_t(State::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
+			if(state_set() & uint32_t(State::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
 		}
 		void Solver::record(void)
 		{

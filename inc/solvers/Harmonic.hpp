@@ -23,10 +23,10 @@ namespace math
 			uint32_t tangent_set(void) const override;
 
 			//enums
-			enum class control : uint32_t
+			enum class Control : uint32_t
 			{
-				load,
-				frequency
+				Load,
+				Frequency
 			};
 
 		private:
@@ -69,7 +69,7 @@ namespace math
 			double *m_rd, *m_fid, *m_fed;
 			uint32_t m_dofs, m_harmonics, m_quadrature_order;
 
-			control m_control;
+			Control m_control;
 			std::function<void(double*, const double*, const double*)> m_internal_force;
 			std::function<void(double*, const double*, const double*, double, double)> m_external_force;
 

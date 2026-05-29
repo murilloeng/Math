@@ -1,9 +1,6 @@
 //std
 #include <cmath>
-#include <cfloat>
-#include <cstdio>
 #include <cstring>
-#include <malloc.h>
 #include <stdexcept>
 
 //Math
@@ -65,9 +62,9 @@ namespace math
 	{
 		//constructors
 		Harmonic::Harmonic(void) : 
-			m_sq(nullptr), m_wq(nullptr),
-			m_xd(nullptr), m_vd(nullptr), m_ad(nullptr),
-			m_Kd(nullptr), m_Cd(nullptr), m_Md(nullptr)
+			m_sq{nullptr}, m_wq{nullptr},
+			m_xd{nullptr}, m_vd{nullptr}, m_ad{nullptr},
+			m_Kd{nullptr}, m_Cd{nullptr}, m_Md{nullptr}
 		{
 			return;
 		}
@@ -96,13 +93,13 @@ namespace math
 		void Harmonic::apply(void)
 		{
 			Solver::apply();
-			(m_control == control::load ? m_l : m_w) = m_p_new;
+			(m_control == Control::Load ? m_l : m_w) = m_p_new;
 		}
 		void Harmonic::check(void)
 		{
 			if(!m_internal_force || !m_external_force || !m_inertia || !m_damping || !m_stiffness)
 			{
-				throw std::runtime_error("Harmonic solver called with at least one method not set!");
+				throw std::runtime_error("Error: Harmonic solver called with at least one method not set!");
 			}
 		}
 		void Harmonic::setup(void)
@@ -291,8 +288,8 @@ namespace math
 		}
 		void Harmonic::compute_harmonic_tangent_p(void)
 		{
-			if(m_control == control::load) compute_harmonic_tangent_l();
-			if(m_control == control::frequency) compute_harmonic_tangent_w();
+			if(m_control == Control::Load) compute_harmonic_tangent_l();
+			if(m_control == Control::Frequency) compute_harmonic_tangent_w();
 		}
 		void Harmonic::compute_harmonic_tangent_l(void)
 		{
