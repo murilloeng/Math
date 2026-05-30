@@ -34,9 +34,12 @@ static void stiffness(double* K, const double*, const double*, const double*, do
 	K[0] = k;
 }
 
-void tests::solvers::harmonic::oscillator(void)
+void tests::solvers::harmonic::linear(void)
 {
 	//data
+	const uint32_t ns = 1000;
+	const double w0 = 1.00e-01;
+	const double wf = 4.00e+00;
 	math::solvers::Harmonic solver;
 	//setup
 	solver.m_dofs = 1;
@@ -44,11 +47,11 @@ void tests::solvers::harmonic::oscillator(void)
 	solver.m_w = 1.00e-01;
 	solver.m_harmonics = 1;
 	solver.m_watch_dof = 1;
-	solver.m_dp0 = 2.00e-10;
-	solver.m_step_max = 1000;
+	solver.m_step_max = ns;
+	solver.m_dp0 = (wf - w0) / ns;
 	solver.m_quadrature_order = 20;
 	solver.m_control = math::solvers::Harmonic::Control::Frequency;
-	solver.m_continuation.m_type = math::solvers::Continuation::Type::ControlLoad;
+	solver.m_continuation.m_type = math::solvers::Continuation::Type::LoadControl;
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;
@@ -60,5 +63,5 @@ void tests::solvers::harmonic::oscillator(void)
 	//solve
 	solver.solve();
 	//save
-	solver.save("oscillator.dat");
+	solver.save("Linear.dat");
 }

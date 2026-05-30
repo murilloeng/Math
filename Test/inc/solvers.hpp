@@ -6,8 +6,8 @@ namespace tests
 	{
 		namespace harmonic
 		{
-			void pyramid(void);
-			void oscillator(void);
+			void linear(void);
+			void duffing(void);
 		}
 		namespace newton_raphson
 		{

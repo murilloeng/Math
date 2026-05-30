@@ -22,8 +22,8 @@ namespace math
 			enum class Type : uint32_t
 			{
 				MinimalNorm				= 1 << 0,
-				ControlLoad				= 1 << 1,
-				ControlState			= 1 << 2,
+				LoadControl				= 1 << 1,
+				StateControl			= 1 << 2,
 				ArcLengthSpherical		= 1 << 3,
 				ArcLengthCylindrical	= 1 << 4,
 				Last
