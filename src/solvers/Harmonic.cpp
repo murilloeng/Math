@@ -91,7 +91,7 @@ namespace math
 		void Harmonic::setup(void)
 		{
 			//data
-			(m_control == Control::Load ? m_l : m_w) = m_p_new;
+			m_p_new = m_control == Control::Load ? m_l : m_w;
 			legendre_compute_dr(m_quadrature_order, m_sq, m_wq);
 			//solver
 			Solver::setup();

@@ -9,7 +9,7 @@ namespace math
 	{
 		//constructor
 		Convergence::Convergence(void) : 
-			m_type(Type::Force), m_solver(nullptr), m_tolerance(1.00e-5)
+			m_type{Type::Force}, m_solver{nullptr}, m_tolerance{1.00e-5}
 		{
 			return;
 		}
