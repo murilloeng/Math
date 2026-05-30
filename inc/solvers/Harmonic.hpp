@@ -1,14 +1,13 @@
 #pragma once
 
 //Math
-#include "Math/inc/solvers/Solver.hpp"
-#include "Math/inc/quadrature/rule.hpp"
+#include "Math/inc/solvers/NewtonRaphson.hpp"
 
 namespace math
 {
 	namespace solvers
 	{
-		class Harmonic : public Solver
+		class Harmonic : private NewtonRaphson
 		{
 		public:
 			//constructors
@@ -17,17 +16,14 @@ namespace math
 			//destructor
 			~Harmonic(void);
 
-			//data
-			uint32_t state_set(void) const override;
-			uint32_t force_set(void) const override;
-			uint32_t tangent_set(void) const override;
-
 			//enums
 			enum class Control : uint32_t
 			{
 				Load,
 				Frequency
 			};
+
+			using NewtonRaphson::state_set;
 
 		private:
 			//solve

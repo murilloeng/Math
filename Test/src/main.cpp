@@ -10,11 +10,15 @@
 #include "Math/Test/inc/rotations.hpp"
 #include "Math/Test/inc/miscellaneous.hpp"
 
+#include "Math/inc/solvers/Harmonic.hpp"
+
 int main(void)
 {
 	try
 	{
-		tests::rotations::vec3::rotation_third();
+		math::solvers::Harmonic solver;
+		// printf("state set: %d\n", solver.state_set());
+		// tests::rotations::vec3::rotation_third();
 	}
 	catch(const std::exception& exception)
 	{

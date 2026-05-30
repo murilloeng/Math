@@ -30,7 +30,7 @@ namespace math
 		//destructor
 		NewtonRaphson::~NewtonRaphson(void)
 		{
-			cleanup();
+			return;
 		}
 
 		//data

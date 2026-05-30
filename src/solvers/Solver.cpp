@@ -12,19 +12,19 @@ namespace math
 	{
 		//constructor
 		Solver::Solver(void) : 
-			m_silent(false), 
-			m_equilibrium(false),
-			m_size(1), m_watch_dof(0),
-			m_step(0), m_attempt(0), m_iteration(0),
-			m_step_max(100), m_attempt_max(5), m_iteration_max(10),
-			m_K(nullptr), m_C(nullptr), m_M(nullptr),
-			m_r(nullptr), m_fi(nullptr), m_fe(nullptr), 
-			m_dxr(nullptr), m_dxt(nullptr), m_ddxr(nullptr), m_ddxt(nullptr),
-			m_x_old(nullptr), m_x_new(nullptr), m_x_data(nullptr), m_dx(nullptr),
-			m_v_old(nullptr), m_v_new(nullptr), m_v_data(nullptr), m_dv(nullptr),
-			m_a_old(nullptr), m_a_new(nullptr), m_a_data(nullptr), m_da(nullptr),
-			m_t_old(0), m_t_new(0), m_t_data(nullptr), m_dt(0), m_t_max(1.00e+00),
-			m_p_old(0), m_p_new(0), m_p_data(nullptr), m_dp(0), m_dp0(1.00e-02), m_ddp(0)
+			m_silent{false}, 
+			m_equilibrium{false},
+			m_size{1}, m_watch_dof{0},
+			m_step{0}, m_attempt{0}, m_iteration{0},
+			m_step_max{100}, m_attempt_max{5}, m_iteration_max{10},
+			m_K{nullptr}, m_C{nullptr}, m_M{nullptr},
+			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr}, 
+			m_dxr{nullptr}, m_dxt{nullptr}, m_ddxr{nullptr}, m_ddxt{nullptr},
+			m_x_old{nullptr}, m_x_new{nullptr}, m_x_data{nullptr}, m_dx{nullptr},
+			m_v_old{nullptr}, m_v_new{nullptr}, m_v_data{nullptr}, m_dv{nullptr},
+			m_a_old{nullptr}, m_a_new{nullptr}, m_a_data{nullptr}, m_da{nullptr},
+			m_t_old{0}, m_t_new{0}, m_t_data{nullptr}, m_dt{0}, m_t_max{1.00e+00},
+			m_p_old{0}, m_p_new{0}, m_p_data{nullptr}, m_dp{0}, m_dp0{1.00e-02}, m_ddp{0}
 		{
 			return;
 		}
@@ -32,7 +32,7 @@ namespace math
 		//destructor
 		Solver::~Solver(void)
 		{
-			Solver::cleanup();
+			cleanup();
 		}
 
 		//data
@@ -84,12 +84,12 @@ namespace math
 			//print
 			if(!m_silent)
 			{
-				printf("step: %04d ", m_step);
-				if(ss & uint32_t(State::t)) printf("time: %+.6e ", m_t_new);
-				if(ss & uint32_t(State::p)) printf("load: %+.6e ", m_p_new);
-				if(ss & uint32_t(State::x)) printf("state: %+.6e ", m_x_new[m_watch_dof]);
-				if(ss & uint32_t(State::v)) printf("velocity: %+.6e ", m_v_new[m_watch_dof]);
-				if(ss & uint32_t(State::a)) printf("acceleration: %+.6e ", m_a_new[m_watch_dof]);
+				printf("Step: %04d ", m_step);
+				if(ss & uint32_t(State::t)) printf("Time: %+.6e ", m_t_new);
+				if(ss & uint32_t(State::p)) printf("Load: %+.6e ", m_p_new);
+				if(ss & uint32_t(State::x)) printf("State: %+.6e ", m_x_new[m_watch_dof]);
+				if(ss & uint32_t(State::v)) printf("Velocity: %+.6e ", m_v_new[m_watch_dof]);
+				if(ss & uint32_t(State::a)) printf("Acceleration: %+.6e ", m_a_new[m_watch_dof]);
 				printf("\n");
 			}
 			if(m_interface) m_interface(m_step);

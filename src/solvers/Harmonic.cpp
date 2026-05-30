@@ -10,16 +10,8 @@
 
 extern "C"
 {
-	#ifdef _WIN32
-	void legendre_dr_compute(int, double[], double[]);
-	#else
 	void legendre_compute_dr(int, double[], double[]);
-	#endif
 }
-
-#ifndef _WIN32
-static void(*legendre_dr_compute)(int, double[], double[]) = legendre_compute_dr;
-#endif
 
 //x: state vector
 //w: load frequency
@@ -64,7 +56,8 @@ namespace math
 		Harmonic::Harmonic(void) : 
 			m_sq{nullptr}, m_wq{nullptr},
 			m_xd{nullptr}, m_vd{nullptr}, m_ad{nullptr},
-			m_Kd{nullptr}, m_Cd{nullptr}, m_Md{nullptr}
+			m_Kd{nullptr}, m_Cd{nullptr}, m_Md{nullptr},
+			m_rd{nullptr}, m_fid{nullptr}, m_fed{nullptr}
 		{
 			return;
 		}
@@ -73,20 +66,6 @@ namespace math
 		Harmonic::~Harmonic(void)
 		{
 			cleanup();
-		}
-
-		//data
-		uint32_t Harmonic::state_set(void) const
-		{
-			return uint32_t(State::x) | uint32_t(State::p);
-		}
-		uint32_t Harmonic::force_set(void) const
-		{
-			return uint32_t(Force::r) | uint32_t(Force::fe);
-		}
-		uint32_t Harmonic::tangent_set(void) const
-		{
-			return uint32_t(Tangent::K);
 		}
 
 		//solve
@@ -105,7 +84,7 @@ namespace math
 		void Harmonic::setup(void)
 		{
 			Solver::setup();
-			legendre_dr_compute(m_quadrature_order, m_sq, m_wq);
+			legendre_compute_dr(m_quadrature_order, m_sq, m_wq);
 		}
 		void Harmonic::compute(void)
 		{
@@ -397,15 +376,16 @@ namespace math
 		void Harmonic::cleanup(void)
 		{
 			//harmonic
-			double* data[] = {
-				m_sq, m_wq, m_xd, m_vd, m_ad, m_rd, m_fid, m_fed, m_Kd, m_Cd, m_Md
+			double** data[] = {
+				&m_sq, &m_wq, &m_xd, &m_vd, &m_ad, &m_Kd, &m_Cd, &m_Md, &m_rd, &m_fid, &m_fed
 			};
-			for(double* ptr : data)
+			for(double** ptr : data)
 			{
-				delete[] ptr;
+				delete[] *ptr;
+				*ptr = nullptr;
 			}
 			//solver
-			Solver::cleanup();
+			NewtonRaphson::cleanup();
 		}
 		void Harmonic::allocate(void)
 		{
@@ -423,7 +403,11 @@ namespace math
 			m_wq = new double[m_quadrature_order];
 			m_size = (1 + 2 * m_harmonics) * m_dofs;
 			//solver
-			Solver::allocate();
+			NewtonRaphson::allocate();
 		}
+		// void Harmonic::allocate(uint32_t dofs, uint32_t harmonics)
+		// {
+		// 	m_dofs = dofs, m_harmonics = harmonics, allocate();
+		// }
 	}
 }
