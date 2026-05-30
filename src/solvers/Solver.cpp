@@ -32,7 +32,21 @@ namespace math
 		//destructor
 		Solver::~Solver(void)
 		{
-			cleanup();
+			//data
+			const double* data[] = {
+				m_K, m_C, m_M, 
+				m_r, m_fi, m_fe,
+				m_dxr, m_dxt, m_ddxr, m_ddxt,
+				m_x_old, m_x_new, m_x_data, m_dx,
+				m_v_old, m_v_new, m_v_data, m_dv,
+				m_a_old, m_a_new, m_a_data, m_da,
+				m_t_data, m_p_data
+			};
+			//delete
+			for(const double* ptr : data)
+			{
+				delete[] ptr;
+			}
 		}
 
 		//data

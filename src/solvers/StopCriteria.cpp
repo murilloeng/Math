@@ -11,7 +11,7 @@ namespace math
 	{
 		//constructor
 		StopCriteria::StopCriteria(void) : 
-			m_stop(type::last), m_types(uint32_t(type::step_maximum) & uint32_t(type::time_maximum)), 
+			m_stop(Type::Last), m_types(uint32_t(Type::StepMaximum) & uint32_t(Type::TimeMaximum)), 
 			m_p_min(-DBL_MAX), m_p_max(+DBL_MAX), m_x_min(-DBL_MAX), m_x_max(+DBL_MAX)
 		{
 			return;
@@ -38,12 +38,12 @@ namespace math
 				&StopCriteria::stop_state_value_negative, &StopCriteria::stop_state_value_positive
 			};
 			//stop
-			m_stop = type::last;
-			for(uint32_t i = 0; 1U << i < uint32_t(type::last); i++)
+			m_stop = Type::Last;
+			for(uint32_t i = 0; 1U << i < uint32_t(Type::Last); i++)
 			{
 				if((i < 2 || m_types & 1 << i) && (this->*fun[i])())
 				{
-					m_stop = type(1 << i);
+					m_stop = Type(1 << i);
 					return true;
 				}
 			}

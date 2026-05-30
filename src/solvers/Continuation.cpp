@@ -12,11 +12,11 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		Continuation::Continuation(void) : m_type(type::arc_length_cylindrical)
+		Continuation::Continuation(void) : m_type(Type::ArcLengthCylindrical)
 		{
 			return;
 		}
-		Continuation::Continuation(type type) : m_type(type)
+		Continuation::Continuation(Type type) : m_type(type)
 		{
 			return;
 		}
@@ -39,7 +39,7 @@ namespace math
 				&Continuation::predictor_arc_length_cylindrical
 			};
 			//predictor
-			for(uint32_t i = 0; 1U << i < uint32_t(type::last); i++)
+			for(uint32_t i = 0; 1U << i < uint32_t(Type::Last); i++)
 			{
 				if(uint32_t(m_type) == 1U << i)
 				{
@@ -59,7 +59,7 @@ namespace math
 				&Continuation::corrector_arc_length_cylindrical
 			};
 			//corrector
-			for(uint32_t i = 0; 1U << i < uint32_t(type::last); i++)
+			for(uint32_t i = 0; 1U << i < uint32_t(Type::Last); i++)
 			{
 				if(uint32_t(m_type) == 1U << i)
 				{

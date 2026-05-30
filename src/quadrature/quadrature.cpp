@@ -17,7 +17,7 @@ namespace math
 	namespace quadrature
 	{
 		//constructor
-		Quadrature::Quadrature(uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(rule::legendre)
+		Quadrature::Quadrature(uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(rule::Legendre)
 		{
 			this->order(order);
 		}
@@ -60,11 +60,11 @@ namespace math
 			delete[] m_weights;
 			m_points = new double[m_order];
 			m_weights = new double[m_order];
-			if(m_rule == quadrature::rule::lobatto)
+			if(m_rule == quadrature::rule::Lobatto)
 			{
 				lobatto_set(m_order, m_points, m_weights);
 			}
-			else if(m_rule == quadrature::rule::legendre)
+			else if(m_rule == quadrature::rule::Legendre)
 			{
 				legendre_set(m_order, m_points, m_weights);
 			}
@@ -88,8 +88,8 @@ namespace math
 		const char* Quadrature::rule_name(quadrature::rule rule)
 		{
 			return 
-				rule == quadrature::rule::lobatto ? "Lobatto" :
-				rule == quadrature::rule::legendre ? "Legendre" : "Error";
+				rule == quadrature::rule::Lobatto ? "Lobatto" :
+				rule == quadrature::rule::Legendre ? "Legendre" : "Error";
 		}
 
 		//points

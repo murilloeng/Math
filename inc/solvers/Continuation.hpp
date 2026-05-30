@@ -19,19 +19,19 @@ namespace math
 		{
 		public:
 			//types
-			enum class type : uint32_t
+			enum class Type : uint32_t
 			{
-				minimal_norm			= 1 << 0,
-				control_load			= 1 << 1,
-				control_state			= 1 << 2,
-				arc_length_spherical	= 1 << 3,
-				arc_length_cylindrical	= 1 << 4,
-				last
+				MinimalNorm				= 1 << 0,
+				ControlLoad				= 1 << 1,
+				ControlState			= 1 << 2,
+				ArcLengthSpherical		= 1 << 3,
+				ArcLengthCylindrical	= 1 << 4,
+				Last
 			};
 	
 			//constructor
 			Continuation(void);
-			Continuation(type);
+			Continuation(Type);
 	
 			//destructor
 			~Continuation(void);
@@ -53,7 +53,7 @@ namespace math
 			double corrector_arc_length_cylindrical(void) const;
 	
 			//data
-			type m_type;
+			Type m_type;
 			Solver* m_solver;
 		};
 	}

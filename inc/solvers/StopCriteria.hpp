@@ -19,23 +19,23 @@ namespace math
 		{
 		public:
 			//types
-			enum class type : uint32_t
+			enum class Type : uint32_t
 			{
-				step_maximum			= 1 << 0,
-				time_maximum			= 1 << 1,
-				load_limit_minimum		= 1 << 2,
-				load_limit_maximum		= 1 << 3,
-				load_local_minimum		= 1 << 4,
-				load_local_maximum		= 1 << 5,
-				load_value_negative		= 1 << 6,
-				load_value_positive		= 1 << 7,
-				state_limit_minimum		= 1 << 8,
-				state_limit_maximum		= 1 << 9,
-				state_local_minimum		= 1 << 10,
-				state_local_maximum		= 1 << 11,
-				state_value_negative	= 1 << 12,
-				state_value_positive	= 1 << 13,
-				last
+				StepMaximum			= 1 << 0,
+				TimeMaximum			= 1 << 1,
+				LoadLimitMinimum	= 1 << 2,
+				LoadLimitMaximum	= 1 << 3,
+				LoadLocalMinimum	= 1 << 4,
+				LoadLocalMaximum	= 1 << 5,
+				LoadValueNegative	= 1 << 6,
+				LoadValuePositive	= 1 << 7,
+				StateLimitMinimum	= 1 << 8,
+				StateLimitMaximum	= 1 << 9,
+				StateLocalMinimum	= 1 << 10,
+				StateLocalMaximum	= 1 << 11,
+				StateValueNegative	= 1 << 12,
+				StateValuePositive	= 1 << 13,
+				Last
 			};
 
 			//constructor
@@ -66,7 +66,7 @@ namespace math
 
 		public:
 			//data
-			type m_stop;
+			Type m_stop;
 			uint32_t m_types;
 			Solver* m_solver;
 			double m_p_min, m_p_max;

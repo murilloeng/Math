@@ -16,9 +16,7 @@ int main(void)
 {
 	try
 	{
-		math::solvers::Harmonic solver;
-		// printf("state set: %d\n", solver.state_set());
-		// tests::rotations::vec3::rotation_third();
+		tests::solvers::harmonic::oscillator();
 	}
 	catch(const std::exception& exception)
 	{

@@ -22,7 +22,7 @@ void tests::solvers::newmark::single_dof(void)
 	solver.m_size = 1;
 	solver.m_step_max = 2000;
 	solver.m_t_max = 2 * M_PI * n / w0;
-	solver.m_convergence.m_type = math::solvers::Convergence::type::fixed;
+	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
 	//initials
 	solver.allocate();
 	solver.m_x_new[0] = x0;

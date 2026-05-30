@@ -3,7 +3,7 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/solvers/harmonic.hpp"
+#include "Math/inc/solvers/Harmonic.hpp"
 
 //Test
 #include "Math/Test/inc/solvers.hpp"
@@ -12,24 +12,24 @@ static const double k = 4.00e+00;
 static const double c = 1.00e-01;
 static const double m = 1.00e+00;
 
-static void internal_force(double* fi, const double* d, const double* v, void** args)
+static void internal_force(double* fi, const double* x, const double* v)
 {
-	fi[0] = k * d[0] + c * v[0];
+	fi[0] = k * x[0] + c * v[0];
 }
-static void external_force(double* fe, double t, double w, const double* d, void** args)
+static void external_force(double* fe, const double*, const double*, double t, double w)
 {
 	fe[0] = cos(w * t);
 }
 
-static void inertia(double* M, const double* d, void** args)
+static void inertia(double* M, const double*)
 {
 	M[0] = m;
 }
-static void damping(double* C, const double* d, const double* v, void** args)
+static void damping(double* C, const double*, const double*, double)
 {
 	C[0] = c;
 }
-static void stiffness(double* K, double t, double w, double l, const double* d, const double* v, const double* a, void** args)
+static void stiffness(double* K, const double*, const double*, const double*, double, double, double)
 {
 	K[0] = k;
 }
@@ -37,25 +37,28 @@ static void stiffness(double* K, double t, double w, double l, const double* d, 
 void tests::solvers::harmonic::oscillator(void)
 {
 	//data
-	math::harmonic solver;
+	math::solvers::Harmonic solver;
 	//setup
-	solver.m_size = 1;
-	solver.m_l_0 = 1.0;
-	solver.m_w_0 = 1.0;
+	solver.m_dofs = 1;
+	solver.m_p_new = 1.0;
 	solver.m_harmonics = 1;
-	solver.m_dpg = 2.00e-03;
+	solver.m_dp0 = 2.00e-03;
 	solver.m_step_max = 1000;
-	solver.m_tolerance = 1e-5;
 	solver.m_iteration_max = 10;
 	solver.m_quadrature_order = 20;
-	solver.m_control = math::harmonic_control::frequency;
-	solver.m_strategy = math::harmonic_strategy::arc_length_spherical;
+	solver.m_convergence.m_tolerance = 1e-5;
+	solver.m_control = math::solvers::Harmonic::Control::Frequency;
+	solver.m_continuation.m_type = math::solvers::Continuation::Type::ArcLengthCylindrical;
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;
 	solver.m_stiffness = stiffness;
 	solver.m_internal_force = internal_force;
 	solver.m_external_force = external_force;
+	//setup
+	solver.allocate();
 	//solve
-	if(solver.solve()) solver.save();
+	solver.solve();
+	//save
+	solver.save("oscillator.dat");
 }

@@ -15,7 +15,7 @@ namespace math
 			m_step_max = 1;
 			m_attempt_max = 1;
 			m_iteration_max = 100;
-			m_convergence.m_type = Convergence::type::fixed;
+			m_convergence.m_type = Convergence::Type::Fixed;
 		}
 		
 		//destructor

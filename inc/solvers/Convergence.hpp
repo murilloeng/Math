@@ -19,11 +19,11 @@ namespace math
 		{
 		public:
 			//types
-			enum class type : uint32_t
+			enum class Type : uint32_t
 			{
-				fixed = 1 << 0, 
-				force = 1 << 1,
-				last
+				Fixed = 1 << 0, 
+				Force = 1 << 1,
+				Last
 			};
 
 			//constructor
@@ -36,7 +36,7 @@ namespace math
 			bool check(void) const;
 
 			//data
-			type m_type;
+			Type m_type;
 			Solver* m_solver;
 			double m_tolerance;
 		};

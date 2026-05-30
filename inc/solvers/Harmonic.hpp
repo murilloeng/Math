@@ -23,37 +23,50 @@ namespace math
 				Frequency
 			};
 
-			using NewtonRaphson::state_set;
+			//data
+			using Solver::save;
+			using Solver::state_set, Solver::force_set, Solver::tangent_set;
+			
+			using Solver::m_silent, Solver::m_equilibrium;
+			using Solver::m_convergence, Solver::m_continuation, Solver::m_stop_criteria;
+			using Solver::m_stop, Solver::m_record, Solver::m_update, Solver::m_restore, Solver::m_interface;
+
+			using Solver::m_watch_dof;
+			using Solver::m_step, Solver::m_attempt, Solver::m_iteration;
+			using Solver::m_step_max, Solver::m_attempt_max, Solver::m_iteration_max;
+
+			using Solver::m_r, Solver::m_fe, Solver::m_K;
+			using Solver::m_x_old, Solver::m_x_new, Solver::m_x_data, Solver::m_dx;
+			using Solver::m_t_old, Solver::m_t_new, Solver::m_t_data, Solver::m_dt;
+			using Solver::m_p_old, Solver::m_p_new, Solver::m_p_data, Solver::m_dp, Solver::m_dp0, Solver::m_ddp;
 
 		private:
 			//solve
 			void apply(void) override;
 			void check(void) override;
 			void setup(void) override;
-			void compute(void) override;
-			void predictor(void) override;
-			void corrector(void) override;
 
 			//state
-			void compute_state(double);
-			void compute_residue(double);
-			void compute_velocity(double);
-			void compute_acceleration(double);
+			void compute_state(const double*, double);
+			void compute_residue(const double*, double);
+			void compute_velocity(const double*, double);
+			void compute_acceleration(const double*, double);
 
 			//tangent
-			void compute_tangent_l(double);
-			void compute_tangent_w(double);
-			void compute_tangent_z(double);
+			void compute_tangent_l(const double*, double);
+			void compute_tangent_w(const double*, double);
+			void compute_tangent_z(const double*, double);
 
 			//harmonic
-			void compute_harmonic_residue(void);
-			void compute_harmonic_tangent_p(void);
-			void compute_harmonic_tangent_l(void);
-			void compute_harmonic_tangent_w(void);
-			void compute_harmonic_tangent_z(void);
+			void compute_harmonic_residue(double*, const double*);
+			void compute_harmonic_tangent_p(double*, const double*);
+			void compute_harmonic_tangent_l(double*, const double*);
+			void compute_harmonic_tangent_w(double*, const double*);
+			void compute_harmonic_tangent_z(double*, const double*);
 
 		public:
-			//solver
+			//solve
+			void solve(void) override;
 			void cleanup(void) override;
 			void allocate(void) override;
 
