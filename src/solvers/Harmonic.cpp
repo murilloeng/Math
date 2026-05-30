@@ -90,8 +90,11 @@ namespace math
 		}
 		void Harmonic::setup(void)
 		{
-			Solver::setup();
+			//data
+			(m_control == Control::Load ? m_l : m_w) = m_p_new;
 			legendre_compute_dr(m_quadrature_order, m_sq, m_wq);
+			//solver
+			Solver::setup();
 		}
 
 		//state
@@ -285,8 +288,8 @@ namespace math
 			//data
 			matrix Ks(K, m_size, m_size);
 			const matrix Kd(m_Kd, m_dofs, m_dofs);
-			const matrix Cd(m_Kd, m_dofs, m_dofs);
-			const matrix Md(m_Kd, m_dofs, m_dofs);
+			const matrix Cd(m_Cd, m_dofs, m_dofs);
+			const matrix Md(m_Md, m_dofs, m_dofs);
 			//tangent
 			Ks.zeros();
 			for(uint32_t k = 0; k < m_quadrature_order; k++)

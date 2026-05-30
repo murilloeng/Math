@@ -40,15 +40,16 @@ void tests::solvers::harmonic::oscillator(void)
 	math::solvers::Harmonic solver;
 	//setup
 	solver.m_dofs = 1;
-	solver.m_p_new = 1.0;
+	solver.m_l = 1.00e+00;
 	solver.m_harmonics = 1;
-	solver.m_dp0 = 2.00e-03;
+	solver.m_dp0 = 2.00e-10;
 	solver.m_step_max = 1000;
+	solver.m_p_new = 1.00e-01;
 	solver.m_iteration_max = 10;
 	solver.m_quadrature_order = 20;
 	solver.m_convergence.m_tolerance = 1e-5;
 	solver.m_control = math::solvers::Harmonic::Control::Frequency;
-	solver.m_continuation.m_type = math::solvers::Continuation::Type::ArcLengthCylindrical;
+	solver.m_continuation.m_type = math::solvers::Continuation::Type::ControlLoad;
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;
