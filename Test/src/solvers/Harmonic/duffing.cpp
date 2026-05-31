@@ -51,7 +51,7 @@ void tests::solvers::harmonic::duffing(void)
 	solver.m_step_max = ns;
 	solver.m_harmonics = 3;
 	solver.m_watch_dof = 1;
-	solver.m_dp0 = 0.01 * (w_max - w_min) / ns;
+	solver.m_dp0 = 0 * (w_max - w_min) / ns;
 	solver.m_control = math::solvers::Harmonic::Control::Frequency;
 	solver.m_continuation.m_type = math::solvers::Continuation::Type::ArcLengthCylindrical;
 	//system
@@ -60,10 +60,6 @@ void tests::solvers::harmonic::duffing(void)
 	solver.m_stiffness = stiffness;
 	solver.m_internal_force = internal_force;
 	solver.m_external_force = external_force;
-
-	// srand(time(nullptr));
-	// solver.test_stiffness();
-	// return;
 	//allocate
 	solver.allocate();
 	//solve
