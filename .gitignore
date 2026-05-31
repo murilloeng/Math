@@ -1,5 +1,6 @@
 *
 !*/
+!*.gp
 !*.cpp
 !*.hpp
 !*Makefile

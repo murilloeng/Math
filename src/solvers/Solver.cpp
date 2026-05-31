@@ -98,7 +98,9 @@ namespace math
 			//print
 			if(!m_silent)
 			{
-				printf("Step: %04d ", m_step);
+				printf("Step: %4d ", m_step);
+				printf("Attempts: %d ", m_attempt);
+				printf("Iterations: %d ", m_iteration);
 				if(ss & uint32_t(State::t)) printf("Time: %+.6e ", m_t_new);
 				if(ss & uint32_t(State::p)) printf("Load: %+.6e ", m_p_new);
 				if(ss & uint32_t(State::x)) printf("State: %+.6e ", m_x_new[m_watch_dof]);

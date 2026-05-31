@@ -15,7 +15,7 @@
 //target system: r(x, p) = 0
 
 //tangent on x: K(x, p) = -dr/dx(x, p)
-//tangent on p: fe(x, p) = +dr/dp(x, p)
+//tangent on p: g(x, p) = +dr/dp(x, p)
 
 namespace math
 {

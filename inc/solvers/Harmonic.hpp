@@ -23,6 +23,11 @@ namespace math
 				Frequency
 			};
 
+			//tests
+			void test_inertia(void) const;
+			void test_damping(void) const;
+			void test_stiffness(void) const;
+
 			//data
 			using Solver::save;
 			using Solver::state_set, Solver::force_set, Solver::tangent_set;
@@ -80,10 +85,10 @@ namespace math
 
 			Control m_control;
 			std::function<void(double*, const double*, const double*)> m_internal_force;
-			std::function<void(double*, const double*, const double*, double, double)> m_external_force;
+			std::function<void(double*, const double*, double, double)> m_external_force;
 
 			std::function<void(double*, const double*)> m_inertia;
-			std::function<void(double*, const double*, const double*, double)> m_damping;
+			std::function<void(double*, const double*, const double*)> m_damping;
 			std::function<void(double*, const double*, const double*, const double*, double, double, double)> m_stiffness;
 		};
 	}

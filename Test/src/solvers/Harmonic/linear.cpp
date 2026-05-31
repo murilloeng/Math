@@ -16,7 +16,7 @@ static void internal_force(double* fi, const double* x, const double* v)
 {
 	fi[0] = k * x[0] + c * v[0];
 }
-static void external_force(double* fe, const double*, const double*, double t, double w)
+static void external_force(double* fe, const double*, double t, double w)
 {
 	fe[0] = cos(w * t);
 }
@@ -25,7 +25,7 @@ static void inertia(double* M, const double*)
 {
 	M[0] = m;
 }
-static void damping(double* C, const double*, const double*, double)
+static void damping(double* C, const double*, const double*)
 {
 	C[0] = c;
 }

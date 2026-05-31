@@ -75,6 +75,152 @@ namespace math
 			}
 		}
 
+		//tests
+		void Harmonic::test_inertia(void) const
+		{
+			//data
+			double t, w, l;
+			const uint32_t nt = 1000;
+			const uint32_t nd = m_dofs;
+			math::vector xd(nd), vd(nd), ad(nd);
+			math::matrix Ma(nd, nd), Mn(nd, nd), Me(nd, nd);
+			//function
+			std::function<void(double*, const double*)> function = [this, &t, &w, &l, nd, &xd, &vd](double* r, const double* a){
+				math::matrix M(nd, nd);
+				math::vector fi(nd), fe(nd);
+				m_inertia(M.data(), xd.data());
+				m_external_force(fe.data(), xd.data(), t, w);
+				m_internal_force(fi.data(), xd.data(), vd.data());
+				math::vector(r, nd) = l * fe - fi - M * math::vector(a, nd);
+			};
+			//gradient
+			std::function<void(double*, const double*)> gradient = [this, nd, &xd](double* M, const double* a){
+				m_inertia(M, xd.data());
+				math::matrix(M, nd, nd) *= -1;
+			};
+			//test
+			for(uint32_t i = 0; i < nt; i++)
+			{
+				//state
+				xd.randu();
+				vd.randu();
+				ad.randu();
+				t = math::randu(0, 1);
+				w = math::randu(0, 1);
+				l = math::randu(0, 1);
+				//test
+				gradient(Ma.data(), ad.data());
+				math::ndiff(function, Mn.data(), ad.data(), nd, nd, 1e-5);
+				//check
+				Me = Ma - Mn;
+				if(Me.norm() > 1e-5 * Ma.norm())
+				{
+					Ma.print("Ma");
+					Mn.print("Mn");
+					Me.print("Me");
+					break;
+				}
+				//print
+				printf("test: %d error norm: %+.2e\n", i, Me.norm());
+			}
+		}
+		void Harmonic::test_damping(void) const
+		{
+			//data
+			double t, w, l;
+			const uint32_t nt = 1000;
+			const uint32_t nd = m_dofs;
+			math::vector xd(nd), vd(nd), ad(nd);
+			math::matrix Ca(nd, nd), Cn(nd, nd), Ce(nd, nd);
+			//function
+			std::function<void(double*, const double*)> function = [this, &t, &w, &l, nd, &xd, &ad](double* r, const double* v){
+				math::matrix M(nd, nd);
+				math::vector fi(nd), fe(nd);
+				m_inertia(M.data(), xd.data());
+				m_internal_force(fi.data(), xd.data(), v);
+				m_external_force(fe.data(), xd.data(), t, w);
+				math::vector(r, nd) = l * fe - fi - M * ad;
+			};
+			//gradient
+			std::function<void(double*, const double*)> gradient = [this, nd, &xd](double* C, const double* v){
+				m_damping(C, xd.data(), v);
+				math::matrix(C, nd, nd) *= -1;
+			};
+			//test
+			for(uint32_t i = 0; i < nt; i++)
+			{
+				//state
+				xd.randu();
+				vd.randu();
+				ad.randu();
+				t = math::randu(0, 1);
+				w = math::randu(0, 1);
+				l = math::randu(0, 1);
+				//test
+				gradient(Ca.data(), vd.data());
+				math::ndiff(function, Cn.data(), vd.data(), nd, nd, 1e-5);
+				//check
+				Ce = Ca - Cn;
+				if(Ce.norm() > 1e-5 * Ca.norm())
+				{
+					Ca.print("Ca");
+					Cn.print("Cn");
+					Ce.print("Ce");
+					break;
+				}
+				//print
+				printf("test: %d error norm: %+.2e\n", i, Ce.norm());
+			}
+		}
+		void Harmonic::test_stiffness(void) const
+		{
+			//data
+			double t, w, l;
+			const uint32_t nt = 1000;
+			const uint32_t nd = m_dofs;
+			math::vector xd(nd), vd(nd), ad(nd);
+			math::matrix Ka(nd, nd), Kn(nd, nd), Ke(nd, nd);
+			//function
+			std::function<void(double*, const double*)> function = [this, &t, &w, &l, nd, &vd, &ad](double* r, const double* x){
+				math::matrix M(nd, nd);
+				math::vector fi(nd), fe(nd);
+				m_inertia(M.data(), x);
+				m_external_force(fe.data(), x, t, w);
+				m_internal_force(fi.data(), x, vd.data());
+				math::vector(r, nd) = l * fe - fi - M * ad;
+			};
+			//gradient
+			std::function<void(double*, const double*)> gradient = [this, nd, &vd, &ad, &t, &w, &l](double* K, const double* x){
+				m_stiffness(K, x, vd.data(), ad.data(), t, w, l);
+				math::matrix(K, nd, nd) *= -1;
+			};
+			//test
+			for(uint32_t i = 0; i < nt; i++)
+			{
+				//state
+				xd.randu();
+				vd.randu();
+				ad.randu();
+				t = math::randu(0, 1);
+				w = math::randu(0, 1);
+				l = math::randu(0, 1);
+				//test
+				gradient(Ka.data(), vd.data());
+				math::ndiff(function, Kn.data(), vd.data(), nd, nd, 1e-5);
+				//check
+				Ke = Ka - Kn;
+				if(Ke.norm() > 1e-5 * Ka.norm())
+				{
+					Ka.print("Ka");
+					Kn.print("Kn");
+					Ke.print("Ke");
+					break;
+				}
+				//print
+				printf("test: %d error norm: %+.2e\n", i, Ke.norm());
+			}
+		}
+
 		//solve
 		void Harmonic::apply(void)
 		{
@@ -107,7 +253,7 @@ namespace math
 				const double si = sin(i * m_w * t);
 				const uint32_t p1 = (2 * i - 1) * m_dofs;
 				const uint32_t p2 = (2 * i + 0) * m_dofs;
-				for (uint32_t j = 0; j < m_dofs; j++)
+				for(uint32_t j = 0; j < m_dofs; j++)
 				{
 					m_xd[j] += ci * z[p1 + j];
 					m_xd[j] += si * z[p2 + j];
@@ -123,7 +269,7 @@ namespace math
 			//state
 			m_inertia(m_Md, m_xd);
 			m_internal_force(m_fid, m_xd, m_vd);
-			m_external_force(m_fed, m_xd, m_vd, t, m_w);
+			m_external_force(m_fed, m_xd, t, m_w);
 			//residue
 			for(uint32_t i = 0; i < m_dofs; i++)
 			{
@@ -174,7 +320,7 @@ namespace math
 			compute_state(z, t);
 			compute_velocity(z, t);
 			//system
-			m_external_force(m_fed, m_xd, m_vd, t, m_w);
+			m_external_force(m_fed, m_xd, t, m_w);
 		}
 		void Harmonic::compute_tangent_w(const double* z, double t)
 		{
@@ -184,7 +330,7 @@ namespace math
 			compute_acceleration(z, t);
 			//system
 			m_inertia(m_Md, m_xd);
-			m_damping(m_Cd, m_xd, m_vd, t);
+			m_damping(m_Cd, m_xd, m_vd);
 			memset(m_fed, 0, m_dofs * sizeof(double));
 			//tangent
 			for(uint32_t i = 0; i < m_dofs; i++)
@@ -204,7 +350,7 @@ namespace math
 			compute_acceleration(z, t);
 			//system
 			m_inertia(m_Md, m_xd);
-			m_damping(m_Cd, m_xd, m_vd, t);
+			m_damping(m_Cd, m_xd, m_vd);
 			m_stiffness(m_Kd, m_xd, m_vd, m_ad, t, m_w, m_l);
 		}
 
@@ -280,7 +426,7 @@ namespace math
 					for(uint32_t j = 0; j < m_dofs; j++) g[p1 + j] += wk * ci * m_fed[j];
 					for(uint32_t j = 0; j < m_dofs; j++) g[p2 + j] += wk * si * m_fed[j];
 				}
-				for(uint32_t j = 0; j < m_dofs; j++) g[j] += wk * m_fed[j];
+				for(uint32_t i = 0; i < m_dofs; i++) g[i] += wk * m_fed[i];
 			}
 		}
 		void Harmonic::compute_harmonic_tangent_z(double* K, const double* z)
@@ -291,7 +437,7 @@ namespace math
 			const matrix Cd(m_Cd, m_dofs, m_dofs);
 			const matrix Md(m_Md, m_dofs, m_dofs);
 			//tangent
-			Ks.zeros();
+			memset(K, 0, m_size * m_size * sizeof(double));
 			for(uint32_t k = 0; k < m_quadrature_order; k++)
 			{
 				//quadrature

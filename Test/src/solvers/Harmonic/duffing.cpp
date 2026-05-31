@@ -1,5 +1,6 @@
 //std
 #include <cmath>
+#include <ctime>
 #include <cstdio>
 
 //Math
@@ -13,28 +14,28 @@ static const double l = 5.00e-02;
 static const double m = 1.00e+00;
 static const double c = 5.00e-02;
 static const double k = 1.00e+00;
-static const double knl = 0.00e+00;
+static const double knl = 3.00e+00;
 static const double w_min = 6.00e-01;
 static const double w_max = 1.50e+00;
 
-static void inertia(double* M, const double* d)
+static void inertia(double* M, const double*)
 {
 	M[0] = m;
 }
-static void damping(double* C, const double* d, const double* v, double)
+static void damping(double* C, const double*, const double*)
 {
 	C[0] = c;
 }
-static void stiffness(double* K, const double* x, const double*, const double* a, double t, double w, double l)
+static void stiffness(double* K, const double* x, const double*, const double*, double, double, double)
 {
 	K[0] = k + 3 * knl * x[0] * x[0];
 }
 
 static void internal_force(double* fi, const double* x, const double* v)
 {
-	fi[0] = k * x[0] + knl * x[0] * x[0] * x[0];
+	fi[0] = k * x[0] + knl * x[0] * x[0] * x[0] + c * v[0];
 }
-static void external_force(double* fe, const double*, const double*, double t, double w)
+static void external_force(double* fe, const double*, double t, double w)
 {
 	fe[0] = cos(w * t);
 }
@@ -48,20 +49,25 @@ void tests::solvers::harmonic::duffing(void)
 	solver.m_dofs = 1;
 	solver.m_w = w_min;
 	solver.m_step_max = ns;
-	solver.m_harmonics = 1;
-	solver.m_dp0 = (w_max - w_min) / ns;
+	solver.m_harmonics = 3;
+	solver.m_watch_dof = 1;
+	solver.m_dp0 = 0.01 * (w_max - w_min) / ns;
 	solver.m_control = math::solvers::Harmonic::Control::Frequency;
-	solver.m_continuation.m_type = math::solvers::Continuation::Type::LoadControl;
+	solver.m_continuation.m_type = math::solvers::Continuation::Type::ArcLengthCylindrical;
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;
 	solver.m_stiffness = stiffness;
 	solver.m_internal_force = internal_force;
 	solver.m_external_force = external_force;
+
+	// srand(time(nullptr));
+	// solver.test_stiffness();
+	// return;
 	//allocate
 	solver.allocate();
 	//solve
 	solver.solve();
 	//save
-	solver.save("duffing.dat");
+	solver.save("Test/data/solvers/harmonic/duffing/duffing.dat");
 }
