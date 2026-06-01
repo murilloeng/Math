@@ -58,7 +58,8 @@ namespace math
 			m_xd{nullptr}, m_vd{nullptr}, m_ad{nullptr},
 			m_Kd{nullptr}, m_Cd{nullptr}, m_Md{nullptr},
 			m_rd{nullptr}, m_fid{nullptr}, m_fed{nullptr},
-			m_dofs{0}, m_harmonics{0}, m_quadrature_order{20}
+			m_dofs{0}, m_harmonics{0}, m_quadrature_order{20},
+			m_stability_steps{100}, m_stability{false}, m_stability_data{nullptr}
 		{
 			return;
 		}
@@ -73,6 +74,7 @@ namespace math
 			{
 				delete[] ptr;
 			}
+			delete[] m_stability_data;
 		}
 
 		//tests
@@ -519,6 +521,9 @@ namespace math
 				delete[] *ptr;
 				*ptr = nullptr;
 			}
+			//stability
+			delete[] m_stability_data;
+			m_stability_data = nullptr;
 			//solver
 			NewtonRaphson::cleanup();
 		}
@@ -537,6 +542,7 @@ namespace math
 			m_sq = new double[m_quadrature_order];
 			m_wq = new double[m_quadrature_order];
 			m_size = (1 + 2 * m_harmonics) * m_dofs;
+			if(m_stability) m_stability_data = new bool[m_step_max + 1];
 			//solver
 			NewtonRaphson::allocate();
 			memset(m_x_new, 0, m_size * sizeof(double));

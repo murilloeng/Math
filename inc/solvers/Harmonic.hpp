@@ -84,6 +84,8 @@ namespace math
 			uint32_t m_dofs, m_harmonics, m_quadrature_order;
 
 			Control m_control;
+			uint32_t m_stability_steps;
+			bool m_stability, *m_stability_data;
 			std::function<void(double*, const double*, const double*)> m_internal_force;
 			std::function<void(double*, const double*, double, double)> m_external_force;
 
