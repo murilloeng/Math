@@ -112,7 +112,6 @@ namespace math
 		}
 		void Solver::setup(void)
 		{
-			compute();
 			m_step = 0;
 			m_dp = m_dp0;
 			m_p_old = m_p_new;
@@ -231,6 +230,7 @@ namespace math
 			setup();
 			print();
 			record();
+			compute();
 			for(m_step = 1; !stop(); m_step++)
 			{
 				step();

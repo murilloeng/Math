@@ -25,7 +25,7 @@ namespace math
 			uint32_t force_set(void) const override;
 			uint32_t tangent_set(void) const override;
 
-		private:
+		protected:
 			//solve
 			void check(void) override;
 			void compute(void) override;

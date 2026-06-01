@@ -9,12 +9,13 @@
 //Test
 #include "Math/Test/inc/solvers.hpp"
 
-static const uint32_t ns = 100;
+static const uint32_t ns = 200;
 static const double l = 5.00e-02;
 static const double m = 1.00e+00;
 static const double c = 5.00e-02;
 static const double k = 1.00e+00;
 static const double knl = 3.00e+00;
+static const double dp0 = 1.00e-01;
 static const double w_min = 6.00e-01;
 static const double w_max = 1.50e+00;
 
@@ -48,12 +49,14 @@ void tests::solvers::harmonic::duffing(void)
 	solver.m_l = l;
 	solver.m_dofs = 1;
 	solver.m_w = w_min;
+	solver.m_dp0 = dp0;
 	solver.m_step_max = ns;
 	solver.m_harmonics = 3;
 	solver.m_watch_dof = 1;
-	solver.m_dp0 = 0 * (w_max - w_min) / ns;
+	solver.m_stop_criteria.m_p_max = w_max;
 	solver.m_control = math::solvers::Harmonic::Control::Frequency;
 	solver.m_continuation.m_type = math::solvers::Continuation::Type::ArcLengthCylindrical;
+	solver.m_stop_criteria.m_types |= uint32_t(math::solvers::StopCriteria::Type::LoadLimitMaximum);
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;

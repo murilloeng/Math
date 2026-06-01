@@ -239,7 +239,25 @@ namespace math
 			//data
 			m_p_new = m_control == Control::Load ? m_l : m_w;
 			legendre_compute_dr(m_quadrature_order, m_sq, m_wq);
-			//solver
+			//initial
+			m_dp = 0;
+			m_convergence.m_solver = this;
+			for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
+			{
+				//data
+				compute();
+				if(equilibrium()) break;
+				vector dx(m_dx, m_size);
+				const matrix K(m_K, m_size, m_size);
+				const vector r(m_r, m_size), fe(m_fe, m_size);
+				//corrector
+				if(!K.solve(dx, r))
+				{
+					if(!m_silent) printf("Unable to decompose stiffness matrix in setup!\n");
+				}
+				for(uint32_t i = 0; i < m_size; i++) m_x_new[i] += m_dx[i];
+			}
+			//setup
 			Solver::setup();
 		}
 
@@ -521,6 +539,8 @@ namespace math
 			m_size = (1 + 2 * m_harmonics) * m_dofs;
 			//solver
 			NewtonRaphson::allocate();
+			memset(m_x_new, 0, m_size * sizeof(double));
+			memset(m_x_old, 0, m_size * sizeof(double));
 		}
 	}
 }
