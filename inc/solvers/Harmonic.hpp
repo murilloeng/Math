@@ -42,7 +42,6 @@ namespace math
 
 			using Solver::m_r, Solver::m_fe, Solver::m_K;
 			using Solver::m_x_old, Solver::m_x_new, Solver::m_x_data, Solver::m_dx;
-			using Solver::m_t_old, Solver::m_t_new, Solver::m_t_data, Solver::m_dt;
 			using Solver::m_p_old, Solver::m_p_new, Solver::m_p_data, Solver::m_dp, Solver::m_dp0, Solver::m_ddp;
 
 		private:
