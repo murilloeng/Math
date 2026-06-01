@@ -20,11 +20,9 @@ namespace math
 			//destructor
 			~Validator(void);
 	
-			//types
-			typedef std::vector<uint32_t> ulist;
-	
 			//items
-			const Item* item(uint32_t) const;
+			void create_item(void);
+			Item* item(uint32_t) const;
 	
 			//validation
 			bool validate(void);

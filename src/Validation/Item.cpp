@@ -23,6 +23,12 @@ namespace math
 			return;
 		}
 
+		//distance
+		double Item::distance(void) const
+		{
+			return m_distance;
+		}
+
 		//data
 		void Item::tolerance(double tolerance)
 		{
@@ -33,53 +39,54 @@ namespace math
 			m_function = function;
 		}
 
-		void Item::data_numeric(FILE*)
+		//print
+		void Item::print_numeric(void) const
 		{
-
+			for(const Point& point : m_points_numeric)
+			{
+				printf("%+.6e %+.6e\n", point.m_data[0], point.m_data[1]);
+			}
 		}
-		void Item::data_numeric(FILE*, uint32_t)
-
+		void Item::print_reference(void) const
 		{
-			
-		}
-		void Item::data_numeric(const double*, uint32_t)
-
-		{
-			
-		}
-		void Item::data_numeric(const double*, uint32_t, uint32_t, uint32_t)
-		{
-			
+			for(const Point& point : m_points_reference)
+			{
+				printf("%+.6e %+.6e\n", point.m_data[0], point.m_data[1]);
+			}
 		}
 
-		void Item::data_reference(FILE*)
+		//load
+		void Item::load_numeric(const char* path, uint32_t col_1, uint32_t col_2)
 		{
-			
+			load(m_points_numeric, path, col_1, col_2);
 		}
-		void Item::data_reference(FILE*, uint32_t)
+		void Item::load_numeric(const double* x1, const double* x2, uint32_t rows)
 		{
-			
+			load(m_points_numeric, x1, x2, rows);
 		}
-		void Item::data_reference(const double*, uint32_t)
+		void Item::load_numeric(const double* x, uint32_t rows, uint32_t cols, uint32_t col_1, uint32_t col_2)
 		{
-			
-		}
-		void Item::data_reference(const double*, uint32_t, uint32_t, uint32_t)
-		{
-			
+			load(m_points_numeric, x, rows, cols, col_1, col_2);
 		}
 
-		//distance
-		double Item::distance(void) const
+		void Item::load_reference(const char* path, uint32_t col_1, uint32_t col_2)
 		{
-			return m_distance;
+			load(m_points_reference, path, col_1, col_2);
+		}
+		void Item::load_reference(const double* x1, const double* x2, uint32_t rows)
+		{
+			load(m_points_reference, x1, x2, rows);
+		}
+		void Item::load_reference(const double* x, uint32_t rows, uint32_t cols, uint32_t col_1, uint32_t col_2)
+		{
+			load(m_points_reference, x, rows, cols, col_1, col_2);
 		}
 
-		//data
-		void Item::data(std::vector<Point>& data, const char* path, uint32_t index_1, uint32_t index_2)
+		//load
+		void Item::load(std::vector<Point>& points, const char* path, uint32_t col_1, uint32_t col_2)
 		{
 			//open
-			char line[2048];
+			char line[512];
 			uint32_t rows = 0, cols = 0;
 			FILE* file = fopen(path, "r");
 			//rows
@@ -99,128 +106,73 @@ namespace math
 			}
 			//read
 			rewind(file);
-			data.resize(rows);
+			points.resize(rows);
 			for(uint32_t i = 0; i < rows; i++)
 			{
 				for(uint32_t j = 0; j < cols; j++)
 				{
-					if(j != index_1 && j != index_2)
+					if(j != col_1 && j != col_2)
 					{
 						if(fscanf(file, "%*f") != 0) throw std::runtime_error("Error: Item file read failed!");
 					}
-					else if(j == index_1)
+					else if(j == col_1)
 					{
-						if(fscanf(file, "%lf", &data[i].m_data[0]) != 1) throw std::runtime_error("Error: Item file read failed!");
+						if(fscanf(file, "%lf", &points[i].m_data[0]) != 1) throw std::runtime_error("Error: Item file read failed!");
 					}
-					else if(j == index_2)
+					else if(j == col_2)
 					{
-						if(fscanf(file, "%lf", &data[i].m_data[1]) != 1) throw std::runtime_error("Error: Item file read failed!");
+						if(fscanf(file, "%lf", &points[i].m_data[1]) != 1) throw std::runtime_error("Error: Item file read failed!");
 					}
 				}
 			}
 			//close
 			fclose(file);
 		}
-		void Item::data(std::vector<Point>& data, const double* x1, const double* x2, uint32_t rows)
+		void Item::load(std::vector<Point>& points, const double* x1, const double* x2, uint32_t rows)
 		{
-			data.resize(rows);
+			points.resize(rows);
 			for(uint32_t i = 0; i < rows; i++)
 			{
-				data[i].m_data[0] = x1[i];
-				data[i].m_data[1] = x2[i];
+				points[i].m_data[0] = x1[i];
+				points[i].m_data[1] = x2[i];
 			}
 		}
-		void Item::data(std::vector<Point>& data, const double*, uint32_t, uint32_t, uint32_t, uint32_t)
+		void Item::load(std::vector<Point>& points, const double* x, uint32_t rows, uint32_t cols, uint32_t col_1, uint32_t col_2)
 		{
-
+			points.resize(rows);
+			for(uint32_t i = 0; i < rows; i++)
+			{
+				points[i].m_data[0] = x[i * cols + col_1];
+				points[i].m_data[1] = x[i * cols + col_2];
+			}
 		}
 
 		//validation
 		bool Item::validate(void)
 		{
-			load_numeric();
-			return !m_function ? validate_file() : validate_function();
+			return !m_function ? validate_data() : validate_function();
 		}
-
-		//load
-		void Item::load_numeric(void)
+		bool Item::validate_data(void)
 		{
-			// //data
-			// const uint32_t ss = m_model->analysis()->solver()->state_set();
-			// const uint32_t steps = m_model->analysis()->solver()->step() + 1;
-			// const uint32_t ps = ss & uint32_t(fea::analysis::solvers::state::p);
-			// //load
-			// m_data_numeric.resize(steps);
-			// for(uint32_t i = 0; i < steps; i++)
-			// {
-			// 	m_data_numeric[i].m_data[0] = 
-			// 		m_nodes[1] == UINT32_MAX && !ps ? 
-			// 		m_model->analysis()->solver()->state_data(i) :
-			// 		m_model->mesh()->node(m_nodes[0])->state_data(m_dof[0], i);
-			// 	m_data_numeric[i].m_data[1] = 
-			// 		m_nodes[1] == UINT32_MAX ? 
-			// 		ps ? m_model->analysis()->solver()->state_data(i) : 
-			// 		m_model->mesh()->node(m_nodes[0])->state_data(m_dof[0], i) :
-			// 		m_model->mesh()->node(m_nodes[1])->state_data(m_dof[1], i) ;
-			// }
-		}
-		void Item::load_reference(FILE* file)
-		{
-			// //data
-			// uint32_t lines = 0;
-			// //count
-			// while(!feof(file))
-			// {
-			// 	if(fgetc(file) == '\n') lines++;
-			// }
-			// //load
-			// rewind(file);
-			// m_data_reference.resize(lines);
-			// for(size_t i = 0; i < lines; i++)
-			// {
-			// 	fscanf(file, "%lf %lf", &m_data_reference[i].m_data[0], &m_data_reference[i].m_data[1]);
-			// }
-		}
-
-		bool Item::validate_file(void)
-		{
-			// //data
-			// char buffer[512];
-			// if(!strlen(m_validator_path))
-			// {
-			// 	strcpy(buffer, m_path.c_str());
-			// }
-			// else
-			// {
-			// 	sprintf(buffer, "%s/%s", m_validator_path, m_path.c_str());
-			// }
-			// FILE* file = fopen(buffer, "r");
-			// const uint32_t steps = m_model->analysis()->solver()->step();
-			// //check
-			// if(!file)
-			// {
-			// 	throw std::runtime_error("Unable to open validation file!");
-			// }
-			// //validation
-			// load_reference(file);
-			// for(uint32_t i = 0; i < m_data_reference.size(); i++)
-			// {
-			// 	bool test = false;
-			// 	m_distance = DBL_MAX;
-			// 	for(uint32_t j = 1; j < m_data_numeric.size(); j++)
-			// 	{
-			// 		if(!test)
-			// 		{
-			// 			m_distance = fmin(m_distance, m_data_reference[i].distance(m_data_numeric[j - 1], m_data_numeric[j]));
-			// 			test = m_distance < m_tolerance;
-			// 		}
-			// 	}
-			// 	if(!test)
-			// 	{
-			// 		return false;
-			// 	}
-			// }
-			// fclose(file);
+			//validation
+			for(uint32_t i = 0; i < m_points_reference.size(); i++)
+			{
+				bool test = false;
+				m_distance = DBL_MAX;
+				for(uint32_t j = 0; j + 1 < m_points_numeric.size(); j++)
+				{
+					if(!test)
+					{
+						m_distance = fmin(m_distance, m_points_reference[i].distance(m_points_numeric[j], m_points_numeric[j + 1]));
+						test = m_distance < m_tolerance;
+					}
+				}
+				if(!test)
+				{
+					printf("minimal distance: %+.2e\n", m_distance);
+					return false;
+				}
+			}
 			//return
 			return true;
 		}
@@ -228,10 +180,10 @@ namespace math
 		{
 			//validation
 			bool test = true;
-			for(uint32_t i = 0; i < m_data_numeric.size(); i++)
+			for(uint32_t i = 0; i < m_points_numeric.size(); i++)
 			{
-				const double x1 = m_data_numeric[i].m_data[0];
-				const double x2 = m_data_numeric[i].m_data[1];
+				const double x1 = m_points_numeric[i].m_data[0];
+				const double x2 = m_points_numeric[i].m_data[1];
 				test = test && fabs(x2 - m_function(x1)) < m_tolerance;
 			}
 			//return

@@ -24,7 +24,11 @@ namespace math
 		}
 
 		//items
-		const Item* Validator::item(uint32_t index) const
+		void Validator::create_item(void)
+		{
+			m_items.push_back(new Item);
+		}
+		Item* Validator::item(uint32_t index) const
 		{
 			return m_items[index];
 		}

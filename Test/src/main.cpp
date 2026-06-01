@@ -1,4 +1,5 @@
 //std
+#include <cmath>
 #include <cstdio>
 #include <stdexcept>
 
@@ -10,13 +11,14 @@
 #include "Math/Test/inc/rotations.hpp"
 #include "Math/Test/inc/miscellaneous.hpp"
 
-#include "Math/inc/solvers/Harmonic.hpp"
+#include "Math/inc/misc/util.hpp"
+#include "Math/inc/Validation/Validator.hpp"
 
 int main(void)
 {
 	try
 	{
-		// tests::solvers::harmonic::duffing();
+		tests::solvers::harmonic::duffing();
 	}
 	catch(const std::exception& exception)
 	{
