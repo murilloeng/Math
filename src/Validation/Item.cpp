@@ -89,7 +89,10 @@ namespace math
 			}
 			//cols
 			rewind(file);
-			fgets(line, sizeof(line), file);
+			if(!fgets(line, sizeof(line), file))
+			{
+				throw std::runtime_error("Error: Item file read failed!");
+			}
 			for(char c : line)
 			{
 				if(c == ' ') cols++; else if(c == '\n') break;
@@ -101,9 +104,18 @@ namespace math
 			{
 				for(uint32_t j = 0; j < cols; j++)
 				{
-					if(j != index_1 && j != index_2) fscanf(file, "%*lf");
-					else if(j == index_1) fscanf(file, "%lf", &data[i].m_data[0]);
-					else if(j == index_2) fscanf(file, "%lf", &data[i].m_data[1]);
+					if(j != index_1 && j != index_2)
+					{
+						if(fscanf(file, "%*f") != 0) throw std::runtime_error("Error: Item file read failed!");
+					}
+					else if(j == index_1)
+					{
+						if(fscanf(file, "%lf", &data[i].m_data[0]) != 1) throw std::runtime_error("Error: Item file read failed!");
+					}
+					else if(j == index_2)
+					{
+						if(fscanf(file, "%lf", &data[i].m_data[1]) != 1) throw std::runtime_error("Error: Item file read failed!");
+					}
 				}
 			}
 			//close
@@ -154,20 +166,20 @@ namespace math
 		}
 		void Item::load_reference(FILE* file)
 		{
-			//data
-			uint32_t lines = 0;
-			//count
-			while(!feof(file))
-			{
-				if(fgetc(file) == '\n') lines++;
-			}
-			//load
-			rewind(file);
-			m_data_reference.resize(lines);
-			for(size_t i = 0; i < lines; i++)
-			{
-				fscanf(file, "%lf %lf", &m_data_reference[i].m_data[0], &m_data_reference[i].m_data[1]);
-			}
+			// //data
+			// uint32_t lines = 0;
+			// //count
+			// while(!feof(file))
+			// {
+			// 	if(fgetc(file) == '\n') lines++;
+			// }
+			// //load
+			// rewind(file);
+			// m_data_reference.resize(lines);
+			// for(size_t i = 0; i < lines; i++)
+			// {
+			// 	fscanf(file, "%lf %lf", &m_data_reference[i].m_data[0], &m_data_reference[i].m_data[1]);
+			// }
 		}
 
 		bool Item::validate_file(void)
