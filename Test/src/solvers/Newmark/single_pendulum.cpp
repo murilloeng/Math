@@ -4,19 +4,21 @@
 //Math
 #include "Math/Test/inc/solvers.hpp"
 #include "Math/inc/Solvers/Newmark.hpp"
+#include "Math/inc/Validation/Validator.hpp"
 
 void tests::solvers::newmark::single_pendulum(void)
 {
 	//data
 	const double g = 9.81e+00;
 	const double L = 1.00e+00;
-	const double x0 = 0.00e+00;
-	const double v0 = 0.9999 * 2 * sqrt(g / L);
+	const double x0 = M_PI_2;
+	const double v0 = 0.00e+00;
 	math::solvers::Newmark solver;
+	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.m_step_max = 2000;
-	solver.m_t_max = 2.00e+01;
+	solver.m_step_max = 1000;
+	solver.m_t_max = 1.00e+01;
 	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
 	//initials
 	solver.allocate();
@@ -42,5 +44,11 @@ void tests::solvers::newmark::single_pendulum(void)
 	//solve
 	solver.solve();
 	//save
-	solver.save("single-pendulum.txt");
+	solver.save("Test/data/Solvers/Newmark/single pendulum/numeric.txt");
+	//validator
+	validator.create_item();
+	validator.item(0)->load_numeric("Test/data/Solvers/Newmark/single pendulum/numeric.txt", 3, 0);
+	validator.item(0)->load_reference("Test/data/Solvers/Newmark/single pendulum/reference.txt", 0, 1);
+	//validation
+	validator.validate();
 }

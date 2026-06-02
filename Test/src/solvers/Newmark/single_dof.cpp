@@ -4,6 +4,7 @@
 //Math
 #include "Math/Test/inc/solvers.hpp"
 #include "Math/inc/Solvers/Newmark.hpp"
+#include "Math/inc/Validation/Validator.hpp"
 
 void tests::solvers::newmark::single_dof(void)
 {
@@ -18,6 +19,7 @@ void tests::solvers::newmark::single_dof(void)
 	const double v0 = 0.00e+00;
 	const double w0 = sqrt(k / m);
 	math::solvers::Newmark solver;
+	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
 	solver.m_step_max = 2000;
@@ -47,5 +49,11 @@ void tests::solvers::newmark::single_dof(void)
 	//solve
 	solver.solve();
 	//save
-	solver.save("single-dof.txt");
+	solver.save("Test/data/Solvers/Newmark/single dof/numeric.txt");
+	//validator
+	validator.create_item();
+	validator.item(0)->load_numeric("Test/data/Solvers/Newmark/single dof/numeric.txt", 3, 0);
+	validator.item(0)->load_reference("Test/data/Solvers/Newmark/single dof/reference.txt", 0, 1);
+	//validation
+	validator.validate();
 }

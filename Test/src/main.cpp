@@ -16,10 +16,7 @@ int main(void)
 {
 	try
 	{
-		// tests::solvers::harmonic::duffing();
-		tests::validation::validation_from_data();
-		tests::validation::validation_from_file();
-		tests::validation::validation_from_function();
+		tests::solvers::newmark::single_dof();
 	}
 	catch(const std::exception& exception)
 	{

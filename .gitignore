@@ -1,6 +1,7 @@
 *
 !*/
 !*.gp
+!*.py
 !*.cpp
 !*.hpp
 !*Makefile
