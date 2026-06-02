@@ -36,7 +36,7 @@ namespace math
 		//destructor
 		Newmark::~Newmark(void)
 		{
-			cleanup();
+			return;
 		}
 
 		//data

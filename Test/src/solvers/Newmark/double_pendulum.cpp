@@ -4,6 +4,7 @@
 //Math
 #include "Math/Test/inc/solvers.hpp"
 #include "Math/inc/Solvers/Newmark.hpp"
+#include "Math/inc/Validation/Validator.hpp"
 
 void tests::solvers::newmark::double_pendulum(void)
 {
@@ -18,9 +19,10 @@ void tests::solvers::newmark::double_pendulum(void)
 	const double v1 = +0.00e+00;
 	const double v2 = +0.00e+00;
 	math::solvers::Newmark solver;
+	math::validation::Validator validator;
 	//setup
-	solver.m_size = 1;
-	solver.m_step_max = 1000;
+	solver.m_size = 2;
+	solver.m_step_max = 2000;
 	solver.m_t_max = 1.00e+01;
 	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
 	//initials
@@ -94,5 +96,14 @@ void tests::solvers::newmark::double_pendulum(void)
 	//solve
 	solver.solve();
 	//save
-	solver.save("single-pendulum.txt");
+	solver.save("Test/data/Solvers/Newmark/double pendulum/numeric.txt");
+	//validator
+	validator.create_item();
+	validator.create_item();
+	validator.item(0)->load_numeric("Test/data/Solvers/Newmark/double pendulum/numeric.txt", 6, 0);
+	validator.item(1)->load_numeric("Test/data/Solvers/Newmark/double pendulum/numeric.txt", 6, 3);
+	validator.item(0)->load_reference("Test/data/Solvers/Newmark/double pendulum/reference.txt", 0, 1);
+	validator.item(1)->load_reference("Test/data/Solvers/Newmark/double pendulum/reference.txt", 0, 2);
+	//validation
+	validator.validate();
 }

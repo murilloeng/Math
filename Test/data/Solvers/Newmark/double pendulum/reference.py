@@ -2,7 +2,7 @@ from scipy.integrate import solve_ivp
 from numpy import sin, cos, pi, linspace
 
 #data
-ns = 1001
+ns = 2001
 q1 = +pi / 4
 q2 = -pi / 4
 g = 9.81e+00
@@ -32,7 +32,7 @@ def double_pendulum(t, y):
 
 #solve
 t_eval = linspace(0, T, ns)
-sol = solve_ivp(double_pendulum, [0, T], y0, t_eval = t_eval, method = 'RK45')
+sol = solve_ivp(double_pendulum, [0, T], y0, t_eval = t_eval, method = 'DOP853')
 
 #write
 with open("reference.txt", "w") as file:
