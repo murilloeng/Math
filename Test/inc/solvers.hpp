@@ -9,14 +9,21 @@ namespace tests
 			void linear(void);
 			void duffing(void);
 		}
-		namespace newton_raphson
-		{
-			void truss_von_mises(void);
-		}
 		namespace newmark
 		{
 			void single_dof(void);
 			void single_pendulum(void);
+			void double_pendulum(void);
+		}
+		namespace runge_kutta
+		{
+			void single_dof(void);
+			void single_pendulum(void);
+			void double_pendulum(void);
+		}
+		namespace newton_raphson
+		{
+			void truss_von_mises(void);
 		}
 		namespace gradient_descent
 		{
