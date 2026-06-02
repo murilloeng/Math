@@ -31,7 +31,7 @@ namespace math
 			return;
 		}
 
-		//Vector
+		//vector
 		Vec3& ASE3::vector_u(void)
 		{
 			return m_vector_u;

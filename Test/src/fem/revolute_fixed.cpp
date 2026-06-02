@@ -65,7 +65,7 @@ static void hessian(double* hv2sk, double* d, void** args)
 	const math::Quat q1n = v1s.quaternion() * q1r;
 	const math::Quat q2n = q1n * (a * s1).quaternion();
 	const math::Vec3 v2s = (q2n * q2r.conjugate()).pseudo();
-	//Vector
+	//vector
 	const math::Vec3 n1 = q2n.rotate(s1);
 	//gradient
 	const math::Mat3 T1 = v1s.rotation_gradient();

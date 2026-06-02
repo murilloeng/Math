@@ -40,7 +40,7 @@ namespace math
 			return object;
 		}
 
-		//Vector
+		//vector
 		Vec3& GSE3::Vector(void)
 		{
 			return m_vector;

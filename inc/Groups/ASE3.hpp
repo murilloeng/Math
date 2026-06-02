@@ -27,7 +27,7 @@ namespace math
 			//destructor
 			~ASE3(void);
 
-			//Vector
+			//vector
 			Vec3& vector_u(void);
 			Vec3& vector_w(void);
 			const Vec3& vector_u(void) const;

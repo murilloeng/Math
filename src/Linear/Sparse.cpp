@@ -187,7 +187,7 @@ namespace math
 		{
 			throw std::runtime_error("Sparse Vector product has incompatible dimentions!");
 		}
-		//Vector
+		//vector
 		Vector r(v.rows(), mode::zeros);
 		for(uint32_t i = 0; i < m_cols; i++)
 		{

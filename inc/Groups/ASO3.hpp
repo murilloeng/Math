@@ -26,7 +26,7 @@ namespace math
 			//destructor
 			~ASO3(void);
 
-			//Vector
+			//vector
 			Vec3& Vector(void);
 			const Vec3& Vector(void) const;
 

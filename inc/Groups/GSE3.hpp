@@ -33,7 +33,7 @@ namespace math
 			//logarithm
 			ASE3 logarithm(void) const;
 
-			//Vector
+			//vector
 			Vec3& Vector(void);
 			const Vec3& Vector(void) const;
 

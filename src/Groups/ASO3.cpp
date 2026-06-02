@@ -25,7 +25,7 @@ namespace math
 			return;
 		}
 
-		//Vector
+		//vector
 		Vec3& ASO3::Vector(void)
 		{
 			return m_vector;

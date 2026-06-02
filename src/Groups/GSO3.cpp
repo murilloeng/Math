@@ -37,7 +37,7 @@ namespace math
 		{
 			//angle
 			const double t = 2 * acos(bound(m_quaternion[0]));
-			//Vector
+			//vector
 			Vec3 algebra;
 			const double s = sin(t / 2);
 			algebra[0] = s ? t * m_quaternion[1] / s : 0;
@@ -79,7 +79,7 @@ namespace math
 			Vec3 r;
 			const double s = m_quaternion[0];
 			const Vec3 x(m_quaternion.data() + 1);
-			//Vector
+			//vector
 			const double b = 2 * x.inner(v);
 			const double a = s * s - x.inner(x);
 			r[0] = a * v[0] + b * x[0] + 2 * s * (x[1] * v[2] - x[2] * v[1]);
