@@ -9,7 +9,7 @@
 void tests::solvers::newmark::single_dof(void)
 {
 	//data
-	const uint32_t n = 40;
+	const uint32_t np = 40;
 	const double m = 1.00e+00;
 	const double c = 5.00e-02;
 	const double k = 1.00e+00;
@@ -22,8 +22,8 @@ void tests::solvers::newmark::single_dof(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.m_step_max = 2000;
-	solver.m_t_max = 2 * M_PI * n / w0;
+	solver.m_step_max = 1000;
+	solver.m_t_max = 2 * M_PI * np / w0;
 	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
 	//initials
 	solver.allocate();

@@ -4,9 +4,9 @@ from numpy import pi, cos, sin, sqrt, linspace
 #data
 np = 40
 ns = 1001
+m = 1.00e+00
 k = 1.00e+00
 c = 5.00e-02
-m = 1.00e+00
 x0 = 1.00e+00
 v0 = 0.00e+00
 Fr = 1.00e+00
@@ -19,7 +19,7 @@ tf = 2 * pi * np / w0
 def pendulum_ode(t, y):
 	x, v = y
 	dx_dt = v
-	dv_dt = Fr * cos(wf * t) - k * x - c * v
+	dv_dt = Fr * sin(wf * t) - k * x - c * v
 	return [dx_dt, dv_dt]
 
 #solve
