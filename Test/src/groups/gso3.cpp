@@ -4,10 +4,10 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/misc/util.hpp"
-#include "Math/inc/linear/vec3.hpp"
-#include "Math/inc/groups/ASO3.hpp"
-#include "Math/inc/groups/GSO3.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Groups/ASO3.hpp"
+#include "Math/inc/Groups/GSO3.hpp"
 
 //tests
 #include "Math/Test/inc/groups.hpp"
@@ -15,30 +15,30 @@
 //static
 static void test_exponential(double* r, const double* v, const void** args)
 {
-	const math::vec3 a = (const double*) args[0];
-	math::vec3(r + 0) = math::groups::ASO3(v).exponential() * a;
+	const math::Vec3 a = (const double*) args[0];
+	math::Vec3(r + 0) = math::groups::ASO3(v).exponential() * a;
 }
 static void test_tangent(double* r, const double* v, const void** args)
 {
-	const math::vec3 a = (const double*) args[0];
-	math::vec3(r + 0) = math::groups::ASO3(v).tangent(a);
+	const math::Vec3 a = (const double*) args[0];
+	math::Vec3(r + 0) = math::groups::ASO3(v).tangent(a);
 }
 static void test_tangent_inverse(double* r, const double* v, const void** args)
 {
-	const math::vec3 a = (const double*) args[0];
-	math::vec3(r + 0) = math::groups::ASO3(v).tangent_inverse(a);
+	const math::Vec3 a = (const double*) args[0];
+	math::Vec3(r + 0) = math::groups::ASO3(v).tangent_inverse(a);
 }
 
 //tests
 void tests::groups::GSO3::log(void)
 {
-	math::vec3 v, r;
+	math::Vec3 v, r;
 	const uint32_t nt = 100000;
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
 	{
 		v.randu();
-		r = v - math::groups::ASO3(v).exponential().logarithm().vector();
+		r = v - math::groups::ASO3(v).exponential().logarithm().Vector();
 		if(r.norm() > 1e-5)
 		{
 			v.print("v");
@@ -53,7 +53,7 @@ void tests::groups::GSO3::log(void)
 }
 void tests::groups::GSO3::inverse(void)
 {
-	math::quat q, r;
+	math::Quat q, r;
 	const uint32_t nt = 100000;
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
@@ -75,9 +75,9 @@ void tests::groups::GSO3::inverse(void)
 }
 void tests::groups::GSO3::tangent(void)
 {
-	math::vec3 a, v, r;
+	math::Vec3 a, v, r;
 	const uint32_t nt = 100000;
-	math::mat3 Ka, Kn, Kr, R, T;
+	math::Mat3 Ka, Kn, Kr, R, T;
 	srand(uint32_t(time(nullptr)));
 	const void* args[] = {a.data()};
 	for(uint32_t i = 0; i < nt; i++)
@@ -104,8 +104,8 @@ void tests::groups::GSO3::tangent(void)
 }
 void tests::groups::GSO3::tangent_inverse(void)
 {
-	math::vec3 v;
-	math::mat3 R, T, A;
+	math::Vec3 v;
+	math::Mat3 R, T, A;
 	const uint32_t nt = 100000;
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
@@ -113,7 +113,7 @@ void tests::groups::GSO3::tangent_inverse(void)
 		v.randu();
 		T = math::groups::ASO3(v).tangent();
 		A = math::groups::ASO3(v).tangent_inverse();
-		R = T * A - math::mat3::eye();
+		R = T * A - math::Mat3::eye();
 		if(R.norm() > 1e-5)
 		{
 			T.print("T");
@@ -129,17 +129,17 @@ void tests::groups::GSO3::tangent_inverse(void)
 }
 void tests::groups::GSO3::tangent_indentity(void)
 {
-	math::mat3 Kr;
+	math::Mat3 Kr;
 	math::groups::ASO3 object;
 	const uint32_t nt = 100000;
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
 	{
-		object.vector().randu();
-		Kr = math::mat3(object.exponential()) * object.tangent() - object.tangent().transpose();
+		object.Vector().randu();
+		Kr = math::Mat3(object.exponential()) * object.tangent() - object.tangent().transpose();
 		if(Kr.norm() > 1e-5)
 		{
-			object.vector().print("v");
+			object.Vector().print("v");
 			Kr.print("Kr");
 			break;
 		}
@@ -151,8 +151,8 @@ void tests::groups::GSO3::tangent_indentity(void)
 }
 void tests::groups::GSO3::tangent_increment(void)
 {
-	math::vec3 a, v;
-	math::mat3 Ka, Kn, Kr;
+	math::Vec3 a, v;
+	math::Mat3 Ka, Kn, Kr;
 	const uint32_t nt = 100000;
 	srand(uint32_t(time(nullptr)));
 	const void* args[] = {a.data()};
@@ -178,8 +178,8 @@ void tests::groups::GSO3::tangent_increment(void)
 }
 void tests::groups::GSO3::tangent_inverse_increment(void)
 {
-	math::vec3 a, v;
-	math::mat3 Ka, Kn, Kr;
+	math::Vec3 a, v;
+	math::Mat3 Ka, Kn, Kr;
 	const uint32_t nt = 100000;
 	srand(uint32_t(time(nullptr)));
 	const void* args[] = {a.data()};

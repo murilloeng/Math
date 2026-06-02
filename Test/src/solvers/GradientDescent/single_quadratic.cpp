@@ -1,5 +1,5 @@
 //Math
-#include "Math/inc/solvers/GradientDescent.hpp"
+#include "Math/inc/Solvers/GradientDescent.hpp"
 
 //Test
 #include "Math/Test/inc/solvers.hpp"

@@ -5,10 +5,10 @@
 #include <cstdlib>
 
 //Math
-#include "Math/inc/misc/util.hpp"
-#include "Math/inc/linear/vec3.hpp"
-#include "Math/inc/linear/mat3.hpp"
-#include "Math/inc/linear/quat.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
+#include "Math/inc/Linear/Quat.hpp"
 
 //Test
 #include "Math/Test/inc/fem.hpp"
@@ -16,17 +16,17 @@
 //data
 static double lr;
 static uint32_t order;
-static math::vec3 z1, z2;
-static math::quat q1n, q2n;
-static math::vec3 s1, s2, s3;
+static math::Vec3 z1, z2;
+static math::Quat q1n, q2n;
+static math::Vec3 s1, s2, s3;
 static const uint32_t nt = 10000;
 
-static math::vector dl(6);
-static math::vector fl(6);
-static math::vector d(12);
-static math::vector f(12);
-static math::matrix Kl(6, 6);
-static math::matrix T(6, 12, math::mode::zeros);
+static math::Vector dl(6);
+static math::Vector fl(6);
+static math::Vector d(12);
+static math::Vector f(12);
+static math::Matrix Kl(6, 6);
+static math::Matrix T(6, 12, math::mode::zeros);
 
 static void setup(void)
 {
@@ -47,16 +47,16 @@ static void setup(void)
 static void compute_state_dl(void)
 {
 	//kinematics
-	const math::vec3 x1 = z1 + math::vec3(d.data() + 0);
-	const math::vec3 x2 = z2 + math::vec3(d.data() + 6);
+	const math::Vec3 x1 = z1 + math::Vec3(d.data() + 0);
+	const math::Vec3 x2 = z2 + math::Vec3(d.data() + 6);
 	//nodal quaternions
-	const math::quat q0(s1, s2, s3);
-	const math::quat q1 = math::vec3(d.data() + 3).quaternion() * q1n;
-	const math::quat q2 = math::vec3(d.data() + 9).quaternion() * q2n;
+	const math::Quat q0(s1, s2, s3);
+	const math::Quat q1 = math::Vec3(d.data() + 3).quaternion() * q1n;
+	const math::Quat q2 = math::Vec3(d.data() + 9).quaternion() * q2n;
 	//local state
-	const math::quat qr = q1 * q0;
-	dl.span(3, 0, 3, 1) = (qr.conjugate() * q2 * q0).pseudo();
-	dl.span(0, 0, 3, 1) = qr.conjugate(x2 - x1) - math::vec3(lr, 0, 0);
+	const math::Quat qr = q1 * q0;
+	dl.Span(3, 0, 3, 1) = (qr.conjugate() * q2 * q0).pseudo();
+	dl.Span(0, 0, 3, 1) = qr.conjugate(x2 - x1) - math::Vec3(lr, 0, 0);
 }
 
 static void compute_force_fl(void)
@@ -67,31 +67,31 @@ static void compute_force_fl(void)
 static void compute_kinematic_T(void)
 {
 	//data
-	const math::vec3 u1 = d.data() + 0;
-	const math::vec3 u2 = d.data() + 6;
-	const math::vec3 t1 = d.data() + 3;
-	const math::vec3 t2 = d.data() + 9;
+	const math::Vec3 u1 = d.data() + 0;
+	const math::Vec3 u2 = d.data() + 6;
+	const math::Vec3 t1 = d.data() + 3;
+	const math::Vec3 t2 = d.data() + 9;
 	//positions
-	const math::vec3 x1 = z1 + u1;
-	const math::vec3 x2 = z2 + u2;
+	const math::Vec3 x1 = z1 + u1;
+	const math::Vec3 x2 = z2 + u2;
 	//nodal quaternions
-	const math::quat q0(s1, s2, s3);
-	const math::quat q1 = t1.quaternion() * q1n;
-	const math::quat q2 = t2.quaternion() * q2n;
+	const math::Quat q0(s1, s2, s3);
+	const math::Quat q1 = t1.quaternion() * q1n;
+	const math::Quat q2 = t2.quaternion() * q2n;
 	//gradient
-	const math::quat qr = q1 * q0;
-	const math::mat3 Xr = (x2 - x1).spin();
-	const math::mat3 T1 = t1.rotation_gradient();
-	const math::mat3 T2 = t2.rotation_gradient();
-	const math::mat3 Rt = qr.conjugate().rotation();
-	const math::vec3 tl = qr.conjugate(q2 * q0).pseudo();
-	const math::mat3 Ti = tl.rotation_gradient_inverse();
+	const math::Quat qr = q1 * q0;
+	const math::Mat3 Xr = (x2 - x1).spin();
+	const math::Mat3 T1 = t1.rotation_gradient();
+	const math::Mat3 T2 = t2.rotation_gradient();
+	const math::Mat3 Rt = qr.conjugate().rotation();
+	const math::Vec3 tl = qr.conjugate(q2 * q0).pseudo();
+	const math::Mat3 Ti = tl.rotation_gradient_inverse();
 	//gradient
-	T.span(0, 0) = -Rt;
-	T.span(0, 6) = +Rt;
-	T.span(3, 3) = -Ti * Rt * T1;
-	T.span(3, 9) = +Ti * Rt * T2;
-	T.span(0, 3) = +Rt * Xr * T1;
+	T.Span(0, 0) = -Rt;
+	T.Span(0, 6) = +Rt;
+	T.Span(3, 3) = -Ti * Rt * T1;
+	T.Span(3, 9) = +Ti * Rt * T2;
+	T.Span(0, 3) = +Rt * Xr * T1;
 }
 
 static void internal_energy(double* U)
@@ -105,55 +105,55 @@ static void internal_force(double* f)
 	compute_state_dl();
 	compute_force_fl();
 	compute_kinematic_T();
-	math::vector(f, 12) = T.transpose() * fl;
+	math::Vector(f, 12) = T.transpose() * fl;
 }
 
 static void stiffness(double* K)
 {
 	//data
-	const math::vec3 u1 = d.data() + 0;
-	const math::vec3 u2 = d.data() + 6;
-	const math::vec3 t1 = d.data() + 3;
-	const math::vec3 t2 = d.data() + 9;
+	const math::Vec3 u1 = d.data() + 0;
+	const math::Vec3 u2 = d.data() + 6;
+	const math::Vec3 t1 = d.data() + 3;
+	const math::Vec3 t2 = d.data() + 9;
 	//positions
-	const math::vec3 x1 = z1 + u1;
-	const math::vec3 x2 = z2 + u2;
+	const math::Vec3 x1 = z1 + u1;
+	const math::Vec3 x2 = z2 + u2;
 	//nodal quaternions
-	const math::quat q0(s1, s2, s3);
-	const math::quat q1 = t1.quaternion() * q1n;
-	const math::quat q2 = t2.quaternion() * q2n;
+	const math::Quat q0(s1, s2, s3);
+	const math::Quat q1 = t1.quaternion() * q1n;
+	const math::Quat q2 = t2.quaternion() * q2n;
 	//gradient
-	const math::quat qr = q1 * q0;
-	const math::mat3 Rr = qr.rotation();
-	const math::mat3 Xr = (x2 - x1).spin();
-	const math::mat3 T1 = t1.rotation_gradient();
-	const math::mat3 T2 = t2.rotation_gradient();
-	const math::mat3 Rt = qr.conjugate().rotation();
-	const math::vec3 tl = qr.conjugate(q2 * q0).pseudo();
-	const math::mat3 Ti = tl.rotation_gradient_inverse();
+	const math::Quat qr = q1 * q0;
+	const math::Mat3 Rr = qr.rotation();
+	const math::Mat3 Xr = (x2 - x1).spin();
+	const math::Mat3 T1 = t1.rotation_gradient();
+	const math::Mat3 T2 = t2.rotation_gradient();
+	const math::Mat3 Rt = qr.conjugate().rotation();
+	const math::Vec3 tl = qr.conjugate(q2 * q0).pseudo();
+	const math::Mat3 Ti = tl.rotation_gradient_inverse();
 	//material part
 	compute_state_dl();
 	compute_force_fl();
 	compute_kinematic_T();
-	math::matrix(K, 12, 12) = T.transpose() * Kl * T;
+	math::Matrix(K, 12, 12) = T.transpose() * Kl * T;
 	//geometric part
-	const math::vec3 nl = fl.data() + 0;
-	const math::vec3 ml = fl.data() + 3;
-	const math::vec3 mp = Ti.transpose() * ml;
-	const math::mat3 Hl = tl.rotation_hessian_inverse(ml, true);
-	math::matrix(K, 12, 12).span(0, 3) += Rr * nl.spin() * Rt * T1;
-	math::matrix(K, 12, 12).span(6, 3) -= Rr * nl.spin() * Rt * T1;
-	math::matrix(K, 12, 12).span(9, 9) += t2.rotation_hessian(Rr * mp, true);
-	math::matrix(K, 12, 12).span(3, 0) -= T1.transpose() * Rr * nl.spin() * Rt;
-	math::matrix(K, 12, 12).span(3, 6) += T1.transpose() * Rr * nl.spin() * Rt;
-	math::matrix(K, 12, 12).span(3, 3) += T1.transpose() * Rr * Hl * Ti * Rt * T1;
-	math::matrix(K, 12, 12).span(9, 3) -= T2.transpose() * Rr * Hl * Ti * Rt * T1;
-	math::matrix(K, 12, 12).span(3, 9) -= T1.transpose() * Rr * Hl * Ti * Rt * T2;
-	math::matrix(K, 12, 12).span(9, 9) += T2.transpose() * Rr * Hl * Ti * Rt * T2;
-	math::matrix(K, 12, 12).span(9, 3) -= T2.transpose() * Rr * mp.spin() * Rt * T1;
-	math::matrix(K, 12, 12).span(3, 3) += T1.transpose() * Rr * mp.spin() * Rt * T1;
-	math::matrix(K, 12, 12).span(3, 3) += T1.transpose() * Xr * Rr * nl.spin() * Rt * T1;
-	math::matrix(K, 12, 12).span(3, 3) -= t1.rotation_hessian(Rr * mp + Xr * Rr * nl, true);
+	const math::Vec3 nl = fl.data() + 0;
+	const math::Vec3 ml = fl.data() + 3;
+	const math::Vec3 mp = Ti.transpose() * ml;
+	const math::Mat3 Hl = tl.rotation_hessian_inverse(ml, true);
+	math::Matrix(K, 12, 12).Span(0, 3) += Rr * nl.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).Span(6, 3) -= Rr * nl.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).Span(9, 9) += t2.rotation_hessian(Rr * mp, true);
+	math::Matrix(K, 12, 12).Span(3, 0) -= T1.transpose() * Rr * nl.spin() * Rt;
+	math::Matrix(K, 12, 12).Span(3, 6) += T1.transpose() * Rr * nl.spin() * Rt;
+	math::Matrix(K, 12, 12).Span(3, 3) += T1.transpose() * Rr * Hl * Ti * Rt * T1;
+	math::Matrix(K, 12, 12).Span(9, 3) -= T2.transpose() * Rr * Hl * Ti * Rt * T1;
+	math::Matrix(K, 12, 12).Span(3, 9) -= T1.transpose() * Rr * Hl * Ti * Rt * T2;
+	math::Matrix(K, 12, 12).Span(9, 9) += T2.transpose() * Rr * Hl * Ti * Rt * T2;
+	math::Matrix(K, 12, 12).Span(9, 3) -= T2.transpose() * Rr * mp.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).Span(3, 3) += T1.transpose() * Rr * mp.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).Span(3, 3) += T1.transpose() * Xr * Rr * nl.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).Span(3, 3) -= t1.rotation_hessian(Rr * mp + Xr * Rr * nl, true);
 }
 
 static void energy_function(double* U, const double* d, void** args)
@@ -174,9 +174,9 @@ static void energy_hessian(double* K, const double* d, void** args)
 
 static void test_gradient(void)
 {
-	math::vector fa(12);
-	math::vector fn(12);
-	math::vector fe(12);
+	math::Vector fa(12);
+	math::Vector fn(12);
+	math::Vector fe(12);
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
 	{
@@ -197,9 +197,9 @@ static void test_gradient(void)
 }
 static void test_hessian(void)
 {
-	math::matrix Ka(12, 12);
-	math::matrix Kn(12, 12);
-	math::matrix Ke(12, 12);
+	math::Matrix Ka(12, 12);
+	math::Matrix Kn(12, 12);
+	math::Matrix Ke(12, 12);
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
 	{

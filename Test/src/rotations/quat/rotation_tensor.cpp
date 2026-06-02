@@ -4,19 +4,19 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/linear/vec3.hpp"
-#include "Math/inc/linear/quat.hpp"
-#include "Math/inc/linear/mat3.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Quat.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
 
 //Test
 #include "Math/Test/inc/rotations.hpp"
 
-void tests::rotations::quat::rotation_tensor(void)
+void tests::rotations::Quat::rotation_tensor(void)
 {
 	//data
-	math::quat q;
+	math::Quat q;
 	const uint32_t nt = 10000;
-	math::vec3 s[3], r1[3], r2[3];
+	math::Vec3 s[3], r1[3], r2[3];
 	//test
 	srand((uint32_t) time(nullptr));
 	for(uint32_t i = 0; i < nt; i++)

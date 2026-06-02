@@ -4,17 +4,17 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/misc/util.hpp"
-#include "Math/inc/linear/vec3.hpp"
-#include "Math/inc/linear/quat.hpp"
-#include "Math/inc/linear/mat3.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Quat.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
 
 //Test
 #include "Math/Test/inc/rotations.hpp"
 
 static bool coupled;
-static math::vec3 ar;
-static math::quat qn;
+static math::Vec3 ar;
+static math::Quat qn;
 
 /*
 	r = exp(vs) * Rn * ar
@@ -26,17 +26,17 @@ static math::quat qn;
 static void function(double* r, const double* v, void** args)
 {
 	//data
-	math::vec3 rm = r;
-	const math::vec3 vm = v;
+	math::Vec3 rm = r;
+	const math::Vec3 vm = v;
 	//function
 	rm = coupled ? (vm.quaternion() * qn).rotate(ar) : (qn * vm.quaternion()).rotate(ar);
 }
 static void gradient(double* dr, const double* v, void** args)
 {
 	//data
-	math::vec3 rm;
-	math::mat3 drm = dr;
-	const math::vec3 vm = v;
+	math::Vec3 rm;
+	math::Mat3 drm = dr;
+	const math::Vec3 vm = v;
 	function(rm.data(), v, args);
 	//gradient
 	if(coupled)
@@ -49,11 +49,11 @@ static void gradient(double* dr, const double* v, void** args)
 	}
 }
 
-void tests::rotations::vec3::rotation_gradient(void)
+void tests::rotations::Vec3::rotation_gradient(void)
 {
 	//data
-	math::vec3 v, r;
-	math::mat3 dra, drn, dri;
+	math::Vec3 v, r;
+	math::Mat3 dra, drn, dri;
 	const uint32_t nt = 10000;
 	//menu
 	while(true)
@@ -76,7 +76,7 @@ void tests::rotations::vec3::rotation_gradient(void)
 		gradient(dra.data(), v.data(), nullptr);
 		math::ndiff(function, drn.data(), v.data(), nullptr, 3, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
-		test = test && (v.rotation_gradient() * dri - math::mat3::eye()).norm() < 1e-5;
+		test = test && (v.rotation_gradient() * dri - math::Mat3::eye()).norm() < 1e-5;
 		printf("Test %s %d: %s\n", coupled ? "spatial" : "material", i, test ? "ok" : "not ok");
 		if(!test) break;
 	}

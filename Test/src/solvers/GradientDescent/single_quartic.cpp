@@ -1,6 +1,6 @@
 //Math
 #include "Math/Test/inc/solvers.hpp"
-#include "Math/inc/solvers/GradientDescent.hpp"
+#include "Math/inc/Solvers/GradientDescent.hpp"
 
 void tests::solvers::gradient_descent::single_quartic(void)
 {

@@ -1,6 +1,6 @@
 //Math
-#include "Math/inc/linear/vector.hpp"
-#include "Math/inc/solvers/GradientDescent.hpp"
+#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Solvers/GradientDescent.hpp"
 
 //Test
 #include "Math/Test/inc/solvers.hpp"
@@ -29,5 +29,5 @@ void tests::solvers::gradient_descent::himmelblau_function(void)
 	solver.solve();
 
 	//print
-	math::vector(solver.m_x_new, solver.m_size).print("solution:");
+	math::Vector(solver.m_x_new, solver.m_size).print("solution:");
 }

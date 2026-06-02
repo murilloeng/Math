@@ -11,7 +11,7 @@
 #include "Math/Test/inc/rotations.hpp"
 #include "Math/Test/inc/miscellaneous.hpp"
 
-#include "Math/inc/misc/util.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
 #include "Math/inc/Validation/Validator.hpp"
 
 int main(void)

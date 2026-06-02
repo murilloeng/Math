@@ -3,7 +3,7 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/solvers/Harmonic.hpp"
+#include "Math/inc/Solvers/Harmonic.hpp"
 
 //Test
 #include "Math/Test/inc/solvers.hpp"

@@ -4,9 +4,9 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/misc/util.hpp"
-#include "Math/inc/linear/vec3.hpp"
-#include "Math/inc/linear/mat3.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
 
 //Test
 #include "Math/Test/inc/rotations.hpp"
@@ -15,14 +15,14 @@ static bool coupled;
 static bool inverse;
 static bool variable;
 static bool transpose;
-static math::vec3 t, u, v;
+static math::Vec3 t, u, v;
 
 static void function(double* r, const double* x, void** args)
 {
 	//data
-	math::vec3 rm = r;
-	const math::vec3 tm = variable ? x : t;
-	const math::vec3 am = variable ? u : x;
+	math::Vec3 rm = r;
+	const math::Vec3 tm = variable ? x : t;
+	const math::Vec3 am = variable ? u : x;
 	//function
 	rm = !inverse ? 
 		tm.rotation_hessian(am, v, transpose) : 
@@ -31,21 +31,21 @@ static void function(double* r, const double* x, void** args)
 static void gradient(double* dr, const double* x, void** args)
 {
 	//data
-	math::mat3 drm = dr;
-	const math::vec3 tm = variable ? x : t;
-	const math::vec3 am = variable ? u : x;
+	math::Mat3 drm = dr;
+	const math::Vec3 tm = variable ? x : t;
+	const math::Vec3 am = variable ? u : x;
 	//gradient
 	drm = !inverse ? 
 		tm.rotation_third(am, v, transpose, variable) : 
 		tm.rotation_third_inverse(am, v, transpose, variable);
 }
 
-void tests::rotations::vec3::rotation_third(void)
+void tests::rotations::Vec3::rotation_third(void)
 {
 	//data
-	math::vec3 t, r;
+	math::Vec3 t, r;
 	uint32_t selection;
-	math::mat3 dra, drn, dri;
+	math::Mat3 dra, drn, dri;
 	const uint32_t nt = 10000;
 	srand(uint32_t(time(nullptr)));
 	const char* format = "Test - Mode: %s, Inverse: %s, Variable: %s, Transpose: %s, Step: %d, Status: %s\n";

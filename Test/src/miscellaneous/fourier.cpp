@@ -4,7 +4,7 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/misc/util.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
 
 //Test
 #include "Math/Test/inc/miscellaneous.hpp"

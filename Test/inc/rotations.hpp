@@ -4,14 +4,14 @@ namespace tests
 {
 	namespace rotations
 	{
-		namespace vec3
+		namespace Vec3
 		{
 			void rotation_third(void);
 			void rotation_tensor(void);
 			void rotation_hessian(void);
 			void rotation_gradient(void);
 		}
-		namespace quat
+		namespace Quat
 		{
 			void rotation_tensor(void);
 		}

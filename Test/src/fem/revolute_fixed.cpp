@@ -4,20 +4,20 @@
 #include <cstdlib>
 
 //Math
-#include "Math/inc/misc/util.hpp"
-#include "Math/inc/linear/vec3.hpp"
-#include "Math/inc/linear/mat3.hpp"
-#include "Math/inc/linear/quat.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
+#include "Math/inc/Linear/Quat.hpp"
 
 //Test
 #include "Math/Test/inc/fem.hpp"
 
-static math::vec3 s1, ar;
-static math::quat q1r, q2r;
+static math::Vec3 s1, ar;
+static math::Quat q1r, q2r;
 static uint32_t nt = 10000;
 static uint32_t what, order;
-static math::vector d(4), ga(4), gn(4);
-static math::matrix ha(4, 4), hn(4, 4);
+static math::Vector d(4), ga(4), gn(4);
+static math::Matrix ha(4, 4), hn(4, 4);
 
 /*
 	uk = R1 * sk
@@ -44,41 +44,41 @@ static void setup(void)
 static void state(double* v2sk, const double* d, void** args)
 {
 	const double a = d[3];
-	const math::quat q1n = math::vec3(d).quaternion() * q1r;
+	const math::Quat q1n = math::Vec3(d).quaternion() * q1r;
 	*v2sk = (q1n * (a * s1).quaternion() * q2r.conjugate()).pseudo().inner(ar);
 }
 static void gradient(double* dv2sk, const double* d, void** args)
 {
 	const double a = d[3];
-	const math::vec3 v1s = d;
-	const math::quat q1n = v1s.quaternion() * q1r;
-	const math::quat q2n = q1n * (a * s1).quaternion();
-	const math::vec3 v2s = (q2n * q2r.conjugate()).pseudo();
+	const math::Vec3 v1s = d;
+	const math::Quat q1n = v1s.quaternion() * q1r;
+	const math::Quat q2n = q1n * (a * s1).quaternion();
+	const math::Vec3 v2s = (q2n * q2r.conjugate()).pseudo();
 	dv2sk[3] = v2s.rotation_gradient_inverse(ar, true).inner(q2n.rotate(s1));
-	math::vec3(dv2sk + 0) = v1s.rotation_gradient(true) * v2s.rotation_gradient_inverse(ar, true);
+	math::Vec3(dv2sk + 0) = v1s.rotation_gradient(true) * v2s.rotation_gradient_inverse(ar, true);
 }
 static void hessian(double* hv2sk, double* d, void** args)
 {
 	//data
 	const double a = d[3];
-	const math::vec3 v1s = d;
-	const math::quat q1n = v1s.quaternion() * q1r;
-	const math::quat q2n = q1n * (a * s1).quaternion();
-	const math::vec3 v2s = (q2n * q2r.conjugate()).pseudo();
-	//vector
-	const math::vec3 n1 = q2n.rotate(s1);
+	const math::Vec3 v1s = d;
+	const math::Quat q1n = v1s.quaternion() * q1r;
+	const math::Quat q2n = q1n * (a * s1).quaternion();
+	const math::Vec3 v2s = (q2n * q2r.conjugate()).pseudo();
+	//Vector
+	const math::Vec3 n1 = q2n.rotate(s1);
 	//gradient
-	const math::mat3 T1 = v1s.rotation_gradient();
-	const math::mat3 T2i = v2s.rotation_gradient_inverse();
-	const math::vec3 t2i = v2s.rotation_gradient_inverse(ar, true);
+	const math::Mat3 T1 = v1s.rotation_gradient();
+	const math::Mat3 T2i = v2s.rotation_gradient_inverse();
+	const math::Vec3 t2i = v2s.rotation_gradient_inverse(ar, true);
 	//hessian
-	const math::mat3 H1 = v1s.rotation_hessian(t2i, true);
-	const math::mat3 H2i = v2s.rotation_hessian_inverse(ar, true);
+	const math::Mat3 H1 = v1s.rotation_hessian(t2i, true);
+	const math::Mat3 H2i = v2s.rotation_hessian_inverse(ar, true);
 	//full hessian
-	math::matrix(hv2sk, 4, 4).span(0, 3, 3, 1) = T1.transpose() * H2i * T2i * n1;
-	math::matrix(hv2sk, 4, 4).span(0, 0, 3, 3) = T1.transpose() * H2i * T2i * T1 + H1;
-	math::matrix(hv2sk, 4, 4).span(3, 3, 1, 1) = n1.transpose() * H2i * T2i * n1 - t2i.transpose() * n1.spin() * n1;
-	math::matrix(hv2sk, 4, 4).span(3, 0, 1, 3) = n1.transpose() * H2i * T2i * T1 - t2i.transpose() * n1.spin() * T1;
+	math::Matrix(hv2sk, 4, 4).Span(0, 3, 3, 1) = T1.transpose() * H2i * T2i * n1;
+	math::Matrix(hv2sk, 4, 4).Span(0, 0, 3, 3) = T1.transpose() * H2i * T2i * T1 + H1;
+	math::Matrix(hv2sk, 4, 4).Span(3, 3, 1, 1) = n1.transpose() * H2i * T2i * n1 - t2i.transpose() * n1.spin() * n1;
+	math::Matrix(hv2sk, 4, 4).Span(3, 0, 1, 3) = n1.transpose() * H2i * T2i * T1 - t2i.transpose() * n1.spin() * T1;
 }
 
 static void menu_what(void)

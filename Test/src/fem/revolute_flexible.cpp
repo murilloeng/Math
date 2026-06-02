@@ -4,10 +4,10 @@
 #include <cstdlib>
 
 //Math
-#include "Math/inc/misc/util.hpp"
-#include "Math/inc/linear/vec3.hpp"
-#include "Math/inc/linear/mat3.hpp"
-#include "Math/inc/linear/quat.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
+#include "Math/inc/Linear/Quat.hpp"
 
 //Test
 #include "Math/Test/inc/fem.hpp"
@@ -19,9 +19,9 @@ static const double ks = 2.00e+03;
 static const double kt = 3.00e+03;
 static const double kb = 4.00e+03;
 
-static math::quat q0, q1, q2;
-static math::mat3 Ku, Kp, Kt, Tr, Nr;
-static math::vec3 z1, z2, u1, u2, x1, x2, t1, t2, ur, xr, tr, fr, mp, mr, n1, n2, n3;
+static math::Quat q0, q1, q2;
+static math::Mat3 Ku, Kp, Kt, Tr, Nr;
+static math::Vec3 z1, z2, u1, u2, x1, x2, t1, t2, ur, xr, tr, fr, mp, mr, n1, n2, n3;
 
 static void setup(void)
 {
@@ -31,7 +31,7 @@ static void setup(void)
 	n3.randu();
 	n3 /= n3.norm();
 	n3.triad(n1, n2);
-	q0 = math::quat(n1, n2, n3);
+	q0 = math::Quat(n1, n2, n3);
 	//stiffness
 	Ku = {ks, 0, 0, 0, ks, 0, 0, 0, ka};
 	Kp = {kb, 0, 0, 0, kb, 0, 0, 0, kt};
@@ -40,7 +40,7 @@ static void local_dof(void)
 {
 	//state
 	xr = q1.conjugate(x2 - x1);
-	ur = xr - s * math::vec3(1, 0, 0);
+	ur = xr - s * math::Vec3(1, 0, 0);
 	tr = (q1.conjugate() * q2).pseudo();
 	//force
 	fr = Ku * ur;
@@ -54,10 +54,10 @@ static void local_dof(void)
 static void global_dof(const double* d)
 {
 	//dof
-	u1 = math::vec3(d + 0);
-	t1 = math::vec3(d + 3);
-	u2 = math::vec3(d + 6);
-	t2 = math::vec3(d + 9);
+	u1 = math::Vec3(d + 0);
+	t1 = math::Vec3(d + 3);
+	u2 = math::Vec3(d + 6);
+	t2 = math::Vec3(d + 9);
 	//state
 	x1 = z1 + u1;
 	x2 = z2 + u2;
@@ -74,65 +74,65 @@ static void internal_force_1(double* fi, const double* d, void** args)
 {
 	global_dof(d);
 	local_dof();
-	math::vec3(fi + 0) = -q1.rotate(fr);
-	math::vec3(fi + 6) = +q1.rotate(fr);
-	math::vec3(fi + 9) = +q1.rotate(mr);
-	math::vec3(fi + 3) = -q1.rotate(mr + xr.cross(fr));
+	math::Vec3(fi + 0) = -q1.rotate(fr);
+	math::Vec3(fi + 6) = +q1.rotate(fr);
+	math::Vec3(fi + 9) = +q1.rotate(mr);
+	math::Vec3(fi + 3) = -q1.rotate(mr + xr.cross(fr));
 }
 static void internal_force_2(double* fi, const double* d, void** args)
 {
 	global_dof(d);
 	local_dof();
-	math::vec3(fi + 0) = -q1.rotate(fr);
-	math::vec3(fi + 6) = +q1.rotate(fr);
-	math::vec3(fi + 9) = +q1.rotate(mr);
-	math::vec3(fi + 3) = -q1.rotate(mr + xr.cross(fr));
-	math::vec3(fi + 3) = t1.rotation_gradient(math::vec3(fi + 3), true);
-	math::vec3(fi + 9) = t2.rotation_gradient(math::vec3(fi + 9), true);
+	math::Vec3(fi + 0) = -q1.rotate(fr);
+	math::Vec3(fi + 6) = +q1.rotate(fr);
+	math::Vec3(fi + 9) = +q1.rotate(mr);
+	math::Vec3(fi + 3) = -q1.rotate(mr + xr.cross(fr));
+	math::Vec3(fi + 3) = t1.rotation_gradient(math::Vec3(fi + 3), true);
+	math::Vec3(fi + 9) = t2.rotation_gradient(math::Vec3(fi + 9), true);
 }
 static void stiffness(double* K, const double* d, void** args)
 {
 	global_dof(d);
 	local_dof();
-	math::mat3 Sr = xr.spin();
-	math::mat3 Fr = fr.spin();
-	math::mat3 Mr = mr.spin();
-	math::mat3 A1 = q1.rotation();
+	math::Mat3 Sr = xr.spin();
+	math::Mat3 Fr = fr.spin();
+	math::Mat3 Mr = mr.spin();
+	math::Mat3 A1 = q1.rotation();
 	for(uint32_t i = 0; i < 144; i++) K[i] = 1;
-	math::matrix(K, 12, 12).span(0, 0) = +A1 * Ku * A1.transpose();
-	math::matrix(K, 12, 12).span(6, 6) = +A1 * Ku * A1.transpose();
-	math::matrix(K, 12, 12).span(0, 6) = -A1 * Ku * A1.transpose();
-	math::matrix(K, 12, 12).span(6, 0) = -A1 * Ku * A1.transpose();
-	math::matrix(K, 12, 12).span(9, 9) = +A1 * Kt * A1.transpose();
-	math::matrix(K, 12, 12).span(3, 9) = -A1 * Kt * A1.transpose();
-	math::matrix(K, 12, 12).span(0, 9) = math::mat3(math::mode::zeros);
-	math::matrix(K, 12, 12).span(9, 0) = math::mat3(math::mode::zeros);
-	math::matrix(K, 12, 12).span(6, 9) = math::mat3(math::mode::zeros);
-	math::matrix(K, 12, 12).span(9, 6) = math::mat3(math::mode::zeros);
-	math::matrix(K, 12, 12).span(9, 3) = -A1 * (Kt + Mr) * A1.transpose();
-	math::matrix(K, 12, 12).span(3, 0) = +A1 * (Sr * Ku - Fr) * A1.transpose();
-	math::matrix(K, 12, 12).span(3, 6) = -A1 * (Sr * Ku - Fr) * A1.transpose();
-	math::matrix(K, 12, 12).span(0, 3) = -A1 * (Ku * Sr - Fr) * A1.transpose();
-	math::matrix(K, 12, 12).span(6, 3) = +A1 * (Ku * Sr - Fr) * A1.transpose();
-	math::matrix(K, 12, 12).span(3, 3) = +A1 * (Kt - Sr * Ku * Sr + Mr + Sr * Fr) * A1.transpose();
-	math::matrix(K, 12, 12).span(0, 3) = math::matrix(K, 12, 12).span(0, 3) * t1.rotation_gradient();
-	math::matrix(K, 12, 12).span(3, 3) = math::matrix(K, 12, 12).span(3, 3) * t1.rotation_gradient();
-	math::matrix(K, 12, 12).span(6, 3) = math::matrix(K, 12, 12).span(6, 3) * t1.rotation_gradient();
-	math::matrix(K, 12, 12).span(9, 3) = math::matrix(K, 12, 12).span(9, 3) * t1.rotation_gradient();
-	math::matrix(K, 12, 12).span(3, 9) = math::matrix(K, 12, 12).span(3, 9) * t2.rotation_gradient();
-	math::matrix(K, 12, 12).span(9, 9) = math::matrix(K, 12, 12).span(9, 9) * t2.rotation_gradient();
+	math::Matrix(K, 12, 12).Span(0, 0) = +A1 * Ku * A1.transpose();
+	math::Matrix(K, 12, 12).Span(6, 6) = +A1 * Ku * A1.transpose();
+	math::Matrix(K, 12, 12).Span(0, 6) = -A1 * Ku * A1.transpose();
+	math::Matrix(K, 12, 12).Span(6, 0) = -A1 * Ku * A1.transpose();
+	math::Matrix(K, 12, 12).Span(9, 9) = +A1 * Kt * A1.transpose();
+	math::Matrix(K, 12, 12).Span(3, 9) = -A1 * Kt * A1.transpose();
+	math::Matrix(K, 12, 12).Span(0, 9) = math::Mat3(math::mode::zeros);
+	math::Matrix(K, 12, 12).Span(9, 0) = math::Mat3(math::mode::zeros);
+	math::Matrix(K, 12, 12).Span(6, 9) = math::Mat3(math::mode::zeros);
+	math::Matrix(K, 12, 12).Span(9, 6) = math::Mat3(math::mode::zeros);
+	math::Matrix(K, 12, 12).Span(9, 3) = -A1 * (Kt + Mr) * A1.transpose();
+	math::Matrix(K, 12, 12).Span(3, 0) = +A1 * (Sr * Ku - Fr) * A1.transpose();
+	math::Matrix(K, 12, 12).Span(3, 6) = -A1 * (Sr * Ku - Fr) * A1.transpose();
+	math::Matrix(K, 12, 12).Span(0, 3) = -A1 * (Ku * Sr - Fr) * A1.transpose();
+	math::Matrix(K, 12, 12).Span(6, 3) = +A1 * (Ku * Sr - Fr) * A1.transpose();
+	math::Matrix(K, 12, 12).Span(3, 3) = +A1 * (Kt - Sr * Ku * Sr + Mr + Sr * Fr) * A1.transpose();
+	math::Matrix(K, 12, 12).Span(0, 3) = math::Matrix(K, 12, 12).Span(0, 3) * t1.rotation_gradient();
+	math::Matrix(K, 12, 12).Span(3, 3) = math::Matrix(K, 12, 12).Span(3, 3) * t1.rotation_gradient();
+	math::Matrix(K, 12, 12).Span(6, 3) = math::Matrix(K, 12, 12).Span(6, 3) * t1.rotation_gradient();
+	math::Matrix(K, 12, 12).Span(9, 3) = math::Matrix(K, 12, 12).Span(9, 3) * t1.rotation_gradient();
+	math::Matrix(K, 12, 12).Span(3, 9) = math::Matrix(K, 12, 12).Span(3, 9) * t2.rotation_gradient();
+	math::Matrix(K, 12, 12).Span(9, 9) = math::Matrix(K, 12, 12).Span(9, 9) * t2.rotation_gradient();
 }
 static void test_force(void)
 {
 	double d[12];
-	math::vector fia(12);
-	math::vector fin(12);
-	math::vector fie(12);
+	math::Vector fia(12);
+	math::Vector fin(12);
+	math::Vector fie(12);
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
 	{
 		setup();
-		math::vector(d, 12).randu();
+		math::Vector(d, 12).randu();
 		internal_force_2(fia.data(), d, nullptr);
 		math::ndiff(energy, fin.data(), d, nullptr, 1, 12, 1e-5);
 		fie = fia - fin;
@@ -150,14 +150,14 @@ static void test_force(void)
 static void test_stiffness(void)
 {
 	double d[12];
-	math::matrix Ka(12, 12);
-	math::matrix Kn(12, 12);
-	math::matrix Ke(12, 12);
+	math::Matrix Ka(12, 12);
+	math::Matrix Kn(12, 12);
+	math::Matrix Ke(12, 12);
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
 	{
 		setup();
-		math::vector(d, 12).randu();
+		math::Vector(d, 12).randu();
 		stiffness(Ka.data(), d, nullptr);
 		math::ndiff(internal_force_1, Kn.data(), d, nullptr, 12, 12, 1e-5);
 		Ke = Ka - Kn;

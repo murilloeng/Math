@@ -3,7 +3,7 @@
 
 //Math
 #include "Math/Test/inc/solvers.hpp"
-#include "Math/inc/solvers/Newmark.hpp"
+#include "Math/inc/Solvers/Newmark.hpp"
 
 void tests::solvers::newmark::single_dof(void)
 {

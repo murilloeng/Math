@@ -4,9 +4,9 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/misc/util.hpp"
-#include "Math/inc/linear/vec3.hpp"
-#include "Math/inc/linear/mat3.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
 
 //Test
 #include "Math/Test/inc/rotations.hpp"
@@ -14,16 +14,16 @@
 static bool coupled;
 static bool inverse;
 static bool transpose;
-static math::vec3 u, v;
+static math::Vec3 u, v;
 
 static void function(double* r, const double* t, void** args)
 {
 	//data
-	const math::vec3 tm = t;
-	const math::mat3 Tm = tm.rotation_gradient(transpose);
-	const math::vec3 Tv = tm.rotation_gradient(v, transpose);
-	const math::mat3 Tmi = tm.rotation_gradient_inverse(transpose);
-	const math::vec3 Tvi = tm.rotation_gradient_inverse(v, transpose);
+	const math::Vec3 tm = t;
+	const math::Mat3 Tm = tm.rotation_gradient(transpose);
+	const math::Vec3 Tv = tm.rotation_gradient(v, transpose);
+	const math::Mat3 Tmi = tm.rotation_gradient_inverse(transpose);
+	const math::Vec3 Tvi = tm.rotation_gradient_inverse(v, transpose);
 	//function
 	r[0] = !inverse ? 
 		coupled ? Tm.bilinear(u, v) : Tv.inner(u) : 
@@ -32,16 +32,16 @@ static void function(double* r, const double* t, void** args)
 static void gradient(double* dr, const double* t, void** args)
 {
 	//data
-	math::vec3 drm = dr;
-	const math::vec3 tm = t;
-	const math::mat3 H0 = tm.rotation_hessian(0, transpose);
-	const math::mat3 H1 = tm.rotation_hessian(1, transpose);
-	const math::mat3 H2 = tm.rotation_hessian(2, transpose);
-	const math::mat3 Hv = tm.rotation_hessian(v, transpose);
-	const math::mat3 Hi0 = tm.rotation_hessian_inverse(0, transpose);
-	const math::mat3 Hi1 = tm.rotation_hessian_inverse(1, transpose);
-	const math::mat3 Hi2 = tm.rotation_hessian_inverse(2, transpose);
-	const math::mat3 Hiv = tm.rotation_hessian_inverse(v, transpose);
+	math::Vec3 drm = dr;
+	const math::Vec3 tm = t;
+	const math::Mat3 H0 = tm.rotation_hessian(0, transpose);
+	const math::Mat3 H1 = tm.rotation_hessian(1, transpose);
+	const math::Mat3 H2 = tm.rotation_hessian(2, transpose);
+	const math::Mat3 Hv = tm.rotation_hessian(v, transpose);
+	const math::Mat3 Hi0 = tm.rotation_hessian_inverse(0, transpose);
+	const math::Mat3 Hi1 = tm.rotation_hessian_inverse(1, transpose);
+	const math::Mat3 Hi2 = tm.rotation_hessian_inverse(2, transpose);
+	const math::Mat3 Hiv = tm.rotation_hessian_inverse(v, transpose);
 	//gradient
 	if(!coupled)
 	{
@@ -55,12 +55,12 @@ static void gradient(double* dr, const double* t, void** args)
 	}
 }
 
-void tests::rotations::vec3::rotation_hessian(void)
+void tests::rotations::Vec3::rotation_hessian(void)
 {
 	//data
-	math::vec3 t, r;
+	math::Vec3 t, r;
 	uint32_t selection;
-	math::mat3 dra, drn, dri;
+	math::Mat3 dra, drn, dri;
 	const uint32_t nt = 10000;
 	//menu
 	while(true)

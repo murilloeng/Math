@@ -1,0 +1,112 @@
+//std
+#include <cmath>
+#include <cstdio>
+#include <cstring>
+#include <stdexcept>
+
+//Math
+#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Solvers/NewtonRaphson.hpp"
+
+//x: state Vector
+//r: residual force Vector
+//p: continuation parameter
+
+//target system: r(x, p) = 0
+
+//tangent on x: K(x, p) = -dr/dx(x, p)
+//tangent on p: g(x, p) = +dr/dp(x, p)
+
+namespace math
+{
+	namespace solvers
+	{
+		//constructors
+		NewtonRaphson::NewtonRaphson(void)
+		{
+			return;
+		}
+
+		//destructor
+		NewtonRaphson::~NewtonRaphson(void)
+		{
+			return;
+		}
+
+		//data
+		uint32_t NewtonRaphson::state_set(void) const
+		{
+			return uint32_t(State::x) | uint32_t(State::p);
+		}
+		uint32_t NewtonRaphson::force_set(void) const
+		{
+			return uint32_t(Force::r) | uint32_t(Force::fi) | uint32_t(Force::fe);
+		}
+		uint32_t NewtonRaphson::tangent_set(void) const
+		{
+			return uint32_t(Tangent::K);
+		}
+
+		//solve
+		void NewtonRaphson::check(void)
+		{
+			if(!m_system_1 && !m_system_2 && !(m_residue && m_tangent_1 && m_tangent_2))
+			{
+				throw std::runtime_error("Newton-Raphson solver called with at least one method not set!");
+			}
+		}
+		void NewtonRaphson::compute(void)
+		{
+			if(m_system_2)
+			{
+				m_system_2(m_r, m_fe, m_K, m_p_new, m_x_new);
+			}
+			else if(m_system_1)
+			{
+				m_system_1(m_r, m_K, m_x_new);
+				for(uint32_t i = 0; i < m_size; i++) m_r[i] = m_p_new * m_fe[i] - m_r[i];
+			}
+			else
+			{
+				m_residue(m_r, m_p_new, m_x_new);
+				m_tangent_2(m_K, m_p_new, m_x_new);
+				m_tangent_1(m_fe, m_p_new, m_x_new);
+			}
+		}
+		void NewtonRaphson::predictor(void)
+		{
+			//data
+			const Matrix K(m_K, m_size, m_size);
+			const Vector r(m_r, m_size), fe(m_fe, m_size);
+			Vector dx(m_dx, m_size), dxr(m_dxr, m_size), dxt(m_dxt, m_size);
+			//predictor
+			if(!K.solve(dxr, r) || !K.solve(dxt, fe))
+			{
+				if(!m_silent) printf("Unable to decompose stiffness Matrix in predictor!\n");
+			}
+			//continuation
+			if(m_step != 1)
+			{
+				m_dp = m_continuation.predictor() / (1 << m_attempt);
+			}
+			for(uint32_t i = 0; i < m_size; i++) dx[i] = dxr[i] + m_dp * dxt[i];
+		}
+		void NewtonRaphson::corrector(void)
+		{
+			//data
+			const Matrix K(m_K, m_size, m_size);
+			const Vector r(m_r, m_size), fe(m_fe, m_size);
+			Vector ddxr(m_ddxr, m_size), ddxt(m_ddxt, m_size);
+			//corrector
+			if(!K.solve(ddxr, r) || !K.solve(ddxt, fe))
+			{
+				if(!m_silent) printf("Unable to decompose stiffness Matrix in corrector!\n");
+			}
+			//continuation
+			m_ddp = m_continuation.corrector();
+			//update
+			m_dp += m_ddp;
+			for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_ddxr[i] + m_ddp * m_ddxt[i];
+		}
+	}
+}

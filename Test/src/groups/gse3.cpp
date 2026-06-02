@@ -4,11 +4,11 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/misc/util.hpp"
-#include "Math/inc/linear/vec3.hpp"
-#include "Math/inc/linear/mat3.hpp"
-#include "Math/inc/groups/ASE3.hpp"
-#include "Math/inc/groups/GSE3.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
+#include "Math/inc/Groups/ASE3.hpp"
+#include "Math/inc/Groups/GSE3.hpp"
 
 //tests
 #include "Math/Test/inc/groups.hpp"
@@ -17,15 +17,15 @@
 static void test_exponential(double* r, const double* v, const void** args)
 {
 	r[3] = 1;
-	const math::vec3 u(v + 0), w(v + 3);
-	const math::vec3 a = (const double*) args[0];
-	math::vec3(r + 0) = math::groups::ASE3(u, w).exponential() * a;
+	const math::Vec3 u(v + 0), w(v + 3);
+	const math::Vec3 a = (const double*) args[0];
+	math::Vec3(r + 0) = math::groups::ASE3(u, w).exponential() * a;
 }
 
 //tests
 void tests::groups::GSE3::log(void)
 {
-	math::vec3 u, w, ru, rw;
+	math::Vec3 u, w, ru, rw;
 	const uint32_t nt = 100000;
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
@@ -56,13 +56,13 @@ void tests::groups::GSE3::inverse(void)
 	srand(uint32_t(time(nullptr)));
 	for(uint32_t i = 0; i < nt; i++)
 	{
-		g.vector().randu();
+		g.Vector().randu();
 		g.quaternion().randu();
 		r = g * g.inverse();
 		r.quaternion()[0] -= 1;
-		if(r.vector().norm() > 1e-5 || r.quaternion().norm() > 1e-5)
+		if(r.Vector().norm() > 1e-5 || r.quaternion().norm() > 1e-5)
 		{
-			r.vector().print("rv");
+			r.Vector().print("rv");
 			r.quaternion().print("rq");
 			break;
 		}
@@ -75,21 +75,21 @@ void tests::groups::GSE3::inverse(void)
 void tests::groups::GSE3::tangent(void)
 {
 	const uint32_t nt = 100000;
-	math::vector a(3), v(6), r(4);
+	math::Vector a(3), v(6), r(4);
 	srand(uint32_t(time(nullptr)));
 	const void* args[] = {a.data()};
-	math::matrix Ka(4, 6), Kn(4, 6), Kr(4, 6), A(4, 6, math::mode::zeros);
+	math::Matrix Ka(4, 6), Kn(4, 6), Kr(4, 6), A(4, 6, math::mode::zeros);
 	for(uint32_t i = 0; i < nt; i++)
 	{
 		a.randu();
 		v.randu();
-		const math::vec3 u = v.data() + 0;
-		const math::vec3 w = v.data() + 3;
-		A.span(0, 0, 3, 3) = math::matrix::eye(3, 3);
-		// A.span(0, 3, 3, 3) = -((math::matrix&) math::vec3(a.data()).spin());
-		const math::matrix T = math::groups::ASE3(u, w).tangent();
-		const math::mat4 H = math::groups::ASE3(u, w).exponential();
-		Ka = ((math::matrix&) H) * A * T;
+		const math::Vec3 u = v.data() + 0;
+		const math::Vec3 w = v.data() + 3;
+		A.Span(0, 0, 3, 3) = math::Matrix::eye(3, 3);
+		// A.Span(0, 3, 3, 3) = -((math::Matrix&) math::Vec3(a.data()).spin());
+		const math::Matrix T = math::groups::ASE3(u, w).tangent();
+		const math::Mat4 H = math::groups::ASE3(u, w).exponential();
+		Ka = ((math::Matrix&) H) * A * T;
 		math::ndiff(test_exponential, Kn.data(), v.data(), args, 4, 6, 1e-5);
 		Kr = Ka - Kn;
 		if(Kr.norm() > 1e-5 * Ka.norm())
@@ -114,9 +114,9 @@ void tests::groups::GSE3::tangent_inverse(void)
 	{
 		object.vector_u().randu();
 		object.vector_w().randu();
-		const math::matrix T = object.tangent();
-		const math::matrix Ti = object.tangent_inverse();
-		const math::matrix Tr = Ti * T - math::matrix::eye(6, 6);
+		const math::Matrix T = object.tangent();
+		const math::Matrix Ti = object.tangent_inverse();
+		const math::Matrix Tr = Ti * T - math::Matrix::eye(6, 6);
 		if(Tr.norm() > 1e-5)
 		{
 			T.print("T");
@@ -132,8 +132,8 @@ void tests::groups::GSE3::tangent_inverse(void)
 }
 void tests::groups::GSE3::tangent_increment(void)
 {
-	// math::vec3 a, v;
-	// math::mat3 Ka, Kn, Kr;
+	// math::Vec3 a, v;
+	// math::Mat3 Ka, Kn, Kr;
 	// const uint32_t nt = 100000;
 	// srand(uint32_t(time(nullptr)));
 	// const void* args[] = {a.data()};
@@ -159,8 +159,8 @@ void tests::groups::GSE3::tangent_increment(void)
 }
 void tests::groups::GSE3::tangent_inverse_increment(void)
 {
-	// math::vec3 a, v;
-	// math::mat3 Ka, Kn, Kr;
+	// math::Vec3 a, v;
+	// math::Mat3 Ka, Kn, Kr;
 	// const uint32_t nt = 100000;
 	// srand(uint32_t(time(nullptr)));
 	// const void* args[] = {a.data()};
