@@ -20,7 +20,10 @@ namespace math
 			//destructor
 			~Validator(void);
 	
-			//items
+			//data
+			bool silent(bool);
+			bool silent(void) const;
+
 			void create_item(void);
 			Item* item(uint32_t) const;
 	
@@ -29,6 +32,7 @@ namespace math
 	
 		private:
 			//data
+			bool m_silent;
 			std::vector<Item*> m_items;
 		};
 	}

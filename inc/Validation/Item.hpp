@@ -33,9 +33,6 @@ namespace math
 			~Item(void);
 	
 		public:
-			//distance
-			double distance(void) const;
-
 			//data
 			void tolerance(double);
 			void function(double(*)(double));
@@ -54,19 +51,25 @@ namespace math
 			void load_reference(const double*, uint32_t, uint32_t, uint32_t, uint32_t);
 	
 		private:
-			//load
-			void load(std::vector<Point>&, const char*, uint32_t, uint32_t);
-			void load(std::vector<Point>&, const double*, const double*, uint32_t);
-			void load(std::vector<Point>&, const double*, uint32_t, uint32_t, uint32_t, uint32_t);
-
 			//validation
 			bool validate(void);
 			bool validate_data(void);
 			bool validate_function(void);
+
+			//bounds
+			void compute_bounds(void);
+			Point transform(const Point&) const;
+
+			//load
+			void load(std::vector<Point>&, const char*, uint32_t, uint32_t);
+			void load(std::vector<Point>&, const double*, const double*, uint32_t);
+			void load(std::vector<Point>&, const double*, uint32_t, uint32_t, uint32_t, uint32_t);
 	
 			//data
-			double m_distance;
+			bool m_silent;
+			double m_error;
 			double m_tolerance;
+			double m_bounds[4];
 			double(*m_function)(double);
 			std::vector<Point> m_points_numeric;
 			std::vector<Point> m_points_reference;

@@ -12,7 +12,7 @@ namespace math
 	namespace validation
 	{
 		//constructor
-		Item::Item(void) : m_tolerance{1e-5}, m_function{nullptr}
+		Item::Item(void) : m_silent{false}, m_tolerance{1e-2}, m_function{nullptr}
 		{
 			return;
 		}
@@ -21,12 +21,6 @@ namespace math
 		Item::~Item(void)
 		{
 			return;
-		}
-
-		//distance
-		double Item::distance(void) const
-		{
-			return m_distance;
 		}
 
 		//data
@@ -80,6 +74,37 @@ namespace math
 		void Item::load_reference(const double* x, uint32_t rows, uint32_t cols, uint32_t col_1, uint32_t col_2)
 		{
 			load(m_points_reference, x, rows, cols, col_1, col_2);
+		}
+
+		//bounds
+		void Item::compute_bounds(void)
+		{
+			//setup
+			m_bounds[0] = m_bounds[2] = +DBL_MAX;
+			m_bounds[1] = m_bounds[3] = -DBL_MAX;
+			//numeric
+			for(const Point& point : m_points_numeric)
+			{
+				m_bounds[0] = fmin(m_bounds[0], point.m_data[0]);
+				m_bounds[1] = fmax(m_bounds[1], point.m_data[0]);
+				m_bounds[2] = fmin(m_bounds[2], point.m_data[1]);
+				m_bounds[3] = fmax(m_bounds[3], point.m_data[1]);
+			}
+			//reference
+			for(const Point& point : m_points_reference)
+			{
+				m_bounds[0] = fmin(m_bounds[0], point.m_data[0]);
+				m_bounds[1] = fmax(m_bounds[1], point.m_data[0]);
+				m_bounds[2] = fmin(m_bounds[2], point.m_data[1]);
+				m_bounds[3] = fmax(m_bounds[3], point.m_data[1]);
+			}
+		}
+		Point Item::transform(const Point& point) const
+		{
+			return {
+				(point.m_data[0] - m_bounds[0]) / (m_bounds[1] - m_bounds[0]),
+				(point.m_data[1] - m_bounds[2]) / (m_bounds[3] - m_bounds[2])
+			};
 		}
 
 		//load
@@ -150,44 +175,49 @@ namespace math
 		//validation
 		bool Item::validate(void)
 		{
+			compute_bounds();
 			return !m_function ? validate_data() : validate_function();
 		}
 		bool Item::validate_data(void)
 		{
 			//validation
-			for(uint32_t i = 0; i < m_points_reference.size(); i++)
+			m_error = 0;
+			const uint64_t nr = m_points_reference.size();
+			for(const Point& point_reference : m_points_reference)
 			{
-				bool test = false;
-				m_distance = DBL_MAX;
-				for(uint32_t j = 0; j + 1 < m_points_numeric.size(); j++)
+				double distance = DBL_MAX;
+				const Point pr = transform(point_reference);
+				for(const Point& point_numeric : m_points_numeric)
 				{
-					if(!test)
-					{
-						m_distance = fmin(m_distance, m_points_reference[i].distance(m_points_numeric[j], m_points_numeric[j + 1]));
-						test = m_distance < m_tolerance;
-					}
+					const Point& pn = transform(point_numeric);
+					distance = fmin(distance, pr.distance(pn));
 				}
-				if(!test)
-				{
-					printf("minimal distance: %+.2e\n", m_distance);
-					return false;
-				}
+				m_error += distance / nr;
+			}
+			if(m_error > m_tolerance && !m_silent)
+			{
+				printf("MAE: %+.2e\n", m_error);
 			}
 			//return
-			return true;
+			return m_error < m_tolerance;
 		}
 		bool Item::validate_function(void)
 		{
 			//validation
-			bool test = true;
+			m_error = 0;
+			const uint64_t nr = m_points_numeric.size();
 			for(uint32_t i = 0; i < m_points_numeric.size(); i++)
 			{
 				const double x1 = m_points_numeric[i].m_data[0];
 				const double x2 = m_points_numeric[i].m_data[1];
-				test = test && fabs(x2 - m_function(x1)) < m_tolerance;
+				m_error += fabs(x2 - m_function(x1)) / (m_bounds[3] - m_bounds[2]) / nr;
+			}
+			if(m_error > m_tolerance && !m_silent)
+			{
+				printf("MAE: %+.2e\n", m_error);
 			}
 			//return
-			return test;
+			return m_error < m_tolerance;
 		}
 	}
 }

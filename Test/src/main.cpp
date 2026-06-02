@@ -9,16 +9,17 @@
 #include "Math/Test/inc/solvers.hpp"
 #include "Math/Test/inc/geometry.hpp"
 #include "Math/Test/inc/rotations.hpp"
+#include "Math/Test/inc/validation.hpp"
 #include "Math/Test/inc/miscellaneous.hpp"
-
-#include "Math/inc/Miscellaneous/util.hpp"
-#include "Math/inc/Validation/Validator.hpp"
 
 int main(void)
 {
 	try
 	{
-		tests::solvers::harmonic::duffing();
+		// tests::solvers::harmonic::duffing();
+		tests::validation::validation_from_data();
+		tests::validation::validation_from_file();
+		tests::validation::validation_from_function();
 	}
 	catch(const std::exception& exception)
 	{

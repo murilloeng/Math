@@ -9,7 +9,7 @@ namespace math
 	namespace validation
 	{
 		//constructor
-		Validator::Validator(void)
+		Validator::Validator(void) : m_silent{false}
 		{
 			return;
 		}
@@ -23,7 +23,20 @@ namespace math
 			}
 		}
 
-		//items
+		//data
+		bool Validator::silent(void) const
+		{
+			return m_silent;
+		}
+		bool Validator::silent(bool silent)
+		{
+			for(Item* item : m_items)
+			{
+				item->m_silent = silent;
+			}
+			return m_silent = silent;
+		}
+
 		void Validator::create_item(void)
 		{
 			m_items.push_back(new Item);
@@ -42,7 +55,7 @@ namespace math
 			{
 				test = test && item->validate();
 			}
-			printf("Status: %s\n", test ? "✅" : "❌");
+			if(!m_silent) printf("Status: %s\n", test ? "✅" : "❌");
 			//return
 			return test;
 		}
