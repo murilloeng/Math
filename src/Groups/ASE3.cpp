@@ -64,9 +64,9 @@ namespace math
 		{
 			//tangent
 			Matrix T(6, 6, mode::zeros);
-			T.Span(0, 0, 3, 3) = ASO3(m_vector_w).tangent();
-			T.Span(3, 3, 3, 3) = ASO3(m_vector_w).tangent();
-			T.Span(0, 3, 3, 3) = Mat3(ASO3(-m_vector_w).exponential()) * ASO3(m_vector_w).tangent_increment(m_vector_u, true);
+			T.span(0, 0, 3, 3) = ASO3(m_vector_w).tangent();
+			T.span(3, 3, 3, 3) = ASO3(m_vector_w).tangent();
+			T.span(0, 3, 3, 3) = Mat3(ASO3(-m_vector_w).exponential()) * ASO3(m_vector_w).tangent_increment(m_vector_u, true);
 			//return
 			return T;
 		}
@@ -77,9 +77,9 @@ namespace math
 			const Mat3 Twi = ASO3(m_vector_w).tangent_inverse();
 			const Mat3 Awu = ASO3(m_vector_w).tangent_increment(m_vector_u, true);
 			//tangent
-			Ti.Span(0, 0, 3, 3) = Twi;
-			Ti.Span(3, 3, 3, 3) = Twi;
-			Ti.Span(0, 3, 3, 3) = -Twi.transpose() * Awu * Twi;
+			Ti.span(0, 0, 3, 3) = Twi;
+			Ti.span(3, 3, 3, 3) = Twi;
+			Ti.span(0, 3, 3, 3) = -Twi.transpose() * Awu * Twi;
 			//return
 			return Ti;
 		}

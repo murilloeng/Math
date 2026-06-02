@@ -466,33 +466,33 @@ namespace math
 				const double tk = (1 + sk) * M_PI / m_w;
 				//tangent
 				compute_tangent_z(z, tk);
-				Ks.Span(0, 0, m_dofs, m_dofs) += wk * Kd;
+				Ks.span(0, 0, m_dofs, m_dofs) += wk * Kd;
 				for(uint32_t i = 1; i <= m_harmonics; i++)
 				{
 					const double ci = cos(i * m_w * tk);
 					const double si = sin(i * m_w * tk);
 					const uint32_t p1 = (2 * i - 1) * m_dofs;
 					const uint32_t p2 = (2 * i + 0) * m_dofs;
-					Ks.Span(p1, 0, m_dofs, m_dofs) += wk * ci * Kd;
-					Ks.Span(p2, 0, m_dofs, m_dofs) += wk * si * Kd;
-					Ks.Span(0, p1, m_dofs, m_dofs) -= wk * si * i * m_w * Cd;
-					Ks.Span(0, p2, m_dofs, m_dofs) += wk * ci * i * m_w * Cd;
-					Ks.Span(0, p1, m_dofs, m_dofs) += wk * ci * (Kd - i * i * m_w * m_w * Md);
-					Ks.Span(0, p2, m_dofs, m_dofs) += wk * si * (Kd - i * i * m_w * m_w * Md);
+					Ks.span(p1, 0, m_dofs, m_dofs) += wk * ci * Kd;
+					Ks.span(p2, 0, m_dofs, m_dofs) += wk * si * Kd;
+					Ks.span(0, p1, m_dofs, m_dofs) -= wk * si * i * m_w * Cd;
+					Ks.span(0, p2, m_dofs, m_dofs) += wk * ci * i * m_w * Cd;
+					Ks.span(0, p1, m_dofs, m_dofs) += wk * ci * (Kd - i * i * m_w * m_w * Md);
+					Ks.span(0, p2, m_dofs, m_dofs) += wk * si * (Kd - i * i * m_w * m_w * Md);
 					for(uint32_t j = 1; j <= m_harmonics; j++)
 					{
 						const double cj = cos(j * m_w * tk);
 						const double sj = sin(j * m_w * tk);
 						const uint32_t q1 = (2 * j - 1) * m_dofs;
 						const uint32_t q2 = (2 * j + 0) * m_dofs;
-						Ks.Span(p1, q1, m_dofs, m_dofs) -= wk * ci * sj * j * m_w * Cd;
-						Ks.Span(p1, q2, m_dofs, m_dofs) += wk * ci * cj * j * m_w * Cd;
-						Ks.Span(p2, q1, m_dofs, m_dofs) -= wk * si * sj * j * m_w * Cd;
-						Ks.Span(p2, q2, m_dofs, m_dofs) += wk * si * cj * j * m_w * Cd;
-						Ks.Span(p1, q1, m_dofs, m_dofs) += wk * ci * cj * (Kd - j * j * m_w * m_w * Md);
-						Ks.Span(p1, q2, m_dofs, m_dofs) += wk * ci * sj * (Kd - j * j * m_w * m_w * Md);
-						Ks.Span(p2, q1, m_dofs, m_dofs) += wk * si * cj * (Kd - j * j * m_w * m_w * Md);
-						Ks.Span(p2, q2, m_dofs, m_dofs) += wk * si * sj * (Kd - j * j * m_w * m_w * Md);
+						Ks.span(p1, q1, m_dofs, m_dofs) -= wk * ci * sj * j * m_w * Cd;
+						Ks.span(p1, q2, m_dofs, m_dofs) += wk * ci * cj * j * m_w * Cd;
+						Ks.span(p2, q1, m_dofs, m_dofs) -= wk * si * sj * j * m_w * Cd;
+						Ks.span(p2, q2, m_dofs, m_dofs) += wk * si * cj * j * m_w * Cd;
+						Ks.span(p1, q1, m_dofs, m_dofs) += wk * ci * cj * (Kd - j * j * m_w * m_w * Md);
+						Ks.span(p1, q2, m_dofs, m_dofs) += wk * ci * sj * (Kd - j * j * m_w * m_w * Md);
+						Ks.span(p2, q1, m_dofs, m_dofs) += wk * si * cj * (Kd - j * j * m_w * m_w * Md);
+						Ks.span(p2, q2, m_dofs, m_dofs) += wk * si * sj * (Kd - j * j * m_w * m_w * Md);
 					}
 				}
 			}

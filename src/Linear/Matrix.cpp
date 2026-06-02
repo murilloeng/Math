@@ -800,7 +800,7 @@ namespace math
 		}
 		return m;
 	}
-	math::Span Matrix::Span(uint32_t r, uint32_t c, uint32_t n, uint32_t m)
+	math::Span Matrix::span(uint32_t r, uint32_t c, uint32_t n, uint32_t m)
 	{
 		return math::Span(*this, r, c, n, m);
 	}

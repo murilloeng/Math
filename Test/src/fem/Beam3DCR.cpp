@@ -55,8 +55,8 @@ static void compute_state_dl(void)
 	const math::Quat q2 = math::Vec3(d.data() + 9).quaternion() * q2n;
 	//local state
 	const math::Quat qr = q1 * q0;
-	dl.Span(3, 0, 3, 1) = (qr.conjugate() * q2 * q0).pseudo();
-	dl.Span(0, 0, 3, 1) = qr.conjugate(x2 - x1) - math::Vec3(lr, 0, 0);
+	dl.span(3, 0, 3, 1) = (qr.conjugate() * q2 * q0).pseudo();
+	dl.span(0, 0, 3, 1) = qr.conjugate(x2 - x1) - math::Vec3(lr, 0, 0);
 }
 
 static void compute_force_fl(void)
@@ -87,11 +87,11 @@ static void compute_kinematic_T(void)
 	const math::Vec3 tl = qr.conjugate(q2 * q0).pseudo();
 	const math::Mat3 Ti = tl.rotation_gradient_inverse();
 	//gradient
-	T.Span(0, 0) = -Rt;
-	T.Span(0, 6) = +Rt;
-	T.Span(3, 3) = -Ti * Rt * T1;
-	T.Span(3, 9) = +Ti * Rt * T2;
-	T.Span(0, 3) = +Rt * Xr * T1;
+	T.span(0, 0) = -Rt;
+	T.span(0, 6) = +Rt;
+	T.span(3, 3) = -Ti * Rt * T1;
+	T.span(3, 9) = +Ti * Rt * T2;
+	T.span(0, 3) = +Rt * Xr * T1;
 }
 
 static void internal_energy(double* U)
@@ -141,19 +141,19 @@ static void stiffness(double* K)
 	const math::Vec3 ml = fl.data() + 3;
 	const math::Vec3 mp = Ti.transpose() * ml;
 	const math::Mat3 Hl = tl.rotation_hessian_inverse(ml, true);
-	math::Matrix(K, 12, 12).Span(0, 3) += Rr * nl.spin() * Rt * T1;
-	math::Matrix(K, 12, 12).Span(6, 3) -= Rr * nl.spin() * Rt * T1;
-	math::Matrix(K, 12, 12).Span(9, 9) += t2.rotation_hessian(Rr * mp, true);
-	math::Matrix(K, 12, 12).Span(3, 0) -= T1.transpose() * Rr * nl.spin() * Rt;
-	math::Matrix(K, 12, 12).Span(3, 6) += T1.transpose() * Rr * nl.spin() * Rt;
-	math::Matrix(K, 12, 12).Span(3, 3) += T1.transpose() * Rr * Hl * Ti * Rt * T1;
-	math::Matrix(K, 12, 12).Span(9, 3) -= T2.transpose() * Rr * Hl * Ti * Rt * T1;
-	math::Matrix(K, 12, 12).Span(3, 9) -= T1.transpose() * Rr * Hl * Ti * Rt * T2;
-	math::Matrix(K, 12, 12).Span(9, 9) += T2.transpose() * Rr * Hl * Ti * Rt * T2;
-	math::Matrix(K, 12, 12).Span(9, 3) -= T2.transpose() * Rr * mp.spin() * Rt * T1;
-	math::Matrix(K, 12, 12).Span(3, 3) += T1.transpose() * Rr * mp.spin() * Rt * T1;
-	math::Matrix(K, 12, 12).Span(3, 3) += T1.transpose() * Xr * Rr * nl.spin() * Rt * T1;
-	math::Matrix(K, 12, 12).Span(3, 3) -= t1.rotation_hessian(Rr * mp + Xr * Rr * nl, true);
+	math::Matrix(K, 12, 12).span(0, 3) += Rr * nl.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).span(6, 3) -= Rr * nl.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).span(9, 9) += t2.rotation_hessian(Rr * mp, true);
+	math::Matrix(K, 12, 12).span(3, 0) -= T1.transpose() * Rr * nl.spin() * Rt;
+	math::Matrix(K, 12, 12).span(3, 6) += T1.transpose() * Rr * nl.spin() * Rt;
+	math::Matrix(K, 12, 12).span(3, 3) += T1.transpose() * Rr * Hl * Ti * Rt * T1;
+	math::Matrix(K, 12, 12).span(9, 3) -= T2.transpose() * Rr * Hl * Ti * Rt * T1;
+	math::Matrix(K, 12, 12).span(3, 9) -= T1.transpose() * Rr * Hl * Ti * Rt * T2;
+	math::Matrix(K, 12, 12).span(9, 9) += T2.transpose() * Rr * Hl * Ti * Rt * T2;
+	math::Matrix(K, 12, 12).span(9, 3) -= T2.transpose() * Rr * mp.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).span(3, 3) += T1.transpose() * Rr * mp.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).span(3, 3) += T1.transpose() * Xr * Rr * nl.spin() * Rt * T1;
+	math::Matrix(K, 12, 12).span(3, 3) -= t1.rotation_hessian(Rr * mp + Xr * Rr * nl, true);
 }
 
 static void energy_function(double* U, const double* d, void** args)

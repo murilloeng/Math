@@ -75,10 +75,10 @@ static void hessian(double* hv2sk, double* d, void** args)
 	const math::Mat3 H1 = v1s.rotation_hessian(t2i, true);
 	const math::Mat3 H2i = v2s.rotation_hessian_inverse(ar, true);
 	//full hessian
-	math::Matrix(hv2sk, 4, 4).Span(0, 3, 3, 1) = T1.transpose() * H2i * T2i * n1;
-	math::Matrix(hv2sk, 4, 4).Span(0, 0, 3, 3) = T1.transpose() * H2i * T2i * T1 + H1;
-	math::Matrix(hv2sk, 4, 4).Span(3, 3, 1, 1) = n1.transpose() * H2i * T2i * n1 - t2i.transpose() * n1.spin() * n1;
-	math::Matrix(hv2sk, 4, 4).Span(3, 0, 1, 3) = n1.transpose() * H2i * T2i * T1 - t2i.transpose() * n1.spin() * T1;
+	math::Matrix(hv2sk, 4, 4).span(0, 3, 3, 1) = T1.transpose() * H2i * T2i * n1;
+	math::Matrix(hv2sk, 4, 4).span(0, 0, 3, 3) = T1.transpose() * H2i * T2i * T1 + H1;
+	math::Matrix(hv2sk, 4, 4).span(3, 3, 1, 1) = n1.transpose() * H2i * T2i * n1 - t2i.transpose() * n1.spin() * n1;
+	math::Matrix(hv2sk, 4, 4).span(3, 0, 1, 3) = n1.transpose() * H2i * T2i * T1 - t2i.transpose() * n1.spin() * T1;
 }
 
 static void menu_what(void)

@@ -124,7 +124,7 @@ namespace math
 		bool symmetric(double = 1e-5) const;
 
 		Mat3 span3(uint32_t, uint32_t) const;
-		math::Span Span(uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
+		math::Span span(uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
 
 		//svd
 		bool svd(Matrix&, Matrix&, Vector&) const;

@@ -85,8 +85,8 @@ void tests::groups::GSE3::tangent(void)
 		v.randu();
 		const math::Vec3 u = v.data() + 0;
 		const math::Vec3 w = v.data() + 3;
-		A.Span(0, 0, 3, 3) = math::Matrix::eye(3, 3);
-		// A.Span(0, 3, 3, 3) = -((math::Matrix&) math::Vec3(a.data()).spin());
+		A.span(0, 0, 3, 3) = math::Matrix::eye(3, 3);
+		// A.span(0, 3, 3, 3) = -((math::Matrix&) math::Vec3(a.data()).spin());
 		const math::Matrix T = math::groups::ASE3(u, w).tangent();
 		const math::Mat4 H = math::groups::ASE3(u, w).exponential();
 		Ka = ((math::Matrix&) H) * A * T;
