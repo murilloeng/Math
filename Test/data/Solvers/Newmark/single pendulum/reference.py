@@ -10,7 +10,7 @@ v0 = 0.00e+00
 q0 = pi / 2
 
 #system
-def pendulum_ode(t, y):
+def single_pendulum(t, y):
 	theta, omega = y
 	dtheta_dt = omega
 	domega_dt = -g / l * sin(theta)
@@ -18,7 +18,7 @@ def pendulum_ode(t, y):
 
 #solve
 t_eval = linspace(0, T, ns)
-sol = scipy.integrate.solve_ivp(pendulum_ode, [0, T], [q0, v0], t_eval = t_eval, method='DOP853')
+sol = scipy.integrate.solve_ivp(single_pendulum, [0, T], [q0, v0], t_eval = t_eval, method='DOP853')
 
 #write
 with open("reference.txt", "w") as file:

@@ -11,7 +11,7 @@ void tests::solvers::newmark::single_pendulum(void)
 	//data
 	const double g = 9.81e+00;
 	const double L = 1.00e+00;
-	const double x0 = M_PI_2;
+	const double x0 = +M_PI_2;
 	const double v0 = 0.00e+00;
 	math::solvers::Newmark solver;
 	math::validation::Validator validator;

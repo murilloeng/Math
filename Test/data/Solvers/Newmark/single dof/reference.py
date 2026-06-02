@@ -16,7 +16,7 @@ w0 = sqrt(k / m)
 tf = 2 * pi * np / w0
 
 #system
-def pendulum_ode(t, y):
+def single_dof(t, y):
 	x, v = y
 	dx_dt = v
 	dv_dt = Fr * sin(wf * t) - k * x - c * v
@@ -24,7 +24,7 @@ def pendulum_ode(t, y):
 
 #solve
 t_eval = linspace(0, tf, ns)
-sol = scipy.integrate.solve_ivp(pendulum_ode, [0, tf], [x0, v0], t_eval = t_eval, method='DOP853')
+sol = scipy.integrate.solve_ivp(single_dof, [0, tf], [x0, v0], t_eval = t_eval, method='DOP853')
 
 #write
 with open("reference.txt", "w") as file:

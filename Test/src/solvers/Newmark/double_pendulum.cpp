@@ -9,35 +9,87 @@ void tests::solvers::newmark::double_pendulum(void)
 {
 	//data
 	const double g = 9.81e+00;
-	const double L = 1.00e+00;
-	const double x0 = 0.00e+00;
-	const double v0 = 0.9999 * 2 * sqrt(g / L);
+	const double m1 = 1.00e+00;
+	const double m2 = 1.00e+00;
+	const double l1 = 1.00e+00;
+	const double l2 = 1.00e+00;
+	const double q1 = +M_PI_4;
+	const double q2 = -M_PI_4;
+	const double v1 = +0.00e+00;
+	const double v2 = +0.00e+00;
 	math::solvers::Newmark solver;
 	//setup
 	solver.m_size = 1;
-	solver.m_step_max = 2000;
-	solver.m_t_max = 2.00e+01;
+	solver.m_step_max = 1000;
+	solver.m_t_max = 1.00e+01;
 	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
 	//initials
 	solver.allocate();
-	solver.m_x_new[0] = x0;
-	solver.m_v_new[0] = v0;
+	solver.m_x_new[0] = q1;
+	solver.m_x_new[1] = q2;
+	solver.m_v_new[0] = v1;
+	solver.m_v_new[1] = v2;
 	//forces
-	solver.m_internal_force = [g, L](double* fi, const double* x, const double* v){
-		fi[0] = g / L * sin(x[0]);
+	solver.m_internal_force = [m2, l1, l2](double* fi, const double* x, const double* v){
+		//data
+		const double q1 = x[0];
+		const double q2 = x[1];
+		const double v1 = v[0];
+		const double v2 = v[1];
+		const double dq = q2 - q1;
+		//force
+		fi[0] = -m2 * l1 * l2 * sin(dq) * v2 * v2;
+		fi[1] = +m2 * l1 * l2 * sin(dq) * v1 * v1;
 	};
-	solver.m_external_force = [](double* fe, const double*, const double*, double t){
-		fe[0] = 0;
+	solver.m_external_force = [g, m1, m2, l1, l2](double* fe, const double* x, const double*, double){
+		//data
+		const double q1 = x[0];
+		const double q2 = x[1];
+		const double mt = m1 + m2;
+		//force
+		fe[0] = -mt * g * l1 * sin(q1);
+		fe[1] = -m2 * g * l2 * sin(q2);
 	};
 	//tangents
-	solver.m_inertia = [](double* M, const double*){
-		M[0] = 1;
+	solver.m_inertia = [m1, m2, l1, l2](double* M, const double* x){
+		//data
+		const double q1 = x[0];
+		const double q2 = x[1];
+		const double dq = q2 - q1;
+		const double mt = m1 + m2;
+		//inertia
+		M[0] = mt * l1 * l1;
+		M[3] = m2 * l2 * l2;
+		M[1] = M[2] = m2 * l1 * l2 * cos(dq);
 	};
-	solver.m_damping = [](double* C, const double*, const double*, double t){
+	solver.m_damping = [m2, l1, l2](double* C, const double* x, const double* v, double){
+		//data
+		const double q1 = x[0];
+		const double q2 = x[1];
+		const double v1 = v[0];
+		const double v2 = v[1];
+		const double dq = q2 - q1;
+		//damping
 		C[0] = 0;
+		C[3] = 0;
+		C[1] = +2 * m2 * l1 * l2 * sin(dq) * v1;
+		C[2] = -2 * m2 * l1 * l2 * sin(dq) * v2;
 	};
-	solver.m_stiffness = [g, L](double* K, const double* x, const double*, const double*, double t){
-		K[0] = g / L * cos(x[0]);
+	solver.m_stiffness = [g, m1, m2, l1, l2](double* K, const double* x, const double* v, const double* a, double){
+		//data
+		const double q1 = x[0];
+		const double q2 = x[1];
+		const double v1 = v[0];
+		const double v2 = v[1];
+		const double a1 = a[0];
+		const double a2 = a[1];
+		const double dq = q2 - q1;
+		const double mt = m1 + m2;
+		//stiffness
+		K[1] = -m2 * l1 * l2 * cos(dq) * v1 * v1 + m2 * l1 * l2 * sin(dq) * a1;
+		K[2] = -m2 * l1 * l2 * cos(dq) * v2 * v2 - m2 * l1 * l2 * sin(dq) * a2;
+		K[0] = +m2 * l1 * l2 * cos(dq) * v2 * v2 + m2 * l1 * l2 * sin(dq) * a2 + mt * g * l1 * cos(q1);
+		K[3] = +m2 * l1 * l2 * cos(dq) * v1 * v1 - m2 * l1 * l2 * sin(dq) * a1 + m2 * g * l2 * cos(q2);
 	};
 	//solve
 	solver.solve();
