@@ -14,12 +14,14 @@ namespace tests
 			void single_dof(void);
 			void single_pendulum(void);
 			void double_pendulum(void);
+			void duffing_oscillator(void);
 		}
 		namespace runge_kutta
 		{
 			void single_dof(void);
 			void single_pendulum(void);
 			void double_pendulum(void);
+			void duffing_oscillator(void);
 		}
 		namespace newton_raphson
 		{
