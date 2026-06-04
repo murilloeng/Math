@@ -16,7 +16,7 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::newmark::duffing_oscillator();
+		tests::solvers::newmark::double_pendulum();
 	}
 	catch(const std::exception& exception)
 	{

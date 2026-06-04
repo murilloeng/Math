@@ -1,47 +1,35 @@
 #pragma once
 
-//std
-#include <cstdint>
+//Math
+#include "Math/inc/Solvers/Solver.hpp"
 
 namespace math
 {
 	namespace solvers
 	{
-		class RungeKutta
+		class RungeKutta : public Solver
 		{
 		public:
 			//constructors
-			RungeKutta(uint32_t, bool);
+			RungeKutta(void);
 
 			//destructor
 			~RungeKutta(void);
 
-		private:
 			//data
-			void update(void);
-			void state(double);
-			void increment(double);
+			uint32_t state_set(void) const override;
+			uint32_t force_set(void) const override;
+			uint32_t tangent_set(void) const override;
 
+		private:
 			//solve
-			void setup(void);
-			void tangent_1(void);
-			void tangent_2(void);
-			void tangent_3(void);
-			void tangent_4(void);
-			void corrector(void);
+			void check(void) override;
+			void compute(void) override;
+			void predictor(void) override;
+			void corrector(void) override;
 
 		public:
-			//solve
-			void init(void);
-			void step(void);
-			void solve(void);
-			void serialize(void);
-
 			//data
-			bool m_mem, m_type;
-			uint32_t m_s, m_nd, m_ns;
-			double m_t, m_T, *m_x, *m_v, *m_a;
-			double m_dt, *m_xn, *m_vn, *m_dx, *m_dv;
 			void (*m_system_1)(double*, const double*, double);
 			void (*m_system_2)(double*, const double*, const double*, double);
 		};
