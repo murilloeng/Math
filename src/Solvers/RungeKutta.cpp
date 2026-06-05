@@ -66,23 +66,22 @@ namespace math
 		}
 		void RungeKutta::predictor(void)
 		{
-			return;
-		}
-		void RungeKutta::corrector(void)
-		{
-			return;
-		}
-		bool RungeKutta::equilibrium(void)
-		{
-			m_equilibrium == m_iteration == 1;
-		}
-
-		//compute
-		void RungeKutta::compute_setup(void)
-		{
 			memset(m_dx, 0, m_size * sizeof(double));
 			memset(m_dv, 0, m_size * sizeof(double));
 		}
+		void RungeKutta::corrector(void)
+		{
+			compute_tangent_1();
+			compute_tangent_2();
+			compute_tangent_3();
+			compute_tangent_4();
+		}
+		bool RungeKutta::equilibrium(void)
+		{
+			return m_equilibrium = m_iteration == 1;
+		}
+
+		//compute
 		void RungeKutta::compute_tangent_1(void)
 		{
 			//setup

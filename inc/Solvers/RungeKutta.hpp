@@ -30,7 +30,6 @@ namespace math
 			bool equilibrium(void) override;
 
 			//compute
-			void compute_setup(void);
 			void compute_tangent_1(void);
 			void compute_tangent_2(void);
 			void compute_tangent_3(void);
