@@ -27,11 +27,21 @@ namespace math
 			void compute(void) override;
 			void predictor(void) override;
 			void corrector(void) override;
+			bool equilibrium(void) override;
+
+			//compute
+			void compute_setup(void);
+			void compute_tangent_1(void);
+			void compute_tangent_2(void);
+			void compute_tangent_3(void);
+			void compute_tangent_4(void);
 
 		public:
 			//data
-			void (*m_system_1)(double*, const double*, double);
-			void (*m_system_2)(double*, const double*, const double*, double);
+			std::function<void(double*, const double*)> m_inertia;
+			std::function<void(double*, const double*, const double*)> m_internal_force;
+			std::function<void(double*, const double*, const double*, double)> m_external_force;
+
 		};
 	}
 }

@@ -4,6 +4,7 @@
 #include <stdexcept>
 
 //Math
+#include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Solvers/RungeKutta.hpp"
 
 namespace math
@@ -34,7 +35,6 @@ namespace math
 		uint32_t RungeKutta::force_set(void) const
 		{
 			return
-				(uint32_t) Force::r  |
 				(uint32_t) Force::fi |
 				(uint32_t) Force::fe;
 		}
@@ -46,14 +46,23 @@ namespace math
 		//solve
 		void RungeKutta::check(void)
 		{
-			if(!m_system_1 && !m_system_2)
+			if(!m_inertia || !m_internal_force || !m_external_force)
 			{
-				throw std::runtime_error("Newton-Raphson solver called with at least one method not set!");
+				throw std::runtime_error("Runge Kutta solver called with at least one method not set!");
 			}
 		}
 		void RungeKutta::compute(void)
 		{
-			return;
+			//data
+			math::Vector a(m_a_new, m_size);
+			math::Matrix M(m_M, m_size, m_size);
+			math::Vector fi(m_fi, m_size), fe(m_fe, m_size);
+			//setup
+			m_inertia(m_M, m_x_new);
+			m_internal_force(m_fi, m_x_new, m_v_new);
+			m_external_force(m_fe, m_x_new, m_v_new, m_t_new);
+			//compute
+			M.solve(a, fe - fi);
 		}
 		void RungeKutta::predictor(void)
 		{
@@ -62,6 +71,61 @@ namespace math
 		void RungeKutta::corrector(void)
 		{
 			return;
+		}
+		bool RungeKutta::equilibrium(void)
+		{
+			m_equilibrium == m_iteration == 1;
+		}
+
+		//compute
+		void RungeKutta::compute_setup(void)
+		{
+			memset(m_dx, 0, m_size * sizeof(double));
+			memset(m_dv, 0, m_size * sizeof(double));
+		}
+		void RungeKutta::compute_tangent_1(void)
+		{
+			//setup
+			m_t_new = m_t_old;
+			for(uint32_t i = 0; i < m_size; i++) m_x_new[i] = m_x_old[i];
+			for(uint32_t i = 0; i < m_size; i++) m_v_new[i] = m_v_old[i];
+			//update
+			compute();
+			for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_dt / 6 * m_v_new[i];
+			for(uint32_t i = 0; i < m_size; i++) m_dv[i] += m_dt / 6 * m_a_new[i];
+		}
+		void RungeKutta::compute_tangent_2(void)
+		{
+			//setup
+			m_t_new = m_t_old + m_dt / 2;
+			for(uint32_t i = 0; i < m_size; i++) m_x_new[i] = m_x_old[i] + m_dt / 2 * m_v_new[i];
+			for(uint32_t i = 0; i < m_size; i++) m_v_new[i] = m_v_old[i] + m_dt / 2 * m_a_new[i];
+			//update
+			compute();
+			for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_dt / 3 * m_v_new[i];
+			for(uint32_t i = 0; i < m_size; i++) m_dv[i] += m_dt / 3 * m_a_new[i];
+		}
+		void RungeKutta::compute_tangent_3(void)
+		{
+			//setup
+			m_t_new = m_t_old + m_dt / 2;
+			for(uint32_t i = 0; i < m_size; i++) m_x_new[i] = m_x_old[i] + m_dt / 2 * m_v_new[i];
+			for(uint32_t i = 0; i < m_size; i++) m_v_new[i] = m_v_old[i] + m_dt / 2 * m_a_new[i];
+			//update
+			compute();
+			for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_dt / 3 * m_v_new[i];
+			for(uint32_t i = 0; i < m_size; i++) m_dv[i] += m_dt / 3 * m_a_new[i];
+		}
+		void RungeKutta::compute_tangent_4(void)
+		{
+			//setup
+			m_t_new = m_t_old + m_dt;
+			for(uint32_t i = 0; i < m_size; i++) m_x_new[i] = m_x_old[i] + m_dt * m_v_new[i];
+			for(uint32_t i = 0; i < m_size; i++) m_v_new[i] = m_v_old[i] + m_dt * m_a_new[i];
+			//update
+			compute();
+			for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_dt / 6 * m_v_new[i];
+			for(uint32_t i = 0; i < m_size; i++) m_dv[i] += m_dt / 6 * m_a_new[i];
 		}
 
 		// //data
