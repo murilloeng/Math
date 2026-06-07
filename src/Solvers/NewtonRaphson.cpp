@@ -40,7 +40,7 @@ namespace math
 		}
 		uint32_t NewtonRaphson::force_set(void) const
 		{
-			return uint32_t(Force::r) | uint32_t(Force::fi) | uint32_t(Force::fe);
+			return uint32_t(Force::r) | uint32_t(Force::fe);
 		}
 		uint32_t NewtonRaphson::tangent_set(void) const
 		{
