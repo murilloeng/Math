@@ -5,6 +5,7 @@
 
 //Test
 #include "Math/Test/inc/fem.hpp"
+#include "Math/Test/inc/eigen.hpp"
 #include "Math/Test/inc/groups.hpp"
 #include "Math/Test/inc/solvers.hpp"
 #include "Math/Test/inc/geometry.hpp"
@@ -16,7 +17,7 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::runge_kutta::double_pendulum();
+		tests::eigen::symmetric_std_full();
 	}
 	catch(const std::exception& exception)
 	{
