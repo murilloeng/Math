@@ -48,6 +48,9 @@ namespace math
 		//compute
 		bool compute(bool);
 
+		//modes
+		uint32_t modes(void) const;
+
 		//eigenvalues
 		const double* eigenvalues(uint32_t) const;
 		double eigenvalue(uint32_t, uint32_t) const;
@@ -63,7 +66,13 @@ namespace math
 
 		//compute
 		bool compute_symmetric_std_full(bool);
+		bool compute_symmetric_gen_full(bool);
 		bool compute_symmetric_std_partial(bool);
+		bool compute_symmetric_gen_partial(bool);
+		bool compute_non_symmetric_std_full(bool);
+		bool compute_non_symmetric_gen_full(bool);
+		bool compute_non_symmetric_std_partial(bool);
+		bool compute_non_symmetric_gen_partial(bool);
 
 		//data
 		Type m_type;

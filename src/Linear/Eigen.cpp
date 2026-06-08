@@ -114,11 +114,20 @@ namespace math
 				{
 					return compute_symmetric_std_full(eigenvectors);
 				}
+				else
+				{
+					return compute_symmetric_std_partial(eigenvectors);
+				}
 			}
 		}
 		return true;
 	}
 
+	//modes
+	uint32_t Eigen::modes(void) const
+	{
+		return m_modes;
+	}
 
 	//eigenvalues
 	const double* Eigen::eigenvalues(uint32_t part) const
@@ -177,13 +186,16 @@ namespace math
 		//return
 		return status == 0;
 	}
+	bool Eigen::compute_symmetric_gen_full(bool eigenvectors)
+	{
+		return true;
+	}
 	bool Eigen::compute_symmetric_std_partial(bool eigenvectors)
 	{
 		//data
 		double query;
 		int32_t status;
 		int32_t lwork = -1;
-		const double tol = 0;
 		const char uplo = 'U';
 		const char jobz = !eigenvectors ? 'N' : 'V';
 		const char range = m_type == Type::Index ? 'I' : 'V';
@@ -193,12 +205,46 @@ namespace math
 		double* A = new double[m_order * m_order];
 		memcpy(A, m_data[0], m_order * m_order * sizeof(double));
 		//query
-		dsyevx_(&jobz, &range, &uplo, &m_order, A, &m_order, &m_value_min, &m_value_max, &m_index_min, &m_index_max, &tol, &m_order, m_eigenvectors[0], m_eigenvectors[0], &m_order, &query, &lwork, iwork, ifail, &status);
+		uint32_t* m = &m_modes;
+		const double abstol = 0;
+		const uint32_t* n = &m_order;
+		double* w = m_eigenvalues[0];
+		double* Z = m_eigenvectors[0];
+		const double* v1 = &m_value_min;
+		const double* v2 = &m_value_max;
+		const uint32_t* i1 = &m_index_min;
+		const uint32_t* i2 = &m_index_max;
+		dsyevx_(&jobz, &range, &uplo, n, A, n, v1, v2, i1, i2, &abstol, m, w, Z, n, &query, &lwork, iwork, ifail, &status);
+		//compute
+		lwork = int32_t(query);
+		double* work = new double[lwork];
+		dsyevx_(&jobz, &range, &uplo, n, A, n, v1, v2, i1, i2, &abstol, m, w, Z, n, work, &lwork, iwork, ifail, &status);
 		//delete
 		delete[] A;
+		delete[] work;
 		delete[] ifail;
 		delete[] iwork;
 		//return
 		return status == 0;
+	}
+	bool Eigen::compute_symmetric_gen_partial(bool eigenvectors)
+	{
+		return true;
+	}
+	bool Eigen::compute_non_symmetric_std_full(bool eigenvectors)
+	{
+		return true;
+	}
+	bool Eigen::compute_non_symmetric_gen_full(bool eigenvectors)
+	{
+		return true;
+	}
+	bool Eigen::compute_non_symmetric_std_partial(bool eigenvectors)
+	{
+		return true;
+	}
+	bool Eigen::compute_non_symmetric_gen_partial(bool eigenvectors)
+	{
+		return true;
 	}
 }

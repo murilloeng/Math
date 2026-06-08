@@ -45,3 +45,31 @@ void tests::eigen::symmetric_std_full(void)
 		printf("Test %3d: ok!\n", i);
 	}
 }
+void tests::eigen::symmetric_std_partial(void)
+{
+	//data
+	math::Eigen eigen;
+	const uint32_t modes = 5;
+	const uint32_t order_max = 100;
+	double A[order_max * order_max];
+	//test
+	eigen.data(0, A);
+	eigen.index_min(1);
+	srand(time(nullptr));
+	eigen.index_max(modes);
+	eigen.type(math::Eigen::Type::Index);
+	for(uint32_t i = modes; i <= order_max; i++)
+	{
+		eigen.order(i);
+		setup_symmetric_matrix(A, i);
+		bool test = eigen.compute(true);
+		for(uint32_t j = 0; j < modes; j++)
+		{
+			const double w = eigen.eigenvalue(0, j);
+			const double* z = eigen.eigenvector(0, j);
+			test = test && fabs(math::Matrix(A, i, i).bilinear(z) - w) < 1e-5;
+		}
+		if(!test) break;
+		printf("Test %3d: ok!\n", i);
+	}
+}

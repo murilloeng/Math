@@ -2,25 +2,6 @@
 #include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Solvers/Buckling.hpp"
 
-subroutine dgegv 	( 	character  	JOBVL,
-		character  	JOBVR,
-		integer  	N,
-		double precision, dimension( lda, * )  	A,
-		integer  	LDA,
-		double precision, dimension( ldb, * )  	B,
-		integer  	LDB,
-		double precision, dimension( * )  	ALPHAR,
-		double precision, dimension( * )  	ALPHAI,
-		double precision, dimension( * )  	BETA,
-		double precision, dimension( ldvl, * )  	VL,
-		integer  	LDVL,
-		double precision, dimension( ldvr, * )  	VR,
-		integer  	LDVR,
-		double precision, dimension( * )  	WORK,
-		integer  	LWORK,
-		integer  	INFO 
-	) 	
-
 namespace math
 {
 	namespace solvers
