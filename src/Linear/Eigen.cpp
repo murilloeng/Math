@@ -2,6 +2,7 @@
 #include <cfloat>
 #include <cstdio>
 #include <cstring>
+#include <stdexcept>
 
 //Math
 #include "Math/inc/Linear/Eigen.hpp"
@@ -20,7 +21,7 @@ namespace math
 {
 	//constructor
 	Eigen::Eigen(void) : 
-		m_type{Type::Full}, m_symmetry{true}, m_order{0},
+		m_type{Type::Full}, m_symmetric{true}, m_order{0},
 		m_value_min{-DBL_MAX}, m_value_max{+DBL_MAX}, m_index_min{0}, m_index_max{UINT32_MAX},
 		m_data{nullptr, nullptr}, m_eigenvalues{nullptr, nullptr}, m_eigenvectors{nullptr, nullptr}, m_eigenvectors_computation{true, true}
 	{
@@ -43,13 +44,13 @@ namespace math
 		return m_type = type;
 	}
 
-	bool Eigen::symmetry(void) const
+	bool Eigen::symmetric(void) const
 	{
-		return m_symmetry;
+		return m_symmetric;
 	}
-	bool Eigen::symmetry(bool symmetry)
+	bool Eigen::symmetric(bool symmetry)
 	{
-		return m_symmetry = symmetry;
+		return m_symmetric = symmetry;
 	}
 
 	uint32_t Eigen::order(void) const
@@ -120,7 +121,11 @@ namespace math
 	{
 		cleanup();
 		allocate();
-		if(m_symmetry)
+		if(!m_symmetric && m_type != Type::Full)
+		{
+			throw std::runtime_error("Error: Selected eigenvalues are not supported for non-symmetric matrices!");
+		}
+		if(m_symmetric)
 		{
 			if(m_data[1] == nullptr)
 			{
@@ -203,8 +208,8 @@ namespace math
 	{
 		m_eigenvalues[0] = new double[m_order];
 		m_eigenvectors[0] = new double[m_order * m_order];
-		if(!m_symmetry) m_eigenvalues[1] = new double[m_order];
-		if(!m_symmetry) m_eigenvectors[1] = new double[m_order * m_order];
+		if(!m_symmetric) m_eigenvalues[1] = new double[m_order];
+		if(!m_symmetric) m_eigenvectors[1] = new double[m_order * m_order];
 	}
 
 	//compute

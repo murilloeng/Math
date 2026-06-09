@@ -24,8 +24,8 @@ namespace math
 		Type type(Type);
 		Type type(void) const;
 
-		bool symmetry(bool);
-		bool symmetry(void) const;
+		bool symmetric(bool);
+		bool symmetric(void) const;
 
 		uint32_t order(uint32_t);
 		uint32_t order(void) const;
@@ -77,7 +77,7 @@ namespace math
 
 		//data
 		Type m_type;
-		bool m_symmetry;
+		bool m_symmetric;
 		uint32_t m_order;
 		uint32_t m_modes;
 		double m_value_min;

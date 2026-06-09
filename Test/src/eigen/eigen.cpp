@@ -61,7 +61,7 @@ void tests::eigen::non_symmetric_std(void)
 	double A[order_max * order_max];
 	//test
 	eigen.data(0, A);
-	eigen.symmetry(false);
+	eigen.symmetric(false);
 	for(uint32_t i = 1; i <= order_max; i++)
 	{
 		eigen.order(i);
@@ -107,7 +107,7 @@ void tests::eigen::non_symmetric_gen(void)
 	//test
 	eigen.data(0, A);
 	eigen.data(1, B);
-	eigen.symmetry(false);
+	eigen.symmetric(false);
 	for(uint32_t i = 1; i <= order_max; i++)
 	{
 		eigen.order(i);
