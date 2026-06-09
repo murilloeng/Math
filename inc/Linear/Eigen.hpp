@@ -45,8 +45,11 @@ namespace math
 		const double* data(uint32_t) const;
 		const double* data(uint32_t, const double*);
 
+		bool eigenvectors_computation(uint32_t, bool);
+		bool eigenvectors_computation(uint32_t) const;
+
 		//compute
-		bool compute(bool);
+		bool compute(void);
 
 		//modes
 		uint32_t modes(void) const;
@@ -65,14 +68,14 @@ namespace math
 		void allocate(void);
 
 		//compute
-		bool compute_symmetric_std_full(bool);
-		bool compute_symmetric_gen_full(bool);
-		bool compute_symmetric_std_partial(bool);
-		bool compute_symmetric_gen_partial(bool);
-		bool compute_non_symmetric_std_full(bool);
-		bool compute_non_symmetric_gen_full(bool);
-		bool compute_non_symmetric_std_partial(bool);
-		bool compute_non_symmetric_gen_partial(bool);
+		bool compute_symmetric_std_full(void);
+		bool compute_symmetric_gen_full(void);
+		bool compute_symmetric_std_partial(void);
+		bool compute_symmetric_gen_partial(void);
+		bool compute_non_symmetric_std_full(void);
+		bool compute_non_symmetric_gen_full(void);
+		bool compute_non_symmetric_std_partial(void);
+		bool compute_non_symmetric_gen_partial(void);
 
 		//data
 		Type m_type;
@@ -86,6 +89,7 @@ namespace math
 		const double* m_data[2];
 		double* m_eigenvalues[2];
 		double* m_eigenvectors[2];
+		bool m_eigenvectors_computation[2];
 
 	};
 }

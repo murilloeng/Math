@@ -3,6 +3,7 @@
 #include <ctime>
 #include <cstdio>
 #include <cstdint>
+#include <stdexcept>
 
 //Math
 #include "Math/Test/inc/eigen.hpp"
@@ -10,6 +11,16 @@
 #include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Miscellaneous/util.hpp"
 
+static void setup_random_matrix(double* A, uint32_t order)
+{
+	for(uint32_t i = 0; i < order; i++)
+	{
+		for(uint32_t j = 0; j < order; j++)
+		{
+			A[i + order * j] = math::randu();
+		}
+	}
+}
 static void setup_symmetric_matrix(double* A, uint32_t order)
 {
 	for(uint32_t i = 0; i < order; i++)
@@ -24,15 +35,8 @@ static void setup_symmetric_pd_matrix(double* B, uint32_t order)
 {
 	//data
 	double* A = new double[order * order];
-	//base
-	for(uint32_t i = 0; i < order; i++)
-	{
-		for(uint32_t j = 0; j < order; j++)
-		{
-			A[i + order * j] = math::randu();
-		}
-	}
 	//matrix
+	setup_random_matrix(A, order);
 	for(uint32_t i = 0; i < order; i++)
 	{
 		for(uint32_t j = 0; j < order; j++)
@@ -52,43 +56,43 @@ void tests::eigen::symmetric_std_full(void)
 {
 	//data
 	math::Eigen eigen;
+	srand(time(nullptr));
 	const uint32_t order_max = 100;
 	double A[order_max * order_max];
 	//test
 	eigen.data(0, A);
-	srand(time(nullptr));
 	for(uint32_t i = 1; i <= order_max; i++)
 	{
 		eigen.order(i);
 		setup_symmetric_matrix(A, i);
-		bool test = eigen.compute(true);
+		bool test = eigen.compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double w = eigen.eigenvalue(0, j);
 			const double* z = eigen.eigenvector(0, j);
 			test = test && fabs(math::Matrix(A, i, i).bilinear(z) - w) < 1e-5;
 		}
-		if(!test) break;
-		printf("Test %3d: ok!\n", i);
+		if(!test) throw std::runtime_error("Error");
+		printf("Test symmetric std full %3d: ok!\n", i);
 	}
 }
 void tests::eigen::symmetric_gen_full(void)
 {
 	//data
 	math::Eigen eigen;
+	srand(time(nullptr));
 	const uint32_t order_max = 100;
 	double A[order_max * order_max];
 	double B[order_max * order_max];
 	//test
 	eigen.data(0, A);
 	eigen.data(1, B);
-	srand(time(nullptr));
 	for(uint32_t i = 1; i <= order_max; i++)
 	{
 		eigen.order(i);
 		setup_symmetric_matrix(A, i);
 		setup_symmetric_pd_matrix(B, i);
-		bool test = eigen.compute(true);
+		bool test = eigen.compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double w = eigen.eigenvalue(0, j);
@@ -96,42 +100,43 @@ void tests::eigen::symmetric_gen_full(void)
 			test = test && fabs(math::Matrix(A, i, i).bilinear(z) - w) < 1e-5;
 			test = test && fabs(math::Matrix(B, i, i).bilinear(z) - 1) < 1e-5;
 		}
-		if(!test) break;
-		printf("Test %3d: ok!\n", i);
+		if(!test) throw std::runtime_error("Error");
+		printf("Test symmetric gen full %3d: ok!\n", i);
 	}
 }
 void tests::eigen::symmetric_std_partial(void)
 {
 	//data
 	math::Eigen eigen;
+	srand(time(nullptr));
 	const uint32_t modes = 5;
 	const uint32_t order_max = 100;
 	double A[order_max * order_max];
 	//test
 	eigen.data(0, A);
 	eigen.index_min(1);
-	srand(time(nullptr));
 	eigen.index_max(modes);
 	eigen.type(math::Eigen::Type::Index);
 	for(uint32_t i = modes; i <= order_max; i++)
 	{
 		eigen.order(i);
 		setup_symmetric_matrix(A, i);
-		bool test = eigen.compute(true);
+		bool test = eigen.compute();
 		for(uint32_t j = 0; j < modes; j++)
 		{
 			const double w = eigen.eigenvalue(0, j);
 			const double* z = eigen.eigenvector(0, j);
 			test = test && fabs(math::Matrix(A, i, i).bilinear(z) - w) < 1e-5;
 		}
-		if(!test) break;
-		printf("Test %3d: ok!\n", i);
+		if(!test) throw std::runtime_error("Error");
+		printf("Test symmetric std partial %3d: ok!\n", i);
 	}
 }
 void tests::eigen::symmetric_gen_partial(void)
 {
 	//data
 	math::Eigen eigen;
+	srand(time(nullptr));
 	const uint32_t modes = 5;
 	const uint32_t order_max = 100;
 	double A[order_max * order_max];
@@ -140,7 +145,6 @@ void tests::eigen::symmetric_gen_partial(void)
 	eigen.data(0, A);
 	eigen.data(1, B);
 	eigen.index_min(1);
-	srand(time(nullptr));
 	eigen.index_max(modes);
 	eigen.type(math::Eigen::Type::Index);
 	for(uint32_t i = modes; i <= order_max; i++)
@@ -148,7 +152,7 @@ void tests::eigen::symmetric_gen_partial(void)
 		eigen.order(i);
 		setup_symmetric_matrix(A, i);
 		setup_symmetric_pd_matrix(B, i);
-		bool test = eigen.compute(true);
+		bool test = eigen.compute();
 		for(uint32_t j = 0; j < modes; j++)
 		{
 			const double w = eigen.eigenvalue(0, j);
@@ -156,7 +160,51 @@ void tests::eigen::symmetric_gen_partial(void)
 			test = test && fabs(math::Matrix(A, i, i).bilinear(z) - w) < 1e-5;
 			test = test && fabs(math::Matrix(B, i, i).bilinear(z) - 1) < 1e-5;
 		}
-		if(!test) break;
-		printf("Test %3d: ok!\n", i);
+		if(!test) throw std::runtime_error("Error");
+		printf("Test symmetric gen partial %3d: ok!\n", i);
+	}
+}
+void tests::eigen::non_symmetric_std_full(void)
+{
+	//data
+	math::Eigen eigen;
+	srand(time(nullptr));
+	const uint32_t order_max = 100;
+	double A[order_max * order_max];
+	//test
+	eigen.data(0, A);
+	eigen.symmetry(false);
+	for(uint32_t i = 1; i <= order_max; i++)
+	{
+		eigen.order(i);
+		math::Matrix Am(A, i, i);
+		setup_random_matrix(A, i);
+		bool test = eigen.compute();
+		for(uint32_t j = 0; j < i; j++)
+		{
+			const double wr = eigen.eigenvalue(0, j);
+			const double wi = eigen.eigenvalue(1, j);
+			if(wi == 0)
+			{
+				const double* zr = eigen.eigenvector(0, j);
+				test = test && fabs(Am.bilinear(zr, zr) - wr) < 1e-5;
+			}
+			else if(wi > 0)
+			{
+				math::Vector zr(eigen.eigenvector(0, j + 0), i);
+				math::Vector zi(eigen.eigenvector(0, j + 1), i);
+				test = test && fabs((Am.bilinear(zr, zr) + Am.bilinear(zi, zi)) / (zr.inner(zr) + zi.inner(zi)) - wr) < 1e-5;
+				test = test && fabs((Am.bilinear(zr, zi) - Am.bilinear(zi, zr)) / (zr.inner(zr) + zi.inner(zi)) - wi) < 1e-5;
+			}
+			else if(wi < 0)
+			{
+				math::Vector zr(eigen.eigenvector(0, j - 1), i);
+				math::Vector zi(eigen.eigenvector(0, j + 0), i);
+				test = test && fabs((Am.bilinear(zr, zr) + Am.bilinear(zi, zi)) / (zr.inner(zr) + zi.inner(zi)) - wr) < 1e-5;
+				test = test && fabs((Am.bilinear(zi, zr) - Am.bilinear(zr, zi)) / (zr.inner(zr) + zi.inner(zi)) - wi) < 1e-5;
+			}
+		}
+		if(!test) throw std::runtime_error("Error");
+		printf("Test non symmetric std full %3d: ok!\n", i);
 	}
 }

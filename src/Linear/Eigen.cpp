@@ -10,6 +10,7 @@ extern "C"
 {
 	void dsyev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, double*, const int32_t*, int32_t*);
 	void dsygv_(const uint32_t*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, double*, double*, const int32_t*, int32_t*);
+	void dgeev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, double*, double*, const uint32_t*, double*, const uint32_t*, double*, int32_t*, int32_t*);
 	void dsyevx_(const char*, const char*, const char*, const uint32_t*, double*, const uint32_t*, const double*, const double*, const uint32_t*, const uint32_t*, const double*, uint32_t*, double*, double*, const uint32_t*, double*, const int32_t*, int32_t*, int32_t*, int32_t*);
 	void dsygvx_(const uint32_t*, const char*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, const double*, const double*, const uint32_t*, const uint32_t*, const double*, uint32_t*, double*, double*, const uint32_t*, double*, const int32_t*, int32_t*, int32_t*, int32_t*);
 }
@@ -20,7 +21,7 @@ namespace math
 	Eigen::Eigen(void) : 
 		m_type{Type::Full}, m_symmetry{true}, m_order{0},
 		m_value_min{-DBL_MAX}, m_value_max{+DBL_MAX}, m_index_min{0}, m_index_max{UINT32_MAX},
-		m_data{nullptr, nullptr}, m_eigenvalues{nullptr, nullptr}, m_eigenvectors{nullptr, nullptr}
+		m_data{nullptr, nullptr}, m_eigenvalues{nullptr, nullptr}, m_eigenvectors{nullptr, nullptr}, m_eigenvectors_computation{true, true}
 	{
 		return;
 	}
@@ -104,8 +105,17 @@ namespace math
 		return m_data[index] = data;
 	}
 
+	bool Eigen::eigenvectors_computation(uint32_t index) const
+	{
+		return m_eigenvectors_computation[index];
+	}
+	bool Eigen::eigenvectors_computation(uint32_t index, bool eigenvectors_computation)
+	{
+		return m_eigenvectors_computation[index] = eigenvectors_computation;
+	}
+
 	//compute
-	bool Eigen::compute(bool eigenvectors)
+	bool Eigen::compute(void)
 	{
 		cleanup();
 		allocate();
@@ -115,22 +125,47 @@ namespace math
 			{
 				if(m_type == Type::Full)
 				{
-					return compute_symmetric_std_full(eigenvectors);
+					return compute_symmetric_std_full();
 				}
 				else
 				{
-					return compute_symmetric_std_partial(eigenvectors);
+					return compute_symmetric_std_partial();
 				}
 			}
 			else
 			{
 				if(m_type == Type::Full)
 				{
-					return compute_symmetric_gen_full(eigenvectors);
+					return compute_symmetric_gen_full();
 				}
 				else
 				{
-					return compute_symmetric_gen_partial(eigenvectors);
+					return compute_symmetric_gen_partial();
+				}
+			}
+		}
+		else
+		{
+			if(m_data[1] == nullptr)
+			{
+				if(m_type == Type::Full)
+				{
+					return compute_non_symmetric_std_full();
+				}
+				else
+				{
+					return compute_non_symmetric_std_partial();
+				}
+			}
+			else
+			{
+				if(m_type == Type::Full)
+				{
+					return compute_non_symmetric_gen_full();
+				}
+				else
+				{
+					return compute_non_symmetric_gen_partial();
 				}
 			}
 		}
@@ -180,14 +215,14 @@ namespace math
 	}
 
 	//compute
-	bool Eigen::compute_symmetric_std_full(bool eigenvectors)
+	bool Eigen::compute_symmetric_std_full(void)
 	{
 		//data
 		double query;
 		int32_t info;
 		int32_t lwork = -1;
 		const char uplo = 'U';
-		const char jobz = !eigenvectors ? 'N' : 'V';
+		const char jobz = !m_eigenvectors_computation[0] ? 'N' : 'V';
 		memcpy(m_eigenvectors[0], m_data[0], m_order * m_order * sizeof(double));
 		//query
 		dsyev_(&jobz, &uplo, &m_order, m_eigenvectors[0], &m_order, m_eigenvalues[0], &query, &lwork, &info);
@@ -200,7 +235,7 @@ namespace math
 		//return
 		return info == 0;
 	}
-	bool Eigen::compute_symmetric_gen_full(bool eigenvectors)
+	bool Eigen::compute_symmetric_gen_full(void)
 	{
 		//data
 		double query;
@@ -208,7 +243,7 @@ namespace math
 		int32_t lwork = -1;
 		uint32_t itype = 1;
 		const char uplo = 'U';
-		const char jobz = !eigenvectors ? 'N' : 'V';
+		const char jobz = !m_eigenvectors_computation[0] ? 'N' : 'V';
 		memcpy(m_eigenvectors[0], m_data[0], m_order * m_order * sizeof(double));
 		//query
 		double* B = new double[m_order * m_order];
@@ -225,14 +260,14 @@ namespace math
 		if(info != 0) printf("info: %d\n", info);
 		return info == 0;
 	}
-	bool Eigen::compute_symmetric_std_partial(bool eigenvectors)
+	bool Eigen::compute_symmetric_std_partial(void)
 	{
 		//data
 		double query;
 		int32_t info;
 		int32_t lwork = -1;
 		const char uplo = 'U';
-		const char jobz = !eigenvectors ? 'N' : 'V';
+		const char jobz = !m_eigenvectors_computation[0] ? 'N' : 'V';
 		const char range = m_type == Type::Index ? 'I' : 'V';
 		//setup
 		int32_t* ifail = new int32_t[m_order];
@@ -262,15 +297,15 @@ namespace math
 		//return
 		return info == 0;
 	}
-	bool Eigen::compute_symmetric_gen_partial(bool eigenvectors)
+	bool Eigen::compute_symmetric_gen_partial(void)
 	{
 		//data
 		double query;
 		int32_t info;
 		int32_t lwork = -1;
 		const char uplo = 'U';
-		const char jobz = !eigenvectors ? 'N' : 'V';
 		const char range = m_type == Type::Index ? 'I' : 'V';
+		const char jobz = !m_eigenvectors_computation[0] ? 'N' : 'V';
 		//setup
 		int32_t* ifail = new int32_t[m_order];
 		int32_t* iwork = new int32_t[5 * m_order];
@@ -303,19 +338,42 @@ namespace math
 		//return
 		return info == 0;
 	}
-	bool Eigen::compute_non_symmetric_std_full(bool eigenvectors)
+	bool Eigen::compute_non_symmetric_std_full(void)
+	{
+		//data
+		double query;
+		int32_t info;
+		int32_t lwork = -1;
+		const char jobvl = !m_eigenvectors_computation[1] ? 'N' : 'V';
+		const char jobvr = !m_eigenvectors_computation[0] ? 'N' : 'V';
+		//query
+		const uint32_t* n = &m_order;
+		double* wr = m_eigenvalues[0];
+		double* wi = m_eigenvalues[1];
+		double* Z1 = m_eigenvectors[0];
+		double* Z2 = m_eigenvectors[1];
+		double* A = new double[m_order * m_order];
+		memcpy(A, m_data[0], m_order * m_order * sizeof(double));
+		dgeev_(&jobvl, &jobvr, n, A, n, wr, wi, Z2, n, Z1, n, &query, &lwork, &info);
+		//compute
+		lwork = int32_t(query);
+		double* work = new double[lwork];
+		dgeev_(&jobvl, &jobvr, n, A, n, wr, wi, Z2, n, Z1, n, work, &lwork, &info);
+		//delete
+		delete[] A;
+		delete[] work;
+		//return
+		return info == 0;
+	}
+	bool Eigen::compute_non_symmetric_gen_full(void)
 	{
 		return true;
 	}
-	bool Eigen::compute_non_symmetric_gen_full(bool eigenvectors)
+	bool Eigen::compute_non_symmetric_std_partial(void)
 	{
 		return true;
 	}
-	bool Eigen::compute_non_symmetric_std_partial(bool eigenvectors)
-	{
-		return true;
-	}
-	bool Eigen::compute_non_symmetric_gen_partial(bool eigenvectors)
+	bool Eigen::compute_non_symmetric_gen_partial(void)
 	{
 		return true;
 	}

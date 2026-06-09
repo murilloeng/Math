@@ -17,7 +17,11 @@ int main(void)
 {
 	try
 	{
-		tests::eigen::symmetric_gen_partial();
+		// tests::eigen::symmetric_std_full();
+		// tests::eigen::symmetric_gen_full();
+		// tests::eigen::symmetric_std_partial();
+		// tests::eigen::symmetric_gen_partial();
+		tests::eigen::non_symmetric_std_full();
 	}
 	catch(const std::exception& exception)
 	{
