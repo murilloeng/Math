@@ -1,5 +1,6 @@
 //std
 #include <cfloat>
+#include <cstdio>
 #include <cstring>
 
 //Math
@@ -216,6 +217,7 @@ namespace math
 		delete[] B;
 		delete[] work;
 		//return
+		if(info != 0) printf("info: %d\n", info);
 		return info == 0;
 	}
 	bool Eigen::compute_symmetric_std_partial(bool eigenvectors)
