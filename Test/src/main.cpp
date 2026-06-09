@@ -17,7 +17,7 @@ int main(void)
 {
 	try
 	{
-		tests::eigen::symmetric_gen_full();
+		tests::eigen::symmetric_gen_partial();
 	}
 	catch(const std::exception& exception)
 	{
