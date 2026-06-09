@@ -74,8 +74,6 @@ namespace math
 		bool compute_symmetric_gen_partial(void);
 		bool compute_non_symmetric_std_full(void);
 		bool compute_non_symmetric_gen_full(void);
-		bool compute_non_symmetric_std_partial(void);
-		bool compute_non_symmetric_gen_partial(void);
 
 		//data
 		Type m_type;
