@@ -17,7 +17,7 @@ int main(void)
 {
 	try
 	{
-		// tests::eigen::non_symmetric_std();
+		tests::eigen::non_symmetric_std();
 		tests::eigen::non_symmetric_gen();
 		// tests::eigen::symmetric_std_full();
 		// tests::eigen::symmetric_gen_full();

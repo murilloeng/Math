@@ -68,12 +68,12 @@ namespace math
 		void allocate(void);
 
 		//compute
+		bool compute_non_symmetric_std(void);
+		bool compute_non_symmetric_gen(void);
 		bool compute_symmetric_std_full(void);
 		bool compute_symmetric_gen_full(void);
 		bool compute_symmetric_std_partial(void);
 		bool compute_symmetric_gen_partial(void);
-		bool compute_non_symmetric_std_full(void);
-		bool compute_non_symmetric_gen_full(void);
 
 		//data
 		Type m_type;

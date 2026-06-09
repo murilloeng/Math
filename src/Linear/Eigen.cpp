@@ -151,14 +151,14 @@ namespace math
 			{
 				if(m_type == Type::Full)
 				{
-					return compute_non_symmetric_std_full();
+					return compute_non_symmetric_std();
 				}
 			}
 			else
 			{
 				if(m_type == Type::Full)
 				{
-					return compute_non_symmetric_gen_full();
+					return compute_non_symmetric_gen();
 				}
 			}
 		}
@@ -208,6 +208,71 @@ namespace math
 	}
 
 	//compute
+	bool Eigen::compute_non_symmetric_std(void)
+	{
+		//data
+		double query;
+		int32_t info;
+		int32_t lwork = -1;
+		const char jobvl = !m_eigenvectors_computation[1] ? 'N' : 'V';
+		const char jobvr = !m_eigenvectors_computation[0] ? 'N' : 'V';
+		//query
+		const uint32_t* n = &m_order;
+		double* wr = m_eigenvalues[0];
+		double* wi = m_eigenvalues[1];
+		double* Z1 = m_eigenvectors[0];
+		double* Z2 = m_eigenvectors[1];
+		double* A = new double[m_order * m_order];
+		memcpy(A, m_data[0], m_order * m_order * sizeof(double));
+		dgeev_(&jobvl, &jobvr, n, A, n, wr, wi, Z2, n, Z1, n, &query, &lwork, &info);
+		//compute
+		lwork = int32_t(query);
+		double* work = new double[lwork];
+		dgeev_(&jobvl, &jobvr, n, A, n, wr, wi, Z2, n, Z1, n, work, &lwork, &info);
+		//delete
+		delete[] A;
+		delete[] work;
+		//return
+		return info == 0;
+	}
+	bool Eigen::compute_non_symmetric_gen(void)
+	{
+		//data
+		double query;
+		int32_t info;
+		int32_t lwork = -1;
+		const char jobvl = !m_eigenvectors_computation[1] ? 'N' : 'V';
+		const char jobvr = !m_eigenvectors_computation[0] ? 'N' : 'V';
+		//query
+		const uint32_t* n = &m_order;
+		double* wr = m_eigenvalues[0];
+		double* wi = m_eigenvalues[1];
+		double* Z1 = m_eigenvectors[0];
+		double* Z2 = m_eigenvectors[1];
+		double* b = new double[m_order];
+		double* A = new double[m_order * m_order];
+		double* B = new double[m_order * m_order];
+		memcpy(A, m_data[0], m_order * m_order * sizeof(double));
+		memcpy(B, m_data[1], m_order * m_order * sizeof(double));
+		dggev_(&jobvl, &jobvr, n, A, n, B, n, wr, wi, b, Z2, n, Z1, n, &query, &lwork, &info);
+		//compute
+		lwork = int32_t(query);
+		double* work = new double[lwork];
+		dggev_(&jobvl, &jobvr, n, A, n, B, n, wr, wi, b, Z2, n, Z1, n, work, &lwork, &info);
+		//division
+		for(uint32_t i = 0; i < m_order; i++)
+		{
+			m_eigenvalues[0][i] /= b[i];
+			m_eigenvalues[1][i] /= b[i];
+		}
+		//delete
+		delete[] b;
+		delete[] A;
+		delete[] B;
+		delete[] work;
+		//return
+		return info == 0;
+	}
 	bool Eigen::compute_symmetric_std_full(void)
 	{
 		//data
@@ -328,65 +393,6 @@ namespace math
 		delete[] work;
 		delete[] ifail;
 		delete[] iwork;
-		//return
-		return info == 0;
-	}
-	bool Eigen::compute_non_symmetric_std_full(void)
-	{
-		//data
-		double query;
-		int32_t info;
-		int32_t lwork = -1;
-		const char jobvl = !m_eigenvectors_computation[1] ? 'N' : 'V';
-		const char jobvr = !m_eigenvectors_computation[0] ? 'N' : 'V';
-		//query
-		const uint32_t* n = &m_order;
-		double* wr = m_eigenvalues[0];
-		double* wi = m_eigenvalues[1];
-		double* Z1 = m_eigenvectors[0];
-		double* Z2 = m_eigenvectors[1];
-		double* A = new double[m_order * m_order];
-		memcpy(A, m_data[0], m_order * m_order * sizeof(double));
-		dgeev_(&jobvl, &jobvr, n, A, n, wr, wi, Z2, n, Z1, n, &query, &lwork, &info);
-		//compute
-		lwork = int32_t(query);
-		double* work = new double[lwork];
-		dgeev_(&jobvl, &jobvr, n, A, n, wr, wi, Z2, n, Z1, n, work, &lwork, &info);
-		//delete
-		delete[] A;
-		delete[] work;
-		//return
-		return info == 0;
-	}
-	bool Eigen::compute_non_symmetric_gen_full(void)
-	{
-		//data
-		double query;
-		int32_t info;
-		int32_t lwork = -1;
-		const char jobvl = !m_eigenvectors_computation[1] ? 'N' : 'V';
-		const char jobvr = !m_eigenvectors_computation[0] ? 'N' : 'V';
-		//query
-		const uint32_t* n = &m_order;
-		double* wr = m_eigenvalues[0];
-		double* wi = m_eigenvalues[1];
-		double* Z1 = m_eigenvectors[0];
-		double* Z2 = m_eigenvectors[1];
-		double* b = new double[m_order];
-		double* A = new double[m_order * m_order];
-		double* B = new double[m_order * m_order];
-		memcpy(A, m_data[0], m_order * m_order * sizeof(double));
-		memcpy(B, m_data[1], m_order * m_order * sizeof(double));
-		dggev_(&jobvl, &jobvr, n, A, n, B, n, wr, wi, b, Z2, n, Z1, n, &query, &lwork, &info);
-		//compute
-		lwork = int32_t(query);
-		double* work = new double[lwork];
-		dggev_(&jobvl, &jobvr, n, A, n, B, n, wr, wi, b, Z2, n, Z1, n, work, &lwork, &info);
-		//delete
-		delete[] b;
-		delete[] A;
-		delete[] B;
-		delete[] work;
 		//return
 		return info == 0;
 	}

@@ -106,7 +106,7 @@ void tests::eigen::non_symmetric_gen(void)
 	double B[order_max * order_max];
 	//test
 	eigen.data(0, A);
-	eigen.data(1, A);
+	eigen.data(1, B);
 	eigen.symmetry(false);
 	for(uint32_t i = 1; i <= order_max; i++)
 	{
@@ -123,25 +123,31 @@ void tests::eigen::non_symmetric_gen(void)
 			if(wi == 0)
 			{
 				const double* zr = eigen.eigenvector(0, j);
-				test = test && fabs((Bm.inverse() * Am).bilinear(zr, zr) - wr) < 1e-5;
+				test = test && fabs(Am.bilinear(zr, zr) - wr * Bm.bilinear(zr, zr)) < 1e-5;
 			}
-			// else if(wi > 0)
-			// {
-			// 	math::Vector zr(eigen.eigenvector(0, j + 0), i);
-			// 	math::Vector zi(eigen.eigenvector(0, j + 1), i);
-			// 	test = test && fabs((Am.bilinear(zr, zr) + Am.bilinear(zi, zi)) / (zr.inner(zr) + zi.inner(zi)) - wr) < 1e-5;
-			// 	test = test && fabs((Am.bilinear(zr, zi) - Am.bilinear(zi, zr)) / (zr.inner(zr) + zi.inner(zi)) - wi) < 1e-5;
-			// }
-			// else if(wi < 0)
-			// {
-			// 	math::Vector zr(eigen.eigenvector(0, j - 1), i);
-			// 	math::Vector zi(eigen.eigenvector(0, j + 0), i);
-			// 	test = test && fabs((Am.bilinear(zr, zr) + Am.bilinear(zi, zi)) / (zr.inner(zr) + zi.inner(zi)) - wr) < 1e-5;
-			// 	test = test && fabs((Am.bilinear(zi, zr) - Am.bilinear(zr, zi)) / (zr.inner(zr) + zi.inner(zi)) - wi) < 1e-5;
-			// }
+			else if(wi > 0)
+			{
+				math::Vector zr(eigen.eigenvector(0, j + 0), i);
+				math::Vector zi(eigen.eigenvector(0, j + 1), i);
+				const double Au = Am.bilinear(zr, zr) + Am.bilinear(zi, zi);
+				const double Ac = Am.bilinear(zr, zi) - Am.bilinear(zi, zr);
+				const double Bu = Bm.bilinear(zr, zr) + Bm.bilinear(zi, zi);
+				const double Bc = Bm.bilinear(zr, zi) - Bm.bilinear(zi, zr);
+				test = test && fabs(wr * Bu - wi * Bc - Au) < 1e-5 && fabs(wr * Bc + wi * Bu - Ac) < 1e-5;
+			}
+			else if(wi < 0)
+			{
+				math::Vector zr(eigen.eigenvector(0, j - 1), i);
+				math::Vector zi(eigen.eigenvector(0, j + 0), i);
+				const double Au = Am.bilinear(zr, zr) + Am.bilinear(zi, zi);
+				const double Ac = Am.bilinear(zr, zi) - Am.bilinear(zi, zr);
+				const double Bu = Bm.bilinear(zr, zr) + Bm.bilinear(zi, zi);
+				const double Bc = Bm.bilinear(zr, zi) - Bm.bilinear(zi, zr);
+				test = test && fabs(wr * Bu + wi * Bc - Au) < 1e-5 && fabs(wr * Bc - wi * Bu - Ac) < 1e-5;
+			}
 		}
 		if(!test) throw std::runtime_error("Error");
-		printf("Test non symmetric std %3d: ok!\n", i);
+		printf("Test non symmetric gen %3d: ok!\n", i);
 	}
 }
 void tests::eigen::symmetric_std_full(void)
