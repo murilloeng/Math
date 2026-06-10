@@ -119,55 +119,24 @@ namespace math
 	//compute
 	bool Eigen::compute(void)
 	{
-		cleanup();
-		allocate();
+		//data
+		const bool type = m_type != Type::Full;
+		const bool data = m_data[1] != nullptr;
+		bool(Eigen::*methods[])(void) = {
+			&Eigen::compute_non_symmetric_std, &Eigen::compute_non_symmetric_gen,
+			&Eigen::compute_symmetric_std_full, &Eigen::compute_symmetric_std_partial,
+			&Eigen::compute_symmetric_gen_full, &Eigen::compute_symmetric_gen_partial
+		};
+		const uint32_t index = !m_symmetric ? data : 2 + 2 * data + type;
+		//check
 		if(!m_symmetric && m_type != Type::Full)
 		{
 			throw std::runtime_error("Error: Selected eigenvalues are not supported for non-symmetric matrices!");
 		}
-		if(m_symmetric)
-		{
-			if(m_data[1] == nullptr)
-			{
-				if(m_type == Type::Full)
-				{
-					return compute_symmetric_std_full();
-				}
-				else
-				{
-					return compute_symmetric_std_partial();
-				}
-			}
-			else
-			{
-				if(m_type == Type::Full)
-				{
-					return compute_symmetric_gen_full();
-				}
-				else
-				{
-					return compute_symmetric_gen_partial();
-				}
-			}
-		}
-		else
-		{
-			if(m_data[1] == nullptr)
-			{
-				if(m_type == Type::Full)
-				{
-					return compute_non_symmetric_std();
-				}
-			}
-			else
-			{
-				if(m_type == Type::Full)
-				{
-					return compute_non_symmetric_gen();
-				}
-			}
-		}
-		return true;
+		//compute
+		cleanup();
+		allocate();
+		return (this->*methods[index])();
 	}
 
 	//modes
