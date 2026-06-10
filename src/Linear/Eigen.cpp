@@ -31,7 +31,10 @@ namespace math
 	//destructor
 	Eigen::~Eigen(void)
 	{
-		return;
+		delete[] m_eigenvalues[0];
+		delete[] m_eigenvalues[1];
+		delete[] m_eigenvectors[0];
+		delete[] m_eigenvectors[1];
 	}
 
 	//data

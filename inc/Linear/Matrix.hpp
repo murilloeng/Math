@@ -126,9 +126,6 @@ namespace math
 		Mat3 span3(uint32_t, uint32_t) const;
 		math::Span span(uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
 
-		//svd
-		bool svd(Matrix&, Matrix&, Vector&) const;
-
 		//stats
 		double mean(void) const;
 		double variance(void) const;

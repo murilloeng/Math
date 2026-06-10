@@ -21,8 +21,6 @@ extern "C"
 	void dgetrf_(const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*, int32_t*);
 	void dgesv_(const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*, double*, const uint32_t*, int32_t*);
 	void dgetrs_(const char*, const uint32_t*, const uint32_t*, double*, const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*);
-	//svd
-	void dgesdd_(const char*, const uint32_t*, const uint32_t*, double*, const uint32_t*, double*, double*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, int32_t*, int32_t*);
 }
 
 namespace math
@@ -799,39 +797,6 @@ namespace math
 	math::Span Matrix::span(uint32_t r, uint32_t c, uint32_t n, uint32_t m)
 	{
 		return math::Span(*this, r, c, n, m);
-	}
-
-	//svd
-	bool Matrix::svd(Matrix& U, Matrix& V, Vector& s) const
-	{
-		//check
-		if(s.m_rows != std::min(m_rows, m_cols))
-		{
-			fprintf(stderr, "\tError: SVD third parameter has incompatible dimensions!\n");
-		}
-		if(U.m_rows != U.m_cols || U.m_rows != m_rows)
-		{
-			fprintf(stderr, "\tError: SVD first parameter has incompatible dimensions!\n");
-		}
-		if(V.m_rows != V.m_cols || V.m_cols != m_cols)
-		{
-			fprintf(stderr, "\tError: SVD second parameter has incompatible dimensions!\n");
-		}
-		//data
-		int32_t info;
-		double query;
-		Matrix A(*this);
-		uint32_t lwork = -1;
-		const char* jobz = "A";
-		int32_t* iwork = (int32_t*) alloca(8 * std::min(m_rows, m_cols) * sizeof(int32_t));
-		//query
-		dgesdd_(jobz, &m_rows, &m_cols, A.m_data_ptr, &m_rows, s.m_data_ptr, U.m_data_ptr, &m_rows, V.m_data_ptr, &m_cols, &query, &lwork, iwork, &info);
-		//decompose
-		lwork = (uint32_t) query;
-		double* work = (double*) alloca(lwork * sizeof(double));
-		dgesdd_(jobz, &m_rows, &m_cols, A.m_data_ptr, &m_rows, s.m_data_ptr, U.m_data_ptr, &m_rows, V.m_data_ptr, &m_cols, work, &lwork, iwork, &info);
-		//return
-		return info == 0;
 	}
 
 	//stats
