@@ -30,8 +30,7 @@ namespace math
 			//data
 			bool m_full;
 			uint32_t m_modes;
-			std::function<void(double*)> m_stiffness_0;
-			std::function<void(double*, const double*)> m_stiffness_d;
+			std::function<void(double*, const double*)> m_stiffness;
 		};
 	}
 }

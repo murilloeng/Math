@@ -1,4 +1,8 @@
+//std
+#include <cstdio>
+
 //Math
+#include "Math/inc/Linear/Eigen.hpp"
 #include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Solvers/Buckling.hpp"
 
@@ -36,14 +40,25 @@ namespace math
 		void Buckling::solve(void)
 		{
 			//data
-			m_stiffness_0(m_K);
-			math::Vector F(m_fe, m_size);
-			math::Vector x(m_x_new, m_size);
-			math::Matrix K(m_K, m_size, m_size);
+			Eigen eigen;
+			eigen.data(0, m_M);
+			eigen.data(1, m_K);
+			eigen.index_min(1);
+			eigen.index_max(1);
+			eigen.type(Eigen::Type::Index);
 			//linear
-			K.solve(x, F);
-			m_stiffness_d(m_M, m_x_new);
-			
+			m_stiffness(m_K, m_x_new);
+			Matrix(m_K, m_size, m_size).solve(m_dx, m_fe);
+			//apply
+			apply();
+			m_stiffness(m_M, m_x_new);
+			for(uint32_t i = 0; i < m_size * m_size; i++)
+			{
+				m_M[i] = m_K[i] - m_M[i];
+			}
+			//compute
+			eigen.compute();
+			printf("Load: %+.6e\n", eigen.eigenvalue(0, 0));
 		}
 	}
 }

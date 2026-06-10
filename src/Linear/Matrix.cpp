@@ -590,7 +590,7 @@ namespace math
 	double Matrix::determinant(void) const
 	{
 		//data
-		int32_t status;
+		int32_t info;
 		Matrix M(*this);
 		uint32_t* pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
 		//check
@@ -599,9 +599,9 @@ namespace math
 			throw std::runtime_error("Matrix determinant called on non-square Matrix!");
 		}
 		//decompose
-		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &status);
+		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &info);
 		//check
-		if(status != 0)
+		if(info != 0)
 		{
 			throw std::runtime_error("Matrix determinant computation failed!");
 		}
@@ -648,30 +648,6 @@ namespace math
 		return bilinear(v1.m_data_ref, v2.m_data_ref);
 	}
 
-	Matrix Matrix::inverse(bool* test) const
-	{
-		//data
-		Matrix M(*this);
-		double query, *work;
-		int32_t status, lwork = -1;
-		uint32_t* pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
-		//check
-		if(m_rows != m_cols)
-		{
-			throw std::runtime_error("Matrix inverse called on a non-square Matrix!");
-		}
-		//query
-		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &status);
-		dgetri_(&m_rows, M.m_data_ptr, &m_rows, pivot, &query, &lwork, &status);
-		//inverse
-		lwork = int32_t(query);
-		work = (double*) alloca(lwork * sizeof(double));
-		dgetri_(&m_rows, M.m_data_ptr, &m_rows, pivot, work, &lwork, &status);
-		//test
-		if(test) *test = status == 0;
-		//return
-		return M;
-	}
 	Matrix Matrix::transpose(void) const
 	{
 		Matrix M(m_cols, m_rows);
@@ -684,26 +660,64 @@ namespace math
 		}
 		return M;
 	}
+	Matrix Matrix::inverse(bool* test) const
+	{
+		//data
+		Matrix M(*this);
+		double query, *work;
+		int32_t info, lwork = -1;
+		uint32_t* pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
+		//check
+		if(m_rows != m_cols)
+		{
+			throw std::runtime_error("Matrix inverse called on a non-square Matrix!");
+		}
+		//query
+		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &info);
+		dgetri_(&m_rows, M.m_data_ptr, &m_rows, pivot, &query, &lwork, &info);
+		//inverse
+		lwork = int32_t(query);
+		work = (double*) alloca(lwork * sizeof(double));
+		dgetri_(&m_rows, M.m_data_ptr, &m_rows, pivot, work, &lwork, &info);
+		//test
+		if(test) *test = info == 0;
+		//return
+		return M;
+	}
 	bool Matrix::solve(Matrix& x, const Matrix& f) const
 	{
 		//data
-		x = f;
-		int32_t status;
-		Matrix M(*this);
-		uint32_t* pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
+		int32_t info;
+		double* A = (double*) alloca(m_rows * m_cols * sizeof(double));
+		uint32_t* ipiv = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
 		//check
 		if(m_rows != m_cols)
 		{
 			throw std::runtime_error("Matrix solve called on a non-square Matrix!");
 		}
-		if(m_cols != x.m_rows || x.m_rows != f.m_rows || x.m_cols != f.m_cols)
+		if(m_cols != x.m_rows || m_rows != f.m_rows || x.m_cols != f.m_cols)
 		{
 			throw std::runtime_error("Matrix solve called with incompatible matrices!");
 		}
 		//solve
-		dgesv_(&m_rows, &x.m_cols, M.m_data_ptr, &m_rows, pivot, x.m_data_ptr, &m_rows, &status);
+		memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
+		memcpy(x.m_data_ptr, f.m_data_ref, x.m_rows * x.m_cols * sizeof(double));
+		dgesv_(&m_rows, &x.m_cols, A, &m_rows, ipiv, x.m_data_ptr, &m_rows, &info);
 		//return
-		return status == 0;
+		return info == 0;
+	}
+	bool Matrix::solve(double* x, const double* f, uint32_t cols) const
+	{
+		//data
+		int32_t info;
+		double* A = (double*) alloca(m_rows * m_cols * sizeof(double));
+		uint32_t* ipiv = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
+		//solve
+		memcpy(x, f, m_rows * cols * sizeof(double));
+		memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
+		dgesv_(&m_rows, &cols, A, &m_rows, ipiv, x, &m_rows, &info);
+		//return
+		return info == 0;
 	}
 
 	bool Matrix::solve_decompose(uint32_t* pivot)
@@ -714,10 +728,10 @@ namespace math
 			throw std::runtime_error("Matrix decompose called on a non-square Matrix!");
 		}
 		//decompose
-		int32_t status;
-		dgetrf_(&m_rows, &m_cols, m_data_ptr, &m_cols, pivot, &status);
+		int32_t info;
+		dgetrf_(&m_rows, &m_cols, m_data_ptr, &m_cols, pivot, &info);
 		//return
-		return status == 0;
+		return info == 0;
 	}
 	bool Matrix::solve_substitute(const uint32_t* pivot, math::Matrix& x)
 	{
@@ -737,10 +751,10 @@ namespace math
 			throw std::runtime_error("Matrix substitute called on a non-square Matrix!");
 		}
 		//substitute
-		uint32_t status;
-		dgetrs_("N", &m_rows, &nhrs, m_data_ptr, &m_cols, pivot, x, &m_cols, &status);
+		uint32_t info;
+		dgetrs_("N", &m_rows, &nhrs, m_data_ptr, &m_cols, pivot, x, &m_cols, &info);
 		//return
-		return status;
+		return info;
 	}
 	bool Matrix::solve_substitute(const uint32_t* pivot, const math::Matrix& f, math::Matrix& x)
 	{
