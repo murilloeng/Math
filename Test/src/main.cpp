@@ -23,6 +23,7 @@ int main(void)
 		tests::eigen::symmetric_gen_full();
 		tests::eigen::symmetric_std_partial();
 		tests::eigen::symmetric_gen_partial();
+		tests::eigen::singular_value_decomposition();
 	}
 	catch(const std::exception& exception)
 	{

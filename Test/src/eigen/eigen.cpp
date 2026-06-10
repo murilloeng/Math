@@ -7,6 +7,7 @@
 
 //Math
 #include "Math/Test/inc/eigen.hpp"
+#include "Math/inc/Linear/SVD.hpp"
 #include "Math/inc/Linear/Eigen.hpp"
 #include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Miscellaneous/util.hpp"
@@ -260,5 +261,31 @@ void tests::eigen::symmetric_gen_partial(void)
 		}
 		if(!test) throw std::runtime_error("Error");
 		printf("Test symmetric gen partial %3d: ok!\n", i);
+	}
+}
+void tests::eigen::singular_value_decomposition(void)
+{
+	//data
+	math::SVD svd;
+	srand(time(nullptr));
+	const uint32_t order_max = 100;
+	double A[order_max * order_max];
+	//test
+	svd.data(A);
+	for(uint32_t i = 1; i <= order_max; i++)
+	{
+		svd.rows(i);
+		svd.cols(i);
+		setup_random_matrix(A, i);
+		bool test = svd.compute();
+		for(uint32_t j = 0; j < i; j++)
+		{
+			const double s = svd.singular_value(j);
+			const double* u = svd.singular_modes(0, j);
+			const double* v = svd.singular_modes(1, j);
+			test = test && fabs(math::Matrix(A, i, i).bilinear(u, v) - s) < 1e-5;
+		}
+		if(!test) throw std::runtime_error("Error");
+		printf("Test singular value decomposition %3d: ok!\n", i);
 	}
 }

@@ -4,6 +4,7 @@
 
 //Math
 #include "Math/inc/Linear/SVD.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
 
 extern "C"
 {
@@ -77,6 +78,8 @@ namespace math
 		double* A = new double[m_rows * m_cols];
 		memcpy(A, m_data, m_rows * m_cols * sizeof(double));
 		//query
+		cleanup();
+		allocate();
 		double* s = m_singular_values;
 		double* U = m_singular_modes[0];
 		double* V = m_singular_modes[1];
@@ -85,6 +88,14 @@ namespace math
 		lwork = int32_t(query);
 		double* work = new double[lwork];
 		dgesvd_(&jobu, &jobv, &m_rows, &m_cols, A, &m_rows, s, U, &m_rows, V, &m_cols, work, &lwork, &info);
+		//transpose
+		for(uint32_t i = 0; i < m_cols; i++)
+		{
+			for(uint32_t j = i + 1; j < m_cols; j++)
+			{
+				swap(V[i + m_cols * j], V[j + m_cols * i]);
+			}
+		}
 		//delete
 		delete[] A;
 		delete[] work;
@@ -109,7 +120,7 @@ namespace math
 	}
 	const double* SVD::singular_modes(uint32_t type, uint32_t index) const
 	{
-		return m_singular_modes[type] + index * m_rows;
+		return m_singular_modes[type] + index * (type == 0 ? m_rows : m_cols);
 	}
 
 	//setup

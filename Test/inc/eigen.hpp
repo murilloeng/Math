@@ -10,5 +10,6 @@ namespace tests
 		void symmetric_gen_full(void);
 		void symmetric_std_partial(void);
 		void symmetric_gen_partial(void);
+		void singular_value_decomposition(void);
 	}
 }
