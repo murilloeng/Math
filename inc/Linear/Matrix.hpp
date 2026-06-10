@@ -129,12 +129,6 @@ namespace math
 		//svd
 		bool svd(Matrix&, Matrix&, Vector&) const;
 
-		//eigen
-		bool eigen(Vector&, Vector&, Matrix&) const;
-
-		bool eigen_sym(Vector&, Matrix&) const;
-		bool eigen_sym(Vector&, Matrix&, const Matrix&) const;
-
 		//stats
 		double mean(void) const;
 		double variance(void) const;

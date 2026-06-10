@@ -23,10 +23,6 @@ extern "C"
 	void dgetrs_(const char*, const uint32_t*, const uint32_t*, double*, const uint32_t*, const uint32_t*, double*, const uint32_t*, uint32_t*);
 	//svd
 	void dgesdd_(const char*, const uint32_t*, const uint32_t*, double*, const uint32_t*, double*, double*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, int32_t*, int32_t*);
-	//eigen
-	void dsyev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, double*, int32_t*, int32_t*);
-	void dsygv_(const uint32_t*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, double*, double*, int32_t*, int32_t*);
-	void dgeev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, double*, double*, const uint32_t*, double*, const uint32_t*, double*, int32_t*, int32_t*);
 }
 
 namespace math
@@ -836,62 +832,6 @@ namespace math
 		dgesdd_(jobz, &m_rows, &m_cols, A.m_data_ptr, &m_rows, s.m_data_ptr, U.m_data_ptr, &m_rows, V.m_data_ptr, &m_cols, work, &lwork, iwork, &info);
 		//return
 		return info == 0;
-	}
-
-	//eigen
-	bool Matrix::eigen(Vector& vr, Vector& vc, Matrix& Z) const
-	{
-		//data
-		double query, *work;
-		int32_t status, lwork = -1;
-		//query
-		dgeev_("N", "V", &m_rows, nullptr, &m_rows, nullptr, nullptr, nullptr, &m_rows, nullptr, &m_rows, &query, &lwork, &status);
-		//eigen
-		Matrix A(*this);
-		lwork = (int32_t) query;
-		work = new double[lwork];
-		dgeev_("N", "V", &m_rows, A.data(), &m_rows, vr.data(), vc.data(), nullptr, &m_rows, Z.data(), &m_rows, work, &lwork, &status);
-		//delete
-		delete[] work;
-		//return
-		return status == 0;
-	}
-
-	bool Matrix::eigen_sym(Vector& v, Matrix& Z) const
-	{
-		//data
-		double query, *work;
-		int32_t status, lwork = -1;
-		//query
-		dsyev_("V", "L", &m_rows, nullptr, &m_rows, nullptr, &query, &lwork, &status);
-		//eigen
-		Z = *this;
-		lwork = (int32_t) query;
-		work = new double[lwork];
-		dsyev_("V", "L", &m_rows, Z.m_data_ptr, &m_rows, v.m_data_ptr, work, &lwork, &status);
-		//delete
-		delete[] work;
-		//return
-		return status == 0;
-	}
-	bool Matrix::eigen_sym(Vector& v, Matrix& Z, const Matrix& B) const
-	{
-		//data
-		double query, *work;
-		const uint32_t type = 1;
-		int32_t status, lwork = -1;
-		//query
-		dsygv_(&type, "V", "L", &m_rows, nullptr, &m_rows, nullptr, &m_rows, nullptr, &query, &lwork, &status);
-		//eigen
-		Z = *this;
-		Matrix Q = B;
-		lwork = (int32_t) query;
-		work = new double[lwork];
-		dsygv_(&type, "V", "L", &m_rows, Z.m_data_ptr, &m_rows, Q.m_data_ptr, &m_rows, v.m_data_ptr, work, &lwork, &status);
-		//delete
-		delete[] work;
-		//return
-		return status == 0;
 	}
 
 	//stats
