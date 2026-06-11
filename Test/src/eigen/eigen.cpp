@@ -213,8 +213,8 @@ void tests::eigen::symmetric_std_partial(void)
 	double A[order_max * order_max];
 	//test
 	eigen.data(0, A);
-	eigen.index_min(1);
-	eigen.index_max(modes);
+	eigen.index_min(0);
+	eigen.index_max(modes - 1);
 	eigen.type(math::Eigen::Type::Index);
 	for(uint32_t i = modes; i <= order_max; i++)
 	{
@@ -243,8 +243,8 @@ void tests::eigen::symmetric_gen_partial(void)
 	//test
 	eigen.data(0, A);
 	eigen.data(1, B);
-	eigen.index_min(1);
-	eigen.index_max(modes);
+	eigen.index_min(0);
+	eigen.index_max(modes - 1);
 	eigen.type(math::Eigen::Type::Index);
 	for(uint32_t i = modes; i <= order_max; i++)
 	{

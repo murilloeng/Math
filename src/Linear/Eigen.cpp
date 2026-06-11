@@ -317,13 +317,13 @@ namespace math
 		double* Z = m_eigenvectors[0];
 		const double* v1 = &m_value_min;
 		const double* v2 = &m_value_max;
-		const uint32_t* i1 = &m_index_min;
-		const uint32_t* i2 = &m_index_max;
-		dsyevx_(&jobz, &range, &uplo, n, A, n, v1, v2, i1, i2, &abstol, m, w, Z, n, &query, &lwork, iwork, ifail, &info);
+		const uint32_t i1 = m_index_min + 1;
+		const uint32_t i2 = m_index_max + 1;
+		dsyevx_(&jobz, &range, &uplo, n, A, n, v1, v2, &i1, &i2, &abstol, m, w, Z, n, &query, &lwork, iwork, ifail, &info);
 		//compute
 		lwork = int32_t(query);
 		double* work = new double[lwork];
-		dsyevx_(&jobz, &range, &uplo, n, A, n, v1, v2, i1, i2, &abstol, m, w, Z, n, work, &lwork, iwork, ifail, &info);
+		dsyevx_(&jobz, &range, &uplo, n, A, n, v1, v2, &i1, &i2, &abstol, m, w, Z, n, work, &lwork, iwork, ifail, &info);
 		//delete
 		delete[] A;
 		delete[] work;
@@ -357,13 +357,13 @@ namespace math
 		double* Z = m_eigenvectors[0];
 		const double* v1 = &m_value_min;
 		const double* v2 = &m_value_max;
-		const uint32_t* i1 = &m_index_min;
-		const uint32_t* i2 = &m_index_max;
-		dsygvx_(&itype, &jobz, &range, &uplo, n, A, n, B, n, v1, v2, i1, i2, &abstol, m, w, Z, n, &query, &lwork, iwork, ifail, &info);
+		const uint32_t i1 = m_index_min + 1;
+		const uint32_t i2 = m_index_max + 1;
+		dsygvx_(&itype, &jobz, &range, &uplo, n, A, n, B, n, v1, v2, &i1, &i2, &abstol, m, w, Z, n, &query, &lwork, iwork, ifail, &info);
 		//compute
 		lwork = int32_t(query);
 		double* work = new double[lwork];
-		dsygvx_(&itype, &jobz, &range, &uplo, n, A, n, B, n, v1, v2, i1, i2, &abstol, m, w, Z, n, work, &lwork, iwork, ifail, &info);
+		dsygvx_(&itype, &jobz, &range, &uplo, n, A, n, B, n, v1, v2, &i1, &i2, &abstol, m, w, Z, n, work, &lwork, iwork, ifail, &info);
 		//delete
 		delete[] A;
 		delete[] B;
