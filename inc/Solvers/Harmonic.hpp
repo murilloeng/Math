@@ -29,7 +29,7 @@ namespace math
 			void test_stiffness(void) const;
 
 			//data
-			using Solver::save;
+			using Solver::save, Solver::solve;
 			using Solver::state_set, Solver::force_set, Solver::tangent_set;
 			
 			using Solver::m_silent, Solver::m_equilibrium;

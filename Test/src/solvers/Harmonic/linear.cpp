@@ -63,5 +63,5 @@ void tests::solvers::harmonic::linear(void)
 	//solve
 	solver.solve();
 	//save
-	solver.save("Test/data/solvers/harmonic/linear/numeric.dat");
+	solver.save("Test/data/Solvers/Harmonic/Linear/numeric.txt");
 }

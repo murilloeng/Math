@@ -68,5 +68,5 @@ void tests::solvers::harmonic::duffing(void)
 	//solve
 	solver.solve();
 	//save
-	solver.save("Test/data/solvers/harmonic/duffing/numeric.dat");
+	solver.save("Test/data/Solvers/Harmonic/Duffing/numeric.txt");
 }

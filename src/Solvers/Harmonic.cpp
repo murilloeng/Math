@@ -249,11 +249,8 @@ namespace math
 				//data
 				compute();
 				if(equilibrium()) break;
-				Vector dx(m_dx, m_size);
-				const Matrix K(m_K, m_size, m_size);
-				const Vector r(m_r, m_size), fe(m_fe, m_size);
 				//corrector
-				if(!K.solve(dx, r))
+				if(!solve(m_K, m_r, m_dx))
 				{
 					if(!m_silent) printf("Unable to decompose stiffness Matrix in setup!\n");
 				}

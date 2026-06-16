@@ -8,7 +8,6 @@ namespace tests
 		{
 			void linear(void);
 			void duffing(void);
-			void harmonic(void);
 		}
 		namespace newmark
 		{
