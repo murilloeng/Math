@@ -17,8 +17,10 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::runge_kutta::duffing_oscillator();
-		// tests::solvers::newton_raphson::truss_von_mises();
+		tests::solvers::newmark::single_dof();
+		tests::solvers::newmark::single_pendulum();
+		tests::solvers::newmark::double_pendulum();
+		tests::solvers::newmark::duffing_oscillator();
 	}
 	catch(const std::exception& exception)
 	{

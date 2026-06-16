@@ -67,14 +67,14 @@ void tests::solvers::runge_kutta::double_pendulum(void)
 	//solve
 	solver.solve();
 	//save
-	solver.save("Test/data/Solvers/RungeKutta/double pendulum/numeric.txt");
+	solver.save("Test/data/Solvers/Runge Kutta/double pendulum/numeric.txt");
 	//validator
 	validator.create_item();
 	validator.create_item();
-	validator.item(0)->load_numeric("Test/data/Solvers/RungeKutta/double pendulum/numeric.txt", 6, 0);
-	validator.item(1)->load_numeric("Test/data/Solvers/RungeKutta/double pendulum/numeric.txt", 6, 3);
-	validator.item(0)->load_reference("Test/data/Solvers/RungeKutta/double pendulum/reference.txt", 0, 1);
-	validator.item(1)->load_reference("Test/data/Solvers/RungeKutta/double pendulum/reference.txt", 0, 2);
+	validator.item(0)->load_numeric("Test/data/Solvers/Runge Kutta/double pendulum/numeric.txt", 6, 0);
+	validator.item(1)->load_numeric("Test/data/Solvers/Runge Kutta/double pendulum/numeric.txt", 6, 3);
+	validator.item(0)->load_reference("Test/data/Solvers/Runge Kutta/double pendulum/reference.txt", 0, 1);
+	validator.item(1)->load_reference("Test/data/Solvers/Runge Kutta/double pendulum/reference.txt", 0, 2);
 	//validation
 	validator.validate();
 }

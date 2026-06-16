@@ -22,7 +22,7 @@ void tests::solvers::newmark::duffing_oscillator(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.m_step_max = 1000;
+	solver.m_step_max = 2000;
 	solver.m_t_max = 2 * M_PI * np / sqrt(k / m);
 	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
 	//initials

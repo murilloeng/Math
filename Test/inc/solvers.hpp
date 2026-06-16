@@ -8,6 +8,7 @@ namespace tests
 		{
 			void linear(void);
 			void duffing(void);
+			void harmonic(void);
 		}
 		namespace newmark
 		{
@@ -26,6 +27,7 @@ namespace tests
 		namespace newton_raphson
 		{
 			void truss_von_mises(void);
+			void spring_buckling(void);
 		}
 		namespace gradient_descent
 		{

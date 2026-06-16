@@ -1,11 +1,8 @@
 //std
-#include <cmath>
 #include <cstdio>
-#include <cstring>
 #include <stdexcept>
 
 //Math
-#include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Solvers/NewtonRaphson.hpp"
 
 //x: state Vector
@@ -75,12 +72,8 @@ namespace math
 		}
 		void NewtonRaphson::predictor(void)
 		{
-			//data
-			const Matrix K(m_K, m_size, m_size);
-			const Vector r(m_r, m_size), fe(m_fe, m_size);
-			Vector dx(m_dx, m_size), dxr(m_dxr, m_size), dxt(m_dxt, m_size);
 			//predictor
-			if(!K.solve(dxr, r) || !K.solve(dxt, fe))
+			if(!solve(m_K, m_r, m_dxr) || !solve(m_K, m_fe, m_dxt))
 			{
 				if(!m_silent) printf("Unable to decompose stiffness Matrix in predictor!\n");
 			}
@@ -89,20 +82,15 @@ namespace math
 			{
 				m_dp = m_continuation.predictor() / (1 << m_attempt);
 			}
-			for(uint32_t i = 0; i < m_size; i++) dx[i] = dxr[i] + m_dp * dxt[i];
+			for(uint32_t i = 0; i < m_size; i++) m_dx[i] = m_dxr[i] + m_dp * m_dxt[i];
 		}
 		void NewtonRaphson::corrector(void)
 		{
-			//data
-			const Matrix K(m_K, m_size, m_size);
-			const Vector r(m_r, m_size), fe(m_fe, m_size);
-			Vector ddxr(m_ddxr, m_size), ddxt(m_ddxt, m_size);
 			//corrector
-			if(!K.solve(ddxr, r) || !K.solve(ddxt, fe))
+			if(!solve(m_K, m_r, m_ddxr) || !solve(m_K, m_fe, m_ddxt))
 			{
 				if(!m_silent) printf("Unable to decompose stiffness Matrix in corrector!\n");
 			}
-			//continuation
 			m_ddp = m_continuation.corrector();
 			//update
 			m_dp += m_ddp;

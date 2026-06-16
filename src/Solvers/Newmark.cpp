@@ -63,10 +63,6 @@ namespace math
 		}
 		void Newmark::setup(void)
 		{
-			//data
-			Vector a(m_a_new, m_size);
-			const Vector r(m_r, m_size);
-			const Matrix M(m_M, m_size, m_size);
 			//setup
 			Solver::setup();
 			for(uint32_t i = 0; i < m_size; i++)
@@ -74,7 +70,7 @@ namespace math
 				m_r[i] = m_fe[i] - m_fi[i];
 			}
 			//check
-			if(!M.solve(a, r))
+			if(!solve(m_M, m_r, m_a_new))
 			{
 				if(!m_silent) printf("Unable to compute acceleration in setup!\n");
 			}
@@ -110,17 +106,13 @@ namespace math
 		}
 		void Newmark::corrector(void)
 		{
-			//data
-			Vector ddxr(m_ddxr, m_size);
-			const Vector r(m_r, m_size);
-			const Matrix K(m_K, m_size, m_size);
 			//tangent
 			for(uint32_t i = 0; i < m_size * m_size; i++)
 			{
 				m_K[i] += m_g * m_C[i] / m_b / m_dt + m_M[i] / m_b / m_dt / m_dt;
 			}
 			//solve
-			if(!K.solve(ddxr, r))
+			if(!solve(m_K, m_r, m_ddxr))
 			{
 				if(!m_silent) printf("Unable to decompose system Matrix in corrector!\n");
 			}

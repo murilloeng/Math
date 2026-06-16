@@ -42,11 +42,11 @@ void tests::solvers::runge_kutta::single_dof(void)
 	//solve
 	solver.solve();
 	//save
-	solver.save("Test/data/Solvers/RungeKutta/single dof/numeric.txt");
+	solver.save("Test/data/Solvers/Runge Kutta/single dof/numeric.txt");
 	//validator
 	validator.create_item();
-	validator.item(0)->load_numeric("Test/data/Solvers/RungeKutta/single dof/numeric.txt", 3, 0);
-	validator.item(0)->load_reference("Test/data/Solvers/RungeKutta/single dof/reference.txt", 0, 1);
+	validator.item(0)->load_numeric("Test/data/Solvers/Runge Kutta/single dof/numeric.txt", 3, 0);
+	validator.item(0)->load_reference("Test/data/Solvers/Runge Kutta/single dof/reference.txt", 0, 1);
 	//validation
 	validator.validate();
 }
