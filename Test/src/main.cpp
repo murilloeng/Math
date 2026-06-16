@@ -17,13 +17,8 @@ int main(void)
 {
 	try
 	{
-		tests::eigen::non_symmetric_std();
-		tests::eigen::non_symmetric_gen();
-		tests::eigen::symmetric_std_full();
-		tests::eigen::symmetric_gen_full();
-		tests::eigen::symmetric_std_partial();
-		tests::eigen::symmetric_gen_partial();
-		tests::eigen::singular_value_decomposition();
+		tests::solvers::runge_kutta::duffing_oscillator();
+		// tests::solvers::newton_raphson::truss_von_mises();
 	}
 	catch(const std::exception& exception)
 	{

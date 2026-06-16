@@ -1,11 +1,18 @@
 //Math
 #include "Math/Test/inc/solvers.hpp"
+#include "Math/inc/Validation/Validator.hpp"
 #include "Math/inc/Solvers/NewtonRaphson.hpp"
+
+static double function(double x)
+{
+	return x * (1 - x * x);
+}
 
 void tests::solvers::newton_raphson::truss_von_mises(void)
 {
 	//data
 	math::solvers::NewtonRaphson solver;
+	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
 	solver.m_dp0 = 1.00e-02;
@@ -29,5 +36,11 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	solver.m_x_new[0] = 1;
 	//solve
 	solver.solve();
-	solver.save("truss.txt");
+	solver.save("Test/data/Solvers/Newton Raphson/Truss von Mises/numeric.txt");
+	//validator
+	validator.create_item();
+	validator.item(0)->function(function);
+	validator.item(0)->load_numeric("Test/data/Solvers/Newton Raphson/Truss von Mises/numeric.txt", 0, 1);
+	//validation
+	validator.validate();
 }
