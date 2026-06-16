@@ -58,7 +58,7 @@ namespace math
 		Matrix convert(void) const;
 
 		//Span
-		void Span(Sparse&, uint32_t, uint32_t) const;
+		void span(Sparse&, uint32_t, uint32_t) const;
 		void span_data(Sparse&, uint32_t, uint32_t) const;
 		void span_pattern(Sparse&, uint32_t, uint32_t) const;
 

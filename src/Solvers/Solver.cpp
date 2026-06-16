@@ -4,6 +4,7 @@
 
 //Math
 #include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Solvers/Solver.hpp"
 
 namespace math
@@ -12,11 +13,9 @@ namespace math
 	{
 		//constructor
 		Solver::Solver(void) : 
-			m_silent{false}, 
-			m_equilibrium{false},
-			m_size{1}, m_watch_dof{0},
-			m_step{0}, m_attempt{0}, m_iteration{0},
-			m_step_max{100}, m_attempt_max{5}, m_iteration_max{10},
+			m_silent{false},  m_equilibrium{false},
+			m_rows_map{nullptr}, m_cols_map{nullptr},
+			m_size{1}, m_watch_dof{0}, m_step{0}, m_attempt{0}, m_iteration{0}, m_step_max{100}, m_attempt_max{5}, m_iteration_max{10},
 			m_K{nullptr}, m_C{nullptr}, m_M{nullptr},
 			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr}, 
 			m_dxr{nullptr}, m_dxt{nullptr}, m_ddxr{nullptr}, m_ddxt{nullptr},
@@ -204,6 +203,30 @@ namespace math
 			if(ts & uint32_t(Tangent::K)) m_K = new double[m_size * m_size];
 			if(ts & uint32_t(Tangent::C)) m_C = new double[m_size * m_size];
 			if(ts & uint32_t(Tangent::M)) m_M = new double[m_size * m_size];
+		}
+
+
+		//solve
+		bool Solver::solve(const double* K, const double* f, double* x) const
+		{
+			if(m_rows_map == nullptr || m_cols_map == nullptr)
+			{
+				//data
+				math::Vector xm(x, m_size);
+				const math::Vector fm(f, m_size);
+				const math::Matrix Km(K, m_size, m_size);
+				//solve
+				return Km.solve(xm, fm);
+			}
+			else
+			{
+				//data
+				math::Vector xm(x, m_size);
+				const math::Vector fm(f, m_size);
+				const math::Sparse Km(K, m_rows_map, m_cols_map, m_size, m_size);
+				//solve
+				return Km.solve(xm, fm);
+			}
 		}
 
 		//solve

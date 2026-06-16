@@ -51,17 +51,20 @@ namespace math
 			virtual void update(void);
 			virtual void restore(void);
 			virtual bool equilibrium(void);
-
+			
 			//solve
 			virtual void check(void) = 0;
 			virtual void compute(void) = 0;
 			virtual void predictor(void) = 0;
 			virtual void corrector(void) = 0;
-
+			
 			//allocate
 			void allocate_state(void);
 			void allocate_forces(void);
 			void allocate_tangents(void);
+
+			//solve
+			bool solve(const double*, const double*, double*) const;
 
 		public:
 			//solve
@@ -74,11 +77,12 @@ namespace math
 			//data
 			bool m_silent;
 			bool m_equilibrium;
+			int32_t* m_rows_map;
+			int32_t* m_cols_map;
 
 			Convergence m_convergence;
 			Continuation m_continuation;
 			StopCriteria m_stop_criteria;
-
 			std::function<bool(void)> m_stop;
 			std::function<void(void)> m_record;
 			std::function<void(void)> m_update;

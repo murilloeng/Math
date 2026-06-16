@@ -141,9 +141,10 @@ namespace math
 	bool Sparse::solve(Vector& x, const Vector& f) const
 	{
 		//check
+		bool test = false;
 		const uint32_t n = m_rows;
-		int32_t test = !UMFPACK_OK;
-		if(m_cols != x.rows() || m_rows != f.rows())
+		const uint32_t m = f.cols();
+		if(m_cols != x.rows() || m_rows != f.rows() || x.cols() != f.cols())
 		{
 			throw std::runtime_error("Sparse solve has incompatible vectors!");
 		}
@@ -157,14 +158,20 @@ namespace math
 		{
 			if(umfpack_di_numeric(c, r, Kd, m_symbolic, &m_numeric, nullptr, nullptr) == UMFPACK_OK)
 			{
-				test = umfpack_di_solve(UMFPACK_A, c, r, Kd, xd, fd, m_numeric, nullptr, nullptr);
+				test = true;
+				for(uint32_t i = 0; i < m; i++)
+				{
+					double* xi = xd + i * n;
+					const double* fi = fd + i * n;
+					test = test && umfpack_di_solve(UMFPACK_A, c, r, Kd, xi, fi, m_numeric, nullptr, nullptr) == UMFPACK_OK;
+				}
 			}
 		}
-		//free memory
+		//cleanup
 		umfpack_di_free_numeric(&m_numeric);
 		umfpack_di_free_symbolic(&m_symbolic);
 		//return
-		return test == UMFPACK_OK;
+		return test;
 	}
 
 	//print
@@ -236,7 +243,7 @@ namespace math
 	}
 
 	//Sparse
-	void Sparse::Span(Sparse& Matrix, uint32_t i, uint32_t j) const
+	void Sparse::span(Sparse& Matrix, uint32_t i, uint32_t j) const
 	{
 		//data
 		span_check(Matrix, i, j, true);
