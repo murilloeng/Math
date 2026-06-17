@@ -10,7 +10,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class Newmark : public Solver
+		class Newmark : virtual public Solver
 		{
 		public:
 			//constructors

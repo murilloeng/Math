@@ -65,11 +65,15 @@ namespace math
 		{
 			//setup
 			Solver::setup();
+			m_inertia(m_M, m_x_new);
+			m_internal_force(m_fi, m_x_new, m_v_new);
+			m_external_force(m_fe, m_x_new, m_v_new, m_t_new);
+			//residue
 			for(uint32_t i = 0; i < m_size; i++)
 			{
 				m_r[i] = m_fe[i] - m_fi[i];
 			}
-			//check
+			//acceleration
 			if(!solve(m_M, m_r, m_a_new))
 			{
 				if(!m_silent) printf("Unable to compute acceleration in setup!\n");

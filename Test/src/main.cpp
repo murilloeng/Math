@@ -17,7 +17,10 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::harmonic::duffing();
+		tests::solvers::newmark::single_dof();
+		tests::solvers::newmark::single_pendulum();
+		tests::solvers::newmark::double_pendulum();
+		tests::solvers::newmark::duffing_oscillator();
 	}
 	catch(const std::exception& exception)
 	{

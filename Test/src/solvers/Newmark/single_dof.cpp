@@ -9,7 +9,7 @@
 void tests::solvers::newmark::single_dof(void)
 {
 	//data
-	const uint32_t np = 40;
+	const uint32_t np = 10;
 	const double m = 1.00e+00;
 	const double c = 5.00e-02;
 	const double k = 1.00e+00;

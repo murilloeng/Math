@@ -7,7 +7,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class GradientDescent : public Solver
+		class GradientDescent : virtual public Solver
 		{
 		public:
 			//constructor

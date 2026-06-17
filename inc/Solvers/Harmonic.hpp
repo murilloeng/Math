@@ -7,7 +7,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class Harmonic : private NewtonRaphson
+		class Harmonic : virtual private NewtonRaphson
 		{
 		public:
 			//constructors

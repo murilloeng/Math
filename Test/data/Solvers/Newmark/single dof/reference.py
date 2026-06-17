@@ -2,7 +2,7 @@ import scipy.integrate
 from numpy import pi, cos, sin, sqrt, linspace
 
 #data
-np = 40
+np = 10
 ns = 1001
 m = 1.00e+00
 k = 1.00e+00

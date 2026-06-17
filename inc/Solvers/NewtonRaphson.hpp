@@ -11,7 +11,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class NewtonRaphson : public Solver
+		class NewtonRaphson : virtual public Solver
 		{
 		public:
 			//constructors

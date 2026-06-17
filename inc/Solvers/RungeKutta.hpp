@@ -7,7 +7,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class RungeKutta : public Solver
+		class RungeKutta : virtual public Solver
 		{
 		public:
 			//constructors
