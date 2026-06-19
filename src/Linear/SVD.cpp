@@ -20,7 +20,7 @@ namespace math
 	{
 		return;
 	}
-	
+
 	//destructor
 	SVD::~SVD(void)
 	{

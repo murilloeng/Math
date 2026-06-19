@@ -51,13 +51,13 @@ namespace math
 			virtual void update(void);
 			virtual void restore(void);
 			virtual bool equilibrium(void);
-			
+
 			//solve
 			virtual void check(void) = 0;
 			virtual void compute(void) = 0;
 			virtual void predictor(void) = 0;
 			virtual void corrector(void) = 0;
-			
+
 			//allocate
 			void allocate_state(void);
 			void allocate_forces(void);

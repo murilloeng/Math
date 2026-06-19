@@ -34,7 +34,7 @@ namespace math
 		Matrix outer(const Vector&) const;
 		double inner(const Vector&) const;
 		double inner(const double*) const;
-		
+
 
 		//operators
 		Vector operator+(void) const;

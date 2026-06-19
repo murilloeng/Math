@@ -17,7 +17,7 @@ namespace math
 		{
 			return;
 		}
-		
+
 		//destructor
 		Point::~Point(void)
 		{

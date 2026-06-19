@@ -13,7 +13,7 @@ namespace math
 		{
 			return;
 		}
-		
+
 		//destructor
 		Convergence::~Convergence(void)
 		{

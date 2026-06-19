@@ -24,14 +24,14 @@ namespace math
 		{
 			//friends
 			friend class Validator;
-	
+
 		private:
 			//constructor
 			Item(void);
-	
+
 			//destructor
 			~Item(void);
-	
+
 		public:
 			//data
 			void tolerance(double);
@@ -49,7 +49,7 @@ namespace math
 			void load_reference(const char*, uint32_t, uint32_t);
 			void load_reference(const double*, const double*, uint32_t);
 			void load_reference(const double*, uint32_t, uint32_t, uint32_t, uint32_t);
-	
+
 		private:
 			//validation
 			bool validate(void);
@@ -64,7 +64,7 @@ namespace math
 			void load(std::vector<Point>&, const char*, uint32_t, uint32_t);
 			void load(std::vector<Point>&, const double*, const double*, uint32_t);
 			void load(std::vector<Point>&, const double*, uint32_t, uint32_t, uint32_t, uint32_t);
-	
+
 			//data
 			bool m_silent;
 			double m_error;

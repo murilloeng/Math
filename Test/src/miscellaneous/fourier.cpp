@@ -26,7 +26,7 @@ void tests::miscellaneous::fft(void)
 		{
 			x[i] += (j + 1) * cos(2 * (j + 1) * t);
 		}
-		
+
 	}
 	math::fft(z, x, n, true);
 	//file

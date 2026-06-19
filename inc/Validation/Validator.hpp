@@ -16,20 +16,20 @@ namespace math
 		public:
 			//constructor
 			Validator(void);
-	
+
 			//destructor
 			~Validator(void);
-	
+
 			//data
 			bool silent(bool);
 			bool silent(void) const;
 
 			void create_item(void);
 			Item* item(uint32_t) const;
-	
+
 			//validation
 			bool validate(void);
-	
+
 		private:
 			//data
 			bool m_silent;

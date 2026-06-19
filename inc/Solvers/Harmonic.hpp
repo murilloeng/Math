@@ -31,7 +31,7 @@ namespace math
 			//data
 			using Solver::save, Solver::solve;
 			using Solver::state_set, Solver::force_set, Solver::tangent_set;
-			
+
 			using Solver::m_silent, Solver::m_equilibrium;
 			using Solver::m_convergence, Solver::m_continuation, Solver::m_stop_criteria;
 			using Solver::m_stop, Solver::m_record, Solver::m_update, Solver::m_restore, Solver::m_interface;

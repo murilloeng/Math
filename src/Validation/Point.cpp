@@ -13,13 +13,13 @@ namespace math
 		{
 			return;
 		}
-	
+
 		//destructor
 		Point::~Point(void)
 		{
 			return;
 		}
-	
+
 		//algebra
 		double Point::norm(void) const
 		{
@@ -29,7 +29,7 @@ namespace math
 		{
 			return m_data[0] * p.m_data[0] + m_data[1] * p.m_data[1];
 		}
-	
+
 		//operators
 		Point Point::operator+(const Point& p) const
 		{
@@ -43,7 +43,7 @@ namespace math
 		{
 			return {s * p.m_data[0], s * p.m_data[1]};
 		}
-	
+
 		//distance
 		double Point::distance(const Point& p) const
 		{

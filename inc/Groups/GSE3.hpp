@@ -26,10 +26,10 @@ namespace math
 
 			//destructor
 			~GSE3(void);
-			
+
 			//inverse
 			GSE3 inverse(void) const;
-			
+
 			//logarithm
 			ASE3 logarithm(void) const;
 

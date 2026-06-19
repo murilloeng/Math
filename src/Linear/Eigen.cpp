@@ -27,7 +27,7 @@ namespace math
 	{
 		return;
 	}
-	
+
 	//destructor
 	Eigen::~Eigen(void)
 	{

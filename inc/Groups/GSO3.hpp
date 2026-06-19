@@ -27,14 +27,14 @@ namespace math
 
 			//inverse
 			GSO3 inverse(void) const;
-			
+
 			//logarithm
 			ASO3 logarithm(void) const;
-			
+
 			//quaternion
 			Quat& quaternion(void);
 			const Quat& quaternion(void) const;
-			
+
 			//operators
 			operator Mat3(void) const;
 			Vec3 operator*(const Vec3&) const;

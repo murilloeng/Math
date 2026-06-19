@@ -47,7 +47,7 @@ namespace math
 		Vec3& normalize(void);
 		Vec3& project(const Vec3&);
 		const Vec3& triad(Vec3&, Vec3&, double = 0) const;
-		
+
 		Mat3 spin(void) const;
 		Quat quaternion(void) const;
 		Mat3 projection(void) const;

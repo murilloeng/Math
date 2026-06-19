@@ -14,13 +14,13 @@ namespace math
 		{
 			return;
 		}
-	
+
 		//destructor
 		Bisection::~Bisection(void)
 		{
 			return;
 		}
-		
+
 		//solve
 		bool Bisection::solve(void** args)
 		{

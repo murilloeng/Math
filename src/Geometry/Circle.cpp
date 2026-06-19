@@ -32,7 +32,7 @@ namespace math
 			//radius
 			m_radius = (x1 - m_center).norm();
 		}
-		
+
 		//destructor
 		Circle::~Circle(void)
 		{

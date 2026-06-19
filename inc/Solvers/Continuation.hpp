@@ -28,18 +28,18 @@ namespace math
 				ArcLengthCylindrical	= 1 << 4,
 				Last
 			};
-	
+
 			//constructor
 			Continuation(void);
 			Continuation(Type);
-	
+
 			//destructor
 			~Continuation(void);
-	
+
 			//continuation
 			double predictor(void) const;
 			double corrector(void) const;
-	
+
 			//types
 			double predictor_minimal_norm(void) const;
 			double corrector_minimal_norm(void) const;
@@ -51,7 +51,7 @@ namespace math
 			double corrector_arc_length_spherical(void) const;
 			double predictor_arc_length_cylindrical(void) const;
 			double corrector_arc_length_cylindrical(void) const;
-	
+
 			//data
 			Type m_type;
 			Solver* m_solver;

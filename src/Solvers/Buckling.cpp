@@ -15,7 +15,7 @@ namespace math
 		{
 			return;
 		}
-		
+
 		//destructor
 		Buckling::~Buckling(void)
 		{

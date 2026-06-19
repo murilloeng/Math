@@ -17,7 +17,7 @@ namespace math
 			m_iteration_max = 100;
 			m_convergence.m_type = Convergence::Type::Fixed;
 		}
-		
+
 		//destructor
 		GradientDescent::~GradientDescent(void)
 		{

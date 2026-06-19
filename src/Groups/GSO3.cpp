@@ -19,7 +19,7 @@ namespace math
 		{
 			return;
 		}
-		
+
 		//destructor
 		GSO3::~GSO3(void)
 		{
