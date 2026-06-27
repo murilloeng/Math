@@ -266,24 +266,23 @@ void tests::eigen::symmetric_gen_partial(void)
 void tests::eigen::singular_value_decomposition(void)
 {
 	//data
-	math::SVD svd;
 	srand(time(nullptr));
 	const uint32_t order_max = 100;
-	double A[order_max * order_max];
 	//test
-	svd.data(A);
+	double s[order_max];
+	double A[order_max * order_max];
+	double U[order_max * order_max];
+	double V[order_max * order_max];
 	for(uint32_t i = 1; i <= order_max; i++)
 	{
-		svd.rows(i);
-		svd.cols(i);
 		setup_random_matrix(A, i);
-		bool test = svd.compute();
+		bool test = math::SVD(A, i, i, s, U, V).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
-			const double s = svd.singular_value(j);
-			const double* u = svd.singular_modes(0, j);
-			const double* v = svd.singular_modes(1, j);
-			test = test && fabs(math::Matrix(A, i, i).bilinear(u, v) - s) < 1e-5;
+			const double sj = s[j];
+			const double* u = U + i * j;
+			const double* v = V + i * j;
+			test = test && fabs(math::Matrix(A, i, i).bilinear(u, v) - sj) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
 		printf("Test singular value decomposition %3d: ok!\n", i);

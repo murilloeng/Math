@@ -14,9 +14,13 @@ extern "C"
 namespace math
 {
 	//constructor
-	SVD::SVD(void) : 
-		m_modes{true}, m_rows{0}, m_cols{0}, m_data{nullptr}, 
-		m_singular_values{nullptr}, m_singular_modes{nullptr, nullptr}
+	SVD::SVD(const double* A, uint32_t rows, uint32_t cols) : 
+		m_own{true}, m_modes{true}, m_rows{rows}, m_cols{cols}, m_A{A}, m_s{nullptr}, m_U{nullptr}, m_V{nullptr}
+	{
+		return;
+	}
+	SVD::SVD(const double* A, uint32_t rows, uint32_t cols, double* s, double* U, double* V) : 
+		m_own{false}, m_modes{true}, m_rows{rows}, m_cols{cols}, m_A{A}, m_s{s}, m_U{U}, m_V{V}
 	{
 		return;
 	}
@@ -24,9 +28,12 @@ namespace math
 	//destructor
 	SVD::~SVD(void)
 	{
-		delete[] m_singular_values;
-		delete[] m_singular_modes[0];
-		delete[] m_singular_modes[1];
+		if(m_own)
+		{
+			delete[] m_s;
+			delete[] m_U;
+			delete[] m_V;
+		}
 	}
 
 	//data
@@ -43,27 +50,21 @@ namespace math
 	{
 		return m_rows;
 	}
-	uint32_t SVD::rows(uint32_t rows)
-	{
-		return m_rows = rows;
-	}
-
 	uint32_t SVD::cols(void) const
 	{
 		return m_cols;
 	}
-	uint32_t SVD::cols(uint32_t cols)
-	{
-		return m_cols = cols;
-	}
-
 	const double* SVD::data(void) const
 	{
-		return m_data;
+		return m_A;
 	}
-	const double* SVD::data(const double* data)
+	const double* SVD::singular_values(void) const
 	{
-		return m_data = data;
+		return m_s;
+	}
+	const double* SVD::singular_vectors(uint32_t index) const
+	{
+		return index == 0 ? m_U : m_V;
 	}
 
 	//compute
@@ -76,24 +77,21 @@ namespace math
 		const char jobu = m_modes ? 'A' : 'N';
 		const char jobv = m_modes ? 'A' : 'N';
 		double* A = new double[m_rows * m_cols];
-		memcpy(A, m_data, m_rows * m_cols * sizeof(double));
+		memcpy(A, m_A, m_rows * m_cols * sizeof(double));
 		//query
 		cleanup();
 		allocate();
-		double* s = m_singular_values;
-		double* U = m_singular_modes[0];
-		double* V = m_singular_modes[1];
-		dgesvd_(&jobu, &jobv, &m_rows, &m_cols, A, &m_rows, s, U, &m_rows, V, &m_cols, &query, &lwork, &info);
+		dgesvd_(&jobu, &jobv, &m_rows, &m_cols, A, &m_rows, m_s, m_U, &m_rows, m_V, &m_cols, &query, &lwork, &info);
 		//compute
 		lwork = int32_t(query);
 		double* work = new double[lwork];
-		dgesvd_(&jobu, &jobv, &m_rows, &m_cols, A, &m_rows, s, U, &m_rows, V, &m_cols, work, &lwork, &info);
+		dgesvd_(&jobu, &jobv, &m_rows, &m_cols, A, &m_rows, m_s, m_U, &m_rows, m_V, &m_cols, work, &lwork, &info);
 		//transpose
 		for(uint32_t i = 0; i < m_cols; i++)
 		{
 			for(uint32_t j = i + 1; j < m_cols; j++)
 			{
-				swap(V[i + m_cols * j], V[j + m_cols * i]);
+				swap(m_V[i + m_cols * j], m_V[j + m_cols * i]);
 			}
 		}
 		//delete
@@ -103,40 +101,23 @@ namespace math
 		return info == 0;
 	}
 
-	//singular values
-	const double* SVD::singular_values(void) const
-	{
-		return m_singular_values;
-	}
-	double SVD::singular_value(uint32_t index) const
-	{
-		return m_singular_values[index];
-	}
-
-	//singular modes
-	const double* SVD::singular_modes(uint32_t type) const
-	{
-		return m_singular_modes[type];
-	}
-	const double* SVD::singular_modes(uint32_t type, uint32_t index) const
-	{
-		return m_singular_modes[type] + index * (type == 0 ? m_rows : m_cols);
-	}
-
 	//setup
 	void SVD::cleanup(void)
 	{
-		delete[] m_singular_values;
-		delete[] m_singular_modes[0];
-		delete[] m_singular_modes[1];
+		if(m_own)
+		{
+			delete[] m_s;
+			delete[] m_U;
+			delete[] m_V;
+		}
 	}
 	void SVD::allocate(void)
 	{
-		//data
-		const uint32_t n = std::min(m_rows, m_cols);
-		//allocate
-		m_singular_values = new double[n];
-		m_singular_modes[0] = new double[m_rows * m_rows];
-		m_singular_modes[1] = new double[m_cols * m_cols];
+		if(m_own)
+		{
+			m_U = new double[m_rows * m_rows];
+			m_V = new double[m_cols * m_cols];
+			m_s = new double[std::min(m_rows, m_cols)];
+		}
 	}
 }

@@ -17,10 +17,7 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::newmark::single_dof();
-		tests::solvers::newmark::single_pendulum();
-		tests::solvers::newmark::double_pendulum();
-		tests::solvers::newmark::duffing_oscillator();
+		tests::eigen::singular_value_decomposition();
 	}
 	catch(const std::exception& exception)
 	{
