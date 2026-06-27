@@ -1,7 +1,7 @@
 //std
 #include <cmath>
 #include <ctime>
-#include <cstdio>
+#include <cstring>
 #include <cstdint>
 #include <stdexcept>
 
@@ -271,18 +271,20 @@ void tests::eigen::singular_value_decomposition(void)
 	//test
 	double s[order_max];
 	double A[order_max * order_max];
+	double B[order_max * order_max];
 	double U[order_max * order_max];
 	double V[order_max * order_max];
 	for(uint32_t i = 1; i <= order_max; i++)
 	{
 		setup_random_matrix(A, i);
+		memcpy(B, A, i * i * sizeof(double));
 		bool test = math::SVD(A, i, i, s, U, V).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double sj = s[j];
 			const double* u = U + i * j;
 			const double* v = V + i * j;
-			test = test && fabs(math::Matrix(A, i, i).bilinear(u, v) - sj) < 1e-5;
+			test = test && fabs(math::Matrix(B, i, i).bilinear(u, v) - sj) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
 		printf("Test singular value decomposition %3d: ok!\n", i);

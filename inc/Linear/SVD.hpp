@@ -9,8 +9,8 @@ namespace math
 	{
 	public:
 		//constructor
-		SVD(const double*, uint32_t, uint32_t);
-		SVD(const double*, uint32_t, uint32_t, double*, double*, double*);
+		SVD(double*, uint32_t, uint32_t);
+		SVD(double*, uint32_t, uint32_t, double*, double*, double*);
 
 		//destructor
 		~SVD(void);
@@ -38,8 +38,7 @@ namespace math
 		bool m_modes;
 		uint32_t m_rows;
 		uint32_t m_cols;
-		const double* m_A;
-		double *m_s, *m_U, *m_V;
+		double *m_A, *m_s, *m_U, *m_V;
 
 	};
 }
