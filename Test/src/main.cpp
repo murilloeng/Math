@@ -17,9 +17,12 @@ int main(void)
 {
 	try
 	{
+		tests::eigen::non_symmetric_std();
+		tests::eigen::non_symmetric_gen();
 		tests::eigen::symmetric_std_full();
 		tests::eigen::symmetric_gen_full();
 		tests::eigen::symmetric_std_partial();
+		tests::eigen::symmetric_gen_partial();
 		tests::eigen::singular_value_decomposition();
 	}
 	catch(const std::exception& exception)

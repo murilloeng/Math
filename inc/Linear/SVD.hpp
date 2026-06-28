@@ -9,7 +9,6 @@ namespace math
 	{
 	public:
 		//constructor
-		SVD(double*, uint32_t, uint32_t);
 		SVD(double*, uint32_t, uint32_t, double*, double*, double*);
 
 		//destructor
@@ -29,12 +28,7 @@ namespace math
 		bool compute(void);
 
 	private:
-		//setup
-		void cleanup(void);
-		void allocate(void);
-
 		//data
-		bool m_own;
 		bool m_modes;
 		uint32_t m_rows;
 		uint32_t m_cols;

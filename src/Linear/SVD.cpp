@@ -14,13 +14,8 @@ extern "C"
 namespace math
 {
 	//constructor
-	SVD::SVD(double* A, uint32_t rows, uint32_t cols) : 
-		m_own{true}, m_modes{true}, m_rows{rows}, m_cols{cols}, m_A{A}, m_s{nullptr}, m_U{nullptr}, m_V{nullptr}
-	{
-		return;
-	}
 	SVD::SVD(double* A, uint32_t rows, uint32_t cols, double* s, double* U, double* V) : 
-		m_own{false}, m_modes{true}, m_rows{rows}, m_cols{cols}, m_A{A}, m_s{s}, m_U{U}, m_V{V}
+		m_modes{U && V}, m_rows{rows}, m_cols{cols}, m_A{A}, m_s{s}, m_U{U}, m_V{V}
 	{
 		return;
 	}
@@ -28,12 +23,7 @@ namespace math
 	//destructor
 	SVD::~SVD(void)
 	{
-		if(m_own)
-		{
-			delete[] m_s;
-			delete[] m_U;
-			delete[] m_V;
-		}
+		return;
 	}
 
 	//data
@@ -77,8 +67,6 @@ namespace math
 		const char jobu = m_modes ? 'A' : 'N';
 		const char jobv = m_modes ? 'A' : 'N';
 		//query
-		cleanup();
-		allocate();
 		dgesvd_(&jobu, &jobv, &m_rows, &m_cols, m_A, &m_rows, m_s, m_U, &m_rows, m_V, &m_cols, &query, &lwork, &info);
 		//compute
 		lwork = int32_t(query);
@@ -96,25 +84,5 @@ namespace math
 		delete[] work;
 		//return
 		return info == 0;
-	}
-
-	//setup
-	void SVD::cleanup(void)
-	{
-		if(m_own)
-		{
-			delete[] m_s;
-			delete[] m_U;
-			delete[] m_V;
-		}
-	}
-	void SVD::allocate(void)
-	{
-		if(m_own)
-		{
-			m_U = new double[m_rows * m_rows];
-			m_V = new double[m_cols * m_cols];
-			m_s = new double[std::min(m_rows, m_cols)];
-		}
 	}
 }
