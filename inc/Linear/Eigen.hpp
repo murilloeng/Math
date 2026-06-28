@@ -9,50 +9,33 @@ namespace math
 	{
 	public:
 		//constructor
-		Eigen(void);
+		Eigen(double*, uint32_t, double*, double*);
+		Eigen(double*, uint32_t, double*, double*, double*, double*);
+		Eigen(double*, uint32_t, double*, double*, uint32_t, uint32_t);
+
+		Eigen(double*, double*, uint32_t, double*, double*);
+		Eigen(double*, double*, uint32_t, double*, double*, double*, double*);
+		Eigen(double*, double*, uint32_t, double*, double*, uint32_t, uint32_t);
 
 		//destructor
 		~Eigen(void);
 
-		//enums
-		enum class Type : uint32_t
-		{
-			Full, Index, Value
-		};
-
 		//data
-		Type type(Type);
-		Type type(void) const;
+		bool full(void) const;
 
-		bool symmetric(bool);
+		bool modes(void) const;
+
 		bool symmetric(void) const;
 
-		uint32_t order(uint32_t);
 		uint32_t order(void) const;
 
-		double value_min(double);
-		double value_min(void) const;
+		double* data(uint32_t) const;
 
-		double value_max(double);
-		double value_max(void) const;
-
-		uint32_t index_min(uint32_t);
 		uint32_t index_min(void) const;
-
-		uint32_t index_max(uint32_t);
 		uint32_t index_max(void) const;
-
-		const double* data(uint32_t) const;
-		const double* data(uint32_t, const double*);
-
-		bool eigenvectors_computation(uint32_t, bool);
-		bool eigenvectors_computation(uint32_t) const;
 
 		//compute
 		bool compute(void);
-
-		//modes
-		uint32_t modes(void) const;
 
 		//eigenvalues
 		const double* eigenvalues(uint32_t) const;
@@ -63,10 +46,6 @@ namespace math
 		const double* eigenvector(uint32_t, uint32_t) const;
 
 	private:
-		//setup
-		void cleanup(void);
-		void allocate(void);
-
 		//compute
 		bool compute_non_symmetric_std(void);
 		bool compute_non_symmetric_gen(void);
@@ -76,18 +55,11 @@ namespace math
 		bool compute_symmetric_gen_partial(void);
 
 		//data
-		Type m_type;
+		bool m_full;
 		bool m_symmetric;
 		uint32_t m_order;
-		uint32_t m_modes;
-		double m_value_min;
-		double m_value_max;
 		uint32_t m_index_min;
 		uint32_t m_index_max;
-		const double* m_data[2];
-		double* m_eigenvalues[2];
-		double* m_eigenvectors[2];
-		bool m_eigenvectors_computation[2];
-
+		double *m_A, *m_B, *m_sr, *m_si, *m_U, *m_V;
 	};
 }
