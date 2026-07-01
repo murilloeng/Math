@@ -35,7 +35,6 @@ namespace math
 		double inner(const Vector&) const;
 		double inner(const double*) const;
 
-
 		//operators
 		Vector operator+(void) const;
 		Vector operator-(void) const;

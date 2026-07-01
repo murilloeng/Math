@@ -44,6 +44,7 @@ namespace math
 		Vec3& operator*=(const Mat3&);
 
 		//linear
+		Vec3 unit(void) const;
 		Vec3& normalize(void);
 		Vec3& project(const Vec3&);
 		const Vec3& triad(Vec3&, Vec3&, double = 0) const;

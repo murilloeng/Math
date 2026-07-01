@@ -117,6 +117,10 @@ namespace math
 	}
 
 	//linear
+	Vec3 Vec3::unit(void) const
+	{
+		return *this / norm();
+	}
 	Vec3& Vec3::normalize(void)
 	{
 		return *this /= norm();

@@ -205,7 +205,6 @@ namespace math
 			if(ts & uint32_t(Tangent::M)) m_M = new double[m_size * m_size];
 		}
 
-
 		//solve
 		bool Solver::solve(const double* K, const double* f, double* x) const
 		{
