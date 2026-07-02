@@ -33,15 +33,15 @@ namespace math
 		//data
 		uint32_t NewtonRaphson::state_set(void) const
 		{
-			return uint32_t(State::x) | uint32_t(State::p);
+			return 1 << uint32_t(State::x) | 1 << uint32_t(State::p);
 		}
 		uint32_t NewtonRaphson::force_set(void) const
 		{
-			return uint32_t(Force::r) | uint32_t(Force::fe);
+			return 1 << uint32_t(Force::r) | 1 << uint32_t(Force::fe);
 		}
 		uint32_t NewtonRaphson::tangent_set(void) const
 		{
-			return uint32_t(Tangent::K);
+			return 1 << uint32_t(Tangent::K);
 		}
 
 		//solve
@@ -83,7 +83,7 @@ namespace math
 		void NewtonRaphson::predictor(void)
 		{
 			//predictor
-			if(!solve(m_K, m_r, m_dxr) || !solve(m_K, m_fe, m_dxt))
+			if(!Solver::solve(m_K, m_r, m_dxr) || !Solver::solve(m_K, m_fe, m_dxt))
 			{
 				if(!m_silent) printf("Unable to decompose stiffness Matrix in predictor!\n");
 			}
@@ -97,7 +97,7 @@ namespace math
 		void NewtonRaphson::corrector(void)
 		{
 			//corrector
-			if(!solve(m_K, m_r, m_ddxr) || !solve(m_K, m_fe, m_ddxt))
+			if(!Solver::solve(m_K, m_r, m_ddxr) || !Solver::solve(m_K, m_fe, m_ddxt))
 			{
 				if(!m_silent) printf("Unable to decompose stiffness Matrix in corrector!\n");
 			}

@@ -22,12 +22,12 @@ void tests::solvers::runge_kutta::duffing_oscillator(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.step_max(1000);
-	solver.m_t_max = 2 * M_PI * np / sqrt(k / m);
+	solver.m_step_max = 1000;
+	solver.m_t_max =2 * M_PI * np / sqrt(k / m);
 	//initials
 	solver.allocate();
-	solver.m_x_new[0] = x0;
-	solver.m_v_new[0] = v0;
+	solver.m_x_old[0] = x0;
+	solver.m_v_old[0] = v0;
 	//forces
 	solver.m_internal_force = [k, c, knl](double* fi, const double* x, const double* v){
 		fi[0] = k * x[0] + c * v[0] + knl * x[0] * x[0] * x[0];

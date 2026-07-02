@@ -22,12 +22,12 @@ void tests::solvers::runge_kutta::single_dof(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.step_max(2000);
+	solver.m_step_max = 2000;
 	solver.m_t_max = 2 * M_PI * n / w0;
 	//initials
 	solver.allocate();
-	solver.m_x_new[0] = x0;
-	solver.m_v_new[0] = v0;
+	solver.m_x_old[0] = x0;
+	solver.m_v_old[0] = v0;
 	//system
 	solver.m_inertia = [m](double* M, const double*){
 		M[0] = m;

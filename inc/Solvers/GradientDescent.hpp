@@ -23,6 +23,7 @@ namespace math
 
 			//solve
 			void check(void) override;
+			void solve(void) override;
 			void compute(void) override;
 			void predictor(void) override;
 			void corrector(void) override;

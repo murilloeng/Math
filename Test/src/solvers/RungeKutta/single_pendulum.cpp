@@ -17,12 +17,12 @@ void tests::solvers::runge_kutta::single_pendulum(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.step_max(1000);
-	solver.m_t_max = 1.00e+01;
+	solver.m_step_max = 1000;
+	solver.m_t_max =1.00e+01;
 	//initials
 	solver.allocate();
-	solver.m_x_new[0] = x0;
-	solver.m_v_new[0] = v0;
+	solver.m_x_old[0] = x0;
+	solver.m_v_old[0] = v0;
 	//system
 	solver.m_inertia = [](double* M, const double*){
 		M[0] = 1;

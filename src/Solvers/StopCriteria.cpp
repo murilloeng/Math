@@ -23,56 +23,6 @@ namespace math
 			return;
 		}
 
-		//data
-		uint32_t StopCriteria::types(Type type)
-		{
-			return m_types |= uint32_t(type);
-		}
-		uint32_t StopCriteria::types(void) const
-		{
-			return m_types;
-		}
-		uint32_t StopCriteria::types(uint32_t types)
-		{
-			return m_types = types;
-		}
-
-		double StopCriteria::load_min(void) const
-		{
-			return m_p_min;
-		}
-		double StopCriteria::load_min(double load_min)
-		{
-			return m_p_min = load_min;
-		}
-
-		double StopCriteria::load_max(void) const
-		{
-			return m_p_max;
-		}
-		double StopCriteria::load_max(double load_max)
-		{
-			return m_p_max = load_max;
-		}
-
-		double StopCriteria::state_min(void) const
-		{
-			return m_x_min;
-		}
-		double StopCriteria::state_min(double state_min)
-		{
-			return m_x_min = state_min;
-		}
-
-		double StopCriteria::state_max(void) const
-		{
-			return m_x_max;
-		}
-		double StopCriteria::state_max(double state_max)
-		{
-			return m_x_max = state_max;
-		}
-
 		//stop
 		bool StopCriteria::stop(void)
 		{
@@ -89,7 +39,7 @@ namespace math
 			};
 			//stop
 			m_stop = Type::Last;
-			for(uint32_t i = 0; 1U << i < uint32_t(Type::Last); i++)
+			for(uint32_t i = 0; i < uint32_t(Type::Last); i++)
 			{
 				if((i < 2 || m_types & 1 << i) && (this->*fun[i])())
 				{

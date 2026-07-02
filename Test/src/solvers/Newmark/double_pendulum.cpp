@@ -16,17 +16,16 @@ void tests::solvers::newmark::double_pendulum(void)
 	const double l2 = 1.00e+00;
 	math::solvers::Newmark solver;
 	math::validation::Validator validator;
-	const double x0[] = {+M_PI_4, -M_PI_4};
-	const double v0[] = {+0.00e+00, +0.00e+00};
 	//setup
-	solver.size(2);
-	solver.step_max(2000);
-	solver.time_max(1.00e+01);
-	solver.convergence().type(math::solvers::Convergence::Type::Fixed);
+	solver.m_size = 2;
+	solver.m_step_max = 2000;
+	solver.m_t_max = 1.00e+01;
+	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
 	//initials
 	solver.allocate();
-	solver.state_new(x0);
-	solver.velocity_new(v0);
+	solver.m_x_old[0] = +M_PI_4;
+	solver.m_x_old[1] = -M_PI_4;
+	solver.m_v_old[0] = solver.m_v_old[1] = 0;
 	//forces
 	solver.m_internal_force = [m2, l1, l2](double* fi, const double* x, const double* v){
 		//data

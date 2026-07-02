@@ -26,24 +26,15 @@ namespace math
 			//destructor
 			~Implicit(void);
 
-			//data
-			Convergence& convergence(void);
-			Continuation& continuation(void);
-
-			uint32_t attempt_max(uint32_t);
-			uint32_t attempt_max(void) const;
-
-			uint32_t iteration_max(uint32_t);
-			uint32_t iteration_max(void) const;
-
-			//analysis
-			virtual bool equilibrium(void);
-
 		protected:
 			//solve
 			void print(void) override;
 			void setup(void) override;
 
+			//compute
+			virtual bool compute_equilibrium(void);
+
+		public:
 			//data
 			bool m_equilibrium;
 			Convergence m_convergence;

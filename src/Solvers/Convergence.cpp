@@ -20,25 +20,6 @@ namespace math
 			return;
 		}
 
-		//data
-		double Convergence::tolerance(void) const
-		{
-			return m_tolerance;
-		}
-		double Convergence::tolerance(double tolerance)
-		{
-			return m_tolerance = tolerance;
-		}
-
-		Convergence::Type Convergence::type(void) const
-		{
-			return m_type;
-		}
-		Convergence::Type Convergence::type(Convergence::Type type)
-		{
-			return m_type = type;
-		}
-
 		//check
 		bool Convergence::check(void) const
 		{

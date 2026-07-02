@@ -42,15 +42,15 @@ namespace math
 		//data
 		uint32_t Newmark::state_set(void) const
 		{
-			return uint32_t(State::x) | uint32_t(State::v) | uint32_t(State::a) | uint32_t(State::t);
+			return 1 << uint32_t(State::x) | 1 << uint32_t(State::v) | 1 << uint32_t(State::a) | 1 << uint32_t(State::t);
 		}
 		uint32_t Newmark::force_set(void) const
 		{
-			return uint32_t(Force::r) | uint32_t(Force::fi) | uint32_t(Force::fe);
+			return 1 << uint32_t(Force::r) | 1 << uint32_t(Force::fi) | 1 << uint32_t(Force::fe);
 		}
 		uint32_t Newmark::tangent_set(void) const
 		{
-			return uint32_t(Tangent::K) | uint32_t(Tangent::C) | uint32_t(Tangent::M);
+			return 1 << uint32_t(Tangent::K) | 1 << uint32_t(Tangent::C) | 1 << uint32_t(Tangent::M);
 		}
 
 		//solve
@@ -80,7 +80,7 @@ namespace math
 				m_r[i] = m_fe[i] - m_fi[i];
 			}
 			//acceleration
-			if(!solve(m_M, m_r, m_a_new))
+			if(!Solver::solve(m_M, m_r, m_a_new))
 			{
 				if(!m_silent) printf("Unable to compute acceleration in setup!\n");
 			}
@@ -122,7 +122,7 @@ namespace math
 				m_K[i] += m_g * m_C[i] / m_b / m_dt + m_M[i] / m_b / m_dt / m_dt;
 			}
 			//solve
-			if(!solve(m_K, m_r, m_ddxr))
+			if(!Solver::solve(m_K, m_r, m_ddxr))
 			{
 				if(!m_silent) printf("Unable to decompose system Matrix in corrector!\n");
 			}

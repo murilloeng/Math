@@ -12,10 +12,10 @@ void tests::solvers::gradient_descent::double_quadratic(void)
 	math::solvers::GradientDescent solver;
 
 	//solver
-	solver.size(2);
-	solver.silent(true);
+	solver.m_size = 2;
+	solver.m_silent = true;
 	solver.m_step_size = 1e-2;
-	solver.iteration_max(10000);
+	solver.m_iteration_max = 10000;
 	solver.m_gradient = [] (double* g, const double* x) {
 		g[0] = 2 * x[0];
 		g[1] = 4 * x[1];
@@ -23,11 +23,12 @@ void tests::solvers::gradient_descent::double_quadratic(void)
 
 	//setup
 	solver.allocate();
-	solver.state_new(x0);
+	solver.m_x_old[0] = x0[0];
+	solver.m_x_old[1] = x0[1];
 
 	//solve
 	solver.solve();
 
 	//print
-	math::Vector(solver.state_new(), 2).print("solution:");
+	math::Vector(solver.m_x_new, 2).print("solution:");
 }

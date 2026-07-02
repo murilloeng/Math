@@ -25,21 +25,15 @@ namespace math
 		//data
 		uint32_t RungeKutta::state_set(void) const
 		{
-			return 
-				(uint32_t) State::x |
-				(uint32_t) State::v |
-				(uint32_t) State::a |
-				(uint32_t) State::t;
+			return 1 << (uint32_t) State::x | 1 << (uint32_t) State::v | 1 << (uint32_t) State::a | 1 << (uint32_t) State::t;
 		}
 		uint32_t RungeKutta::force_set(void) const
 		{
-			return
-				(uint32_t) Force::fi |
-				(uint32_t) Force::fe;
+			return 1 << (uint32_t) Force::fi | 1 << (uint32_t) Force::fe;
 		}
 		uint32_t RungeKutta::tangent_set(void) const
 		{
-			return (uint32_t) Tangent::M;
+			return 1 << (uint32_t) Tangent::M;
 		}
 
 		//solve
@@ -58,7 +52,7 @@ namespace math
 			m_external_force(m_fe, m_x_new, m_v_new, m_t_new);
 			for(uint32_t i = 0; i < m_size; i++) m_fe[i] -= m_fi[i];
 			//compute
-			solve(m_M, m_fe, m_a_new);
+			Solver::solve(m_M, m_fe, m_a_new);
 		}
 		void RungeKutta::predictor(void)
 		{

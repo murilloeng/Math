@@ -24,11 +24,11 @@ namespace math
 		//data
 		uint32_t GradientDescent::state_set(void) const
 		{
-			return uint32_t(State::x);
+			return 1 << uint32_t(State::x);
 		}
 		uint32_t GradientDescent::force_set(void) const
 		{
-			return uint32_t(Force::r);
+			return 1 << uint32_t(Force::r);
 		}
 		uint32_t GradientDescent::tangent_set(void) const
 		{
@@ -42,6 +42,10 @@ namespace math
 			{
 				throw std::runtime_error("gradient descent called with gradient missing!");
 			}
+		}
+		void GradientDescent::solve(void)
+		{
+			return;
 		}
 		void GradientDescent::compute(void)
 		{

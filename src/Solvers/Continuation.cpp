@@ -23,16 +23,6 @@ namespace math
 			return;
 		}
 
-		//data
-		Continuation::Type Continuation::type(Type type)
-		{
-			return m_type = type;
-		}
-		Continuation::Type Continuation::type(void) const
-		{
-			return m_type;
-		}
-
 		//continuation
 		double Continuation::predictor(void) const
 		{
@@ -45,9 +35,9 @@ namespace math
 				&Continuation::predictor_arc_length_cylindrical
 			};
 			//predictor
-			for(uint32_t i = 0; 1U << i < uint32_t(Type::Last); i++)
+			for(uint32_t i = 0; i < uint32_t(Type::Last); i++)
 			{
-				if(uint32_t(m_type) == 1U << i)
+				if(uint32_t(m_type) == i)
 				{
 					return (this->*pfun[i])();
 				}
@@ -65,9 +55,9 @@ namespace math
 				&Continuation::corrector_arc_length_cylindrical
 			};
 			//corrector
-			for(uint32_t i = 0; 1U << i < uint32_t(Type::Last); i++)
+			for(uint32_t i = 0; i < uint32_t(Type::Last); i++)
 			{
-				if(uint32_t(m_type) == 1U << i)
+				if(uint32_t(m_type) == i)
 				{
 					return (this->*cfun[i])();
 				}

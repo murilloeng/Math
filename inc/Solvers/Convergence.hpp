@@ -21,9 +21,7 @@ namespace math
 			//types
 			enum class Type : uint32_t
 			{
-				Fixed = 1 << 0, 
-				Force = 1 << 1,
-				Last
+				Fixed,  Force, Last
 			};
 
 			//constructor
@@ -32,17 +30,9 @@ namespace math
 			//destructor
 			~Convergence(void);
 
-			//data
-			Type type(Type);
-			Type type(void) const;
-
-			double tolerance(double);
-			double tolerance(void) const;
-
 			//check
 			bool check(void) const;
 
-		private:
 			//data
 			Type m_type;
 			Solver* m_solver;

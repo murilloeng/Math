@@ -19,10 +19,10 @@ namespace math
 			m_size{1}, m_watch_dof{0}, 
 			m_K{nullptr}, m_C{nullptr}, m_M{nullptr},
 			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr}, 
-			m_dxr{nullptr}, m_dxt{nullptr}, m_ddxr{nullptr}, m_ddxt{nullptr},
 			m_x_old{nullptr}, m_x_new{nullptr}, m_dx{nullptr},
 			m_v_old{nullptr}, m_v_new{nullptr}, m_dv{nullptr},
 			m_a_old{nullptr}, m_a_new{nullptr}, m_da{nullptr},
+			m_dxr{nullptr}, m_dxt{nullptr}, m_ddxr{nullptr}, m_ddxt{nullptr},
 			m_p_old{0}, m_p_new{0}, m_dp{0}, m_dp0{1.00e-02}, m_ddp{0},
 			m_t_old{0}, m_t_new{0}, m_dt{0}, m_t_min{0.00e+00}, m_t_max{1.00e+00}
 		{
@@ -46,154 +46,6 @@ namespace math
 			}
 		}
 
-		//data
-		bool Solver::silent(void) const
-		{
-			return m_silent;
-		}
-		bool Solver::silent(bool silent)
-		{
-			return m_silent = silent;
-		}
-
-		uint32_t Solver::size(void) const
-		{
-			return m_size;
-		}
-		uint32_t Solver::size(uint32_t size)
-		{
-			return m_size = size;
-		}
-
-		int32_t* Solver::rows_map(void) const
-		{
-			return m_rows_map;
-		}
-		int32_t* Solver::rows_map(int32_t* rows_map)
-		{
-			return m_rows_map = rows_map;
-		}
-
-		int32_t* Solver::cols_map(void) const
-		{
-			return m_cols_map;
-		}
-		int32_t* Solver::cols_map(int32_t* cols_map)
-		{
-			return m_cols_map = cols_map;
-		}
-
-		uint32_t Solver::watch_dof(void) const
-		{
-			return m_watch_dof;
-		}
-		uint32_t Solver::watch_dof(uint32_t watch_dof)
-		{
-			return m_watch_dof = watch_dof;
-		}
-
-		double Solver::time_min(void) const
-		{
-			return m_t_min;
-		}
-		double Solver::time_min(double time_min)
-		{
-			return m_t_min = time_min;
-		}
-
-		double Solver::time_max(void) const
-		{
-			return m_t_max;
-		}
-		double Solver::time_max(double time_max)
-		{
-			return m_t_max = time_max;
-		}
-
-		double Solver::load_increment(void) const
-		{
-			return m_dp0;
-		}
-		double Solver::load_increment(double load_increment)
-		{
-			return m_dp0 = load_increment;
-		}
-
-		double* Solver::state_old(void) const
-		{
-			return m_x_old;
-		}
-		double* Solver::state_old(const double* x_old)
-		{
-			return (double*) memcpy(m_x_old, x_old, m_size * sizeof(double));
-		}
-
-		double* Solver::state_new(void) const
-		{
-			return m_x_new;
-		}
-		double* Solver::state_new(const double* x_new)
-		{
-			return (double*) memcpy(m_x_new, x_new, m_size * sizeof(double));
-		}
-
-		double* Solver::velocity_old(void) const
-		{
-			return m_v_old;
-		}
-		double* Solver::velocity_old(const double* v_old)
-		{
-			return (double*) memcpy(m_v_old, v_old, m_size * sizeof(double));
-		}
-
-		double* Solver::velocity_new(void) const
-		{
-			return m_v_new;
-		}
-		double* Solver::velocity_new(const double* v_new)
-		{
-			return (double*) memcpy(m_v_new, v_new, m_size * sizeof(double));
-		}
-
-		double* Solver::acceleration_old(void) const
-		{
-			return m_a_old;
-		}
-		double* Solver::acceleration_old(const double* a_old)
-		{
-			return (double*) memcpy(m_a_old, a_old, m_size * sizeof(double));
-		}
-
-		double* Solver::acceleration_new(void) const
-		{
-			return m_a_new;
-		}
-		double* Solver::acceleration_new(const double* a_new)
-		{
-			return (double*) memcpy(m_a_new, a_new, m_size * sizeof(double));
-		}
-
-		std::function<void(void)> Solver::callback_step(std::function<void(void)> callback_step)
-		{
-			return m_callback_step = callback_step;
-		}
-		std::function<bool(void)> Solver::callback_stop(std::function<bool(void)> callback_stop)
-		{
-			return m_callback_stop = callback_stop;
-		}
-		std::function<void(void)> Solver::callback_record(std::function<void(void)> callback_record)
-		{
-			return m_callback_record = callback_record;
-		}
-		std::function<void(void)> Solver::callback_update(std::function<void(void)> callback_update)
-		{
-			return m_callback_update = callback_update;
-		}
-		std::function<void(void)> Solver::callback_restore(std::function<void(void)> callback_restore)
-		{
-			return m_callback_restore = callback_restore;
-		}
-
 		//serialization
 		void Solver::save(const char*) const
 		{
@@ -201,41 +53,43 @@ namespace math
 		}
 
 		//solve
-		void Solver::step(void)
-		{
-			// for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
-			// {
-			// 	predictor();
-			// 	for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
-			// 	{
-			// 		apply();
-			// 		compute();
-			// 		if(equilibrium()) break; else corrector();
-			// 	}
-			// 	if(m_equilibrium) break;
-			// 	restore();
-			// }
-			// update();
-			// record();
-		}
-		void Solver::solve(void)
-		{
-			// check();
-			// setup();
-			// print();
-			// record();
-			// compute();
-			// for(m_step = 1; !stop(); m_step++)
-			// {
-			// 	step();
-			// 	print();
-			// 	if(!m_equilibrium)
-			// 	{
-			// 		if(!m_silent) printf("Solver failed in step %d!\n", m_step);
-			// 		break;
-			// 	}
-			// }
-		}
+		// void Solver::step(void)
+		// {
+		// 	for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
+		// 	{
+		// 		predictor();
+		// 		for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
+		// 		{
+		// 			apply();
+		// 			compute();
+		// 			if(equilibrium()) break; else corrector();
+		// 		}
+		// 		if(m_equilibrium) break;
+		// 		restore();
+		// 	}
+		// 	update();
+		// 	record();
+		// }
+		// void Solver::solve(void)
+		// {
+		// 	check();
+		// 	setup();
+		// 	print();
+		// 	record();
+		// 	compute();
+		// 	for(m_step = 1; !stop(); m_step++)
+		// 	{
+		// 		step();
+		// 		print();
+		// 		if(!m_equilibrium)
+		// 		{
+		// 			if(!m_silent) printf("Solver failed in step %d!\n", m_step);
+		// 			break;
+		// 		}
+		// 	}
+		// }
+
+		//data
 		void Solver::cleanup(void)
 		{
 			//data

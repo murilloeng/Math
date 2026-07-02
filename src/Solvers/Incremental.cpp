@@ -32,19 +32,14 @@ namespace math
 			}
 		}
 
-		//data
-		uint32_t Incremental::step_max(void) const
+		//solve
+		void Incremental::step(void)
 		{
-			return m_step_max;
+			return;
 		}
-		uint32_t Incremental::step_max(uint32_t step_max)
+		void Incremental::solve(void)
 		{
-			return m_step_max = step_max;
-		}
-
-		StopCriteria& Incremental::stop_criteria(void)
-		{
-			return m_stop_criteria;
+			return;
 		}
 
 		//serialization
@@ -60,8 +55,8 @@ namespace math
 					if(ss & uint32_t(State::v)) fprintf(file, "%+.6e ", m_v_data[j + m_size * i]);
 					if(ss & uint32_t(State::a)) fprintf(file, "%+.6e ", m_a_data[j + m_size * i]);
 				}
-				if(ss & uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
 				if(ss & uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
+				if(ss & uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
 				fprintf(file, "\n");
 			}
 			fclose(file);

@@ -43,15 +43,15 @@ void tests::solvers::harmonic::linear(void)
 	math::solvers::Harmonic solver;
 	//setup
 	solver.m_dofs = 1;
-	solver.step_max(ns);
 	solver.m_l = 1.00e+00;
 	solver.m_w = 1.00e-01;
+	solver.m_step_max = ns;
 	solver.m_harmonics = 1;
 	solver.m_watch_dof = 1;
 	solver.m_dp0 = (wf - w0) / ns;
 	solver.m_quadrature_order = 20;
 	solver.m_control = math::solvers::Harmonic::Control::Frequency;
-	solver.continuation().type(math::solvers::Continuation::Type::LoadControl);
+	solver.m_continuation.m_type = math::solvers::Continuation::Type::LoadControl;
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;
