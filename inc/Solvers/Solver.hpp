@@ -11,6 +11,15 @@ namespace math
 {
 	namespace solvers
 	{
+		class Convergence;
+		class Continuation;
+	}
+}
+
+namespace math
+{
+	namespace solvers
+	{
 		class Solver
 		{
 		public:
@@ -20,27 +29,91 @@ namespace math
 			//destructor
 			virtual ~Solver(void);
 
+			//enums
+			enum class State : uint32_t
+			{
+				x = 1 << 0,
+				v = 1 << 1,
+				a = 1 << 2,
+				p = 1 << 3,
+				t = 1 << 4
+			};
+			enum class Force : uint32_t
+			{
+				r = 1 << 0,
+				fi = 1 << 1,
+				fe = 1 << 2
+			};
+			enum class Tangent : uint32_t
+			{
+				K = 1 << 0,
+				C = 1 << 1,
+				M = 1 << 2
+			};
+
+			//data
+			bool silent(bool);
+			bool silent(void) const;
+
+			uint32_t size(uint32_t);
+			uint32_t size(void) const;
+			
+			int32_t* rows_map(int32_t*);
+			int32_t* rows_map(void) const;
+			
+			int32_t* cols_map(int32_t*);
+			int32_t* cols_map(void) const;
+			
+			uint32_t watch_dof(uint32_t);
+			uint32_t watch_dof(void) const;
+
+			double time_min(double);
+			double time_min(void) const;
+
+			double time_max(double);
+			double time_max(void) const;
+
+			double load_increment(double);
+			double load_increment(void) const;
+			
+			double* state_old(void) const;
+			double* state_old(const double*);
+			
+			double* state_new(void) const;
+			double* state_new(const double*);
+
+			double* velocity_old(void) const;
+			double* velocity_old(const double*);
+
+			double* velocity_new(void) const;
+			double* velocity_new(const double*);
+
+			double* acceleration_old(void) const;
+			double* acceleration_old(const double*);
+
+			double* acceleration_new(void) const;
+			double* acceleration_new(const double*);
+
+			std::function<void(void)> callback_step(std::function<void(void)>);
+			std::function<bool(void)> callback_stop(std::function<bool(void)>);
+			std::function<void(void)> callback_record(std::function<void(void)>);
+			std::function<void(void)> callback_update(std::function<void(void)>);
+			std::function<void(void)> callback_restore(std::function<void(void)>);
+
 			//serialization
 			virtual void save(const char*) const;
 
-			//data
+			//sets
 			virtual uint32_t state_set(void) const = 0;
 			virtual uint32_t force_set(void) const = 0;
 			virtual uint32_t tangent_set(void) const = 0;
 
-			//enums
-			enum class State : uint32_t
-			{
-				x = 1 << 0, v = 1 << 1, a = 1 << 2, p = 1 << 3, t = 1 << 4
-			};
-			enum class Force : uint32_t
-			{
-				r = 1 << 0, fi = 1 << 1, fe = 1 << 2
-			};
-			enum class Tangent : uint32_t
-			{
-				K = 1 << 0, C = 1 << 1, M = 1 << 2
-			};
+			//solve
+			virtual void step(void);
+			virtual void solve(void);
+			virtual void cleanup(void);
+			virtual void allocate(void);
+			virtual void allocate(uint32_t);
 
 		protected:
 			//solve
@@ -66,25 +139,17 @@ namespace math
 			//solve
 			bool solve(const double*, const double*, double*) const;
 
-		public:
-			//solve
-			virtual void step(void);
-			virtual void solve(void);
-			virtual void cleanup(void);
-			virtual void allocate(void);
-			virtual void allocate(uint32_t);
-
 			//data
 			bool m_silent;
 			int32_t* m_rows_map;
 			int32_t* m_cols_map;
 			uint32_t m_size, m_watch_dof;
 
-			std::function<bool(void)> m_stop;
-			std::function<void(void)> m_record;
-			std::function<void(void)> m_update;
-			std::function<void(void)> m_restore;
-			std::function<void(uint32_t)> m_interface;
+			std::function<void(void)> m_callback_step;
+			std::function<bool(void)> m_callback_stop;
+			std::function<void(void)> m_callback_record;
+			std::function<void(void)> m_callback_update;
+			std::function<void(void)> m_callback_restore;
 
 			double *m_K, *m_C, *m_M;
 			double *m_r, *m_fi, *m_fe;
@@ -95,6 +160,10 @@ namespace math
 			double *m_a_old, *m_a_new, *m_da;
 			double m_p_old, m_p_new, m_dp, m_dp0, m_ddp;
 			double m_t_old, m_t_new, m_dt, m_t_min, m_t_max;
+
+			//friends
+			friend class Convergence;
+			friend class Continuation;
 		};
 	}
 }

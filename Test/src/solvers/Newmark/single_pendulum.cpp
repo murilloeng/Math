@@ -16,14 +16,14 @@ void tests::solvers::newmark::single_pendulum(void)
 	math::solvers::Newmark solver;
 	math::validation::Validator validator;
 	//setup
-	solver.m_size = 1;
+	solver.size(1);
 	solver.step_max(1000);
-	solver.m_t_max = 1.00e+01;
+	solver.time_max(1.00e+01);
 	solver.convergence().type(math::solvers::Convergence::Type::Fixed);
 	//initials
 	solver.allocate();
-	solver.m_x_new[0] = x0;
-	solver.m_v_new[0] = v0;
+	solver.state_new(&x0);
+	solver.velocity_new(&x0);
 	//forces
 	solver.m_internal_force = [g, L](double* fi, const double* x, const double* v){
 		fi[0] = g / L * sin(x[0]);

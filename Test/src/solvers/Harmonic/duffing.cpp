@@ -46,23 +46,23 @@ void tests::solvers::harmonic::duffing(void)
 	//data
 	math::solvers::Harmonic solver;
 	//setup
-	solver.m_l = l;
-	solver.m_dofs = 1;
-	solver.m_w = w_min;
+	solver.dofs(1);
+	solver.load(l);
 	solver.m_dp0 = dp0;
-	solver.m_step_max = ns;
-	solver.m_harmonics = 3;
+	solver.step_max(ns);
+	solver.harmonics(3);
 	solver.m_watch_dof = 1;
-	solver.m_stop_criteria.load_max(w_max);
-	solver.m_control = math::solvers::Harmonic::Control::Frequency;
-	solver.m_stop_criteria.types(math::solvers::StopCriteria::Type::LoadLimitMaximum);
-	solver.m_continuation.type(math::solvers::Continuation::Type::ArcLengthCylindrical);
+	solver.frequency(w_min);
+	solver.stop_criteria().load_max(w_max);
+	solver.control(math::solvers::Harmonic::Control::Frequency);
+	solver.stop_criteria().types(math::solvers::StopCriteria::Type::LoadLimitMaximum);
+	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthCylindrical);
 	//system
-	solver.m_inertia = inertia;
-	solver.m_damping = damping;
-	solver.m_stiffness = stiffness;
-	solver.m_internal_force = internal_force;
-	solver.m_external_force = external_force;
+	solver.inertia(inertia);
+	solver.damping(damping);
+	solver.stiffness(stiffness);
+	solver.internal_force(internal_force);
+	solver.external_force(external_force);
 	//allocate
 	solver.allocate();
 	//solve

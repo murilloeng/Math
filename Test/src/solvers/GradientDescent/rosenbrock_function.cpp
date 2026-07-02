@@ -8,11 +8,12 @@
 void tests::solvers::gradient_descent::rosenbrock_function(void)
 {
 	//data
+	const double x0[] = {-1.2, +1.0};
 	math::solvers::GradientDescent solver;
 
 	//solver
-	solver.m_size = 2;
-	solver.m_silent = false;
+	solver.size(2);
+	solver.silent(false);
 	solver.m_step_size = 1e-3;
 	solver.iteration_max(100000);
 	solver.m_gradient = [] (double* g, const double* x) {
@@ -22,12 +23,11 @@ void tests::solvers::gradient_descent::rosenbrock_function(void)
 
 	//setup
 	solver.allocate();
-	solver.m_x_new[0] = -1.2;
-	solver.m_x_new[1] = +1.0;
+	solver.state_new(x0);
 
 	//solve
 	solver.solve();
 
 	//print
-	math::Vector(solver.m_x_new, solver.m_size).print("solution:");
+	math::Vector(solver.state_new(), 2).print("solution:");
 }

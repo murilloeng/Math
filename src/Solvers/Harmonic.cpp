@@ -58,8 +58,7 @@ namespace math
 			m_xd{nullptr}, m_vd{nullptr}, m_ad{nullptr},
 			m_Kd{nullptr}, m_Cd{nullptr}, m_Md{nullptr},
 			m_rd{nullptr}, m_fid{nullptr}, m_fed{nullptr},
-			m_dofs{0}, m_harmonics{0}, m_quadrature_order{20},
-			m_stability_steps{100}, m_stability{false}, m_stability_data{nullptr}
+			m_dofs{0}, m_harmonics{0}, m_quadrature_order{20}
 		{
 			return;
 		}
@@ -74,7 +73,83 @@ namespace math
 			{
 				delete[] ptr;
 			}
-			delete[] m_stability_data;
+		}
+
+		//data
+		double Harmonic::load(void) const
+		{
+			return m_l;
+		}
+		double Harmonic::load(double load)
+		{
+			return m_l = load;
+		}
+
+		uint32_t Harmonic::dofs(void) const
+		{
+			return m_dofs;
+		}
+		uint32_t Harmonic::dofs(uint32_t dofs)
+		{
+			return m_dofs = dofs;
+		}
+
+		uint32_t Harmonic::harmonics(void) const
+		{
+			return m_harmonics;
+		}
+		uint32_t Harmonic::harmonics(uint32_t harmonics)
+		{
+			return m_harmonics = harmonics;
+		}
+
+		Harmonic::Control Harmonic::control(void) const
+		{
+			return m_control;
+		}
+		Harmonic::Control Harmonic::control(Control control)
+		{
+			return m_control = control;
+		}
+
+		double Harmonic::frequency(void) const
+		{
+			return m_w;
+		}
+		double Harmonic::frequency(double frequency)
+		{
+			return m_w = frequency;
+		}
+
+		Harmonic::Inertia Harmonic::inertia(Inertia inertia)
+		{
+			return m_inertia = inertia;
+		}
+		Harmonic::Damping Harmonic::damping(Damping damping)
+		{
+			return m_damping = damping;
+		}
+		Harmonic::Stiffness Harmonic::stiffness(Stiffness stiffness)
+		{
+			return m_stiffness = stiffness;
+		}
+
+		uint32_t Harmonic::quadrature_order(void) const
+		{
+			return m_quadrature_order;
+		}
+		uint32_t Harmonic::quadrature_order(uint32_t quadrature)
+		{
+			return m_quadrature_order = quadrature;
+		}
+
+		Harmonic::InternalForce Harmonic::internal_force(InternalForce internal_force)
+		{
+			return m_internal_force = internal_force;
+		}
+		Harmonic::ExternalForce Harmonic::external_force(ExternalForce external_force)
+		{
+			return m_external_force = external_force;
 		}
 
 		//tests
@@ -518,9 +593,6 @@ namespace math
 				delete[] *ptr;
 				*ptr = nullptr;
 			}
-			//stability
-			delete[] m_stability_data;
-			m_stability_data = nullptr;
 			//solver
 			NewtonRaphson::cleanup();
 		}
@@ -539,7 +611,6 @@ namespace math
 			m_sq = new double[m_quadrature_order];
 			m_wq = new double[m_quadrature_order];
 			m_size = (1 + 2 * m_harmonics) * m_dofs;
-			if(m_stability) m_stability_data = new bool[m_step_max + 1];
 			//solver
 			NewtonRaphson::allocate();
 			memset(m_x_new, 0, m_size * sizeof(double));

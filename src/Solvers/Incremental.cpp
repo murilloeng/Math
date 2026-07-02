@@ -87,8 +87,8 @@ namespace math
 			if(ss & uint32_t(State::v)) printf("Velocity: %+.6e ", m_v_new[m_watch_dof]);
 			if(ss & uint32_t(State::a)) printf("Acceleration: %+.6e ", m_a_new[m_watch_dof]);
 			printf("\n");
-			//interface
-			if(m_interface) m_interface(m_step);
+			//callback
+			if(m_callback_step) m_callback_step();
 		}
 		void Incremental::setup(void)
 		{
@@ -99,8 +99,9 @@ namespace math
 		{
 			//data
 			const uint32_t ss = state_set();
+			//callback
+			if(m_callback_record) m_callback_record();
 			//record
-			if(m_record) m_record();
 			for(uint32_t i = 0; i < m_size; i++)
 			{
 				if(ss & uint32_t(State::x)) m_x_data[m_step * m_size + i] = m_x_new[i];
