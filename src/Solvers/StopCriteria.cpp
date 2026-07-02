@@ -2,7 +2,7 @@
 #include <cfloat>
 
 //Math
-#include "Math/inc/Solvers/Solver.hpp"
+#include "Math/inc/Solvers/Incremental.hpp"
 #include "Math/inc/Solvers/StopCriteria.hpp"
 
 namespace math
@@ -10,9 +10,9 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		StopCriteria::StopCriteria(void) : 
-			m_stop(Type::Last), m_types(uint32_t(Type::StepMaximum) & uint32_t(Type::TimeMaximum)), 
-			m_p_min(-DBL_MAX), m_p_max(+DBL_MAX), m_x_min(-DBL_MAX), m_x_max(+DBL_MAX)
+		StopCriteria::StopCriteria(Incremental* solver) : 
+			m_stop{Type::Last}, m_types{uint32_t(Type::StepMaximum) & uint32_t(Type::TimeMaximum)}, m_solver{solver}, 
+			m_p_min{-DBL_MAX}, m_p_max{+DBL_MAX}, m_x_min{-DBL_MAX}, m_x_max{+DBL_MAX}
 		{
 			return;
 		}
@@ -21,6 +21,56 @@ namespace math
 		StopCriteria::~StopCriteria(void)
 		{
 			return;
+		}
+
+		//data
+		uint32_t StopCriteria::types(Type type)
+		{
+			return m_types |= uint32_t(type);
+		}
+		uint32_t StopCriteria::types(void) const
+		{
+			return m_types;
+		}
+		uint32_t StopCriteria::types(uint32_t types)
+		{
+			return m_types = types;
+		}
+
+		double StopCriteria::load_min(void) const
+		{
+			return m_p_min;
+		}
+		double StopCriteria::load_min(double load_min)
+		{
+			return m_p_min = load_min;
+		}
+
+		double StopCriteria::load_max(void) const
+		{
+			return m_p_max;
+		}
+		double StopCriteria::load_max(double load_max)
+		{
+			return m_p_max = load_max;
+		}
+
+		double StopCriteria::state_min(void) const
+		{
+			return m_x_min;
+		}
+		double StopCriteria::state_min(double state_min)
+		{
+			return m_x_min = state_min;
+		}
+
+		double StopCriteria::state_max(void) const
+		{
+			return m_x_max;
+		}
+		double StopCriteria::state_max(double state_max)
+		{
+			return m_x_max = state_max;
 		}
 
 		//stop

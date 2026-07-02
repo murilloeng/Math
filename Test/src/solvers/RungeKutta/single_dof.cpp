@@ -22,9 +22,8 @@ void tests::solvers::runge_kutta::single_dof(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.m_step_max = 2000;
+	solver.step_max(2000);
 	solver.m_t_max = 2 * M_PI * n / w0;
-	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
 	//initials
 	solver.allocate();
 	solver.m_x_new[0] = x0;

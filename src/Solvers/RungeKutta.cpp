@@ -72,10 +72,6 @@ namespace math
 			compute_tangent_3();
 			compute_tangent_4();
 		}
-		bool RungeKutta::equilibrium(void)
-		{
-			return m_equilibrium = m_iteration == 1;
-		}
 
 		//compute
 		void RungeKutta::compute_tangent_1(void)

@@ -30,17 +30,21 @@ namespace math
 			};
 
 			//constructor
-			Continuation(void);
-			Continuation(Type);
+			Continuation(Solver*, Type);
 
 			//destructor
 			~Continuation(void);
+
+			//data
+			Type type(Type);
+			Type type(void) const;
 
 			//continuation
 			double predictor(void) const;
 			double corrector(void) const;
 
-			//types
+		private:
+			//continuation
 			double predictor_minimal_norm(void) const;
 			double corrector_minimal_norm(void) const;
 			double predictor_control_load(void) const;

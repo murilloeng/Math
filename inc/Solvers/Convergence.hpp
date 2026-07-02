@@ -27,14 +27,22 @@ namespace math
 			};
 
 			//constructor
-			Convergence(void);
+			Convergence(Solver*);
 
 			//destructor
 			~Convergence(void);
 
+			//data
+			Type type(Type);
+			Type type(void) const;
+
+			double tolerance(double);
+			double tolerance(void) const;
+
 			//check
 			bool check(void) const;
 
+		private:
 			//data
 			Type m_type;
 			Solver* m_solver;

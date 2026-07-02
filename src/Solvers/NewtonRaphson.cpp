@@ -52,6 +52,16 @@ namespace math
 				throw std::runtime_error("Newton-Raphson solver called with at least one method not set!");
 			}
 		}
+		void NewtonRaphson::print(void)
+		{
+			Incremental::print();
+		}
+		void NewtonRaphson::setup(void)
+		{
+			Solver::setup();
+			Implicit::setup();
+			Incremental::setup();
+		}
 		void NewtonRaphson::compute(void)
 		{
 			if(m_system_2)

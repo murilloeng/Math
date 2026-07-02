@@ -1,13 +1,13 @@
 #pragma once
 
 //Math
-#include "Math/inc/Solvers/Solver.hpp"
+#include "Math/inc/Solvers/Incremental.hpp"
 
 namespace math
 {
 	namespace solvers
 	{
-		class RungeKutta : virtual public Solver
+		class RungeKutta : virtual public Incremental
 		{
 		public:
 			//constructors
@@ -27,7 +27,6 @@ namespace math
 			void compute(void) override;
 			void predictor(void) override;
 			void corrector(void) override;
-			bool equilibrium(void) override;
 
 			//compute
 			void compute_tangent_1(void);

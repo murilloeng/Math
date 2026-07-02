@@ -1,13 +1,13 @@
 #pragma once
 
 //Math
-#include "Math/inc/Solvers/Solver.hpp"
+#include "Math/inc/Solvers/Implicit.hpp"
 
 namespace math
 {
 	namespace solvers
 	{
-		class GradientDescent : virtual public Solver
+		class GradientDescent : virtual public Implicit
 		{
 		public:
 			//constructor

@@ -8,8 +8,8 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		Convergence::Convergence(void) : 
-			m_type{Type::Force}, m_solver{nullptr}, m_tolerance{1.00e-5}
+		Convergence::Convergence(Solver* solver) : 
+			m_type{Type::Force}, m_solver{solver}, m_tolerance{1.00e-5}
 		{
 			return;
 		}
@@ -18,6 +18,25 @@ namespace math
 		Convergence::~Convergence(void)
 		{
 			return;
+		}
+
+		//data
+		double Convergence::tolerance(void) const
+		{
+			return m_tolerance;
+		}
+		double Convergence::tolerance(double tolerance)
+		{
+			return m_tolerance = tolerance;
+		}
+
+		Convergence::Type Convergence::type(void) const
+		{
+			return m_type;
+		}
+		Convergence::Type Convergence::type(Convergence::Type type)
+		{
+			return m_type = type;
 		}
 
 		//check

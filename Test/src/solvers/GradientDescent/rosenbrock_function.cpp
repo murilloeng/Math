@@ -14,7 +14,7 @@ void tests::solvers::gradient_descent::rosenbrock_function(void)
 	solver.m_size = 2;
 	solver.m_silent = false;
 	solver.m_step_size = 1e-3;
-	solver.m_iteration_max = 100000;
+	solver.iteration_max(100000);
 	solver.m_gradient = [] (double* g, const double* x) {
 		g[1] = 200 * (x[1] - x[0] * x[0]);
 		g[0] = 2 * (x[0] - 1) + 400 * (x[0] * x[0] - x[1]) * x[0];

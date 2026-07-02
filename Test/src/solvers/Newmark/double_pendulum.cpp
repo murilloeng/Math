@@ -22,9 +22,9 @@ void tests::solvers::newmark::double_pendulum(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 2;
-	solver.m_step_max = 2000;
+	solver.step_max(2000);
 	solver.m_t_max = 1.00e+01;
-	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
+	solver.convergence().type(math::solvers::Convergence::Type::Fixed);
 	//initials
 	solver.allocate();
 	solver.m_x_new[0] = q1;

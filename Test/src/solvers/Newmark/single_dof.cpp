@@ -22,9 +22,9 @@ void tests::solvers::newmark::single_dof(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.m_step_max = 1000;
+	solver.step_max(1000);
 	solver.m_t_max = 2 * M_PI * np / w0;
-	solver.m_convergence.m_type = math::solvers::Convergence::Type::Fixed;
+	solver.convergence().type(math::solvers::Convergence::Type::Fixed);
 	//initials
 	solver.allocate();
 	solver.m_x_new[0] = x0;

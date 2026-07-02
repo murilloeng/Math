@@ -1,11 +1,10 @@
 #pragma once
 
 //std
+#include <cstdint>
 #include <functional>
 
 //Math
-#include "Math/inc/Solvers/Convergence.hpp"
-#include "Math/inc/Solvers/Continuation.hpp"
 #include "Math/inc/Solvers/StopCriteria.hpp"
 
 namespace math
@@ -21,8 +20,10 @@ namespace math
 			//destructor
 			virtual ~Solver(void);
 
-			//data
+			//serialization
 			virtual void save(const char*) const;
+
+			//data
 			virtual uint32_t state_set(void) const = 0;
 			virtual uint32_t force_set(void) const = 0;
 			virtual uint32_t tangent_set(void) const = 0;
@@ -50,7 +51,6 @@ namespace math
 			virtual void record(void);
 			virtual void update(void);
 			virtual void restore(void);
-			virtual bool equilibrium(void);
 
 			//solve
 			virtual void check(void) = 0;
@@ -59,9 +59,9 @@ namespace math
 			virtual void corrector(void) = 0;
 
 			//allocate
-			void allocate_state(void);
-			void allocate_forces(void);
-			void allocate_tangents(void);
+			virtual void allocate_state(void);
+			virtual void allocate_forces(void);
+			virtual void allocate_tangents(void);
 
 			//solve
 			bool solve(const double*, const double*, double*) const;
@@ -76,31 +76,25 @@ namespace math
 
 			//data
 			bool m_silent;
-			bool m_equilibrium;
 			int32_t* m_rows_map;
 			int32_t* m_cols_map;
+			uint32_t m_size, m_watch_dof;
 
-			Convergence m_convergence;
-			Continuation m_continuation;
-			StopCriteria m_stop_criteria;
 			std::function<bool(void)> m_stop;
 			std::function<void(void)> m_record;
 			std::function<void(void)> m_update;
 			std::function<void(void)> m_restore;
 			std::function<void(uint32_t)> m_interface;
 
-			uint32_t m_size, m_watch_dof;
-			uint32_t m_step, m_attempt, m_iteration;
-			uint32_t m_step_max, m_attempt_max, m_iteration_max;
-
 			double *m_K, *m_C, *m_M;
 			double *m_r, *m_fi, *m_fe;
 			double *m_dxr, *m_dxt, *m_ddxr, *m_ddxt;
-			double *m_x_old, *m_x_new, *m_x_data, *m_dx;
-			double *m_v_old, *m_v_new, *m_v_data, *m_dv;
-			double *m_a_old, *m_a_new, *m_a_data, *m_da;
-			double m_t_old, m_t_new, *m_t_data, m_dt, m_t_max;
-			double m_p_old, m_p_new, *m_p_data, m_dp, m_dp0, m_ddp;
+
+			double *m_x_old, *m_x_new, *m_dx;
+			double *m_v_old, *m_v_new, *m_dv;
+			double *m_a_old, *m_a_new, *m_da;
+			double m_p_old, m_p_new, m_dp, m_dp0, m_ddp;
+			double m_t_old, m_t_new, m_dt, m_t_min, m_t_max;
 		};
 	}
 }

@@ -13,17 +13,17 @@ namespace math
 	{
 		//constructor
 		Solver::Solver(void) : 
-			m_silent{false},  m_equilibrium{false},
+			m_silent{false},
 			m_rows_map{nullptr}, m_cols_map{nullptr},
-			m_size{1}, m_watch_dof{0}, m_step{0}, m_attempt{0}, m_iteration{0}, m_step_max{100}, m_attempt_max{5}, m_iteration_max{10},
+			m_size{1}, m_watch_dof{0}, 
 			m_K{nullptr}, m_C{nullptr}, m_M{nullptr},
 			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr}, 
 			m_dxr{nullptr}, m_dxt{nullptr}, m_ddxr{nullptr}, m_ddxt{nullptr},
-			m_x_old{nullptr}, m_x_new{nullptr}, m_x_data{nullptr}, m_dx{nullptr},
-			m_v_old{nullptr}, m_v_new{nullptr}, m_v_data{nullptr}, m_dv{nullptr},
-			m_a_old{nullptr}, m_a_new{nullptr}, m_a_data{nullptr}, m_da{nullptr},
-			m_t_old{0}, m_t_new{0}, m_t_data{nullptr}, m_dt{0}, m_t_max{1.00e+00},
-			m_p_old{0}, m_p_new{0}, m_p_data{nullptr}, m_dp{0}, m_dp0{1.00e-02}, m_ddp{0}
+			m_x_old{nullptr}, m_x_new{nullptr}, m_dx{nullptr},
+			m_v_old{nullptr}, m_v_new{nullptr}, m_dv{nullptr},
+			m_a_old{nullptr}, m_a_new{nullptr}, m_da{nullptr},
+			m_p_old{0}, m_p_new{0}, m_dp{0}, m_dp0{1.00e-02}, m_ddp{0},
+			m_t_old{0}, m_t_new{0}, m_dt{0}, m_t_min{0.00e+00}, m_t_max{1.00e+00}
 		{
 			return;
 		}
@@ -36,10 +36,7 @@ namespace math
 				m_K, m_C, m_M, 
 				m_r, m_fi, m_fe,
 				m_dxr, m_dxt, m_ddxr, m_ddxt,
-				m_x_old, m_x_new, m_x_data, m_dx,
-				m_v_old, m_v_new, m_v_data, m_dv,
-				m_a_old, m_a_new, m_a_data, m_da,
-				m_t_data, m_p_data
+				m_x_old, m_x_new, m_dx, m_v_old, m_v_new, m_dv, m_a_old, m_a_new, m_da
 			};
 			//delete
 			for(const double* ptr : data)
@@ -48,33 +45,16 @@ namespace math
 			}
 		}
 
-		//data
-		void Solver::save(const char* path) const
+		//serialization
+		void Solver::save(const char*) const
 		{
-			//file
-			FILE* file = fopen(path, "w");
-			const uint32_t ss = state_set();
-			//write
-			for(uint32_t i = 0; i < m_step; i++)
-			{
-				for(uint32_t j = 0; j < m_size; j++)
-				{
-					if(ss & uint32_t(State::x)) fprintf(file, "%+.6e ", m_x_data[j + m_size * i]);
-					if(ss & uint32_t(State::v)) fprintf(file, "%+.6e ", m_v_data[j + m_size * i]);
-					if(ss & uint32_t(State::a)) fprintf(file, "%+.6e ", m_a_data[j + m_size * i]);
-				}
-				if(ss & uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
-				if(ss & uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
-				fprintf(file, "\n");
-			}
-			//close
-			fclose(file);
+			return;
 		}
 
 		//solve
 		bool Solver::stop(void)
 		{
-			return m_stop_criteria.stop() || (m_stop && m_stop());
+			return m_stop && m_stop();
 		}
 		void Solver::apply(void)
 		{
@@ -92,51 +72,20 @@ namespace math
 		}
 		void Solver::print(void)
 		{
-			//data
-			const uint32_t ss = state_set();
-			//print
-			if(!m_silent)
-			{
-				printf("Step: %4d ", m_step);
-				printf("Attempts: %2d ", m_attempt);
-				printf("Iterations: %2d ", m_iteration);
-				if(ss & uint32_t(State::t)) printf("Time: %+.6e ", m_t_new);
-				if(ss & uint32_t(State::p)) printf("Load: %+.6e ", m_p_new);
-				if(ss & uint32_t(State::x)) printf("State: %+.6e ", m_x_new[m_watch_dof]);
-				if(ss & uint32_t(State::v)) printf("Velocity: %+.6e ", m_v_new[m_watch_dof]);
-				if(ss & uint32_t(State::a)) printf("Acceleration: %+.6e ", m_a_new[m_watch_dof]);
-				printf("\n");
-			}
-			if(m_interface) m_interface(m_step);
+			return;
 		}
 		void Solver::setup(void)
 		{
-			m_step = 0;
 			m_dp = m_dp0;
 			m_p_old = m_p_new;
-			m_t_old = m_t_new;
-			m_dt = m_t_max / m_step_max;
-			m_convergence.m_solver = this;
-			m_continuation.m_solver = this;
-			m_stop_criteria.m_solver = this;
+			m_t_old = m_t_new = m_t_min;
 			if(state_set() & uint32_t(State::x)) memcpy(m_x_old, m_x_new, m_size * sizeof(double));
 			if(state_set() & uint32_t(State::v)) memcpy(m_v_old, m_v_new, m_size * sizeof(double));
 			if(state_set() & uint32_t(State::a)) memcpy(m_a_old, m_a_new, m_size * sizeof(double));
 		}
 		void Solver::record(void)
 		{
-			//data
-			const uint32_t ss = state_set();
-			//record
-			if(m_record) m_record();
-			for(uint32_t i = 0; i < m_size; i++)
-			{
-				if(ss & uint32_t(State::x)) m_x_data[m_step * m_size + i] = m_x_new[i];
-				if(ss & uint32_t(State::v)) m_v_data[m_step * m_size + i] = m_v_new[i];
-				if(ss & uint32_t(State::a)) m_a_data[m_step * m_size + i] = m_a_new[i];
-			}
-			if(ss & uint32_t(State::t)) m_t_data[m_step] = m_t_new;
-			if(ss & uint32_t(State::p)) m_p_data[m_step] = m_p_new;
+			return;
 		}
 		void Solver::update(void)
 		{
@@ -162,10 +111,6 @@ namespace math
 			if(ss & uint32_t(State::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
 			if(ss & uint32_t(State::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
 		}
-		bool Solver::equilibrium(void)
-		{
-			return m_equilibrium = m_convergence.check();
-		}
 
 		//allocate
 		void Solver::allocate_state(void)
@@ -184,11 +129,6 @@ namespace math
 			if(ss & uint32_t(State::v)) m_v_new = new double[m_size];
 			if(ss & uint32_t(State::a)) m_a_old = new double[m_size];
 			if(ss & uint32_t(State::a)) m_a_new = new double[m_size];
-			if(ss & uint32_t(State::t)) m_t_data = new double[m_step_max + 1];
-			if(ss & uint32_t(State::p)) m_p_data = new double[m_step_max + 1];
-			if(ss & uint32_t(State::x)) m_x_data = new double[m_size * (m_step_max + 1)];
-			if(ss & uint32_t(State::v)) m_v_data = new double[m_size * (m_step_max + 1)];
-			if(ss & uint32_t(State::a)) m_a_data = new double[m_size * (m_step_max + 1)];
 		}
 		void Solver::allocate_forces(void)
 		{
@@ -231,38 +171,38 @@ namespace math
 		//solve
 		void Solver::step(void)
 		{
-			for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
-			{
-				predictor();
-				for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
-				{
-					apply();
-					compute();
-					if(equilibrium()) break; else corrector();
-				}
-				if(m_equilibrium) break;
-				restore();
-			}
-			update();
-			record();
+			// for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
+			// {
+			// 	predictor();
+			// 	for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
+			// 	{
+			// 		apply();
+			// 		compute();
+			// 		if(equilibrium()) break; else corrector();
+			// 	}
+			// 	if(m_equilibrium) break;
+			// 	restore();
+			// }
+			// update();
+			// record();
 		}
 		void Solver::solve(void)
 		{
-			check();
-			setup();
-			print();
-			record();
-			compute();
-			for(m_step = 1; !stop(); m_step++)
-			{
-				step();
-				print();
-				if(!m_equilibrium)
-				{
-					if(!m_silent) printf("Solver failed in step %d!\n", m_step);
-					break;
-				}
-			}
+			// check();
+			// setup();
+			// print();
+			// record();
+			// compute();
+			// for(m_step = 1; !stop(); m_step++)
+			// {
+			// 	step();
+			// 	print();
+			// 	if(!m_equilibrium)
+			// 	{
+			// 		if(!m_silent) printf("Solver failed in step %d!\n", m_step);
+			// 		break;
+			// 	}
+			// }
 		}
 		void Solver::cleanup(void)
 		{
@@ -271,10 +211,7 @@ namespace math
 				&m_K, &m_C, &m_M, 
 				&m_r, &m_fi, &m_fe,
 				&m_dxr, &m_dxt, &m_ddxr, &m_ddxt,
-				&m_x_old, &m_x_new, &m_x_data, &m_dx,
-				&m_v_old, &m_v_new, &m_v_data, &m_dv,
-				&m_a_old, &m_a_new, &m_a_data, &m_da,
-				&m_t_data, &m_p_data
+				&m_x_old, &m_x_new, &m_dx, &m_v_old, &m_v_new, &m_dv, &m_a_old, &m_a_new, &m_da
 			};
 			//cleanup
 			for(double** ptr : data)

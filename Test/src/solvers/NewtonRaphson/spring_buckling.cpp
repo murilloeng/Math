@@ -23,8 +23,8 @@ void tests::solvers::newton_raphson::spring_buckling(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
+	solver.step_max(400);
 	solver.m_dp0 = 1.00e-02;
-	solver.m_step_max = 400;
 	solver.m_residue = [](double* r, double p, const double* x)
 	{
 		r[0] = p - Ks / (Fs * Ls) * x[0] / sin(x[0] + qs);
@@ -37,7 +37,7 @@ void tests::solvers::newton_raphson::spring_buckling(void)
 	{
 		K[0] = Ks / (Fs * Ls) * (1 - x[0] * cos(x[0] + qs) / sin(x[0] + qs)) / sin(x[0] + qs);
 	};
-	solver.m_continuation.m_type = math::solvers::Continuation::Type::ArcLengthSpherical;
+	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthSpherical);
 	//setup
 	solver.allocate();
 	solver.m_p_new = 0;

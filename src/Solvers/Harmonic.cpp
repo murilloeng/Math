@@ -238,26 +238,26 @@ namespace math
 		}
 		void Harmonic::setup(void)
 		{
-			//data
-			m_p_new = m_control == Control::Load ? m_l : m_w;
-			legendre_compute_dr(m_quadrature_order, m_sq, m_wq);
-			//initial
-			m_dp = 0;
-			m_convergence.m_solver = this;
-			for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
-			{
-				//data
-				compute();
-				if(equilibrium()) break;
-				//corrector
-				if(!solve(m_K, m_r, m_dx))
-				{
-					if(!m_silent) printf("Unable to decompose stiffness Matrix in setup!\n");
-				}
-				for(uint32_t i = 0; i < m_size; i++) m_x_new[i] += m_dx[i];
-			}
-			//setup
-			Solver::setup();
+			// //data
+			// m_p_new = m_control == Control::Load ? m_l : m_w;
+			// legendre_compute_dr(m_quadrature_order, m_sq, m_wq);
+			// //initial
+			// m_dp = 0;
+			// m_convergence.m_solver = this;
+			// for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
+			// {
+			// 	//data
+			// 	compute();
+			// 	if(equilibrium()) break;
+			// 	//corrector
+			// 	if(!solve(m_K, m_r, m_dx))
+			// 	{
+			// 		if(!m_silent) printf("Unable to decompose stiffness Matrix in setup!\n");
+			// 	}
+			// 	for(uint32_t i = 0; i < m_size; i++) m_x_new[i] += m_dx[i];
+			// }
+			// //setup
+			// Solver::setup();
 		}
 
 		//state

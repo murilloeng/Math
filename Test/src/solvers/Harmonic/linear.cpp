@@ -51,7 +51,7 @@ void tests::solvers::harmonic::linear(void)
 	solver.m_dp0 = (wf - w0) / ns;
 	solver.m_quadrature_order = 20;
 	solver.m_control = math::solvers::Harmonic::Control::Frequency;
-	solver.m_continuation.m_type = math::solvers::Continuation::Type::LoadControl;
+	solver.m_continuation.type(math::solvers::Continuation::Type::LoadControl);
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;

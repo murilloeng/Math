@@ -61,10 +61,16 @@ namespace math
 				throw std::runtime_error("Newmark solver called with at least one method not set!");
 			}
 		}
+		void Newmark::print(void)
+		{
+			Incremental::print();
+		}
 		void Newmark::setup(void)
 		{
 			//setup
 			Solver::setup();
+			Implicit::setup();
+			Incremental::setup();
 			m_inertia(m_M, m_x_new);
 			m_internal_force(m_fi, m_x_new, m_v_new);
 			m_external_force(m_fe, m_x_new, m_v_new, m_t_new);

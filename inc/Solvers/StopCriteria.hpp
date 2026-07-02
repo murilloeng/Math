@@ -7,7 +7,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class Solver;
+		class Incremental;
 	}
 }
 
@@ -39,10 +39,27 @@ namespace math
 			};
 
 			//constructor
-			StopCriteria(void);
+			StopCriteria(Incremental*);
 
 			//destructor
 			~StopCriteria(void);
+
+			//data
+			uint32_t types(Type);
+			uint32_t types(uint32_t);
+			uint32_t types(void) const;
+
+			double load_min(double);
+			double load_min(void) const;
+
+			double load_max(double);
+			double load_max(void) const;
+
+			double state_min(double);
+			double state_min(void) const;
+
+			double state_max(double);
+			double state_max(void) const;
 
 			//stop
 			bool stop(void);
@@ -64,11 +81,10 @@ namespace math
 			bool stop_state_value_negative(void) const;
 			bool stop_state_value_positive(void) const;
 
-		public:
 			//data
 			Type m_stop;
 			uint32_t m_types;
-			Solver* m_solver;
+			Incremental* m_solver;
 			double m_p_min, m_p_max;
 			double m_x_min, m_x_max;
 		};

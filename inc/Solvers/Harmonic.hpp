@@ -32,17 +32,17 @@ namespace math
 			using Solver::save, Solver::solve;
 			using Solver::state_set, Solver::force_set, Solver::tangent_set;
 
-			using Solver::m_silent, Solver::m_equilibrium;
-			using Solver::m_convergence, Solver::m_continuation, Solver::m_stop_criteria;
+			using Solver::m_silent, Implicit::m_equilibrium;
+			using Implicit::m_convergence, Implicit::m_continuation, Incremental::m_stop_criteria;
 			using Solver::m_stop, Solver::m_record, Solver::m_update, Solver::m_restore, Solver::m_interface;
 
 			using Solver::m_watch_dof;
-			using Solver::m_step, Solver::m_attempt, Solver::m_iteration;
-			using Solver::m_step_max, Solver::m_attempt_max, Solver::m_iteration_max;
+			using Incremental::m_step, Implicit::m_attempt, Implicit::m_iteration;
+			using Incremental::m_step_max, Implicit::m_attempt_max, Implicit::m_iteration_max;
 
 			using Solver::m_r, Solver::m_fe, Solver::m_K;
-			using Solver::m_x_old, Solver::m_x_new, Solver::m_x_data, Solver::m_dx;
-			using Solver::m_p_old, Solver::m_p_new, Solver::m_p_data, Solver::m_dp, Solver::m_dp0, Solver::m_ddp;
+			using Solver::m_x_old, Solver::m_x_new, Incremental::m_x_data, Solver::m_dx;
+			using Solver::m_p_old, Solver::m_p_new, Incremental::m_p_data, Solver::m_dp, Solver::m_dp0, Solver::m_ddp;
 
 		private:
 			//solve
