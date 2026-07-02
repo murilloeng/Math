@@ -51,12 +51,12 @@ namespace math
 			{
 				for(uint32_t j = 0; j < m_size; j++)
 				{
-					if(ss & uint32_t(State::x)) fprintf(file, "%+.6e ", m_x_data[j + m_size * i]);
-					if(ss & uint32_t(State::v)) fprintf(file, "%+.6e ", m_v_data[j + m_size * i]);
-					if(ss & uint32_t(State::a)) fprintf(file, "%+.6e ", m_a_data[j + m_size * i]);
+					if(ss & 1 << uint32_t(State::x)) fprintf(file, "%+.6e ", m_x_data[j + m_size * i]);
+					if(ss & 1 << uint32_t(State::v)) fprintf(file, "%+.6e ", m_v_data[j + m_size * i]);
+					if(ss & 1 << uint32_t(State::a)) fprintf(file, "%+.6e ", m_a_data[j + m_size * i]);
 				}
-				if(ss & uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
-				if(ss & uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
+				if(ss & 1 << uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
+				if(ss & 1 << uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
 				fprintf(file, "\n");
 			}
 			fclose(file);

@@ -7,7 +7,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class Harmonic : virtual private NewtonRaphson
+		class Harmonic : virtual public NewtonRaphson
 		{
 		public:
 			//constructors
@@ -30,22 +30,6 @@ namespace math
 			void test_inertia(void) const;
 			void test_damping(void) const;
 			void test_stiffness(void) const;
-
-			//data
-			using Solver::save;
-			using Solver::state_set, Solver::force_set, Solver::tangent_set;
-
-			using Solver::m_silent, Implicit::m_equilibrium;
-			using Implicit::m_convergence, Implicit::m_continuation, Incremental::m_stop_criteria;
-			using Solver::m_callback_step, Solver::m_callback_stop, Solver::m_callback_record, Solver::m_callback_update, Solver::m_callback_restore;
-
-			using Solver::m_watch_dof;
-			using Incremental::m_step, Incremental::m_step_max;
-			using Implicit::m_attempt_max, Implicit::m_iteration_max;
-
-			using Solver::m_r, Solver::m_fe, Solver::m_K;
-			using Solver::m_x_old, Solver::m_x_new, Incremental::m_x_data, Solver::m_dx;
-			using Solver::m_p_old, Solver::m_p_new, Incremental::m_p_data, Solver::m_dp, Solver::m_dp0, Solver::m_ddp;
 
 		private:
 			//solve
@@ -70,6 +54,13 @@ namespace math
 			void compute_harmonic_tangent_l(double*, const double*);
 			void compute_harmonic_tangent_w(double*, const double*);
 			void compute_harmonic_tangent_z(double*, const double*);
+
+			//derived
+			using Solver::m_size;
+			using Solver::allocate;
+			using NewtonRaphson::m_residue;
+			using NewtonRaphson::m_system_1, NewtonRaphson::m_system_2;
+			using NewtonRaphson::m_tangent_1, NewtonRaphson::m_tangent_2;
 
 		public:
 			//solve
