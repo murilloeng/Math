@@ -248,7 +248,7 @@ namespace math
 				if(equilibrium()) break;
 				if(!Solver::solve(m_K, m_r, m_dx))
 				{
-					if(!m_silent) printf("Unable to decompose stiffness Matrix in setup!\n");
+					if(!m_silent) printf("Error: Harmonic solver setup failed!");
 				}
 				for(uint32_t i = 0; i < m_size; i++) m_x_new[i] += m_dx[i];
 			}
