@@ -17,7 +17,7 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::gradient_descent::himmelblau_function();
+		tests::solvers::harmonic::linear();
 	}
 	catch(const std::exception& exception)
 	{

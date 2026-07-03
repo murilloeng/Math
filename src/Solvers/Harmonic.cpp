@@ -236,26 +236,28 @@ namespace math
 		}
 		void Harmonic::setup(void)
 		{
-			// //data
-			// m_p_new = m_control == Control::Load ? m_l : m_w;
-			// legendre_compute_dr(m_quadrature_order, m_sq, m_wq);
-			// //initial
-			// m_dp = 0;
-			// m_convergence.m_solver = this;
-			// for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
-			// {
-			// 	//data
-			// 	compute();
-			// 	if(equilibrium()) break;
-			// 	//corrector
-			// 	if(!solve(m_K, m_r, m_dx))
-			// 	{
-			// 		if(!m_silent) printf("Unable to decompose stiffness Matrix in setup!\n");
-			// 	}
-			// 	for(uint32_t i = 0; i < m_size; i++) m_x_new[i] += m_dx[i];
-			// }
-			// //setup
-			// Solver::setup();
+			//data
+			m_dp = 0;
+			m_p_new = m_control == Control::Load ? m_l : m_w;
+			legendre_compute_dr(m_quadrature_order, m_sq, m_wq);
+			//initial
+			memset(m_x_new, 0, m_size * sizeof(double));
+			for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
+			{
+				compute();
+				if(equilibrium()) break;
+				if(!Solver::solve(m_K, m_r, m_dx))
+				{
+					if(!m_silent) printf("Unable to decompose stiffness Matrix in setup!\n");
+				}
+				for(uint32_t i = 0; i < m_size; i++) m_x_new[i] += m_dx[i];
+			}
+			//check
+			m_p_old = m_p_new;
+			memcpy(m_x_old, m_x_new, m_size * sizeof(double));
+			if(!m_status) throw std::runtime_error("Error: Harmonic solver setup failed!");
+			//setup
+			NewtonRaphson::setup();
 		}
 
 		//state
@@ -536,8 +538,6 @@ namespace math
 			m_size = (1 + 2 * m_harmonics) * m_dofs;
 			//solver
 			NewtonRaphson::allocate();
-			memset(m_x_new, 0, m_size * sizeof(double));
-			memset(m_x_old, 0, m_size * sizeof(double));
 		}
 		void Harmonic::allocate(uint32_t dofs, uint32_t harmonics, uint32_t quadrature_order)
 		{
