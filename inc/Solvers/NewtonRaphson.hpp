@@ -41,8 +41,8 @@ namespace math
 		public:
 			//data
 			std::function<void(double*, double, const double*)> m_residue;
-			std::function<void(double*, double, const double*)> m_tangent_1;
-			std::function<void(double*, double, const double*)> m_tangent_2;
+			std::function<void(double*, double, const double*)> m_tangent_p;
+			std::function<void(double*, double, const double*)> m_tangent_x;
 			std::function<void(double*, double*, const double*)> m_system_1;
 			std::function<void(double*, double*, double*, double, const double*)> m_system_2;
 		};

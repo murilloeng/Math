@@ -2,6 +2,7 @@
 #include <cmath>
 
 //Math
+#include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Solvers/GradientDescent.hpp"
 
 //Test
@@ -10,7 +11,6 @@
 void tests::solvers::gradient_descent::exponential_smooth(void)
 {
 	//data
-	const double x0 = 1;
 	math::solvers::GradientDescent solver;
 
 	//solver
@@ -21,8 +21,14 @@ void tests::solvers::gradient_descent::exponential_smooth(void)
 
 	//setup
 	solver.allocate();
-	solver.m_x_old[0] = x0;
+	solver.m_x_old[0] = +1.00e+00;
 
 	//solve
 	solver.solve();
+
+	//print
+	double g;
+	solver.m_gradient(&g, solver.m_x_new);
+	math::Vector(&g, 1).print("Gradient:");
+	math::Vector(solver.m_x_new, 1).print("Solution:");
 }

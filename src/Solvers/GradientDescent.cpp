@@ -12,13 +12,25 @@ namespace math
 		//constructor
 		GradientDescent::GradientDescent(void)
 		{
-			return;
+			m_convergence.m_type = Convergence::Type::Fixed;
 		}
 
 		//destructor
 		GradientDescent::~GradientDescent(void)
 		{
 			return;
+		}
+
+		//solve
+		void GradientDescent::solve(void)
+		{
+			predictor();
+			for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
+			{
+				apply();
+				compute();
+				if(equilibrium()) break; else corrector();
+			}
 		}
 
 		//data
@@ -42,10 +54,6 @@ namespace math
 			{
 				throw std::runtime_error("gradient descent called with gradient missing!");
 			}
-		}
-		void GradientDescent::solve(void)
-		{
-			return;
 		}
 		void GradientDescent::compute(void)
 		{

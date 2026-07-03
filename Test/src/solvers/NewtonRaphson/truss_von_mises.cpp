@@ -21,11 +21,11 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	{
 		r[0] = -p - x[0] * (x[0] * x[0] - 1);
 	};
-	solver.m_tangent_1 = [](double* g, double p, const double* x)
+	solver.m_tangent_p = [](double* g, double p, const double* x)
 	{
 		g[0] = -1;
 	};
-	solver.m_tangent_2 = [](double* K, double p, const double* x)
+	solver.m_tangent_x = [](double* K, double p, const double* x)
 	{
 		K[0] = 3 * x[0] * x[0] - 1;
 	};

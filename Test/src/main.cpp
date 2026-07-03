@@ -17,7 +17,7 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::gradient_descent::single_quartic();
+		tests::solvers::gradient_descent::himmelblau_function();
 	}
 	catch(const std::exception& exception)
 	{

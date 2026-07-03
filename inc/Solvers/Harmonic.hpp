@@ -60,7 +60,7 @@ namespace math
 			using Solver::allocate;
 			using NewtonRaphson::m_residue;
 			using NewtonRaphson::m_system_1, NewtonRaphson::m_system_2;
-			using NewtonRaphson::m_tangent_1, NewtonRaphson::m_tangent_2;
+			using NewtonRaphson::m_tangent_p, NewtonRaphson::m_tangent_x;
 
 		public:
 			//solve

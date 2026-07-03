@@ -66,7 +66,7 @@ namespace math
 		//solve
 		void NewtonRaphson::check(void)
 		{
-			if(!m_system_1 && !m_system_2 && !(m_residue && m_tangent_1 && m_tangent_2))
+			if(!m_system_1 && !m_system_2 && !(m_residue && m_tangent_p && m_tangent_x))
 			{
 				throw std::runtime_error("Newton-Raphson solver called with at least one method not set!");
 			}
@@ -97,8 +97,8 @@ namespace math
 			else
 			{
 				m_residue(m_r, m_p_new, m_x_new);
-				m_tangent_2(m_K, m_p_new, m_x_new);
-				m_tangent_1(m_fe, m_p_new, m_x_new);
+				m_tangent_x(m_K, m_p_new, m_x_new);
+				m_tangent_p(m_fe, m_p_new, m_x_new);
 			}
 		}
 		void NewtonRaphson::predictor(void)

@@ -29,11 +29,11 @@ void tests::solvers::newton_raphson::spring_buckling(void)
 	{
 		r[0] = p - Ks / (Fs * Ls) * x[0] / sin(x[0] + qs);
 	};
-	solver.m_tangent_1 = [](double* g, double p, const double* x)
+	solver.m_tangent_p = [](double* g, double p, const double* x)
 	{
 		g[0] = 1;
 	};
-	solver.m_tangent_2 = [](double* K, double p, const double* x)
+	solver.m_tangent_x = [](double* K, double p, const double* x)
 	{
 		K[0] = Ks / (Fs * Ls) * (1 - x[0] * cos(x[0] + qs) / sin(x[0] + qs)) / sin(x[0] + qs);
 	};

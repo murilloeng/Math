@@ -18,7 +18,7 @@ void tests::solvers::gradient_descent::single_quartic(void)
 
 	//setup
 	solver.allocate();
-	solver.m_x_old[0] = -5.00e-01;
+	solver.m_x_old[0] = +1.00e-05;
 
 	//solve
 	solver.solve();
