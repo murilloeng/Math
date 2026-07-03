@@ -53,7 +53,7 @@ namespace math
 	namespace solvers
 	{
 		//constructors
-		Harmonic::Harmonic(void) : 
+		Harmonic::Harmonic(void) :
 			m_sq{nullptr}, m_wq{nullptr},
 			m_xd{nullptr}, m_vd{nullptr}, m_ad{nullptr},
 			m_Kd{nullptr}, m_Cd{nullptr}, m_Md{nullptr},
@@ -538,6 +538,15 @@ namespace math
 			NewtonRaphson::allocate();
 			memset(m_x_new, 0, m_size * sizeof(double));
 			memset(m_x_old, 0, m_size * sizeof(double));
+		}
+		void Harmonic::allocate(uint32_t dofs, uint32_t harmonics, uint32_t quadrature_order)
+		{
+			//data
+			m_dofs = dofs;
+			m_harmonics = harmonics;
+			m_quadrature_order = quadrature_order;
+			//allocate
+			allocate();
 		}
 	}
 }

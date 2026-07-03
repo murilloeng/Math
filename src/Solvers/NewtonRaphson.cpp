@@ -55,6 +55,8 @@ namespace math
 		void NewtonRaphson::print(void)
 		{
 			Incremental::print();
+			Implicit::print();
+			Solver::print();
 		}
 		void NewtonRaphson::setup(void)
 		{

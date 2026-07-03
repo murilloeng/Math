@@ -67,6 +67,7 @@ namespace math
 			void solve(void) override;
 			void cleanup(void) override;
 			void allocate(void) override;
+			void allocate(uint32_t, uint32_t, uint32_t);
 
 			//data
 			double m_w, m_l;
@@ -80,7 +81,7 @@ namespace math
 			std::function<void(double*, const double*, const double*)> m_internal_force;
 			std::function<void(double*, const double*, double, double)> m_external_force;
 
-			std::function<void(double*, const double*)>  m_inertia;
+			std::function<void(double*, const double*)> m_inertia;
 			std::function<void(double*, const double*, const double*)> m_damping;
 			std::function<void(double*, const double*, const double*, const double*, double, double, double)> m_stiffness;
 

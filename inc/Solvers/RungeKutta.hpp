@@ -24,6 +24,7 @@ namespace math
 		private:
 			//solve
 			void check(void) override;
+			void print(void) override;
 			void compute(void) override;
 			void predictor(void) override;
 			void corrector(void) override;

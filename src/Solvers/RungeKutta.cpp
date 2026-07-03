@@ -44,6 +44,11 @@ namespace math
 				throw std::runtime_error("Runge Kutta solver called with at least one method not set!");
 			}
 		}
+		void RungeKutta::print(void)
+		{
+			Incremental::print();
+			Solver::print();
+		}
 		void RungeKutta::compute(void)
 		{
 			//setup

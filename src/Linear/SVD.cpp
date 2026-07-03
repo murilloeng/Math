@@ -14,7 +14,7 @@ extern "C"
 namespace math
 {
 	//constructor
-	SVD::SVD(double* A, uint32_t rows, uint32_t cols, double* s, double* U, double* V) : 
+	SVD::SVD(double* A, uint32_t rows, uint32_t cols, double* s, double* U, double* V) :
 		m_modes{U && V}, m_rows{rows}, m_cols{cols}, m_A{A}, m_s{s}, m_U{U}, m_V{V}
 	{
 		return;

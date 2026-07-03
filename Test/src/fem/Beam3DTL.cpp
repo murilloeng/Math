@@ -436,7 +436,7 @@ void tests::fem::beam3DTL(void)
 
 	menu_what();
 	menu_order();
-	what == 1 ? 
-		order == 1 ? test_energy_gradient() : test_energy_hessian() : 
+	what == 1 ?
+		order == 1 ? test_energy_gradient() : test_energy_hessian() :
 		order == 1 ? test_strains_gradient() : test_strains_hessian();
 }

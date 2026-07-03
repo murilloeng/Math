@@ -24,8 +24,8 @@ static void function(double* r, const double* x, void** args)
 	const math::Vec3 tm = variable ? x : t;
 	const math::Vec3 am = variable ? u : x;
 	//function
-	rm = !inverse ? 
-		tm.rotation_hessian(am, v, transpose) : 
+	rm = !inverse ?
+		tm.rotation_hessian(am, v, transpose) :
 		tm.rotation_hessian_inverse(am, transpose).transpose() * v;
 }
 static void gradient(double* dr, const double* x, void** args)
@@ -35,8 +35,8 @@ static void gradient(double* dr, const double* x, void** args)
 	const math::Vec3 tm = variable ? x : t;
 	const math::Vec3 am = variable ? u : x;
 	//gradient
-	drm = !inverse ? 
-		tm.rotation_third(am, v, transpose, variable) : 
+	drm = !inverse ?
+		tm.rotation_third(am, v, transpose, variable) :
 		tm.rotation_third_inverse(am, v, transpose, variable);
 }
 
@@ -92,7 +92,7 @@ void tests::rotations::Vec3::rotation_third(void)
 		gradient(dra.data(), t.data(), nullptr);
 		math::ndiff(function, drn.data(), t.data(), nullptr, 3, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
-		printf(format, 
+		printf(format,
 			coupled ? "Uncoupled" : "Coupled", inverse ? "Yes" : "No", variable ? "t" : "u", transpose ? "Yes" : "No", i, test ? "ok" : "not ok");
 		if(!test) break;
 	}

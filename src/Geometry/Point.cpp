@@ -58,7 +58,7 @@ namespace math
 			const Vec3& xp = m_position;
 			const Vec3& xl = segment.m_points[0];
 			const Vec3& tl = segment.direction();
-			const double a =  (xp - xl).inner(tl);
+			const double a = (xp - xl).inner(tl);
 			//distance
 			return (xl - xp + bound(a, 0, 1) * tl).norm();
 		}

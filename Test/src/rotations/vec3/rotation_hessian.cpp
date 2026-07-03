@@ -25,8 +25,8 @@ static void function(double* r, const double* t, void** args)
 	const math::Mat3 Tmi = tm.rotation_gradient_inverse(transpose);
 	const math::Vec3 Tvi = tm.rotation_gradient_inverse(v, transpose);
 	//function
-	r[0] = !inverse ? 
-		coupled ? Tm.bilinear(u, v) : Tv.inner(u) : 
+	r[0] = !inverse ?
+		coupled ? Tm.bilinear(u, v) : Tv.inner(u) :
 		coupled ? Tmi.bilinear(u, v) : Tvi.inner(u);
 }
 static void gradient(double* dr, const double* t, void** args)
@@ -97,7 +97,7 @@ void tests::rotations::Vec3::rotation_hessian(void)
 		gradient(dra.data(), t.data(), nullptr);
 		math::ndiff(function, drn.data(), t.data(), nullptr, 1, 3, 1.00e-5);
 		test = test && (dra - drn).norm() < 1e-5;
-		printf("Test - Mode: %s, Inverse: %s, Transpose: %s, Step: %04d, Status: %s\n", 
+		printf("Test - Mode: %s, Inverse: %s, Transpose: %s, Step: %04d, Status: %s\n",
 				coupled ? "Uncoupled" : "Coupled", inverse ? "Yes" : "No", transpose ? "Yes" : "No", i, test ? "ok" : "not ok");
 		if(!test) break;
 	}

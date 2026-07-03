@@ -12,7 +12,7 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		Continuation::Continuation(Solver* solver, Type type) :  m_type{type}, m_solver{solver}
+		Continuation::Continuation(Solver* solver, Type type) : m_type{type}, m_solver{solver}
 		{
 			return;
 		}
@@ -28,10 +28,10 @@ namespace math
 		{
 			//data
 			double(Continuation::*pfun[])(void) const = {
-				&Continuation::predictor_minimal_norm, 
-				&Continuation::predictor_control_load, 
-				&Continuation::predictor_control_state, 
-				&Continuation::predictor_arc_length_spherical, 
+				&Continuation::predictor_minimal_norm,
+				&Continuation::predictor_control_load,
+				&Continuation::predictor_control_state,
+				&Continuation::predictor_arc_length_spherical,
 				&Continuation::predictor_arc_length_cylindrical
 			};
 			//predictor
@@ -48,10 +48,10 @@ namespace math
 		{
 			//data
 			double(Continuation::*cfun[])(void) const = {
-				&Continuation::corrector_minimal_norm, 
-				&Continuation::corrector_control_load, 
-				&Continuation::corrector_control_state, 
-				&Continuation::corrector_arc_length_spherical, 
+				&Continuation::corrector_minimal_norm,
+				&Continuation::corrector_control_load,
+				&Continuation::corrector_control_state,
+				&Continuation::corrector_arc_length_spherical,
 				&Continuation::corrector_arc_length_cylindrical
 			};
 			//corrector

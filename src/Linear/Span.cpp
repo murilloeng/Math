@@ -11,7 +11,7 @@
 namespace math
 {
 	//constructors
-	Span::Span(Matrix& k, uint32_t row, uint32_t col, uint32_t rows, uint32_t cols) : 
+	Span::Span(Matrix& k, uint32_t row, uint32_t col, uint32_t rows, uint32_t cols) :
 		m_k(k), m_row(row), m_col(col), m_rows(rows), m_cols(cols)
 	{
 		return;

@@ -8,7 +8,7 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		Convergence::Convergence(Solver* solver) : 
+		Convergence::Convergence(Solver* solver) :
 			m_type{Type::Force}, m_solver{solver}, m_tolerance{1.00e-5}
 		{
 			return;

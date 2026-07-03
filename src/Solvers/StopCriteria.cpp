@@ -10,8 +10,8 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		StopCriteria::StopCriteria(Incremental* solver) : 
-			m_stop{Type::Last}, m_types{uint32_t(Type::StepMaximum) & uint32_t(Type::TimeMaximum)}, m_solver{solver}, 
+		StopCriteria::StopCriteria(Incremental* solver) :
+			m_stop{Type::Last}, m_types{uint32_t(Type::StepMaximum) & uint32_t(Type::TimeMaximum)}, m_solver{solver},
 			m_p_min{-DBL_MAX}, m_p_max{+DBL_MAX}, m_x_min{-DBL_MAX}, m_x_max{+DBL_MAX}
 		{
 			return;

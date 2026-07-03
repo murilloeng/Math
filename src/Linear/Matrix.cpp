@@ -55,7 +55,7 @@ namespace math
 			zeros();
 		}
 	}
-	Matrix::Matrix(double* ptr, uint32_t rows, uint32_t cols, mode init) : 
+	Matrix::Matrix(double* ptr, uint32_t rows, uint32_t cols, mode init) :
 		m_own(false), m_rows(rows), m_cols(cols), m_data_ptr(ptr), m_data_ref(ptr)
 	{
 		if(init == mode::eye)
@@ -67,12 +67,12 @@ namespace math
 			zeros();
 		}
 	}
-	Matrix::Matrix(const double* ref, uint32_t rows, uint32_t cols) : 
+	Matrix::Matrix(const double* ref, uint32_t rows, uint32_t cols) :
 		m_own(false), m_rows(rows), m_cols(cols), m_data_ptr(nullptr), m_data_ref(ref)
 	{
 		return;
 	}
-	Matrix::Matrix(std::initializer_list<std::initializer_list<double>> list, bool columns) : 
+	Matrix::Matrix(std::initializer_list<std::initializer_list<double>> list, bool columns) :
 		m_own(true)
 	{
 		//data

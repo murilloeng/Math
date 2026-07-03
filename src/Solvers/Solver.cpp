@@ -12,13 +12,14 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		Solver::Solver(void) : 
+		Solver::Solver(void) :
 			m_silent{false},
-			m_rows_map{nullptr}, 
+			m_status{false},
+			m_rows_map{nullptr},
 			m_cols_map{nullptr},
-			m_size{1}, m_watch_dof{0}, 
+			m_size{1}, m_watch_dof{0},
 			m_K{nullptr}, m_C{nullptr}, m_M{nullptr},
-			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr}, 
+			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr},
 			m_x_old{nullptr}, m_x_new{nullptr}, m_dx{nullptr},
 			m_v_old{nullptr}, m_v_new{nullptr}, m_dv{nullptr},
 			m_a_old{nullptr}, m_a_new{nullptr}, m_da{nullptr},
@@ -34,10 +35,12 @@ namespace math
 		{
 			//data
 			const double* data[] = {
-				m_K, m_C, m_M, 
+				m_K, m_C, m_M,
 				m_r, m_fi, m_fe,
-				m_dxr, m_dxt, m_ddxr, m_ddxt,
-				m_x_old, m_x_new, m_dx, m_v_old, m_v_new, m_dv, m_a_old, m_a_new, m_da
+				m_x_old, m_x_new, m_dx,
+				m_v_old, m_v_new, m_dv,
+				m_a_old, m_a_new, m_da,
+				m_dxr, m_dxt, m_ddxr, m_ddxt
 			};
 			//delete
 			for(const double* ptr : data)
@@ -94,10 +97,12 @@ namespace math
 		{
 			//data
 			double** data[] = {
-				&m_K, &m_C, &m_M, 
+				&m_K, &m_C, &m_M,
 				&m_r, &m_fi, &m_fe,
-				&m_dxr, &m_dxt, &m_ddxr, &m_ddxt,
-				&m_x_old, &m_x_new, &m_dx, &m_v_old, &m_v_new, &m_dv, &m_a_old, &m_a_new, &m_da
+				&m_x_old, &m_x_new, &m_dx,
+				&m_v_old, &m_v_new, &m_dv,
+				&m_a_old, &m_a_new, &m_da,
+				&m_dxr, &m_dxt, &m_ddxr, &m_ddxt
 			};
 			//cleanup
 			for(double** ptr : data)
@@ -141,11 +146,21 @@ namespace math
 		}
 		void Solver::print(void)
 		{
-			return;
+			//data
+			if(m_silent) return;
+			const uint32_t ss = state_set();
+			//print
+			if(ss & 1 << uint32_t(State::t)) printf("Time: %+.6e ", m_t_new);
+			if(ss & 1 << uint32_t(State::p)) printf("Load: %+.6e ", m_p_new);
+			if(ss & 1 << uint32_t(State::x)) printf("State: %+.6e ", m_x_new[m_watch_dof]);
+			if(ss & 1 << uint32_t(State::v)) printf("Velocity: %+.6e ", m_v_new[m_watch_dof]);
+			if(ss & 1 << uint32_t(State::a)) printf("Acceleration: %+.6e ", m_a_new[m_watch_dof]);
+			printf("\n");
 		}
 		void Solver::setup(void)
 		{
 			m_dp = m_dp0;
+			m_status = false;
 			m_p_new = m_p_old;
 			m_t_new = m_t_old = m_t_min;
 			if(state_set() & 1 << uint32_t(State::x)) memcpy(m_x_new, m_x_old, m_size * sizeof(double));

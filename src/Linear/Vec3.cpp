@@ -394,10 +394,10 @@ namespace math
 		const Mat3 Sk = ek.spin();
 		const Mat3 Sp = ep.spin();
 		const Mat3 Sa = ea.spin();
-		return 
-			f3 * (Sk * Sp + Sp * Sk) + 
+		return
+			f3 * (Sk * Sp + Sp * Sk) +
 			(k == p) * (df2 * St + df3 * St * St) +
-			s * df2 * Sa + df3 * (St * Sa + Sa * St) + 
+			s * df2 * Sa + df3 * (St * Sa + Sa * St) +
 			tk * tp * (s * ddf2 * St + ddf3 * St * St);
 	}
 	Mat3 Vec3::rotation_third(const Vec3& v, const Vec3& u, bool q, bool x) const

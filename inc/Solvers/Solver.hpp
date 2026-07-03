@@ -45,7 +45,7 @@ namespace math
 			//serialization
 			virtual void save(const char*) const;
 
-			//sets
+			//data
 			virtual uint32_t state_set(void) const = 0;
 			virtual uint32_t force_set(void) const = 0;
 			virtual uint32_t tangent_set(void) const = 0;
@@ -77,6 +77,7 @@ namespace math
 		public:
 			//data
 			bool m_silent;
+			bool m_status;
 			int32_t* m_rows_map;
 			int32_t* m_cols_map;
 			uint32_t m_size, m_watch_dof;

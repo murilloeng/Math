@@ -64,6 +64,8 @@ namespace math
 		void Newmark::print(void)
 		{
 			Incremental::print();
+			Implicit::print();
+			Solver::print();
 		}
 		void Newmark::setup(void)
 		{

@@ -10,7 +10,7 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		Incremental::Incremental(void) : 
+		Incremental::Incremental(void) :
 			m_step{0}, m_step_max{100}, m_stop_criteria{this},
 			m_x_data{nullptr}, m_v_data{nullptr}, m_a_data{nullptr}, m_p_data{nullptr}, m_t_data{nullptr}
 		{
@@ -39,7 +39,21 @@ namespace math
 		}
 		void Incremental::solve(void)
 		{
-			return;
+			check();
+			setup();
+			print();
+			record();
+			compute();
+			for(m_step = 1; !stop(); m_step++)
+			{
+				step();
+				print();
+				if(!m_status)
+				{
+					if(!m_silent) printf("Solver failed in step %d!\n", m_step);
+					break;
+				}
+			}
 		}
 
 		//serialization
@@ -69,21 +83,8 @@ namespace math
 		}
 		void Incremental::print(void)
 		{
-			//data
 			if(m_silent) return;
-			const uint32_t ss = state_set();
-			Implicit* implicit = dynamic_cast<Implicit*>(this);
-			//print
 			printf("Step: %4d ", m_step);
-			if(implicit) implicit->Implicit::print();
-			if(ss & uint32_t(State::t)) printf("Time: %+.6e ", m_t_new);
-			if(ss & uint32_t(State::p)) printf("Load: %+.6e ", m_p_new);
-			if(ss & uint32_t(State::x)) printf("State: %+.6e ", m_x_new[m_watch_dof]);
-			if(ss & uint32_t(State::v)) printf("Velocity: %+.6e ", m_v_new[m_watch_dof]);
-			if(ss & uint32_t(State::a)) printf("Acceleration: %+.6e ", m_a_new[m_watch_dof]);
-			printf("\n");
-			//callback
-			if(m_callback_step) m_callback_step();
 		}
 		void Incremental::setup(void)
 		{

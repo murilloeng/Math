@@ -14,12 +14,12 @@ namespace math
 		{
 			return;
 		}
-		ASE3::ASE3(const ASE3& object) : 
+		ASE3::ASE3(const ASE3& object) :
 			m_vector_u(object.m_vector_u), m_vector_w(object.m_vector_w)
 		{
 			return;
 		}
-		ASE3::ASE3(const Vec3& vector_u, const Vec3& vector_w) : 
+		ASE3::ASE3(const Vec3& vector_u, const Vec3& vector_w) :
 			m_vector_u(vector_u), m_vector_w(vector_w)
 		{
 			return;

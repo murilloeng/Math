@@ -21,7 +21,7 @@ namespace math
 			//types
 			enum class Type : uint32_t
 			{
-				Fixed,  Force, Last
+				Fixed, Force, Last
 			};
 
 			//constructor

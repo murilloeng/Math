@@ -20,38 +20,38 @@ extern "C"
 namespace math
 {
 	//constructor
-	Eigen::Eigen(double* A, uint32_t order, double* s, double* U) : 
+	Eigen::Eigen(double* A, uint32_t order, double* s, double* U) :
 		m_full{true}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
 		m_A{A}, m_B{nullptr}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
 	{
 		return;
 	}
-	Eigen::Eigen(double* A, uint32_t order, double* sr, double* si, double* U, double* V) : 
+	Eigen::Eigen(double* A, uint32_t order, double* sr, double* si, double* U, double* V) :
 		m_full{true}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
 		m_A{A}, m_B{nullptr}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
 	{
 		return;
 	}
-	Eigen::Eigen(double* A, uint32_t order, double* s, double* U, uint32_t index_min, uint32_t index_max) : 
+	Eigen::Eigen(double* A, uint32_t order, double* s, double* U, uint32_t index_min, uint32_t index_max) :
 		m_full{false}, m_symmetric{true}, m_order{order}, m_index_min{index_min}, m_index_max{index_max},
 		m_A{A}, m_B{nullptr}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
 	{
 		return;
 	}
 
-	Eigen::Eigen(double* A, double* B, uint32_t order, double* s, double* U) : 
+	Eigen::Eigen(double* A, double* B, uint32_t order, double* s, double* U) :
 		m_full{true}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
 		m_A{A}, m_B{B}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
 	{
 		return;
 	}
-	Eigen::Eigen(double* A, double* B, uint32_t order, double* sr, double* si, double* U, double* V) : 
+	Eigen::Eigen(double* A, double* B, uint32_t order, double* sr, double* si, double* U, double* V) :
 		m_full{true}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
 		m_A{A}, m_B{B}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
 	{
 		return;
 	}
-	Eigen::Eigen(double* A, double* B, uint32_t order, double* s, double* U, uint32_t index_min, uint32_t index_max) : 
+	Eigen::Eigen(double* A, double* B, uint32_t order, double* s, double* U, uint32_t index_min, uint32_t index_max) :
 		m_full{true}, m_symmetric{true}, m_order{order},m_index_min{index_min}, m_index_max{index_max},
 		m_A{A}, m_B{B}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
 	{

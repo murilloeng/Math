@@ -9,14 +9,6 @@ namespace math
 {
 	namespace solvers
 	{
-		class Incremental;
-	}
-}
-
-namespace math
-{
-	namespace solvers
-	{
 		class Implicit : public virtual Solver
 		{
 		public:
@@ -41,9 +33,6 @@ namespace math
 			Continuation m_continuation;
 			uint32_t m_attempt, m_attempt_max;
 			uint32_t m_iteration, m_iteration_max;
-
-			//friends
-			friend class Incremental;
 		};
 	}
 }

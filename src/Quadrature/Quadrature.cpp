@@ -87,7 +87,7 @@ namespace math
 		}
 		const char* Quadrature::rule_name(quadrature::Rule rule)
 		{
-			return 
+			return
 				rule == quadrature::Rule::Lobatto ? "Lobatto" :
 				rule == quadrature::Rule::Legendre ? "Legendre" : "Error";
 		}
