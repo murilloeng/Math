@@ -16,6 +16,9 @@ namespace math
 			//destructor
 			~RungeKutta(void);
 
+			//solve
+			void step(void) override;
+
 			//data
 			uint32_t state_set(void) const override;
 			uint32_t force_set(void) const override;

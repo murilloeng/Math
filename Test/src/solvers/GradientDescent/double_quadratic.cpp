@@ -8,7 +8,6 @@
 void tests::solvers::gradient_descent::double_quadratic(void)
 {
 	//data
-	const double x0[] = {1, 1};
 	math::solvers::GradientDescent solver;
 
 	//solver
@@ -23,12 +22,15 @@ void tests::solvers::gradient_descent::double_quadratic(void)
 
 	//setup
 	solver.allocate();
-	solver.m_x_old[0] = x0[0];
-	solver.m_x_old[1] = x0[1];
+	solver.m_x_old[0] = +1.00e+00;
+	solver.m_x_old[1] = +1.00e+00;
 
 	//solve
 	solver.solve();
 
 	//print
-	math::Vector(solver.m_x_new, 2).print("solution:");
+	double g[2];
+	solver.m_gradient(g, solver.m_x_new);
+	math::Vector(g, 2).print("Gradient:");
+	math::Vector(solver.m_x_new, 2).print("Solution:");
 }

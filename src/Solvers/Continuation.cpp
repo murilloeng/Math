@@ -12,7 +12,7 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		Continuation::Continuation(Solver* solver, Type type) : m_type{type}, m_solver{solver}
+		Continuation::Continuation(Solver* solver) : m_type{Type::ArcLengthCylindrical}, m_solver{solver}
 		{
 			return;
 		}

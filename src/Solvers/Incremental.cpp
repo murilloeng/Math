@@ -33,10 +33,6 @@ namespace math
 		}
 
 		//solve
-		void Incremental::step(void)
-		{
-			return;
-		}
 		void Incremental::solve(void)
 		{
 			check();
@@ -53,6 +49,7 @@ namespace math
 					if(!m_silent) printf("Solver failed in step %d!\n", m_step);
 					break;
 				}
+				if(m_callback_step) m_callback_step();
 			}
 		}
 
@@ -79,7 +76,7 @@ namespace math
 		//solve
 		bool Incremental::stop(void)
 		{
-			return Solver::stop() && m_stop_criteria.stop();
+			return Solver::stop() || m_stop_criteria.stop();
 		}
 		void Incremental::print(void)
 		{
@@ -93,19 +90,16 @@ namespace math
 		}
 		void Incremental::record(void)
 		{
-			//data
+			Solver::record();
 			const uint32_t ss = state_set();
-			//callback
-			if(m_callback_record) m_callback_record();
-			//record
 			for(uint32_t i = 0; i < m_size; i++)
 			{
-				if(ss & uint32_t(State::x)) m_x_data[m_step * m_size + i] = m_x_new[i];
-				if(ss & uint32_t(State::v)) m_v_data[m_step * m_size + i] = m_v_new[i];
-				if(ss & uint32_t(State::a)) m_a_data[m_step * m_size + i] = m_a_new[i];
+				if(ss & 1 << uint32_t(State::x)) m_x_data[m_step * m_size + i] = m_x_new[i];
+				if(ss & 1 << uint32_t(State::v)) m_v_data[m_step * m_size + i] = m_v_new[i];
+				if(ss & 1 << uint32_t(State::a)) m_a_data[m_step * m_size + i] = m_a_new[i];
 			}
-			if(ss & uint32_t(State::t)) m_t_data[m_step] = m_t_new;
-			if(ss & uint32_t(State::p)) m_p_data[m_step] = m_p_new;
+			if(ss & 1 << uint32_t(State::t)) m_t_data[m_step] = m_t_new;
+			if(ss & 1 << uint32_t(State::p)) m_p_data[m_step] = m_p_new;
 		}
 
 		//allocate
@@ -127,11 +121,11 @@ namespace math
 		{
 			Solver::allocate_state();
 			const uint32_t ss = state_set();
-			if(ss & uint32_t(State::t)) m_t_data = new double[m_step_max + 1];
-			if(ss & uint32_t(State::p)) m_p_data = new double[m_step_max + 1];
-			if(ss & uint32_t(State::x)) m_x_data = new double[m_size * (m_step_max + 1)];
-			if(ss & uint32_t(State::v)) m_v_data = new double[m_size * (m_step_max + 1)];
-			if(ss & uint32_t(State::a)) m_a_data = new double[m_size * (m_step_max + 1)];
+			if(ss & 1 << uint32_t(State::t)) m_t_data = new double[m_step_max + 1];
+			if(ss & 1 << uint32_t(State::p)) m_p_data = new double[m_step_max + 1];
+			if(ss & 1 << uint32_t(State::x)) m_x_data = new double[m_size * (m_step_max + 1)];
+			if(ss & 1 << uint32_t(State::v)) m_v_data = new double[m_size * (m_step_max + 1)];
+			if(ss & 1 << uint32_t(State::a)) m_a_data = new double[m_size * (m_step_max + 1)];
 		}
 	}
 }

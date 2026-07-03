@@ -55,43 +55,6 @@ namespace math
 			return;
 		}
 
-		//solve
-		// void Solver::step(void)
-		// {
-		// 	for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
-		// 	{
-		// 		predictor();
-		// 		for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
-		// 		{
-		// 			apply();
-		// 			compute();
-		// 			if(equilibrium()) break; else corrector();
-		// 		}
-		// 		if(m_equilibrium) break;
-		// 		restore();
-		// 	}
-		// 	update();
-		// 	record();
-		// }
-		// void Solver::solve(void)
-		// {
-		// 	check();
-		// 	setup();
-		// 	print();
-		// 	record();
-		// 	compute();
-		// 	for(m_step = 1; !stop(); m_step++)
-		// 	{
-		// 		step();
-		// 		print();
-		// 		if(!m_equilibrium)
-		// 		{
-		// 			if(!m_silent) printf("Solver failed in step %d!\n", m_step);
-		// 			break;
-		// 		}
-		// 	}
-		// }
-
 		//data
 		void Solver::cleanup(void)
 		{
@@ -163,13 +126,14 @@ namespace math
 			m_status = false;
 			m_p_new = m_p_old;
 			m_t_new = m_t_old = m_t_min;
-			if(state_set() & 1 << uint32_t(State::x)) memcpy(m_x_new, m_x_old, m_size * sizeof(double));
-			if(state_set() & 1 << uint32_t(State::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
-			if(state_set() & 1 << uint32_t(State::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
+			const uint32_t ss = state_set();
+			if(ss & 1 << uint32_t(State::x)) memcpy(m_x_new, m_x_old, m_size * sizeof(double));
+			if(ss & 1 << uint32_t(State::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
+			if(ss & 1 << uint32_t(State::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
 		}
 		void Solver::record(void)
 		{
-			return;
+			if(m_callback_record) m_callback_record();
 		}
 		void Solver::update(void)
 		{

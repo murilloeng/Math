@@ -12,7 +12,7 @@ namespace math
 		//constructor
 		GradientDescent::GradientDescent(void)
 		{
-			// m_convergence.m_type = Convergence::Type::Fixed;
+			return;
 		}
 
 		//destructor

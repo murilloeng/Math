@@ -39,6 +39,25 @@ namespace math
 			return;
 		}
 
+		//solve
+		void Newmark::step(void)
+		{
+			for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
+			{
+				predictor();
+				for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
+				{
+					apply();
+					compute();
+					if(equilibrium()) break; else corrector();
+				}
+				if(m_status) break;
+				restore();
+			}
+			update();
+			record();
+		}
+
 		//data
 		uint32_t Newmark::state_set(void) const
 		{

@@ -24,11 +24,10 @@ namespace math
 			void setup(void) override;
 
 			//compute
-			virtual bool compute_equilibrium(void);
+			virtual bool equilibrium(void);
 
 		public:
 			//data
-			bool m_equilibrium;
 			Convergence m_convergence;
 			Continuation m_continuation;
 			uint32_t m_attempt, m_attempt_max;

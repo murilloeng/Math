@@ -22,6 +22,22 @@ namespace math
 			return;
 		}
 
+		//solve
+		void RungeKutta::step(void)
+		{
+			//predictor
+			predictor();
+			//corrector
+			apply();
+			compute();
+			corrector();
+			m_status = true;
+			//update
+			update();
+			//record
+			record();
+		}
+
 		//data
 		uint32_t RungeKutta::state_set(void) const
 		{

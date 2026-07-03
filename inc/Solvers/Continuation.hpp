@@ -30,7 +30,7 @@ namespace math
 			};
 
 			//constructor
-			Continuation(Solver*, Type);
+			Continuation(Solver*);
 
 			//destructor
 			~Continuation(void);

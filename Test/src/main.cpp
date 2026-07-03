@@ -17,7 +17,7 @@ int main(void)
 {
 	try
 	{
-		tests::fem::revolute_fixed();
+		tests::solvers::gradient_descent::single_quartic();
 	}
 	catch(const std::exception& exception)
 	{

@@ -8,14 +8,6 @@ namespace math
 {
 	namespace solvers
 	{
-		class StopCriteria;
-	}
-}
-
-namespace math
-{
-	namespace solvers
-	{
 		class Incremental : public virtual Solver
 		{
 		public:
@@ -26,8 +18,8 @@ namespace math
 			~Incremental(void);
 
 			//solve
-			void step(void);
 			void solve(void) override;
+			virtual void step(void) = 0;
 
 			//serialization
 			void save(const char*) const override;
@@ -48,9 +40,6 @@ namespace math
 			uint32_t m_step, m_step_max;
 			StopCriteria m_stop_criteria;
 			double *m_x_data, *m_v_data, *m_a_data, *m_p_data, *m_t_data;
-
-			//friends
-			friend class StopCriteria;
 		};
 	}
 }
