@@ -19,12 +19,8 @@ namespace math
 			//enums
 			enum class Control : uint32_t
 			{
-				Load,
-				Frequency
+				Load, Frequency
 			};
-
-			//types
-			typedef std::function<void(double*, const double*, const double*, const double*, double, double, double)> Stiffness;
 
 			//tests
 			void test_inertia(void) const;
