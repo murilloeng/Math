@@ -110,6 +110,10 @@ namespace math
 	}
 
 	//linear
+	void Sparse::zeros(void)
+	{
+		memset(m_data_ptr, 0, m_cols_map_ptr[m_cols] * sizeof(double));
+	}
 	double Sparse::norm(void) const
 	{
 		double s = 0;

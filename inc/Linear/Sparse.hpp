@@ -40,6 +40,7 @@ namespace math
 		void pattern(int32_t*&, int32_t*&) const;
 
 		//linear
+		void zeros(void);
 		double norm(void) const;
 		double trace(void) const;
 
