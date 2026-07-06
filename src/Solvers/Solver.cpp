@@ -188,9 +188,9 @@ namespace math
 		void Solver::allocate_tangents(void)
 		{
 			const uint32_t ts = tangent_set();
-			if(ts & 1 << uint32_t(Tangent::K)) m_K = new double[m_size * m_size];
-			if(ts & 1 << uint32_t(Tangent::C)) m_C = new double[m_size * m_size];
-			if(ts & 1 << uint32_t(Tangent::M)) m_M = new double[m_size * m_size];
+			if(ts & 1 << uint32_t(Tangent::K)) m_K = new double[m_cols_map ? m_cols_map[m_size] : m_size * m_size];
+			if(ts & 1 << uint32_t(Tangent::C)) m_C = new double[m_cols_map ? m_cols_map[m_size] : m_size * m_size];
+			if(ts & 1 << uint32_t(Tangent::M)) m_M = new double[m_cols_map ? m_cols_map[m_size] : m_size * m_size];
 		}
 
 		//solve
