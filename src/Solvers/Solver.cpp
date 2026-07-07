@@ -93,6 +93,10 @@ namespace math
 		{
 			return m_callback_stop && m_callback_stop();
 		}
+		void Solver::check(void)
+		{
+			return;
+		}
 		void Solver::apply(void)
 		{
 			//data
@@ -158,6 +162,18 @@ namespace math
 			if(ss & 1 << uint32_t(State::x)) memcpy(m_x_new, m_x_old, m_size * sizeof(double));
 			if(ss & 1 << uint32_t(State::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
 			if(ss & 1 << uint32_t(State::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
+		}
+		void Solver::compute(void)
+		{
+			return;
+		}
+		void Solver::predictor(void)
+		{
+			return;
+		}
+		void Solver::corrector(void)
+		{
+			return;
 		}
 
 		//allocate

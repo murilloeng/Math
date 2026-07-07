@@ -53,18 +53,16 @@ namespace math
 		protected:
 			//solve
 			virtual bool stop(void);
+			virtual void check(void);
 			virtual void apply(void);
 			virtual void print(void);
 			virtual void setup(void);
 			virtual void record(void);
 			virtual void update(void);
 			virtual void restore(void);
-
-			//solve
-			virtual void check(void) = 0;
-			virtual void compute(void) = 0;
-			virtual void predictor(void) = 0;
-			virtual void corrector(void) = 0;
+			virtual void compute(void);
+			virtual void predictor(void);
+			virtual void corrector(void);
 
 			//allocate
 			virtual void allocate_state(void);
