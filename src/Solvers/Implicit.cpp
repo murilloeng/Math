@@ -47,7 +47,7 @@ namespace math
 		}
 		uint32_t Implicit::iteration_max(uint32_t iteration_max)
 		{
-			return m_iteration_max;
+			return m_iteration_max = iteration_max;
 		}
 
 		Convergence& Implicit::convergence(void)

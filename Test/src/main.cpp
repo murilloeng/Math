@@ -29,6 +29,13 @@ int main(void)
 		tests::solvers::runge_kutta::single_pendulum();
 		tests::solvers::runge_kutta::double_pendulum();
 		tests::solvers::runge_kutta::duffing_oscillator();
+
+		// tests::solvers::gradient_descent::single_quartic();
+		tests::solvers::gradient_descent::single_quadratic();
+		// tests::solvers::gradient_descent::double_quadratic();
+		// tests::solvers::gradient_descent::exponential_smooth();
+		// tests::solvers::gradient_descent::himmelblau_function();
+		// tests::solvers::gradient_descent::rosenbrock_function();
 	}
 	catch(const std::exception& exception)
 	{

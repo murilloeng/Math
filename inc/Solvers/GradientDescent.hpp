@@ -16,8 +16,19 @@ namespace math
 			//destructor
 			~GradientDescent(void);
 
+			//types
+			typedef std::function<void(double*, const double*)> Gradient;
+
 			//solve
 			void solve(void) override;
+
+			//data
+			double step_size(double);
+			double step_size(void) const;
+
+			Gradient gradient(Gradient);
+			Gradient gradient(void) const;
+			void gradient(double*, const double*) const;
 
 			//data
 			uint32_t state_set(void) const override;
@@ -35,10 +46,9 @@ namespace math
 			using Implicit::m_attempt, Implicit::m_attempt_max;
 			using Implicit::m_convergence, Implicit::m_continuation;
 
-		public:
 			//data
 			double m_step_size;
-			std::function<void(double*, const double*)> m_gradient;
+			Gradient m_gradient;
 		};
 	}
 }

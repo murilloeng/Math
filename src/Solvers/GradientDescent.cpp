@@ -24,6 +24,8 @@ namespace math
 		//solve
 		void GradientDescent::solve(void)
 		{
+			check();
+			setup();
 			predictor();
 			for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
 			{
@@ -31,6 +33,29 @@ namespace math
 				compute();
 				if(equilibrium()) break; else corrector();
 			}
+		}
+
+		//data
+		double GradientDescent::step_size(void) const
+		{
+			return m_step_size;
+		}
+		double GradientDescent::step_size(double step_size)
+		{
+			return m_step_size = step_size;
+		}
+
+		GradientDescent::Gradient GradientDescent::gradient(void) const
+		{
+			return m_gradient;
+		}
+		GradientDescent::Gradient GradientDescent::gradient(Gradient gradient)
+		{
+			return m_gradient = gradient;
+		}
+		void GradientDescent::gradient(double* g, const double* x) const
+		{
+			m_gradient(g, x);
 		}
 
 		//data
