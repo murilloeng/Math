@@ -1,5 +1,6 @@
 //std
 #include <cmath>
+#include <cstdio>
 
 //Math
 #include "Math/inc/Linear/Vector.hpp"
@@ -27,8 +28,5 @@ void tests::solvers::gradient_descent::exponential_smooth(void)
 	solver.solve();
 
 	//print
-	double g;
-	solver.gradient(&g, solver.m_x_new);
-	math::Vector(&g, 1).print("Gradient:");
-	math::Vector(solver.m_x_new, 1).print("Solution:");
+	printf("Status: %s\n", solver.m_status ? "✅" : "❌");
 }

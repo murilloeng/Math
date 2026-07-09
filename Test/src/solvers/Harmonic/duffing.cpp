@@ -55,7 +55,7 @@ void tests::solvers::harmonic::duffing(void)
 	solver.m_watch_dof = 1;
 	solver.stop_criteria().m_p_max = w_max;
 	solver.m_control = math::solvers::Harmonic::Control::Frequency;
-	solver.continuation().m_type = math::solvers::Continuation::Type::ArcLengthCylindrical;
+	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthCylindrical);
 	solver.stop_criteria().m_types |= 1 << uint32_t(math::solvers::StopCriteria::Type::LoadLimitMaximum);
 	//system
 	solver.m_inertia = inertia;

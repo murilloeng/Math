@@ -35,6 +35,10 @@ namespace math
 			//destructor
 			~Continuation(void);
 
+			//data
+			Type type(Type);
+			Type type(void) const;
+
 			//continuation
 			double predictor(void) const;
 			double corrector(void) const;
@@ -52,7 +56,6 @@ namespace math
 			double predictor_arc_length_cylindrical(void) const;
 			double corrector_arc_length_cylindrical(void) const;
 
-		public:
 			//data
 			Type m_type;
 			Solver* m_solver;

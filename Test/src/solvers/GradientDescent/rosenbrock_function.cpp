@@ -1,3 +1,6 @@
+//std
+#include <cstdio>
+
 //Math
 #include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Solvers/GradientDescent.hpp"
@@ -28,8 +31,5 @@ void tests::solvers::gradient_descent::rosenbrock_function(void)
 	solver.solve();
 
 	//print
-	double g[2];
-	solver.gradient(g, solver.m_x_new);
-	math::Vector(g, 2).print("Gradient:");
-	math::Vector(solver.m_x_new, 2).print("Solution:");
+	printf("Status: %s\n", solver.m_status ? "✅" : "❌");
 }

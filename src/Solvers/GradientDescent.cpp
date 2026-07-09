@@ -12,7 +12,7 @@ namespace math
 		//constructor
 		GradientDescent::GradientDescent(void)
 		{
-			m_convergence.m_type = Convergence::Type::Fixed;
+			m_convergence.type(Convergence::Type::Fixed);
 		}
 
 		//destructor
@@ -31,7 +31,8 @@ namespace math
 			{
 				apply();
 				compute();
-				if(equilibrium()) break; else corrector();
+				corrector();
+				if(equilibrium()) break;
 			}
 		}
 

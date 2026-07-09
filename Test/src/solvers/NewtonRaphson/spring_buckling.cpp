@@ -37,7 +37,7 @@ void tests::solvers::newton_raphson::spring_buckling(void)
 	{
 		K[0] = Ks / (Fs * Ls) * (1 - x[0] * cos(x[0] + qs) / sin(x[0] + qs)) / sin(x[0] + qs);
 	};
-	solver.continuation().m_type = math::solvers::Continuation::Type::ArcLengthSpherical;
+	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthSpherical);
 	//setup
 	solver.allocate();
 	solver.m_x_old[0] = 0;

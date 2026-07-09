@@ -23,6 +23,16 @@ namespace math
 			return;
 		}
 
+		//data
+		Continuation::Type Continuation::type(Type type)
+		{
+			return m_type = type;
+		}
+		Continuation::Type Continuation::type(void) const
+		{
+			return m_type;
+		}
+
 		//continuation
 		double Continuation::predictor(void) const
 		{

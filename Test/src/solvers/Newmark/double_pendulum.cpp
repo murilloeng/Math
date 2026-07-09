@@ -20,7 +20,7 @@ void tests::solvers::newmark::double_pendulum(void)
 	solver.m_size = 2;
 	solver.step_max(2000);
 	solver.m_t_max = 1.00e+01;
-	solver.convergence().m_type = math::solvers::Convergence::Type::Fixed;
+	solver.convergence().type(math::solvers::Convergence::Type::Fixed);
 	//initials
 	solver.allocate();
 	solver.m_x_old[0] = +M_PI_4;
