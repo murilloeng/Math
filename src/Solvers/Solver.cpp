@@ -88,6 +88,23 @@ namespace math
 			return m_watch_dof = watch_dof;
 		}
 
+		int32_t* Solver::rows_map(void) const
+		{
+			return m_rows_map;
+		}
+		int32_t* Solver::cols_map(void) const
+		{
+			return m_cols_map;
+		}
+		int32_t* Solver::rows_map(int32_t* rows_map)
+		{
+			return m_rows_map = rows_map;
+		}
+		int32_t* Solver::cols_map(int32_t* cols_map)
+		{
+			return m_cols_map = cols_map;
+		}
+
 		double Solver::time_min(void) const
 		{
 			return m_t_min;

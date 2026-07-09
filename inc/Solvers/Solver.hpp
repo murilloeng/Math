@@ -71,6 +71,11 @@ namespace math
 			uint32_t watch_dof(uint32_t);
 			uint32_t watch_dof(void) const;
 
+			int32_t* rows_map(int32_t*);
+			int32_t* cols_map(int32_t*);
+			int32_t* rows_map(void) const;
+			int32_t* cols_map(void) const;
+
 			double time_min(double);
 			double time_max(double);
 			double time_min(void) const;
