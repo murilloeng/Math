@@ -80,6 +80,8 @@ namespace math
 			double time_max(double);
 			double time_min(void) const;
 			double time_max(void) const;
+			double time_old(void) const;
+			double time_new(void) const;
 
 			double step_size(double);
 			double step_size(void) const;

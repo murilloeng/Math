@@ -121,6 +121,14 @@ namespace math
 		{
 			return m_t_max = t_max;
 		}
+		double Solver::time_old(void) const
+		{
+			return m_t_old;
+		}
+		double Solver::time_new(void) const
+		{
+			return m_t_new;
+		}
 
 		double Solver::step_size(void) const
 		{
