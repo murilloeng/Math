@@ -23,18 +23,18 @@ namespace math
 			{
 				StepMaximum,
 				TimeMaximum,
-				LoadLimitMinimum,
-				LoadLimitMaximum,
-				LoadLocalMinimum,
-				LoadLocalMaximum,
-				LoadValueNegative,
-				LoadValuePositive,
 				StateLimitMinimum,
 				StateLimitMaximum,
 				StateLocalMinimum,
 				StateLocalMaximum,
 				StateValueNegative,
 				StateValuePositive,
+				ParameterLimitMinimum,
+				ParameterLimitMaximum,
+				ParameterLocalMinimum,
+				ParameterLocalMaximum,
+				ParameterValueNegative,
+				ParameterValuePositive,
 				Last
 			};
 
@@ -47,30 +47,45 @@ namespace math
 			//stop
 			bool stop(void);
 
+			//data
+			uint32_t add_type(Type);
+			uint32_t types(void) const;
+
+			double state_min(double);
+			double state_min(void) const;
+
+			double state_max(double);
+			double state_max(void) const;
+
+			double parameter_min(double);
+			double parameter_min(void) const;
+
+			double parameter_max(double);
+			double parameter_max(void) const;
+
 		private:
 			//stop
 			bool stop_step_maximum(void) const;
 			bool stop_time_maximum(void) const;
-			bool stop_load_limit_minimum(void) const;
-			bool stop_load_limit_maximum(void) const;
-			bool stop_load_local_minimum(void) const;
-			bool stop_load_local_maximum(void) const;
-			bool stop_load_value_negative(void) const;
-			bool stop_load_value_positive(void) const;
 			bool stop_state_limit_minimum(void) const;
 			bool stop_state_limit_maximum(void) const;
 			bool stop_state_local_minimum(void) const;
 			bool stop_state_local_maximum(void) const;
 			bool stop_state_value_negative(void) const;
 			bool stop_state_value_positive(void) const;
+			bool stop_parameter_limit_minimum(void) const;
+			bool stop_parameter_limit_maximum(void) const;
+			bool stop_parameter_local_minimum(void) const;
+			bool stop_parameter_local_maximum(void) const;
+			bool stop_parameter_value_negative(void) const;
+			bool stop_parameter_value_positive(void) const;
 
-		public:
 			//data
 			Type m_stop;
 			uint32_t m_types;
 			Incremental* m_solver;
-			double m_p_min, m_p_max;
-			double m_x_min, m_x_max;
+			double m_state_min, m_parameter_min;
+			double m_state_max, m_parameter_max;
 		};
 	}
 }
