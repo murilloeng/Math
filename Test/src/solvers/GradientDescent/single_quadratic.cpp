@@ -12,8 +12,8 @@ void tests::solvers::gradient_descent::single_quadratic(void)
 
 	//solver
 	solver.m_size = 1;
+	solver.iteration_max(1000);
 	solver.m_step_size = 1.00e-02;
-	solver.m_iteration_max = 1000;
 	solver.m_gradient = [] (double* g, const double* x) { g[0] = x[0]; };
 
 	//setup

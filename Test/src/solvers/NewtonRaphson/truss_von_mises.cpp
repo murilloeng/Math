@@ -29,7 +29,7 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	{
 		K[0] = 3 * x[0] * x[0] - 1;
 	};
-	solver.m_continuation.m_type = math::solvers::Continuation::Type::ArcLengthSpherical;
+	solver.continuation().m_type = math::solvers::Continuation::Type::ArcLengthSpherical;
 	//setup
 	solver.allocate();
 	solver.m_x_old[0] = 1;

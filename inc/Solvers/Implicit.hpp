@@ -11,13 +11,27 @@ namespace math
 	{
 		class Implicit : public virtual Solver
 		{
-		public:
+		protected:
 			//constructor
 			Implicit(void);
 
 			//destructor
 			~Implicit(void);
 
+		public:
+			//data
+			uint32_t attempt(void) const;
+			uint32_t iteration(void) const;
+
+			uint32_t attempt_max(uint32_t);
+			uint32_t attempt_max(void) const;
+
+			uint32_t iteration_max(uint32_t);
+			uint32_t iteration_max(void) const;
+
+			Convergence& convergence(void);
+			Continuation& continuation(void);
+		
 		protected:
 			//solve
 			void print(void) override;
@@ -26,7 +40,6 @@ namespace math
 			//compute
 			virtual bool equilibrium(void);
 
-		public:
 			//data
 			Convergence m_convergence;
 			Continuation m_continuation;

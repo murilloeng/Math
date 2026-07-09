@@ -22,6 +22,43 @@ namespace math
 			return;
 		}
 
+		//data
+		uint32_t Implicit::attempt(void) const
+		{
+			return m_attempt;
+		}
+		uint32_t Implicit::iteration(void) const
+		{
+			return m_iteration;
+		}
+
+		uint32_t Implicit::attempt_max(void) const
+		{
+			return m_attempt_max;
+		}
+		uint32_t Implicit::attempt_max(uint32_t attempt_max)
+		{
+			return m_attempt_max;
+		}
+
+		uint32_t Implicit::iteration_max(void) const
+		{
+			return m_iteration_max;
+		}
+		uint32_t Implicit::iteration_max(uint32_t iteration_max)
+		{
+			return m_iteration_max;
+		}
+
+		Convergence& Implicit::convergence(void)
+		{
+			return m_convergence;
+		}
+		Continuation& Implicit::continuation(void)
+		{
+			return m_continuation;
+		}
+
 		//solve
 		void Implicit::print(void)
 		{
