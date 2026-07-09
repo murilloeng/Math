@@ -10,9 +10,9 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		StopCriteria::StopCriteria(Incremental* solver) :
-			m_stop{Type::Last}, m_types{uint32_t(Type::StepMaximum) & uint32_t(Type::TimeMaximum)}, m_solver{solver},
-			m_state_min{-DBL_MAX}, m_parameter_min{-DBL_MAX}, m_state_max{+DBL_MAX}, m_parameter_max{+DBL_MAX}
+		StopCriteria::StopCriteria(Incremental* solver) : 
+			m_stop_type{Type::Last}, m_types{1 << uint32_t(Type::StepMaximum) & 1 << uint32_t(Type::TimeMaximum)}, 
+			m_solver{solver}, m_state_min{-DBL_MAX}, m_parameter_min{-DBL_MAX}, m_state_max{+DBL_MAX}, m_parameter_max{+DBL_MAX}
 		{
 			return;
 		}
@@ -38,12 +38,12 @@ namespace math
 				&StopCriteria::stop_parameter_value_negative, &StopCriteria::stop_parameter_value_positive
 			};
 			//stop
-			m_stop = Type::Last;
+			m_stop_type = Type::Last;
 			for(uint32_t i = 0; i < uint32_t(Type::Last); i++)
 			{
 				if((i < 2 || m_types & 1 << i) && (this->*fun[i])())
 				{
-					m_stop = Type(1 << i);
+					m_stop_type = Type(1 << i);
 					return true;
 				}
 			}
@@ -58,6 +58,11 @@ namespace math
 		uint32_t StopCriteria::add_type(Type type)
 		{
 			return m_types |= 1 << uint32_t(type);
+		}
+
+		StopCriteria::Type StopCriteria::stop_type(void) const
+		{
+			return m_stop_type;
 		}
 
 		double StopCriteria::state_min(void) const

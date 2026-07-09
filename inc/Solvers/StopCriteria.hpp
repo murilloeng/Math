@@ -51,6 +51,8 @@ namespace math
 			uint32_t add_type(Type);
 			uint32_t types(void) const;
 
+			Type stop_type(void) const;
+
 			double state_min(double);
 			double state_min(void) const;
 
@@ -81,7 +83,7 @@ namespace math
 			bool stop_parameter_value_positive(void) const;
 
 			//data
-			Type m_stop;
+			Type m_stop_type;
 			uint32_t m_types;
 			Incremental* m_solver;
 			double m_state_min, m_parameter_min;
