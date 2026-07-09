@@ -48,10 +48,10 @@ void tests::solvers::harmonic::duffing(void)
 	//setup
 	solver.load(l);
 	solver.dofs(1);
-	solver.m_dp0 = dp0;
 	solver.step_max(ns);
 	solver.harmonics(3);
-	solver.m_watch_dof = 1;
+	solver.watch_dof(1);
+	solver.step_size(dp0);
 	solver.frequency(w_min);
 	solver.stop_criteria().parameter_max(w_max);
 	solver.control(math::solvers::Harmonic::Control::Frequency);

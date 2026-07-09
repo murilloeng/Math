@@ -22,9 +22,9 @@ void tests::solvers::newton_raphson::spring_buckling(void)
 	math::solvers::NewtonRaphson solver;
 	math::validation::Validator validator;
 	//setup
-	solver.m_size = 1;
+	solver.size(1);
 	solver.step_max(400);
-	solver.m_dp0 = 1.00e-02;
+	solver.step_size(1.00e-02);
 	solver.residue([](double* r, double p, const double* x)
 	{
 		r[0] = p - Ks / (Fs * Ls) * x[0] / sin(x[0] + qs);
@@ -40,7 +40,7 @@ void tests::solvers::newton_raphson::spring_buckling(void)
 	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthSpherical);
 	//setup
 	solver.allocate();
-	solver.m_x_old[0] = 0;
+	solver.state_old(0, 0);
 	//solve
 	solver.solve();
 	solver.save("Test/data/Solvers/Newton Raphson/Spring buckling/numeric.txt");

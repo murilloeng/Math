@@ -14,18 +14,18 @@ void tests::solvers::gradient_descent::single_quartic(void)
 	math::solvers::GradientDescent solver;
 
 	//solver
-	solver.m_size = 1;
+	solver.size(1);
 	solver.step_size(1.00e-02);
 	solver.iteration_max(10000);
 	solver.gradient([] (double* g, const double* x) { g[0] = 4 * x[0] * (x[0] * x[0] - 1); });
 
 	//setup
 	solver.allocate();
-	solver.m_x_old[0] = +1.00e-05;
+	solver.state_old(0, +1.00e-05);
 
 	//solve
 	solver.solve();
 
 	//print
-	printf("Status: %s\n", solver.m_status ? "✅" : "❌");
+	printf("Status: %s\n", solver.status() ? "✅" : "❌");
 }

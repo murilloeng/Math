@@ -56,6 +56,140 @@ namespace math
 		}
 
 		//data
+		bool Solver::silent(void) const
+		{
+			return m_silent;
+		}
+		bool Solver::silent(bool silent)
+		{
+			return m_silent = silent;
+		}
+
+		bool Solver::status(void) const
+		{
+			return m_status;
+		}
+
+		uint32_t Solver::size(void) const
+		{
+			return m_size;
+		}
+		uint32_t Solver::size(uint32_t size)
+		{
+			return m_size = size;
+		}
+
+		uint32_t Solver::watch_dof(void) const
+		{
+			return m_watch_dof;
+		}
+		uint32_t Solver::watch_dof(uint32_t watch_dof)
+		{
+			return m_watch_dof = watch_dof;
+		}
+
+		double Solver::time_min(void) const
+		{
+			return m_t_min;
+		}
+		double Solver::time_max(void) const
+		{
+			return m_t_max;
+		}
+		double Solver::time_min(double t_min)
+		{
+			return m_t_min = t_min;
+		}
+		double Solver::time_max(double t_max)
+		{
+			return m_t_max = t_max;
+		}
+
+		double Solver::step_size(void) const
+		{
+			return m_dp0;
+		}
+		double Solver::step_size(double dp0)
+		{
+			return m_dp0 = dp0;
+		}
+
+		double* Solver::state_old(void)
+		{
+			return m_x_old;
+		}
+		double* Solver::state_new(void)
+		{
+			return m_x_new;
+		}
+		double Solver::state_old(uint32_t index)
+		{
+			return m_x_old[index];
+		}
+		double Solver::state_new(uint32_t index)
+		{
+			return m_x_new[index];
+		}
+		double Solver::state_old(uint32_t index, double x)
+		{
+			return m_x_old[index] = x;
+		}
+		double Solver::state_new(uint32_t index, double x)
+		{
+			return m_x_new[index] = x;
+		}
+
+		double* Solver::velocity_old(void)
+		{
+			return m_v_old;
+		}
+		double* Solver::velocity_new(void)
+		{
+			return m_v_new;
+		}
+		double Solver::velocity_old(uint32_t index)
+		{
+			return m_v_old[index];
+		}
+		double Solver::velocity_new(uint32_t index)
+		{
+			return m_v_new[index];
+		}
+		double Solver::velocity_old(uint32_t index, double v)
+		{
+			return m_v_old[index] = v;
+		}
+		double Solver::velocity_new(uint32_t index, double v)
+		{
+			return m_v_new[index] = v;
+		}
+
+		double* Solver::acceleration_old(void)
+		{
+			return m_a_old;
+		}
+		double* Solver::acceleration_new(void)
+		{
+			return m_a_new;
+		}
+		double Solver::acceleration_old(uint32_t index)
+		{
+			return m_a_old[index];
+		}
+		double Solver::acceleration_new(uint32_t index)
+		{
+			return m_a_new[index];
+		}
+		double Solver::acceleration_old(uint32_t index, double a)
+		{
+			return m_a_old[index] = a;
+		}
+		double Solver::acceleration_new(uint32_t index, double a)
+		{
+			return m_a_new[index] = a;
+		}
+
+		//data
 		void Solver::cleanup(void)
 		{
 			//data

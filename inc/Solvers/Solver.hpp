@@ -11,6 +11,15 @@ namespace math
 {
 	namespace solvers
 	{
+		class Convergence;
+		class Continuation;
+	}
+}
+
+namespace math
+{
+	namespace solvers
+	{
 		class Solver
 		{
 		public:
@@ -50,6 +59,47 @@ namespace math
 			virtual uint32_t force_set(void) const = 0;
 			virtual uint32_t tangent_set(void) const = 0;
 
+			//data
+			bool silent(bool);
+			bool silent(void) const;
+
+			bool status(void) const;
+
+			uint32_t size(uint32_t);
+			uint32_t size(void) const;
+
+			uint32_t watch_dof(uint32_t);
+			uint32_t watch_dof(void) const;
+
+			double time_min(double);
+			double time_max(double);
+			double time_min(void) const;
+			double time_max(void) const;
+
+			double step_size(double);
+			double step_size(void) const;
+
+			double* state_old(void);
+			double* state_new(void);
+			double state_old(uint32_t);
+			double state_new(uint32_t);
+			double state_old(uint32_t, double);
+			double state_new(uint32_t, double);
+
+			double* velocity_old(void);
+			double* velocity_new(void);
+			double velocity_old(uint32_t);
+			double velocity_new(uint32_t);
+			double velocity_old(uint32_t, double);
+			double velocity_new(uint32_t, double);
+
+			double* acceleration_old(void);
+			double* acceleration_new(void);
+			double acceleration_old(uint32_t);
+			double acceleration_new(uint32_t);
+			double acceleration_old(uint32_t, double);
+			double acceleration_new(uint32_t, double);
+
 		protected:
 			//solve
 			virtual bool stop(void);
@@ -72,7 +122,6 @@ namespace math
 			//solve
 			bool solve(const double*, const double*, double*) const;
 
-		public:
 			//data
 			bool m_silent;
 			bool m_status;
@@ -94,6 +143,10 @@ namespace math
 			double *m_dxr, *m_dxt, *m_ddxr, *m_ddxt;
 			double m_p_old, m_p_new, m_dp, m_dp0, m_ddp;
 			double m_t_old, m_t_new, m_dt, m_t_min, m_t_max;
+
+			//friends
+			friend class math::solvers::Convergence;
+			friend class math::solvers::Continuation;
 		};
 	}
 }

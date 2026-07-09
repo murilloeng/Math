@@ -45,10 +45,10 @@ void tests::solvers::harmonic::linear(void)
 	solver.dofs(1);
 	solver.step_max(ns);
 	solver.harmonics(1);
+	solver.watch_dof(1);
 	solver.load(1.00e+00);
-	solver.m_watch_dof = 1;
 	solver.frequency(1.00e-01);
-	solver.m_dp0 = (wf - w0) / ns;
+	solver.step_size((wf - w0) / ns);
 	solver.control(math::solvers::Harmonic::Control::Frequency);
 	solver.continuation().type(math::solvers::Continuation::Type::LoadControl);
 	//system

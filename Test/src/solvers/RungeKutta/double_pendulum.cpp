@@ -17,14 +17,15 @@ void tests::solvers::runge_kutta::double_pendulum(void)
 	math::solvers::RungeKutta solver;
 	math::validation::Validator validator;
 	//setup
-	solver.m_size = 2;
+	solver.size(2);
 	solver.step_max(2000);
-	solver.m_t_max =1.00e+01;
+	solver.time_max(1.00e+01);
 	//initials
 	solver.allocate();
-	solver.m_x_old[0] = +M_PI_4;
-	solver.m_x_old[1] = -M_PI_4;
-	solver.m_v_old[0] = solver.m_v_old[1] = 0;
+	solver.velocity_old(0, 0);
+	solver.velocity_old(1, 0);
+	solver.state_old(0, +M_PI_4);
+	solver.state_old(1, -M_PI_4);
 	//forces
 	solver.internal_force([m2, l1, l2](double* fi, const double* x, const double* v){
 		//data

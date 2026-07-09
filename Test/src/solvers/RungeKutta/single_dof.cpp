@@ -21,13 +21,13 @@ void tests::solvers::runge_kutta::single_dof(void)
 	math::solvers::RungeKutta solver;
 	math::validation::Validator validator;
 	//setup
-	solver.m_size = 1;
+	solver.size(1);
 	solver.step_max(2000);
-	solver.m_t_max = 2 * M_PI * n / w0;
+	solver.time_max(2 * M_PI * n / w0);
 	//initials
 	solver.allocate();
-	solver.m_x_old[0] = x0;
-	solver.m_v_old[0] = v0;
+	solver.state_old(0, x0);
+	solver.velocity_old(0, v0);
 	//system
 	solver.inertia([m](double* M, const double*){
 		M[0] = m;

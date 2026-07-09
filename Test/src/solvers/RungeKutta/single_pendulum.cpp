@@ -16,13 +16,13 @@ void tests::solvers::runge_kutta::single_pendulum(void)
 	math::solvers::RungeKutta solver;
 	math::validation::Validator validator;
 	//setup
-	solver.m_size = 1;
+	solver.size(1);
 	solver.step_max(1000);
-	solver.m_t_max =1.00e+01;
+	solver.time_max(1.00e+01);
 	//initials
 	solver.allocate();
-	solver.m_x_old[0] = x0;
-	solver.m_v_old[0] = v0;
+	solver.state_old(0, x0);
+	solver.velocity_old(0, v0);
 	//system
 	solver.inertia([](double* M, const double*){
 		M[0] = 1;

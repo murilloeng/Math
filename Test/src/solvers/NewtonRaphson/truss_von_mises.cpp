@@ -14,9 +14,9 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	math::solvers::NewtonRaphson solver;
 	math::validation::Validator validator;
 	//setup
-	solver.m_size = 1;
+	solver.size(1);
 	solver.step_max(400);
-	solver.m_dp0 = 1.00e-02;
+	solver.step_size(1.00e-02);
 	solver.residue([](double* r, double p, const double* x)
 	{
 		r[0] = -p - x[0] * (x[0] * x[0] - 1);
@@ -32,7 +32,7 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthSpherical);
 	//setup
 	solver.allocate();
-	solver.m_x_old[0] = 1;
+	solver.state_old(0, 1);
 	//solve
 	solver.solve();
 	solver.save("Test/data/Solvers/Newton Raphson/Truss von Mises/numeric.txt");
