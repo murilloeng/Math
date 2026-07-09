@@ -31,7 +31,7 @@ namespace math
 
 			Convergence& convergence(void);
 			Continuation& continuation(void);
-		
+
 		protected:
 			//solve
 			void print(void) override;

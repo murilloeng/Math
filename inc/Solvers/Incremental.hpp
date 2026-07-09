@@ -39,7 +39,7 @@ namespace math
 			void print(void) override;
 			void setup(void) override;
 			void record(void) override;
-			
+
 			//allocate
 			void cleanup(void) override;
 			void allocate_state(void) override;

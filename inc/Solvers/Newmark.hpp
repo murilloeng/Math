@@ -69,7 +69,7 @@ namespace math
 
 			//data
 			double m_g, m_b;
-			
+
 			Inertia m_inertia;
 			Damping m_damping;
 			Stiffness m_stiffness;

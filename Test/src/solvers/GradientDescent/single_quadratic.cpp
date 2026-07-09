@@ -12,20 +12,20 @@ void tests::solvers::gradient_descent::single_quadratic(void)
 {
 	//data
 	math::solvers::GradientDescent solver;
-	
+
 	//solver
 	solver.size(1);
 	solver.step_size(1.00e-01);
 	solver.iteration_max(1000);
 	solver.gradient([] (double* g, const double* x) { g[0] = x[0]; });
-	
+
 	//setup
 	solver.allocate();
 	solver.state_old(0, 1.00e+00);
-	
+
 	//solve
 	solver.solve();
-	
+
 	//print
 	printf("Status: %s\n", solver.status() ? "✅" : "❌");
 }

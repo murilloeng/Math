@@ -15,7 +15,7 @@ namespace math
 		{
 			return;
 		}
-		
+
 		//destructor
 		Implicit::~Implicit(void)
 		{
