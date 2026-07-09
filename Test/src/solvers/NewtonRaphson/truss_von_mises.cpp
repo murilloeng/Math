@@ -17,18 +17,18 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	solver.m_size = 1;
 	solver.step_max(400);
 	solver.m_dp0 = 1.00e-02;
-	solver.m_residue = [](double* r, double p, const double* x)
+	solver.residue([](double* r, double p, const double* x)
 	{
 		r[0] = -p - x[0] * (x[0] * x[0] - 1);
-	};
-	solver.m_tangent_p = [](double* g, double p, const double* x)
+	});
+	solver.tangent_p([](double* g, double p, const double* x)
 	{
 		g[0] = -1;
-	};
-	solver.m_tangent_x = [](double* K, double p, const double* x)
+	});
+	solver.tangent_x([](double* K, double p, const double* x)
 	{
 		K[0] = 3 * x[0] * x[0] - 1;
-	};
+	});
 	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthSpherical);
 	//setup
 	solver.allocate();

@@ -63,6 +63,52 @@ namespace math
 			return 1 << uint32_t(Tangent::K);
 		}
 
+		//data
+		NewtonRaphson::Residue NewtonRaphson::residue(void) const
+		{
+			return m_residue;
+		}
+		NewtonRaphson::Residue NewtonRaphson::residue(NewtonRaphson::Residue residue)
+		{
+			return m_residue = residue;
+		}
+
+		NewtonRaphson::System_1 NewtonRaphson::system_1(void) const
+		{
+			return m_system_1;
+		}
+		NewtonRaphson::System_1 NewtonRaphson::system_1(NewtonRaphson::System_1 system_1)
+		{
+			return m_system_1 = system_1;
+		}
+
+		NewtonRaphson::System_2 NewtonRaphson::system_2(void) const
+		{
+			return m_system_2;
+		}
+		NewtonRaphson::System_2 NewtonRaphson::system_2(NewtonRaphson::System_2 system_2)
+		{
+			return m_system_2 = system_2;
+		}
+
+		NewtonRaphson::Tangent_p NewtonRaphson::tangent_p(void) const
+		{
+			return m_tangent_p;
+		}
+		NewtonRaphson::Tangent_p NewtonRaphson::tangent_p(NewtonRaphson::Tangent_p tangent_p)
+		{
+			return m_tangent_p = tangent_p;
+		}
+
+		NewtonRaphson::Tangent_x NewtonRaphson::tangent_x(void) const
+		{
+			return m_tangent_x;
+		}
+		NewtonRaphson::Tangent_x NewtonRaphson::tangent_x(NewtonRaphson::Tangent_x tangent_x)
+		{
+			return m_tangent_x = tangent_x;
+		}
+
 		//solve
 		void NewtonRaphson::check(void)
 		{
