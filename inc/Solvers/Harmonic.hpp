@@ -27,6 +27,16 @@ namespace math
 			void test_damping(void) const;
 			void test_stiffness(void) const;
 
+			//data
+			uint32_t dofs(uint32_t);
+			uint32_t dofs(void) const;
+
+			uint32_t harmonics(uint32_t);
+			uint32_t harmonics(void) const;
+
+			uint32_t quadrature_order(uint32_t);
+			uint32_t quadrature_order(void) const;
+
 		private:
 			//solve
 			void apply(void) override;

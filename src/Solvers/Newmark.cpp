@@ -72,6 +72,70 @@ namespace math
 			return 1 << uint32_t(Tangent::K) | 1 << uint32_t(Tangent::C) | 1 << uint32_t(Tangent::M);
 		}
 
+		//data
+		double Newmark::beta(void) const
+		{
+			return m_b;
+		}
+		double Newmark::beta(double beta)
+		{
+			return m_b = beta;
+		}
+
+		double Newmark::gamma(void) const
+		{
+			return m_g;
+		}
+		double Newmark::gamma(double gamma)
+		{
+			return m_g = gamma;
+		}
+
+		Newmark::Inertia Newmark::inertia(void) const
+		{
+			return m_inertia;
+		}
+		Newmark::Inertia Newmark::inertia(Inertia inertia)
+		{
+			return m_inertia = inertia;
+		}
+
+		Newmark::Damping Newmark::damping(void) const
+		{
+			return m_damping;
+		}
+		Newmark::Damping Newmark::damping(Damping damping)
+		{
+			return m_damping = damping;
+		}
+
+		Newmark::Stiffness Newmark::stiffness(void) const
+		{
+			return m_stiffness;
+		}
+		Newmark::Stiffness Newmark::stiffness(Stiffness stiffness)
+		{
+			return m_stiffness = stiffness;
+		}
+
+		Newmark::InternalForce Newmark::internal_force(void) const
+		{
+			return m_internal_force;
+		}
+		Newmark::InternalForce Newmark::internal_force(InternalForce internal_force)
+		{
+			return m_internal_force = internal_force;
+		}
+
+		Newmark::ExternalForce Newmark::external_force(void) const
+		{
+			return m_external_force;
+		}
+		Newmark::ExternalForce Newmark::external_force(ExternalForce external_force)
+		{
+			return m_external_force = external_force;
+		}
+
 		//solve
 		void Newmark::check(void)
 		{

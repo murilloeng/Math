@@ -221,6 +221,34 @@ namespace math
 			}
 		}
 
+		//data
+		uint32_t Harmonic::dofs(void) const
+		{
+			return m_dofs;
+		}
+		uint32_t Harmonic::dofs(uint32_t dofs)
+		{
+			return m_dofs = dofs;
+		}
+
+		uint32_t Harmonic::harmonics(void) const
+		{
+			return m_harmonics;
+		}
+		uint32_t Harmonic::harmonics(uint32_t harmonics)
+		{
+			return m_harmonics = harmonics;
+		}
+
+		uint32_t Harmonic::quadrature_order(void) const
+		{
+			return m_quadrature_order;
+		}
+		uint32_t Harmonic::quadrature_order(uint32_t quadrature_order)
+		{
+			return m_quadrature_order = quadrature_order;
+		}
+
 		//solve
 		void Harmonic::apply(void)
 		{

@@ -27,7 +27,7 @@ void tests::solvers::newmark::double_pendulum(void)
 	solver.m_x_old[1] = -M_PI_4;
 	solver.m_v_old[0] = solver.m_v_old[1] = 0;
 	//forces
-	solver.m_internal_force = [m2, l1, l2](double* fi, const double* x, const double* v){
+	solver.internal_force([m2, l1, l2](double* fi, const double* x, const double* v){
 		//data
 		const double q1 = x[0];
 		const double q2 = x[1];
@@ -37,8 +37,8 @@ void tests::solvers::newmark::double_pendulum(void)
 		//force
 		fi[0] = -m2 * l1 * l2 * sin(dq) * v2 * v2;
 		fi[1] = +m2 * l1 * l2 * sin(dq) * v1 * v1;
-	};
-	solver.m_external_force = [g, m1, m2, l1, l2](double* fe, const double* x, const double*, double){
+	});
+	solver.external_force([g, m1, m2, l1, l2](double* fe, const double* x, const double*, double){
 		//data
 		const double q1 = x[0];
 		const double q2 = x[1];
@@ -46,9 +46,9 @@ void tests::solvers::newmark::double_pendulum(void)
 		//force
 		fe[0] = -mt * g * l1 * sin(q1);
 		fe[1] = -m2 * g * l2 * sin(q2);
-	};
+	});
 	//tangents
-	solver.m_inertia = [m1, m2, l1, l2](double* M, const double* x){
+	solver.inertia([m1, m2, l1, l2](double* M, const double* x){
 		//data
 		const double q1 = x[0];
 		const double q2 = x[1];
@@ -58,8 +58,8 @@ void tests::solvers::newmark::double_pendulum(void)
 		M[0] = mt * l1 * l1;
 		M[3] = m2 * l2 * l2;
 		M[1] = M[2] = m2 * l1 * l2 * cos(dq);
-	};
-	solver.m_damping = [m2, l1, l2](double* C, const double* x, const double* v, double){
+	});
+	solver.damping([m2, l1, l2](double* C, const double* x, const double* v, double){
 		//data
 		const double q1 = x[0];
 		const double q2 = x[1];
@@ -67,12 +67,11 @@ void tests::solvers::newmark::double_pendulum(void)
 		const double v2 = v[1];
 		const double dq = q2 - q1;
 		//damping
-		C[0] = 0;
-		C[3] = 0;
+		C[0] = C[3] = 0;
 		C[1] = +2 * m2 * l1 * l2 * sin(dq) * v1;
 		C[2] = -2 * m2 * l1 * l2 * sin(dq) * v2;
-	};
-	solver.m_stiffness = [g, m1, m2, l1, l2](double* K, const double* x, const double* v, const double* a, double){
+	});
+	solver.stiffness([g, m1, m2, l1, l2](double* K, const double* x, const double* v, const double* a, double){
 		//data
 		const double q1 = x[0];
 		const double q2 = x[1];
@@ -87,7 +86,7 @@ void tests::solvers::newmark::double_pendulum(void)
 		K[2] = -m2 * l1 * l2 * cos(dq) * v2 * v2 - m2 * l1 * l2 * sin(dq) * a2;
 		K[0] = +m2 * l1 * l2 * cos(dq) * v2 * v2 + m2 * l1 * l2 * sin(dq) * a2 + mt * g * l1 * cos(q1);
 		K[3] = +m2 * l1 * l2 * cos(dq) * v1 * v1 - m2 * l1 * l2 * sin(dq) * a1 + m2 * g * l2 * cos(q2);
-	};
+	});
 	//solve
 	solver.solve();
 	//save

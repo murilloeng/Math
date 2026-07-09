@@ -38,13 +38,13 @@ namespace math
 		private:
 			//solve
 			void check(void) override;
+			void setup(void) override;
 			void compute(void) override;
 			void predictor(void) override;
 			void corrector(void) override;
 
 			//data
-			using Implicit::m_attempt, Implicit::m_attempt_max;
-			using Implicit::m_convergence, Implicit::m_continuation;
+			using Implicit::attempt, Implicit::attempt_max, Implicit::convergence, Implicit::continuation;
 
 			//data
 			double m_step_size;

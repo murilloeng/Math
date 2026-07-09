@@ -10,13 +10,14 @@ namespace math
 	{
 		class Incremental : public virtual Solver
 		{
-		public:
+		protected:
 			//constructor
 			Incremental(void);
 
 			//destructor
 			~Incremental(void);
 
+		public:
 			//solve
 			void solve(void) override;
 			virtual void step(void) = 0;

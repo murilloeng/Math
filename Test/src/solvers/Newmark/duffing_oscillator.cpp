@@ -30,22 +30,22 @@ void tests::solvers::newmark::duffing_oscillator(void)
 	solver.m_x_old[0] = x0;
 	solver.m_v_old[0] = v0;
 	//forces
-	solver.m_internal_force = [k, c, knl](double* fi, const double* x, const double* v){
+	solver.internal_force([k, c, knl](double* fi, const double* x, const double* v){
 		fi[0] = k * x[0] + c * v[0] + knl * x[0] * x[0] * x[0];
-	};
-	solver.m_external_force = [F, w](double* fe, const double*, const double*, double t){
+	});
+	solver.external_force([F, w](double* fe, const double*, const double*, double t){
 		fe[0] = F * sin(w * t);
-	};
+	});
 	//tangents
-	solver.m_inertia = [m](double* M, const double*){
+	solver.inertia([m](double* M, const double*){
 		M[0] = m;
-	};
-	solver.m_damping = [c](double* C, const double*, const double*, double){
+	});
+	solver.damping([c](double* C, const double*, const double*, double){
 		C[0] = c;
-	};
-	solver.m_stiffness = [k, knl](double* K, const double* x, const double*, const double*, double){
+	});
+	solver.stiffness([k, knl](double* K, const double* x, const double*, const double*, double){
 		K[0] = k + 3 * knl * x[0] * x[0];
-	};
+	});
 	//solve
 	solver.solve();
 	//save

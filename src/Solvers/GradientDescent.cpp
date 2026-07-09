@@ -81,6 +81,11 @@ namespace math
 				throw std::runtime_error("gradient descent called with gradient missing!");
 			}
 		}
+		void GradientDescent::setup(void)
+		{
+			Solver::setup();
+			Implicit::setup();
+		}
 		void GradientDescent::compute(void)
 		{
 			m_gradient(m_r, m_x_new);
