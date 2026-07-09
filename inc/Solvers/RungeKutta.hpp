@@ -24,6 +24,21 @@ namespace math
 			uint32_t force_set(void) const override;
 			uint32_t tangent_set(void) const override;
 
+			//types
+			typedef std::function<void(double*, const double*)> Inertia;
+			typedef std::function<void(double*, const double*, const double*)> InternalForce;
+			typedef std::function<void(double*, const double*, const double*, double)> ExternalForce;
+
+			//data
+			Inertia inertia(Inertia);
+			Inertia inertia(void) const;
+
+			InternalForce internal_force(void) const;
+			InternalForce internal_force(InternalForce);
+
+			ExternalForce external_force(void) const;
+			ExternalForce external_force(ExternalForce);
+
 		private:
 			//solve
 			void check(void) override;
@@ -38,11 +53,10 @@ namespace math
 			void compute_tangent_3(void);
 			void compute_tangent_4(void);
 
-		public:
 			//data
-			std::function<void(double*, const double*)> m_inertia;
-			std::function<void(double*, const double*, const double*)> m_internal_force;
-			std::function<void(double*, const double*, const double*, double)> m_external_force;
+			Inertia m_inertia;
+			InternalForce m_internal_force;
+			ExternalForce m_external_force;
 
 		};
 	}

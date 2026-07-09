@@ -52,6 +52,34 @@ namespace math
 			return 1 << (uint32_t) Tangent::M;
 		}
 
+		//data
+		RungeKutta::Inertia RungeKutta::inertia(void) const
+		{
+			return m_inertia;
+		}
+		RungeKutta::Inertia RungeKutta::inertia(Inertia inertia)
+		{
+			return m_inertia = inertia;
+		}
+
+		RungeKutta::InternalForce RungeKutta::internal_force(void) const
+		{
+			return m_internal_force;
+		}
+		RungeKutta::InternalForce RungeKutta::internal_force(InternalForce internal_force)
+		{
+			return m_internal_force = internal_force;
+		}
+
+		RungeKutta::ExternalForce RungeKutta::external_force(void) const
+		{
+			return m_external_force;
+		}
+		RungeKutta::ExternalForce RungeKutta::external_force(ExternalForce external_force)
+		{
+			return m_external_force = external_force;
+		}
+
 		//solve
 		void RungeKutta::check(void)
 		{
