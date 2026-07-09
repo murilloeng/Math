@@ -21,6 +21,14 @@ namespace math
 			void solve(void) override;
 			virtual void step(void) = 0;
 
+			//data
+			uint32_t step(void) const;
+
+			uint32_t step_max(uint32_t);
+			uint32_t step_max(void) const;
+
+			StopCriteria& stop_criteria(void);
+
 			//serialization
 			void save(const char*) const override;
 
@@ -35,11 +43,13 @@ namespace math
 			void cleanup(void) override;
 			void allocate_state(void) override;
 
-		public:
 			//data
 			uint32_t m_step, m_step_max;
 			StopCriteria m_stop_criteria;
 			double *m_x_data, *m_v_data, *m_a_data, *m_p_data, *m_t_data;
+
+			//friends
+			friend class math::solvers::StopCriteria;
 		};
 	}
 }

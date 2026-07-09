@@ -18,7 +18,7 @@ void tests::solvers::runge_kutta::double_pendulum(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 2;
-	solver.m_step_max = 2000;
+	solver.step_max(2000);
 	solver.m_t_max =1.00e+01;
 	//initials
 	solver.allocate();

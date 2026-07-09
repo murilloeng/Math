@@ -53,6 +53,26 @@ namespace math
 			}
 		}
 
+		//data
+		uint32_t Incremental::step(void) const
+		{
+			return m_step;
+		}
+
+		uint32_t Incremental::step_max(void) const
+		{
+			return m_step_max;
+		}
+		uint32_t Incremental::step_max(uint32_t step_max)
+		{
+			return m_step_max = step_max;
+		}
+
+		StopCriteria& Incremental::stop_criteria(void)
+		{
+			return m_stop_criteria;
+		}
+
 		//serialization
 		void Incremental::save(const char* path) const
 		{

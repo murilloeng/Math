@@ -22,7 +22,7 @@ void tests::solvers::runge_kutta::single_dof(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.m_step_max = 2000;
+	solver.step_max(2000);
 	solver.m_t_max = 2 * M_PI * n / w0;
 	//initials
 	solver.allocate();

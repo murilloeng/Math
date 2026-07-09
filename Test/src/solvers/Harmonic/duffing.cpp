@@ -50,13 +50,13 @@ void tests::solvers::harmonic::duffing(void)
 	solver.m_dofs = 1;
 	solver.m_w = w_min;
 	solver.m_dp0 = dp0;
-	solver.m_step_max = ns;
+	solver.step_max(ns);
 	solver.m_harmonics = 3;
 	solver.m_watch_dof = 1;
-	solver.m_stop_criteria.m_p_max = w_max;
+	solver.stop_criteria().m_p_max = w_max;
 	solver.m_control = math::solvers::Harmonic::Control::Frequency;
 	solver.m_continuation.m_type = math::solvers::Continuation::Type::ArcLengthCylindrical;
-	solver.m_stop_criteria.m_types |= 1 << uint32_t(math::solvers::StopCriteria::Type::LoadLimitMaximum);
+	solver.stop_criteria().m_types |= 1 << uint32_t(math::solvers::StopCriteria::Type::LoadLimitMaximum);
 	//system
 	solver.m_inertia = inertia;
 	solver.m_damping = damping;

@@ -15,7 +15,7 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	math::validation::Validator validator;
 	//setup
 	solver.m_size = 1;
-	solver.m_step_max = 400;
+	solver.step_max(400);
 	solver.m_dp0 = 1.00e-02;
 	solver.m_residue = [](double* r, double p, const double* x)
 	{
