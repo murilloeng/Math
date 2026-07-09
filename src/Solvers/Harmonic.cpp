@@ -325,7 +325,7 @@ namespace math
 		void Harmonic::solve(void)
 		{
 			//setup
-			m_system_2 = [this](double* r, double* g, double* K, double p, const double* z){
+			m_system = [this](double* r, double* g, double* K, double p, const double* z){
 				compute_harmonic_residue(r, z);
 				compute_harmonic_tangent_p(g, z);
 				compute_harmonic_tangent_z(K, z);

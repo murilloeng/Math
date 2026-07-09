@@ -100,8 +100,8 @@ namespace math
 			void compute_harmonic_tangent_z(double*, const double*);
 
 			//data
-			using Solver::m_size, Solver::allocate;
-			using NewtonRaphson::residue, NewtonRaphson::system_1, NewtonRaphson::system_2, NewtonRaphson::tangent_p, NewtonRaphson::tangent_x;
+			using Solver::size, Solver::allocate;
+			using NewtonRaphson::system, NewtonRaphson::residue, NewtonRaphson::tangent_p, NewtonRaphson::tangent_x;
 
 			//data
 			double m_w, m_l;

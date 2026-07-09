@@ -15,6 +15,18 @@ static double function(double x)
 {
 	return Ks / (Fs * Ls) * x / sin(x + qs);
 }
+static void residue(double* r, double p, const double* x)
+{
+	r[0] = p - Ks / (Fs * Ls) * x[0] / sin(x[0] + qs);
+}
+static void tangent_p(double* g, double p, const double* x)
+{
+	g[0] = 1;
+}
+static void tangent_x(double* K, double p, const double* x)
+{
+	K[0] = Ks / (Fs * Ls) * (1 - x[0] * cos(x[0] + qs) / sin(x[0] + qs)) / sin(x[0] + qs);
+}
 
 void tests::solvers::newton_raphson::spring_buckling(void)
 {
@@ -25,20 +37,12 @@ void tests::solvers::newton_raphson::spring_buckling(void)
 	solver.size(1);
 	solver.step_max(400);
 	solver.step_size(1.00e-02);
-	solver.residue([](double* r, double p, const double* x)
-	{
-		r[0] = p - Ks / (Fs * Ls) * x[0] / sin(x[0] + qs);
-	});
-	solver.tangent_p([](double* g, double p, const double* x)
-	{
-		g[0] = 1;
-	});
-	solver.tangent_x([](double* K, double p, const double* x)
-	{
-		K[0] = Ks / (Fs * Ls) * (1 - x[0] * cos(x[0] + qs) / sin(x[0] + qs)) / sin(x[0] + qs);
-	});
 	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthSpherical);
-	//setup
+	//system
+	solver.residue(residue);
+	solver.tangent_p(tangent_p);
+	solver.tangent_x(tangent_x);
+	//initial
 	solver.allocate();
 	solver.state_old(0, 0);
 	//solve

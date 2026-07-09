@@ -64,47 +64,38 @@ namespace math
 		}
 
 		//data
-		NewtonRaphson::Residue NewtonRaphson::residue(void) const
+		NewtonRaphson::System NewtonRaphson::system(void) const
+		{
+			return m_system;
+		}
+		NewtonRaphson::System NewtonRaphson::system(NewtonRaphson::System system)
+		{
+			return m_system = system;
+		}
+
+		NewtonRaphson::Function NewtonRaphson::residue(void) const
 		{
 			return m_residue;
 		}
-		NewtonRaphson::Residue NewtonRaphson::residue(NewtonRaphson::Residue residue)
+		NewtonRaphson::Function NewtonRaphson::residue(NewtonRaphson::Function residue)
 		{
 			return m_residue = residue;
 		}
 
-		NewtonRaphson::System_1 NewtonRaphson::system_1(void) const
-		{
-			return m_system_1;
-		}
-		NewtonRaphson::System_1 NewtonRaphson::system_1(NewtonRaphson::System_1 system_1)
-		{
-			return m_system_1 = system_1;
-		}
-
-		NewtonRaphson::System_2 NewtonRaphson::system_2(void) const
-		{
-			return m_system_2;
-		}
-		NewtonRaphson::System_2 NewtonRaphson::system_2(NewtonRaphson::System_2 system_2)
-		{
-			return m_system_2 = system_2;
-		}
-
-		NewtonRaphson::Tangent_p NewtonRaphson::tangent_p(void) const
+		NewtonRaphson::Function NewtonRaphson::tangent_p(void) const
 		{
 			return m_tangent_p;
 		}
-		NewtonRaphson::Tangent_p NewtonRaphson::tangent_p(NewtonRaphson::Tangent_p tangent_p)
+		NewtonRaphson::Function NewtonRaphson::tangent_p(NewtonRaphson::Function tangent_p)
 		{
 			return m_tangent_p = tangent_p;
 		}
 
-		NewtonRaphson::Tangent_x NewtonRaphson::tangent_x(void) const
+		NewtonRaphson::Function NewtonRaphson::tangent_x(void) const
 		{
 			return m_tangent_x;
 		}
-		NewtonRaphson::Tangent_x NewtonRaphson::tangent_x(NewtonRaphson::Tangent_x tangent_x)
+		NewtonRaphson::Function NewtonRaphson::tangent_x(NewtonRaphson::Function tangent_x)
 		{
 			return m_tangent_x = tangent_x;
 		}
@@ -112,7 +103,7 @@ namespace math
 		//solve
 		void NewtonRaphson::check(void)
 		{
-			if(!m_system_1 && !m_system_2 && !(m_residue && m_tangent_p && m_tangent_x))
+			if(!m_system && !(m_residue && m_tangent_p && m_tangent_x))
 			{
 				throw std::runtime_error("Newton-Raphson solver called with at least one method not set!");
 			}
@@ -131,14 +122,9 @@ namespace math
 		}
 		void NewtonRaphson::compute(void)
 		{
-			if(m_system_2)
+			if(m_system)
 			{
-				m_system_2(m_r, m_fe, m_K, m_p_new, m_x_new);
-			}
-			else if(m_system_1)
-			{
-				m_system_1(m_r, m_K, m_x_new);
-				for(uint32_t i = 0; i < m_size; i++) m_r[i] = m_p_new * m_fe[i] - m_r[i];
+				m_system(m_r, m_fe, m_K, m_p_new, m_x_new);
 			}
 			else
 			{
