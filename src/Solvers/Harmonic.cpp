@@ -249,6 +249,132 @@ namespace math
 			return m_quadrature_order = quadrature_order;
 		}
 
+		double Harmonic::load(void) const
+		{
+			return m_l;
+		}
+		double Harmonic::load(double load)
+		{
+			return m_l = load;
+		}
+
+		double Harmonic::frequency(void) const
+		{
+			return m_w;
+		}
+		double Harmonic::frequency(double frequency)
+		{
+			return m_w = frequency;
+		}
+
+		Harmonic::Control Harmonic::control(void) const
+		{
+			return m_control;
+		}
+		Harmonic::Control Harmonic::control(Control control)
+		{
+			return m_control = control;
+		}
+
+		Harmonic::Inertia Harmonic::inertia(void) const
+		{
+			return m_inertia;
+		}
+		Harmonic::Inertia Harmonic::inertia(Inertia inertia)
+		{
+			return m_inertia = inertia;
+		}
+
+		Harmonic::Damping Harmonic::damping(void) const
+		{
+			return m_damping;
+		}
+		Harmonic::Damping Harmonic::damping(Damping damping)
+		{
+			return m_damping = damping;
+		}
+
+		Harmonic::Stiffness Harmonic::stiffness(void) const
+		{
+			return m_stiffness;
+		}
+		Harmonic::Stiffness Harmonic::stiffness(Stiffness stiffness)
+		{
+			return m_stiffness = stiffness;
+		}
+
+		Harmonic::InternalForce Harmonic::internal_force(void) const
+		{
+			return m_internal_force;
+		}
+		Harmonic::InternalForce Harmonic::internal_force(InternalForce internal_force)
+		{
+			return m_internal_force = internal_force;
+		}
+
+		Harmonic::ExternalForce Harmonic::external_force(void) const
+		{
+			return m_external_force;
+		}
+		Harmonic::ExternalForce Harmonic::external_force(ExternalForce external_force)
+		{
+			return m_external_force = external_force;
+		}
+
+		//solve
+		void Harmonic::solve(void)
+		{
+			//setup
+			m_system_2 = [this](double* r, double* g, double* K, double p, const double* z){
+				compute_harmonic_residue(r, z);
+				compute_harmonic_tangent_p(g, z);
+				compute_harmonic_tangent_z(K, z);
+			};
+			//solve
+			NewtonRaphson::solve();
+		}
+		void Harmonic::cleanup(void)
+		{
+			//harmonic
+			double** data[] = {
+				&m_sq, &m_wq, &m_xd, &m_vd, &m_ad, &m_Kd, &m_Cd, &m_Md, &m_rd, &m_fid, &m_fed
+			};
+			for(double** ptr : data)
+			{
+				delete[] *ptr;
+				*ptr = nullptr;
+			}
+			//solver
+			NewtonRaphson::cleanup();
+		}
+		void Harmonic::allocate(void)
+		{
+			//harmonic
+			m_xd = new double[m_dofs];
+			m_vd = new double[m_dofs];
+			m_ad = new double[m_dofs];
+			m_rd = new double[m_dofs];
+			m_fid = new double[m_dofs];
+			m_fed = new double[m_dofs];
+			m_Kd = new double[m_dofs * m_dofs];
+			m_Cd = new double[m_dofs * m_dofs];
+			m_Md = new double[m_dofs * m_dofs];
+			m_sq = new double[m_quadrature_order];
+			m_wq = new double[m_quadrature_order];
+			m_size = (1 + 2 * m_harmonics) * m_dofs;
+			//solver
+			NewtonRaphson::allocate();
+		}
+		void Harmonic::allocate(uint32_t dofs, uint32_t harmonics, uint32_t quadrature_order)
+		{
+			//data
+			m_dofs = dofs;
+			m_harmonics = harmonics;
+			m_quadrature_order = quadrature_order;
+			//allocate
+			allocate();
+		}
+
 		//solve
 		void Harmonic::apply(void)
 		{
@@ -521,60 +647,6 @@ namespace math
 					}
 				}
 			}
-		}
-
-		//solver
-		void Harmonic::solve(void)
-		{
-			//setup
-			m_system_2 = [this](double* r, double* g, double* K, double p, const double* z){
-				compute_harmonic_residue(r, z);
-				compute_harmonic_tangent_p(g, z);
-				compute_harmonic_tangent_z(K, z);
-			};
-			//solve
-			NewtonRaphson::solve();
-		}
-		void Harmonic::cleanup(void)
-		{
-			//harmonic
-			double** data[] = {
-				&m_sq, &m_wq, &m_xd, &m_vd, &m_ad, &m_Kd, &m_Cd, &m_Md, &m_rd, &m_fid, &m_fed
-			};
-			for(double** ptr : data)
-			{
-				delete[] *ptr;
-				*ptr = nullptr;
-			}
-			//solver
-			NewtonRaphson::cleanup();
-		}
-		void Harmonic::allocate(void)
-		{
-			//harmonic
-			m_xd = new double[m_dofs];
-			m_vd = new double[m_dofs];
-			m_ad = new double[m_dofs];
-			m_rd = new double[m_dofs];
-			m_fid = new double[m_dofs];
-			m_fed = new double[m_dofs];
-			m_Kd = new double[m_dofs * m_dofs];
-			m_Cd = new double[m_dofs * m_dofs];
-			m_Md = new double[m_dofs * m_dofs];
-			m_sq = new double[m_quadrature_order];
-			m_wq = new double[m_quadrature_order];
-			m_size = (1 + 2 * m_harmonics) * m_dofs;
-			//solver
-			NewtonRaphson::allocate();
-		}
-		void Harmonic::allocate(uint32_t dofs, uint32_t harmonics, uint32_t quadrature_order)
-		{
-			//data
-			m_dofs = dofs;
-			m_harmonics = harmonics;
-			m_quadrature_order = quadrature_order;
-			//allocate
-			allocate();
 		}
 	}
 }

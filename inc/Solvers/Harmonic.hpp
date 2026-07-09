@@ -27,6 +27,14 @@ namespace math
 			void test_damping(void) const;
 			void test_stiffness(void) const;
 
+			//types
+			typedef std::function<void(double*, const double*, const double*)> InternalForce;
+			typedef std::function<void(double*, const double*, double, double)> ExternalForce;
+
+			typedef std::function<void(double*, const double*)> Inertia;
+			typedef std::function<void(double*, const double*, const double*)> Damping;
+			typedef std::function<void(double*, const double*, const double*, const double*, double, double, double)> Stiffness;
+
 			//data
 			uint32_t dofs(uint32_t);
 			uint32_t dofs(void) const;
@@ -36,6 +44,36 @@ namespace math
 
 			uint32_t quadrature_order(uint32_t);
 			uint32_t quadrature_order(void) const;
+
+			double load(double);
+			double load(void) const;
+
+			double frequency(double);
+			double frequency(void) const;
+
+			Control control(Control);
+			Control control(void) const;
+
+			Inertia inertia(Inertia);
+			Inertia inertia(void) const;
+
+			Damping damping(Damping);
+			Damping damping(void) const;
+
+			Stiffness stiffness(Stiffness);
+			Stiffness stiffness(void) const;
+
+			InternalForce internal_force(void) const;
+			InternalForce internal_force(InternalForce);
+
+			ExternalForce external_force(void) const;
+			ExternalForce external_force(ExternalForce);
+
+			//solve
+			void solve(void) override;
+			void cleanup(void) override;
+			void allocate(void) override;
+			void allocate(uint32_t, uint32_t, uint32_t);
 
 		private:
 			//solve
@@ -61,19 +99,9 @@ namespace math
 			void compute_harmonic_tangent_w(double*, const double*);
 			void compute_harmonic_tangent_z(double*, const double*);
 
-			//derived
-			using Solver::m_size;
-			using Solver::allocate;
-			using NewtonRaphson::m_residue;
-			using NewtonRaphson::m_system_1, NewtonRaphson::m_system_2;
-			using NewtonRaphson::m_tangent_p, NewtonRaphson::m_tangent_x;
-
-		public:
-			//solve
-			void solve(void) override;
-			void cleanup(void) override;
-			void allocate(void) override;
-			void allocate(uint32_t, uint32_t, uint32_t);
+			//data
+			using Solver::m_size, Solver::allocate;
+			using NewtonRaphson::residue, NewtonRaphson::system_1, NewtonRaphson::system_2, NewtonRaphson::tangent_p, NewtonRaphson::tangent_x;
 
 			//data
 			double m_w, m_l;

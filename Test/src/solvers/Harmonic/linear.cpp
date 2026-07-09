@@ -42,22 +42,21 @@ void tests::solvers::harmonic::linear(void)
 	const double wf = 4.00e+00;
 	math::solvers::Harmonic solver;
 	//setup
-	solver.m_dofs = 1;
+	solver.dofs(1);
 	solver.step_max(ns);
-	solver.m_l = 1.00e+00;
-	solver.m_w = 1.00e-01;
-	solver.m_harmonics = 1;
+	solver.harmonics(1);
+	solver.load(1.00e+00);
 	solver.m_watch_dof = 1;
+	solver.frequency(1.00e-01);
 	solver.m_dp0 = (wf - w0) / ns;
-	solver.m_quadrature_order = 20;
-	solver.m_control = math::solvers::Harmonic::Control::Frequency;
+	solver.control(math::solvers::Harmonic::Control::Frequency);
 	solver.continuation().type(math::solvers::Continuation::Type::LoadControl);
 	//system
-	solver.m_inertia = inertia;
-	solver.m_damping = damping;
-	solver.m_stiffness = stiffness;
-	solver.m_internal_force = internal_force;
-	solver.m_external_force = external_force;
+	solver.inertia(inertia);
+	solver.damping(damping);
+	solver.stiffness(stiffness);
+	solver.internal_force(internal_force);
+	solver.external_force(external_force);
 	//setup
 	solver.allocate();
 	//solve
