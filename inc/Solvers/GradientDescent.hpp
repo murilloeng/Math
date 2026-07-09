@@ -23,8 +23,8 @@ namespace math
 			void solve(void) override;
 
 			//data
-			double step_size(double);
-			double step_size(void) const;
+			double tolerance(double);
+			double tolerance(void) const;
 
 			Gradient gradient(Gradient);
 			Gradient gradient(void) const;
@@ -47,7 +47,6 @@ namespace math
 			using Implicit::attempt, Implicit::attempt_max, Implicit::convergence, Implicit::continuation;
 
 			//data
-			double m_step_size;
 			Gradient m_gradient;
 		};
 	}

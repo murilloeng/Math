@@ -37,13 +37,13 @@ namespace math
 		}
 
 		//data
-		double GradientDescent::step_size(void) const
+		double GradientDescent::tolerance(void) const
 		{
-			return m_step_size;
+			return m_convergence.tolerance();
 		}
-		double GradientDescent::step_size(double step_size)
+		double GradientDescent::tolerance(double tolerance)
 		{
-			return m_step_size = step_size;
+			return m_convergence.tolerance(tolerance);
 		}
 
 		GradientDescent::Gradient GradientDescent::gradient(void) const
@@ -96,7 +96,7 @@ namespace math
 		}
 		void GradientDescent::corrector(void)
 		{
-			math::Vector(m_dx, m_size) -= m_step_size * math::Vector(m_r, m_size);
+			math::Vector(m_dx, m_size) -= m_dp0 * math::Vector(m_r, m_size);
 		}
 	}
 }
