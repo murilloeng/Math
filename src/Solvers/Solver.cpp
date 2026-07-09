@@ -13,7 +13,7 @@ namespace math
 	{
 		//constructor
 		Solver::Solver(void) :
-			m_silent{true},
+			m_silent{false},
 			m_status{false},
 			m_rows_map{nullptr},
 			m_cols_map{nullptr},
