@@ -87,6 +87,27 @@ namespace math
 			return m_stop_criteria;
 		}
 
+		const double* Incremental::time_data(void) const
+		{
+			return m_t_data;
+		}
+		const double* Incremental::load_data(void) const
+		{
+			return m_p_data;
+		}
+		const double* Incremental::state_data(void) const
+		{
+			return m_x_data;
+		}
+		const double* Incremental::velocity_data(void) const
+		{
+			return m_v_data;
+		}
+		const double* Incremental::acceleration_data(void) const
+		{
+			return m_a_data;
+		}
+
 		//serialization
 		void Incremental::save(const char* path) const
 		{

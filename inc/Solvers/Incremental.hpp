@@ -31,6 +31,12 @@ namespace math
 
 			StopCriteria& stop_criteria(void);
 
+			const double* time_data(void) const;
+			const double* load_data(void) const;
+			const double* state_data(void) const;
+			const double* velocity_data(void) const;
+			const double* acceleration_data(void) const;
+
 			//serialization
 			void save(const char*) const override;
 
