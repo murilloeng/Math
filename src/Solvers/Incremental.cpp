@@ -52,6 +52,20 @@ namespace math
 				if(m_callback_step) m_callback_step();
 			}
 		}
+		void Incremental::cleanup(void)
+		{
+			//data
+			double** data[] = {
+				&m_x_data, &m_v_data, &m_a_data, &m_p_data, &m_t_data
+			};
+			//cleanup
+			Solver::cleanup();
+			for(double** ptr : data)
+			{
+				delete[] *ptr;
+				*ptr = nullptr;
+			}
+		}
 
 		//data
 		uint32_t Incremental::step(void) const
@@ -123,20 +137,6 @@ namespace math
 		}
 
 		//allocate
-		void Incremental::cleanup(void)
-		{
-			//data
-			double** data[] = {
-				&m_x_data, &m_v_data, &m_a_data, &m_p_data, &m_t_data
-			};
-			//cleanup
-			Solver::cleanup();
-			for(double** ptr : data)
-			{
-				delete[] *ptr;
-				*ptr = nullptr;
-			}
-		}
 		void Incremental::allocate_state(void)
 		{
 			Solver::allocate_state();

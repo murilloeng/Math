@@ -20,6 +20,7 @@ namespace math
 		public:
 			//solve
 			void solve(void) override;
+			void cleanup(void) override;
 			virtual void step(void) = 0;
 
 			//data
@@ -41,7 +42,6 @@ namespace math
 			void record(void) override;
 
 			//allocate
-			void cleanup(void) override;
 			void allocate_state(void) override;
 
 			//data
