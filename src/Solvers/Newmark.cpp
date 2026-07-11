@@ -40,7 +40,7 @@ namespace math
 		}
 
 		//solve
-		void Newmark::step(void)
+		void Newmark::compute_step(void)
 		{
 			for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
 			{

@@ -42,13 +42,13 @@ namespace math
 			compute();
 			for(m_step = 1; !stop(); m_step++)
 			{
-				step();
-				print();
+				compute_step();
 				if(!m_status)
 				{
 					if(!m_silent) printf("Solver failed in step %d!\n", m_step);
 					break;
 				}
+				print();
 				if(m_callback_step) m_callback_step();
 			}
 		}

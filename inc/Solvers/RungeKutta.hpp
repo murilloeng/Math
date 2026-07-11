@@ -17,7 +17,7 @@ namespace math
 			~RungeKutta(void);
 
 			//solve
-			void step(void) override;
+			void compute_step(void) override;
 
 			//data
 			uint32_t state_set(void) const override;

@@ -23,7 +23,7 @@ namespace math
 		}
 
 		//solve
-		void RungeKutta::step(void)
+		void RungeKutta::compute_step(void)
 		{
 			//predictor
 			predictor();

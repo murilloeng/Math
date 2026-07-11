@@ -31,7 +31,7 @@ namespace math
 		}
 
 		//solve
-		void NewtonRaphson::step(void)
+		void NewtonRaphson::compute_step(void)
 		{
 			for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
 			{

@@ -21,7 +21,7 @@ namespace math
 			//solve
 			void solve(void) override;
 			void cleanup(void) override;
-			virtual void step(void) = 0;
+			virtual void compute_step(void) = 0;
 
 			//data
 			uint32_t step(void) const;
