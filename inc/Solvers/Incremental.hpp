@@ -45,6 +45,7 @@ namespace math
 
 			//serialization
 			void save(const char*) const override;
+			void save(const char*, std::vector<uint32_t>) const;
 
 		protected:
 			//solve

@@ -148,6 +148,24 @@ namespace math
 			}
 			fclose(file);
 		}
+		void Incremental::save(const char* path, std::vector<uint32_t> dof_list) const
+		{
+			FILE* file = fopen(path, "w");
+			const uint32_t ss = state_set();
+			for(uint32_t i = 0; i < m_step; i++)
+			{
+				for(uint32_t dof : dof_list)
+				{
+					if(ss & 1 << uint32_t(State::x)) fprintf(file, "%+.6e ", m_x_data[dof + m_size * i]);
+					if(ss & 1 << uint32_t(State::v)) fprintf(file, "%+.6e ", m_v_data[dof + m_size * i]);
+					if(ss & 1 << uint32_t(State::a)) fprintf(file, "%+.6e ", m_a_data[dof + m_size * i]);
+				}
+				if(ss & 1 << uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
+				if(ss & 1 << uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
+				fprintf(file, "\n");
+			}
+			fclose(file);
+		}
 
 		//solve
 		bool Incremental::stop(void)
