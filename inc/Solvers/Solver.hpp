@@ -43,6 +43,10 @@ namespace math
 				K, C, M
 			};
 
+			//types
+			typedef std::function<void(void)> callback_1;
+			typedef std::function<bool(void)> callback_2;
+
 			//solve
 			virtual void solve(void) = 0;
 
@@ -107,6 +111,21 @@ namespace math
 			double acceleration_old(uint32_t, double);
 			double acceleration_new(uint32_t, double);
 
+			callback_1 callback_step(callback_1);
+			callback_1 callback_step(void) const;
+
+			callback_2 callback_stop(callback_2);
+			callback_2 callback_stop(void) const;
+
+			callback_1 callback_record(callback_1);
+			callback_1 callback_record(void) const;
+
+			callback_1 callback_update(callback_1);
+			callback_1 callback_update(void) const;
+
+			callback_1 callback_restore(callback_1);
+			callback_1 callback_restore(void) const;
+
 		protected:
 			//solve
 			virtual bool stop(void);
@@ -136,11 +155,11 @@ namespace math
 			int32_t* m_cols_map;
 			uint32_t m_size, m_watch_dof;
 
-			std::function<void(void)> m_callback_step;
-			std::function<bool(void)> m_callback_stop;
-			std::function<void(void)> m_callback_record;
-			std::function<void(void)> m_callback_update;
-			std::function<void(void)> m_callback_restore;
+			callback_1 m_callback_step;
+			callback_2 m_callback_stop;
+			callback_1 m_callback_record;
+			callback_1 m_callback_update;
+			callback_1 m_callback_restore;
 
 			double *m_K, *m_C, *m_M;
 			double *m_r, *m_fi, *m_fe;
