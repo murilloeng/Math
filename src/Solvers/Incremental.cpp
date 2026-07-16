@@ -87,27 +87,6 @@ namespace math
 			return m_stop_criteria;
 		}
 
-		double Incremental::time_data(uint32_t step) const
-		{
-			return m_t_data[step];
-		}
-		double Incremental::load_data(uint32_t step) const
-		{
-			return m_p_data[step];
-		}
-		double Incremental::state_data(uint32_t step) const
-		{
-			return m_x_data[step];
-		}
-		double Incremental::velocity_data(uint32_t step) const
-		{
-			return m_v_data[step];
-		}
-		double Incremental::acceleration_data(uint32_t step) const
-		{
-			return m_a_data[step];
-		}
-
 		const double* Incremental::time_data(void) const
 		{
 			return m_t_data;
@@ -127,6 +106,27 @@ namespace math
 		const double* Incremental::acceleration_data(void) const
 		{
 			return m_a_data;
+		}
+
+		double Incremental::time_data(uint32_t step) const
+		{
+			return m_t_data[step];
+		}
+		double Incremental::load_data(uint32_t step) const
+		{
+			return m_p_data[step];
+		}
+		double Incremental::state_data(uint32_t step, uint32_t dof) const
+		{
+			return m_x_data[step * m_size + dof];
+		}
+		double Incremental::velocity_data(uint32_t step, uint32_t dof) const
+		{
+			return m_v_data[step * m_size + dof];
+		}
+		double Incremental::acceleration_data(uint32_t step, uint32_t dof) const
+		{
+			return m_a_data[step * m_size + dof];
 		}
 
 		//serialization
