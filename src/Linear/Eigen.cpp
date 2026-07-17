@@ -341,9 +341,12 @@ namespace math
 		const uint32_t nev = m_index_max + 1;
 		const uint32_t lworkl = ncv * ncv + 8 * ncv;
 		//data
+		double workl[lworkl];
 		const double tol = 1.00e-10;
+		double* v = new double[n * n];
+		double* resid = new double[n];
+		double* workd = new double[3 * n];
 		int32_t ido = 0, info = 0, iparam[11], ipntr[11];
-		double resid[n], v[n * n], workd[3 * n], workl[lworkl];
 		//setup
 		iparam[0] = 1;
 		iparam[6] = 1;
@@ -361,6 +364,10 @@ namespace math
 		//eigenvalues
 		bool rvec = true, select[ncv];
 		dseupd_(&rvec, "A", select, m_sr, m_U, &n, nullptr, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
+		//delete
+		delete[] v;
+		delete[] resid;
+		delete[] workd;
 		//return
 		return info == 0;
 	}
