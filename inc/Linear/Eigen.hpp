@@ -17,6 +17,13 @@ namespace math
 		Eigen(double*, double*, uint32_t, double*, double*, double*, double*);
 		Eigen(double*, double*, uint32_t, double*, double*, uint32_t, uint32_t);
 
+		Eigen(double*, uint32_t, const int32_t*, const int32_t*, double*, double*, uint32_t);
+		Eigen(double*, uint32_t, const int32_t*, const int32_t*, double*, double*, double*, double*, uint32_t);
+
+		Eigen(double*, double*, uint32_t, const int32_t*, const int32_t*, double*, double*, uint32_t);
+		Eigen(double*, double*, uint32_t, const int32_t*, const int32_t*, double*, double*, double*, double*, uint32_t);
+
+
 		//destructor
 		~Eigen(void);
 
@@ -47,19 +54,29 @@ namespace math
 
 	private:
 		//compute
-		bool compute_non_symmetric_std(void);
-		bool compute_non_symmetric_gen(void);
-		bool compute_symmetric_std_full(void);
-		bool compute_symmetric_gen_full(void);
-		bool compute_symmetric_std_partial(void);
-		bool compute_symmetric_gen_partial(void);
+		bool compute_dense_symmetric_std_full(void);
+		bool compute_dense_symmetric_gen_full(void);
+		bool compute_dense_symmetric_std_partial(void);
+		bool compute_dense_symmetric_gen_partial(void);
+		bool compute_dense_non_symmetric_std_full(void);
+		bool compute_dense_non_symmetric_gen_full(void);
+
+		bool compute_sparse_symmetric_std_partial(void);
+		bool compute_sparse_symmetric_gen_partial(void);
+		bool compute_sparse_non_symmetric_std_partial(void);
+		bool compute_sparse_non_symmetric_gen_partial(void);
+
+		//sparse
+		void sparse_product(double*, const double*) const;
 
 		//data
 		bool m_full;
+		bool m_dense;
 		bool m_symmetric;
 		uint32_t m_order;
 		uint32_t m_index_min;
 		uint32_t m_index_max;
+		const int32_t *m_rows_map, *m_cols_map;
 		double *m_A, *m_B, *m_sr, *m_si, *m_U, *m_V;
 	};
 }

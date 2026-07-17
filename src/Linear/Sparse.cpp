@@ -141,6 +141,38 @@ namespace math
 		}
 		return s;
 	}
+	double Sparse::bilinear(const double* v) const
+	{
+		return bilinear(v, v);
+	}
+	double Sparse::bilinear(const Vector& v) const
+	{
+		return bilinear(v, v);
+	}
+	double Sparse::bilinear(const double* v1, const double* v2) const
+	{
+		//compute
+		double s = 0;
+		for(uint32_t i = 0; i < m_cols; i++)
+		{
+			for(int32_t j = m_cols_map_ref[i]; j < m_cols_map_ref[i + 1]; j++)
+			{
+				s += v1[m_rows_map_ref[j]] * m_data_ref[j] * v2[i];
+			}
+		}
+		//return
+		return s;
+	}
+	double Sparse::bilinear(const Vector& v1, const Vector& v2) const
+	{
+		//check
+		if(m_rows != v1.rows() || m_cols != v2.rows())
+		{
+			throw std::runtime_error("Matrix bilinear called with inconsistent dimensions!");
+		}
+		//return
+		return bilinear(v1.data(), v2.data());
+	}
 
 	bool Sparse::solve(Vector& x, const Vector& f) const
 	{

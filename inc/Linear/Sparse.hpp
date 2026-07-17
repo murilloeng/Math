@@ -43,6 +43,10 @@ namespace math
 		void zeros(void);
 		double norm(void) const;
 		double trace(void) const;
+		double bilinear(const double*) const;
+		double bilinear(const Vector&) const;
+		double bilinear(const double*, const double*) const;
+		double bilinear(const Vector&, const Vector&) const;
 
 		//solve
 		bool solve(Vector&, const Vector&) const;

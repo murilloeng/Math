@@ -3,6 +3,8 @@
 #include <cstdio>
 #include <stdexcept>
 
+#include <arpack/arpack.h>
+
 //Test
 #include "Math/Test/inc/fem.hpp"
 #include "Math/Test/inc/eigen.hpp"
@@ -17,7 +19,13 @@ int main(void)
 {
 	try
 	{
-		tests::eigen::non_symmetric_gen();
+		tests::eigen::symmetric_std_full();
+		tests::eigen::symmetric_gen_full();
+		tests::eigen::symmetric_std_partial();
+		tests::eigen::symmetric_gen_partial();
+		tests::eigen::non_symmetric_std_full();
+		tests::eigen::non_symmetric_gen_full();
+		tests::eigen::singular_value_decomposition();
 		// tests::solvers::newton_raphson::spring_buckling();
 		// tests::solvers::newton_raphson::truss_von_mises();
 

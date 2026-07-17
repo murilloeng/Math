@@ -15,45 +15,73 @@ extern "C"
 	void dggev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, double*, double*, double*, double*, const uint32_t*, double*, const uint32_t*, double*, const int32_t*, int32_t*);
 	void dsyevx_(const char*, const char*, const char*, const uint32_t*, double*, const uint32_t*, const double*, const double*, const uint32_t*, const uint32_t*, const double*, uint32_t*, double*, double*, const uint32_t*, double*, const int32_t*, int32_t*, int32_t*, int32_t*);
 	void dsygvx_(const uint32_t*, const char*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, const double*, const double*, const uint32_t*, const uint32_t*, const double*, uint32_t*, double*, double*, const uint32_t*, double*, const int32_t*, int32_t*, int32_t*, int32_t*);
+	void dsaupd_(int32_t*, const char*, const int32_t*, const char*, const int32_t*, const double*, double*, const int32_t*, double*, const int32_t*, int32_t*, int32_t*, double*, double*, const int32_t*, int32_t*);
+	void dseupd_(const bool*, const char*, bool*, double*, double*, const int32_t*, const double*, const char*, const int32_t*, const char*, const int32_t*, const double*, double*, const int32_t*, double*, const int32_t*, int32_t*, int32_t*, double*, double*, const int32_t*, int32_t*);
 }
 
 namespace math
 {
 	//constructor
 	Eigen::Eigen(double* A, uint32_t order, double* s, double* U) :
-		m_full{true}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
-		m_A{A}, m_B{nullptr}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
+		m_full{true}, m_dense{true}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
+		m_rows_map{nullptr}, m_cols_map{nullptr}, m_A{A}, m_B{nullptr}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
 	{
 		return;
 	}
 	Eigen::Eigen(double* A, uint32_t order, double* sr, double* si, double* U, double* V) :
-		m_full{true}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
-		m_A{A}, m_B{nullptr}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
+		m_full{true}, m_dense{true}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
+		m_rows_map{nullptr}, m_cols_map{nullptr}, m_A{A}, m_B{nullptr}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
 	{
 		return;
 	}
 	Eigen::Eigen(double* A, uint32_t order, double* s, double* U, uint32_t index_min, uint32_t index_max) :
-		m_full{false}, m_symmetric{true}, m_order{order}, m_index_min{index_min}, m_index_max{index_max},
-		m_A{A}, m_B{nullptr}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
+		m_full{false}, m_dense{true}, m_symmetric{true}, m_order{order}, m_index_min{index_min}, m_index_max{index_max},
+		m_rows_map{nullptr}, m_cols_map{nullptr}, m_A{A}, m_B{nullptr}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
 	{
 		return;
 	}
 
 	Eigen::Eigen(double* A, double* B, uint32_t order, double* s, double* U) :
-		m_full{true}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
-		m_A{A}, m_B{B}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
+		m_full{true}, m_dense{true}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
+		m_rows_map{nullptr}, m_cols_map{nullptr}, m_A{A}, m_B{B}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
 	{
 		return;
 	}
 	Eigen::Eigen(double* A, double* B, uint32_t order, double* sr, double* si, double* U, double* V) :
-		m_full{true}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
-		m_A{A}, m_B{B}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
+		m_full{true}, m_dense{true}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{order - 1},
+		m_rows_map{nullptr}, m_cols_map{nullptr}, m_A{A}, m_B{B}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
 	{
 		return;
 	}
 	Eigen::Eigen(double* A, double* B, uint32_t order, double* s, double* U, uint32_t index_min, uint32_t index_max) :
-		m_full{true}, m_symmetric{true}, m_order{order},m_index_min{index_min}, m_index_max{index_max},
-		m_A{A}, m_B{B}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
+		m_full{true}, m_dense{true}, m_symmetric{true}, m_order{order},m_index_min{index_min}, m_index_max{index_max},
+		m_rows_map{nullptr}, m_cols_map{nullptr}, m_A{A}, m_B{B}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
+	{
+		return;
+	}
+
+	Eigen::Eigen(double* A, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* s, double* U, uint32_t index_max) : 
+		m_full{false}, m_dense{false}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{index_max},
+		m_rows_map{rows_map}, m_cols_map{cols_map}, m_A{A}, m_B{nullptr}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
+	{
+		return;
+	}
+	Eigen::Eigen(double* A, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* sr, double* si, double* U, double* V, uint32_t index_max) : 
+		m_full{false}, m_dense{false}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{index_max},
+		m_rows_map{rows_map}, m_cols_map{cols_map}, m_A{A}, m_B{nullptr}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
+	{
+		return;
+	}
+
+	Eigen::Eigen(double* A, double* B, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* s, double* U, uint32_t index_max) : 
+		m_full{false}, m_dense{false}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{index_max},
+		m_rows_map{rows_map}, m_cols_map{cols_map}, m_A{A}, m_B{B}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
+	{
+		return;
+	}
+	Eigen::Eigen(double* A, double* B, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* sr, double* si, double* U, double* V, uint32_t index_max) : 
+		m_full{false}, m_dense{false}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{index_max},
+		m_rows_map{rows_map}, m_cols_map{cols_map}, m_A{A}, m_B{B}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
 	{
 		return;
 	}
@@ -103,13 +131,30 @@ namespace math
 	bool Eigen::compute(void)
 	{
 		//data
-		const bool data = m_B != nullptr;
+		const bool std = m_B == nullptr;
 		bool(Eigen::*methods[])(void) = {
-			&Eigen::compute_non_symmetric_std, &Eigen::compute_non_symmetric_gen,
-			&Eigen::compute_symmetric_std_full, &Eigen::compute_symmetric_std_partial,
-			&Eigen::compute_symmetric_gen_full, &Eigen::compute_symmetric_gen_partial
+			&Eigen::compute_dense_symmetric_std_full,
+			&Eigen::compute_dense_symmetric_gen_full,
+			&Eigen::compute_dense_symmetric_std_partial,
+			&Eigen::compute_dense_symmetric_gen_partial,
+			&Eigen::compute_dense_non_symmetric_std_full,
+			&Eigen::compute_dense_non_symmetric_gen_full,
+			&Eigen::compute_sparse_symmetric_std_partial,
+			&Eigen::compute_sparse_symmetric_gen_partial,
+			&Eigen::compute_sparse_non_symmetric_std_partial,
+			&Eigen::compute_sparse_non_symmetric_gen_partial
 		};
-		const uint32_t index = !m_symmetric ? data : 2 + 2 * data + !m_full;
+		const uint32_t index = 
+			 m_dense &&  m_symmetric &&  std &&  m_full ? 0 :
+			 m_dense &&  m_symmetric && !std &&  m_full ? 1 :
+			 m_dense &&  m_symmetric &&  std && !m_full ? 2 :
+			 m_dense &&  m_symmetric && !std && !m_full ? 3 :
+			 m_dense && !m_symmetric &&  std &&  m_full ? 4 :
+			 m_dense && !m_symmetric && !std &&  m_full ? 5 :
+			!m_dense &&  m_symmetric &&  std && !m_full ? 6 :
+			!m_dense &&  m_symmetric && !std && !m_full ? 7 :
+			!m_dense && !m_symmetric &&  std && !m_full ? 8 :
+			!m_dense && !m_symmetric && !std && !m_full ? 9 : 0;
 		//compute
 		return (this->*methods[index])();
 	}
@@ -135,55 +180,7 @@ namespace math
 	}
 
 	//compute
-	bool Eigen::compute_non_symmetric_std(void)
-	{
-		//data
-		double query;
-		int32_t info;
-		int32_t lwork = -1;
-		const char jobvl = m_U && m_V ? 'V' : 'N';
-		const char jobvr = m_U && m_V ? 'V' : 'N';
-		//query
-		const uint32_t* n = &m_order;
-		dgeev_(&jobvl, &jobvr, n, m_A, n, m_sr, m_si, m_V, n, m_U, n, &query, &lwork, &info);
-		//compute
-		lwork = int32_t(query);
-		double* work = new double[lwork];
-		dgeev_(&jobvl, &jobvr, n, m_A, n, m_sr, m_si, m_V, n, m_U, n, work, &lwork, &info);
-		//delete
-		delete[] work;
-		//return
-		return info == 0;
-	}
-	bool Eigen::compute_non_symmetric_gen(void)
-	{
-		//data
-		double query;
-		int32_t info;
-		int32_t lwork = -1;
-		const char jobvl = m_U && m_V ? 'V' : 'N';
-		const char jobvr = m_U && m_V ? 'V' : 'N';
-		//query
-		const uint32_t* n = &m_order;
-		double* b = new double[m_order];
-		dggev_(&jobvl, &jobvr, n, m_A, n, m_B, n, m_sr, m_si, b, m_V, n, m_U, n, &query, &lwork, &info);
-		//compute
-		lwork = int32_t(query);
-		double* work = new double[lwork];
-		dggev_(&jobvl, &jobvr, n, m_A, n, m_B, n, m_sr, m_si, b, m_V, n, m_U, n, work, &lwork, &info);
-		//division
-		for(uint32_t i = 0; i < m_order; i++)
-		{
-			m_sr[i] /= b[i];
-			m_si[i] /= b[i];
-		}
-		//delete
-		delete[] b;
-		delete[] work;
-		//return
-		return info == 0;
-	}
-	bool Eigen::compute_symmetric_std_full(void)
+	bool Eigen::compute_dense_symmetric_std_full(void)
 	{
 		//data
 		double query;
@@ -203,7 +200,7 @@ namespace math
 		//return
 		return info == 0;
 	}
-	bool Eigen::compute_symmetric_gen_full(void)
+	bool Eigen::compute_dense_symmetric_gen_full(void)
 	{
 		//data
 		double query;
@@ -224,7 +221,7 @@ namespace math
 		//return
 		return info == 0;
 	}
-	bool Eigen::compute_symmetric_std_partial(void)
+	bool Eigen::compute_dense_symmetric_std_partial(void)
 	{
 		//data
 		uint32_t m;
@@ -255,7 +252,7 @@ namespace math
 		//return
 		return info == 0;
 	}
-	bool Eigen::compute_symmetric_gen_partial(void)
+	bool Eigen::compute_dense_symmetric_gen_partial(void)
 	{
 		//data
 		uint32_t m;
@@ -286,5 +283,113 @@ namespace math
 		delete[] iwork;
 		//return
 		return info == 0;
+	}
+	bool Eigen::compute_dense_non_symmetric_std_full(void)
+	{
+		//data
+		double query;
+		int32_t info;
+		int32_t lwork = -1;
+		const char jobvl = m_U && m_V ? 'V' : 'N';
+		const char jobvr = m_U && m_V ? 'V' : 'N';
+		//query
+		const uint32_t* n = &m_order;
+		dgeev_(&jobvl, &jobvr, n, m_A, n, m_sr, m_si, m_V, n, m_U, n, &query, &lwork, &info);
+		//compute
+		lwork = int32_t(query);
+		double* work = new double[lwork];
+		dgeev_(&jobvl, &jobvr, n, m_A, n, m_sr, m_si, m_V, n, m_U, n, work, &lwork, &info);
+		//delete
+		delete[] work;
+		//return
+		return info == 0;
+	}
+	bool Eigen::compute_dense_non_symmetric_gen_full(void)
+	{
+		//data
+		double query;
+		int32_t info;
+		int32_t lwork = -1;
+		const char jobvl = m_U && m_V ? 'V' : 'N';
+		const char jobvr = m_U && m_V ? 'V' : 'N';
+		//query
+		const uint32_t* n = &m_order;
+		double* b = new double[m_order];
+		dggev_(&jobvl, &jobvr, n, m_A, n, m_B, n, m_sr, m_si, b, m_V, n, m_U, n, &query, &lwork, &info);
+		//compute
+		lwork = int32_t(query);
+		double* work = new double[lwork];
+		dggev_(&jobvl, &jobvr, n, m_A, n, m_B, n, m_sr, m_si, b, m_V, n, m_U, n, work, &lwork, &info);
+		//division
+		for(uint32_t i = 0; i < m_order; i++)
+		{
+			m_sr[i] /= b[i];
+			m_si[i] /= b[i];
+		}
+		//delete
+		delete[] b;
+		delete[] work;
+		//return
+		return info == 0;
+	}
+
+	bool Eigen::compute_sparse_symmetric_std_partial(void)
+	{
+		//data
+		const int32_t n = m_order;
+		const int32_t ncv = m_order;
+		const int32_t nev = m_index_max + 1;
+		const int32_t lworkl = ncv * ncv + 8 * ncv;
+		//data
+		const double tol = 1.00e-10;
+		int32_t ido = 0, info = 0, iparam[11], ipntr[11];
+		double resid[n], v[n * n], workd[3 * n], workl[lworkl];
+		//setup
+		iparam[0] = 1;
+		iparam[6] = 1;
+		iparam[2] = 300;
+		//Arnoldi
+		while(true)
+		{
+			//decomposition
+			dsaupd_(&ido, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
+			//check
+			if(ido == 99) break;
+			//compute
+			if(ido == -1 || ido == 1) sparse_product(workd + ipntr[1] - 1, workd + ipntr[0] - 1);
+		}
+		if(info != 0) return false;
+		//eigenvalues
+		bool select[ncv];
+		bool rvec = false;
+		double sigma = 0, d[nev], z[n * nev];
+		dseupd_(&rvec, "A", select, d, z, &n, &sigma, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
+		//return
+		return info == 0;
+	}
+	bool Eigen::compute_sparse_symmetric_gen_partial(void)
+	{
+		return false;
+	}
+	bool Eigen::compute_sparse_non_symmetric_std_partial(void)
+	{
+		return false;
+	}
+	bool Eigen::compute_sparse_non_symmetric_gen_partial(void)
+	{
+		return false;
+	}
+
+	//sparse
+	void Eigen::sparse_product(double* y, const double* x) const
+	{
+		memset(y, 0, m_order * sizeof(double));
+		for(uint32_t i = 0; i < m_order; i++)
+		{
+			for(int32_t j = m_cols_map[i]; j < m_cols_map[i + 1]; j++)
+			{
+				y[m_rows_map[j]] += m_A[j] * x[i];
+			}
+		}
 	}
 }
