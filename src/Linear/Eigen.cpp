@@ -15,8 +15,8 @@ extern "C"
 	void dggev_(const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, double*, double*, double*, double*, const uint32_t*, double*, const uint32_t*, double*, const int32_t*, int32_t*);
 	void dsyevx_(const char*, const char*, const char*, const uint32_t*, double*, const uint32_t*, const double*, const double*, const uint32_t*, const uint32_t*, const double*, uint32_t*, double*, double*, const uint32_t*, double*, const int32_t*, int32_t*, int32_t*, int32_t*);
 	void dsygvx_(const uint32_t*, const char*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, const double*, const double*, const uint32_t*, const uint32_t*, const double*, uint32_t*, double*, double*, const uint32_t*, double*, const int32_t*, int32_t*, int32_t*, int32_t*);
-	void dsaupd_(int32_t*, const char*, const int32_t*, const char*, const int32_t*, const double*, double*, const int32_t*, double*, const int32_t*, int32_t*, int32_t*, double*, double*, const int32_t*, int32_t*);
-	void dseupd_(const bool*, const char*, bool*, double*, double*, const int32_t*, const double*, const char*, const int32_t*, const char*, const int32_t*, const double*, double*, const int32_t*, double*, const int32_t*, int32_t*, int32_t*, double*, double*, const int32_t*, int32_t*);
+	void dsaupd_(int32_t*, const char*, const uint32_t*, const char*, const uint32_t*, const double*, double*, const uint32_t*, double*, const uint32_t*, int32_t*, int32_t*, double*, double*, const uint32_t*, int32_t*);
+	void dseupd_(const bool*, const char*, bool*, double*, double*, const uint32_t*, const double*, const char*, const uint32_t*, const char*, const uint32_t*, const double*, double*, const uint32_t*, double*, const uint32_t*, int32_t*, int32_t*, double*, double*, const uint32_t*, int32_t*);
 }
 
 namespace math
@@ -336,10 +336,10 @@ namespace math
 	bool Eigen::compute_sparse_symmetric_std_partial(void)
 	{
 		//data
-		const int32_t n = m_order;
-		const int32_t ncv = m_order;
-		const int32_t nev = m_index_max + 1;
-		const int32_t lworkl = ncv * ncv + 8 * ncv;
+		const uint32_t n = m_order;
+		const uint32_t ncv = m_order;
+		const uint32_t nev = m_index_max + 1;
+		const uint32_t lworkl = ncv * ncv + 8 * ncv;
 		//data
 		const double tol = 1.00e-10;
 		int32_t ido = 0, info = 0, iparam[11], ipntr[11];
@@ -359,10 +359,8 @@ namespace math
 		}
 		if(info != 0) return false;
 		//eigenvalues
-		bool select[ncv];
-		bool rvec = false;
-		double sigma = 0, d[nev], z[n * nev];
-		dseupd_(&rvec, "A", select, d, z, &n, &sigma, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
+		bool rvec = true, select[ncv];
+		dseupd_(&rvec, "A", select, m_sr, m_U, &n, nullptr, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
 		//return
 		return info == 0;
 	}

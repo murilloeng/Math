@@ -210,18 +210,6 @@ namespace math
 		return test;
 	}
 
-	//print
-	void Sparse::print(const char* header, bool dense) const
-	{
-		//header
-		if(strlen(header) != 0)
-		{
-			printf("%s\n", header);
-		}
-		//print
-		dense ? print_dense() : print_sparse();
-	}
-
 	//operators
 	Vector Sparse::operator*(const Vector& v) const
 	{
@@ -278,7 +266,7 @@ namespace math
 		return M;
 	}
 
-	//Sparse
+	//spqn
 	void Sparse::span(Sparse& Matrix, uint32_t i, uint32_t j) const
 	{
 		//data
@@ -301,7 +289,6 @@ namespace math
 			}
 		}
 	}
-	//Sparse
 	void Sparse::span_data(Sparse& Matrix, uint32_t i, uint32_t j) const
 	{
 		//data
@@ -322,7 +309,6 @@ namespace math
 			}
 		}
 	}
-	//Sparse
 	void Sparse::span_pattern(Sparse& Matrix, uint32_t i, uint32_t j) const
 	{
 		//data
@@ -345,6 +331,18 @@ namespace math
 		}
 	}
 
+	//print
+	void Sparse::print(const char* header, bool dense, double v) const
+	{
+		//header
+		if(strlen(header) != 0)
+		{
+			printf("%s\n", header);
+		}
+		//print
+		dense ? print_dense(v) : print_sparse(v);
+	}
+
 	//data
 	void Sparse::cleanup(void)
 	{
@@ -360,24 +358,35 @@ namespace math
 	}
 
 	//print
-	void Sparse::print_dense(void) const
+	void Sparse::print_dense(double v) const
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
 			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				printf("%+.2e ", (*this)(i, j));
+				const double u = (*this)(i, j);
+				if(v != 0 && fabs(u) < v)
+				{
+					printf("--------- ");
+				}
+				else
+				{
+					printf("%+.2e ", u);
+				}
 			}
 			printf("\n");
 		}
 	}
-	void Sparse::print_sparse(void) const
+	void Sparse::print_sparse(double v) const
 	{
 		for(uint32_t i = 0; i < m_cols; i++)
 		{
 			for(int32_t j = m_cols_map_ref[i]; j < m_cols_map_ref[i + 1]; j++)
 			{
-				printf("(%04d, %04d): %+.2e\n", m_rows_map_ref[j], i, m_data_ref[j]);
+				if(v != 0 && fabs(m_data_ref[j]) > v)
+				{
+					printf("(%04d, %04d): %+.2e\n", m_rows_map_ref[j], i, m_data_ref[j]);
+				}
 			}
 		}
 	}

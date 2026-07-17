@@ -15,7 +15,6 @@ static void matvec(int n, double* x, double* y)
 	y[3]=-x[2]+2*x[3];
 }
 
-
 int main(void)
 {
 	//data

@@ -23,7 +23,6 @@ namespace math
 		Eigen(double*, double*, uint32_t, const int32_t*, const int32_t*, double*, double*, uint32_t);
 		Eigen(double*, double*, uint32_t, const int32_t*, const int32_t*, double*, double*, double*, double*, uint32_t);
 
-
 		//destructor
 		~Eigen(void);
 

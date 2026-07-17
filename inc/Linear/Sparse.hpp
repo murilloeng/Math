@@ -50,30 +50,30 @@ namespace math
 
 		//solve
 		bool solve(Vector&, const Vector&) const;
-
-		//print
-		void print(const char* = "", bool = true) const;
-
+		
 		//operators
 		Vector operator*(const Vector&) const;
 		double& operator()(uint32_t, uint32_t);
 		const double operator()(uint32_t, uint32_t) const;
-
+		
 		//convert
 		Matrix convert(void) const;
-
-		//Span
+		
+		//span
 		void span(Sparse&, uint32_t, uint32_t) const;
 		void span_data(Sparse&, uint32_t, uint32_t) const;
 		void span_pattern(Sparse&, uint32_t, uint32_t) const;
+
+		//print
+		void print(const char* = "", bool = true, double = 0) const;
 
 	private:
 		//data
 		void cleanup(void);
 
 		//print
-		void print_dense(void) const;
-		void print_sparse(void) const;
+		void print_dense(double) const;
+		void print_sparse(double) const;
 
 		//Span
 		void span_count(Sparse&, uint32_t, uint32_t, bool) const;
