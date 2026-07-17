@@ -168,7 +168,7 @@ namespace math
 		//check
 		if(m_rows != v1.rows() || m_cols != v2.rows())
 		{
-			throw std::runtime_error("Matrix bilinear called with inconsistent dimensions!");
+			throw std::runtime_error("Sparse bilinear called with inconsistent dimensions!");
 		}
 		//return
 		return bilinear(v1.data(), v2.data());
