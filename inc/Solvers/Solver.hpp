@@ -111,6 +111,10 @@ namespace math
 			double acceleration_old(uint32_t, double);
 			double acceleration_new(uint32_t, double);
 
+			const double* inertia(void) const;
+			const double* damping(void) const;
+			const double* stiffness(void) const;
+
 			callback_1 callback_step(callback_1);
 			callback_1 callback_step(void) const;
 

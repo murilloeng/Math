@@ -214,6 +214,19 @@ namespace math
 			return m_a_new[index] = a;
 		}
 
+		const double* Solver::inertia(void) const
+		{
+			return m_M;
+		}
+		const double* Solver::damping(void) const
+		{
+			return m_C;
+		}
+		const double* Solver::stiffness(void) const
+		{
+			return m_K;
+		}
+
 		Solver::callback_1 Solver::callback_step(void) const
 		{
 			return m_callback_step;
