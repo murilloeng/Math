@@ -353,9 +353,8 @@ namespace math
 		{
 			//decomposition
 			dsaupd_(&ido, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
-			//check
-			if(ido == 99) break;
 			//compute
+			if(ido == 99) break;
 			if(ido == -1 || ido == 1) sparse_product(workd + ipntr[1] - 1, workd + ipntr[0] - 1);
 		}
 		if(info != 0) return false;
