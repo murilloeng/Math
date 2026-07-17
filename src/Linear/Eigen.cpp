@@ -16,7 +16,7 @@ extern "C"
 	void dsyevx_(const char*, const char*, const char*, const uint32_t*, double*, const uint32_t*, const double*, const double*, const uint32_t*, const uint32_t*, const double*, uint32_t*, double*, double*, const uint32_t*, double*, const int32_t*, int32_t*, int32_t*, int32_t*);
 	void dsygvx_(const uint32_t*, const char*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, const double*, const double*, const uint32_t*, const uint32_t*, const double*, uint32_t*, double*, double*, const uint32_t*, double*, const int32_t*, int32_t*, int32_t*, int32_t*);
 	void dsaupd_(int32_t*, const char*, const uint32_t*, const char*, const uint32_t*, const double*, double*, const uint32_t*, double*, const uint32_t*, int32_t*, int32_t*, double*, double*, const uint32_t*, int32_t*);
-	void dseupd_(const bool*, const char*, bool*, double*, double*, const uint32_t*, const double*, const char*, const uint32_t*, const char*, const uint32_t*, const double*, double*, const uint32_t*, double*, const uint32_t*, int32_t*, int32_t*, double*, double*, const uint32_t*, int32_t*);
+	void dseupd_(const uint32_t*, const char*, uint32_t*, double*, double*, const uint32_t*, const double*, const char*, const uint32_t*, const char*, const uint32_t*, const double*, double*, const uint32_t*, double*, const uint32_t*, int32_t*, int32_t*, double*, double*, const uint32_t*, int32_t*);
 }
 
 namespace math
@@ -60,27 +60,27 @@ namespace math
 		return;
 	}
 
-	Eigen::Eigen(double* A, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* s, double* U, uint32_t index_max) : 
-		m_full{false}, m_dense{false}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{index_max},
+	Eigen::Eigen(double* A, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* s, double* U, uint32_t nev, uint32_t ncv) : 
+		m_full{false}, m_dense{false}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{0}, m_nev{nev}, m_ncv{ncv},
 		m_rows_map{rows_map}, m_cols_map{cols_map}, m_A{A}, m_B{nullptr}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
 	{
 		return;
 	}
-	Eigen::Eigen(double* A, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* sr, double* si, double* U, double* V, uint32_t index_max) : 
-		m_full{false}, m_dense{false}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{index_max},
+	Eigen::Eigen(double* A, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* sr, double* si, double* U, double* V, uint32_t nev, uint32_t ncv) : 
+		m_full{false}, m_dense{false}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{0}, m_nev{nev}, m_ncv{ncv},
 		m_rows_map{rows_map}, m_cols_map{cols_map}, m_A{A}, m_B{nullptr}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
 	{
 		return;
 	}
 
-	Eigen::Eigen(double* A, double* B, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* s, double* U, uint32_t index_max) : 
-		m_full{false}, m_dense{false}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{index_max},
+	Eigen::Eigen(double* A, double* B, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* s, double* U, uint32_t nev, uint32_t ncv) : 
+		m_full{false}, m_dense{false}, m_symmetric{true}, m_order{order}, m_index_min{0}, m_index_max{0}, m_nev{nev}, m_ncv{ncv},
 		m_rows_map{rows_map}, m_cols_map{cols_map}, m_A{A}, m_B{B}, m_sr{s}, m_si{nullptr}, m_U{U}, m_V{nullptr}
 	{
 		return;
 	}
-	Eigen::Eigen(double* A, double* B, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* sr, double* si, double* U, double* V, uint32_t index_max) : 
-		m_full{false}, m_dense{false}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{index_max},
+	Eigen::Eigen(double* A, double* B, uint32_t order, const int32_t* rows_map, const int32_t* cols_map, double* sr, double* si, double* U, double* V, uint32_t nev, uint32_t ncv) : 
+		m_full{false}, m_dense{false}, m_symmetric{false}, m_order{order}, m_index_min{0}, m_index_max{0}, m_nev{nev}, m_ncv{ncv},
 		m_rows_map{rows_map}, m_cols_map{cols_map}, m_A{A}, m_B{B}, m_sr{sr}, m_si{si}, m_U{U}, m_V{V}
 	{
 		return;
@@ -337,15 +337,13 @@ namespace math
 	{
 		//data
 		const uint32_t n = m_order;
-		const uint32_t ncv = m_order;
-		const uint32_t nev = m_index_max + 1;
-		const uint32_t lworkl = ncv * ncv + 8 * ncv;
+		const uint32_t lworkl = (m_ncv + 8) * m_ncv;
 		//data
-		double workl[lworkl];
 		const double tol = 1.00e-10;
-		double* v = new double[n * n];
 		double* resid = new double[n];
+		double* v = new double[n * m_ncv];
 		double* workd = new double[3 * n];
+		double* workl = new double[lworkl];
 		int32_t ido = 0, info = 0, iparam[11], ipntr[11];
 		//setup
 		iparam[0] = 1;
@@ -355,19 +353,22 @@ namespace math
 		while(true)
 		{
 			//decomposition
-			dsaupd_(&ido, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
+			dsaupd_(&ido, "I", &n, "SA", &m_nev, &tol, resid, &m_ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
 			//compute
 			if(ido == 99) break;
 			if(ido == -1 || ido == 1) sparse_product(workd + ipntr[1] - 1, workd + ipntr[0] - 1);
 		}
 		if(info != 0) return false;
 		//eigenvalues
-		bool rvec = true, select[ncv];
-		dseupd_(&rvec, "A", select, m_sr, m_U, &n, nullptr, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
+		const uint32_t rvec = true;
+		uint32_t* select = new uint32_t[m_ncv];
+		dseupd_(&rvec, "A", select, m_sr, m_U, &n, nullptr, "I", &n, "SA", &m_nev, &tol, resid, &m_ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
 		//delete
 		delete[] v;
 		delete[] resid;
 		delete[] workd;
+		delete[] workl;
+		delete[] select;
 		//return
 		return info == 0;
 	}

@@ -6,12 +6,16 @@ LIBS = -l openblas -l arpack -l umfpack -l quadrule -l fftw3
 CXXFLAGS = -std=c++20 -fPIC -pipe -fopenmp -MT $@ -MMD -MP -MF $(subst .o,.d, $@) $(DEFS) $(INCS) $(WARS)
 
 #mode
-ifneq ($(m), r)
-	mode = debug
-	CXXFLAGS += -ggdb3
-else
+ifeq ($(m), r)
 	mode = release
 	CXXFLAGS += -Ofast
+else ifeq ($(m), p)
+	LINK += -pg
+	mode = profiling
+	CXXFLAGS += -O2 -pg -fno-inline
+else
+	mode = debug
+	CXXFLAGS += -ggdb3
 endif
 
 #ouput
@@ -47,12 +51,12 @@ exe : lib $(out_exe)
 
 $(out_lib) : $(obj_lib)
 	@mkdir -p $(dir $@)
-	@g++ -shared -o $(out_lib) $(obj_lib)
+	@g++ -shared $(LINK) -o $(out_lib) $(obj_lib)
 	@echo 'linking - $(mode): $@'
 
 $(out_exe) : $(obj_exe)
 	@mkdir -p $(dir $@)
-	@g++ -o $(out_exe) $(obj_exe) dist/$(mode)/libmath.so $(LIBS)
+	@g++ $(LINK) -o $(out_exe) $(obj_exe) dist/$(mode)/libmath.so $(LIBS)
 	@echo 'linking - $(mode): $@'
 
 build/$(mode)/%.o : src/%.cpp build/$(mode)/%.d

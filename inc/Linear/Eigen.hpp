@@ -17,11 +17,11 @@ namespace math
 		Eigen(double*, double*, uint32_t, double*, double*, double*, double*);
 		Eigen(double*, double*, uint32_t, double*, double*, uint32_t, uint32_t);
 
-		Eigen(double*, uint32_t, const int32_t*, const int32_t*, double*, double*, uint32_t);
-		Eigen(double*, uint32_t, const int32_t*, const int32_t*, double*, double*, double*, double*, uint32_t);
+		Eigen(double*, uint32_t, const int32_t*, const int32_t*, double*, double*, uint32_t, uint32_t);
+		Eigen(double*, uint32_t, const int32_t*, const int32_t*, double*, double*, double*, double*, uint32_t, uint32_t);
 
-		Eigen(double*, double*, uint32_t, const int32_t*, const int32_t*, double*, double*, uint32_t);
-		Eigen(double*, double*, uint32_t, const int32_t*, const int32_t*, double*, double*, double*, double*, uint32_t);
+		Eigen(double*, double*, uint32_t, const int32_t*, const int32_t*, double*, double*, uint32_t, uint32_t);
+		Eigen(double*, double*, uint32_t, const int32_t*, const int32_t*, double*, double*, double*, double*, uint32_t, uint32_t);
 
 		//destructor
 		~Eigen(void);
@@ -75,6 +75,7 @@ namespace math
 		uint32_t m_order;
 		uint32_t m_index_min;
 		uint32_t m_index_max;
+		uint32_t m_nev, m_ncv;
 		const int32_t *m_rows_map, *m_cols_map;
 		double *m_A, *m_B, *m_sr, *m_si, *m_U, *m_V;
 	};

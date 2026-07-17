@@ -339,12 +339,13 @@ void tests::eigen::sparse_symmetric_std_partial(void)
 {
 	int32_t *rm, *cm;
 	const uint32_t nev = 5;
+	const uint32_t ncv = 15;
 	const uint32_t n = 1000;
 	double *Am, s[nev], U[nev * n];
-	for(uint32_t i = 100; i < n; i += 10)
+	for(uint32_t i = 100; i <= n; i += 10)
 	{
 		setup_sparse_symmetric(Am, rm, cm, i);
-		bool test = math::Eigen(Am, i, rm, cm, s, U, nev - 1).compute();
+		bool test = math::Eigen(Am, i, rm, cm, s, U, nev, ncv).compute();
 		for(uint32_t j = 0; j < nev; j++)
 		{
 			test = test && fabs(math::Sparse(Am, rm, cm, i, i).bilinear(U + i * j) - s[j]) < 1e-5;
@@ -355,23 +356,6 @@ void tests::eigen::sparse_symmetric_std_partial(void)
 		if(!test) throw std::runtime_error("Error");
 		printf("Test sparse symmetric std partial %3d: ok!\n", i);
 	}
-
-	// math::Sparse(Am, rm, cm, n, n).print();
-
-	// double s[n], U[n * n];
-	// double Ad[] = {2, -1, 0, 0, -1, 2, -1, 0, 0, -1, 2, -1, 0, 0, -1, 2};
-
-	// math::Matrix(Ad, n, n).print("Ad");
-	// math::Eigen(Ad, n, s, U).compute();
-	// math::Vector(s, n).print();
-
-	// double s[nev], U[n * nev];
-	// bool test = math::Eigen(Am, n, rm, cm, s, U, nev - 1).compute();
-	// for(uint32_t i = 0; i < nev; i++)
-	// {
-	// 	test = test && fabs(math::Sparse(Am, rm, cm, n, n).bilinear(U + i * n) - s[i]) < 1.00e-5;
-	// }
-	// printf("test: %d\n", test);
 }
 void tests::eigen::sparse_symmetric_gen_partial(void)
 {
