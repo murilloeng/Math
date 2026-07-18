@@ -3,7 +3,7 @@
 #include <cstring>
 
 //Math
-#include "Math/inc/Eigen/EigenDenseSymGen.hpp"
+#include "Math/inc/Eigen/DenseSymGen.hpp"
 
 extern "C"
 {
@@ -16,20 +16,20 @@ namespace math
 	namespace eigen
 	{
 		//constructor
-		EigenDenseSymGen::EigenDenseSymGen(uint32_t order, double* A, double* B, double* s, double* U) : 
-			EigenDenseSym{order}, m_A{A}, m_B{B}, m_s{s}, m_U{U}
+		DenseSymGen::DenseSymGen(uint32_t order, double* A, double* B, double* s, double* U) : 
+			DenseSym{order}, m_A{A}, m_B{B}, m_s{s}, m_U{U}
 		{
 			return;
 		}
-		EigenDenseSymGen::EigenDenseSymGen(uint32_t order, double* A, double* B, double* s, double* U, double value_min, double value_max) : 
-			EigenDenseSym{order}, m_A{A}, m_B{B}, m_s{s}, m_U{U}
+		DenseSymGen::DenseSymGen(uint32_t order, double* A, double* B, double* s, double* U, double value_min, double value_max) : 
+			DenseSym{order}, m_A{A}, m_B{B}, m_s{s}, m_U{U}
 		{
 			m_range = 'V';
 			m_value_min = value_min;
 			m_value_max = value_max;
 		}
-		EigenDenseSymGen::EigenDenseSymGen(uint32_t order, double* A, double* B, double* s, double* U, uint32_t index_min, uint32_t index_max) : 
-			EigenDenseSym{order}, m_A{A}, m_B{B}, m_s{s}, m_U{U}
+		DenseSymGen::DenseSymGen(uint32_t order, double* A, double* B, double* s, double* U, uint32_t index_min, uint32_t index_max) : 
+			DenseSym{order}, m_A{A}, m_B{B}, m_s{s}, m_U{U}
 		{
 			m_range = 'I';
 			m_index_min = index_min;
@@ -37,17 +37,17 @@ namespace math
 		}
 
 		//destructor
-		EigenDenseSymGen::~EigenDenseSymGen(void)
+		DenseSymGen::~DenseSymGen(void)
 		{
 			return;
 		}
 
 		//compute
-		bool EigenDenseSymGen::compute(void)
+		bool DenseSymGen::compute(void)
 		{
 			return m_range == 'A' ? compute_full() : compute_partial();
 		}
-		bool EigenDenseSymGen::compute_full(void)
+		bool DenseSymGen::compute_full(void)
 		{
 			//data
 			double query;
@@ -68,7 +68,7 @@ namespace math
 			//return
 			return info == 0;
 		}
-		bool EigenDenseSymGen::compute_partial(void)
+		bool DenseSymGen::compute_partial(void)
 		{
 			//data
 			double query;

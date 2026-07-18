@@ -16,10 +16,10 @@
 #include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Miscellaneous/util.hpp"
 
-#include "Math/inc/Eigen/EigenDenseSymStd.hpp"
-#include "Math/inc/Eigen/EigenDenseSymGen.hpp"
-#include "Math/inc/Eigen/EigenDenseNonStd.hpp"
-#include "Math/inc/Eigen/EigenDenseNonGen.hpp"
+#include "Math/inc/Eigen/DenseSymStd.hpp"
+#include "Math/inc/Eigen/DenseSymGen.hpp"
+#include "Math/inc/Eigen/DenseNonStd.hpp"
+#include "Math/inc/Eigen/DenseNonGen.hpp"
 
 static void setup_dense_random_matrix(double* A, uint32_t order)
 {
@@ -111,7 +111,7 @@ void tests::eigen::dense_symmetric_std_full(void)
 	{
 		setup_dense_symmetric_matrix(A, i);
 		memcpy(B, A, i * i * sizeof(double));
-		bool test = math::eigen::EigenDenseSymStd(i, A, s, U).compute();
+		bool test = math::eigen::DenseSymStd(i, A, s, U).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double w = s[j];
@@ -140,7 +140,7 @@ void tests::eigen::dense_symmetric_gen_full(void)
 		setup_dense_symmetric_pd_matrix(B, i);
 		memcpy(C, A, i * i * sizeof(double));
 		memcpy(D, B, i * i * sizeof(double));
-		bool test = math::eigen::EigenDenseSymGen(i, A, B, s, U).compute();
+		bool test = math::eigen::DenseSymGen(i, A, B, s, U).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double w = s[j];
@@ -167,7 +167,7 @@ void tests::eigen::dense_symmetric_std_partial(void)
 	{
 		setup_dense_symmetric_matrix(A, i);
 		memcpy(B, A, i * i * sizeof(double));
-		bool test = math::eigen::EigenDenseSymStd(i, A, s, U, 0, modes - 1).compute();
+		bool test = math::eigen::DenseSymStd(i, A, s, U, 0, modes - 1).compute();
 		for(uint32_t j = 0; j < modes; j++)
 		{
 			const double w = s[j];
@@ -197,7 +197,7 @@ void tests::eigen::dense_symmetric_gen_partial(void)
 		setup_dense_symmetric_pd_matrix(B, i);
 		memcpy(C, A, i * i * sizeof(double));
 		memcpy(D, B, i * i * sizeof(double));
-		bool test = math::eigen::EigenDenseSymGen(i, A, B, s, U, 0, modes - 1).compute();
+		bool test = math::eigen::DenseSymGen(i, A, B, s, U, 0, modes - 1).compute();
 		for(uint32_t j = 0; j < modes; j++)
 		{
 			const double w = s[j];
@@ -226,7 +226,7 @@ void tests::eigen::dense_non_symmetric_std_full(void)
 		math::Matrix Am(B, i, i);
 		setup_dense_random_matrix(A, i);
 		memcpy(B, A, i * i * sizeof(double));
-		bool test = math::eigen::EigenDenseNonStd(i, A, sr, si, U, V).compute();
+		bool test = math::eigen::DenseNonStd(i, A, sr, si, U, V).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double wr = sr[j];
@@ -277,7 +277,7 @@ void tests::eigen::dense_non_symmetric_gen_full(void)
 		setup_dense_random_matrix(B, i);
 		memcpy(C, A, i * i * sizeof(double));
 		memcpy(D, B, i * i * sizeof(double));
-		bool test = math::eigen::EigenDenseNonGen(i, A, B, sr, si, U, V).compute();
+		bool test = math::eigen::DenseNonGen(i, A, B, sr, si, U, V).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double wr = sr[j];

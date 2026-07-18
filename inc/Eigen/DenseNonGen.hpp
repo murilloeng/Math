@@ -1,20 +1,20 @@
 #pragma once
 
 //Math
-#include "Math/inc/Eigen/EigenDenseNon.hpp"
+#include "Math/inc/Eigen/DenseNon.hpp"
 
 namespace math
 {
 	namespace eigen
 	{
-		class EigenDenseNonStd : public EigenDenseNon
+		class DenseNonGen : public DenseNon
 		{
 		public:
 			//constructor
-			EigenDenseNonStd(uint32_t, double*, double*, double*, double*, double*);
+			DenseNonGen(uint32_t, double*, double*, double*, double*, double*, double*);
 
 			//destructor
-			virtual ~EigenDenseNonStd(void);
+			virtual ~DenseNonGen(void);
 
 			//compute
 			bool compute(void) override;
@@ -22,6 +22,7 @@ namespace math
 		protected:
 			//data
 			double* m_A;
+			double* m_B;
 			double* m_U;
 			double* m_V;
 			double* m_sr;

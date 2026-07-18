@@ -7,14 +7,14 @@ namespace math
 {
 	namespace eigen
 	{
-		class Eigen
+		class Base
 		{
 		public:
 			//constructor
-			Eigen(uint32_t);
+			Base(uint32_t);
 
 			//destructor
-			virtual ~Eigen(void);
+			virtual ~Base(void);
 
 			//compute
 			virtual bool compute(void) = 0;

@@ -1,20 +1,20 @@
 #pragma once
 
 //Math
-#include "Math/inc/Eigen/EigenDense.hpp"
+#include "Math/inc/Eigen/Dense.hpp"
 
 namespace math
 {
 	namespace eigen
 	{
-		class EigenDenseSym : public EigenDense
+		class DenseSym : public Dense
 		{
 		public:
 			//constructor
-			EigenDenseSym(uint32_t);
+			DenseSym(uint32_t);
 
 			//destructor
-			virtual ~EigenDenseSym(void);
+			virtual ~DenseSym(void);
 
 			//data
 			char range(char);

@@ -25,9 +25,9 @@ int main(void)
 		tests::eigen::dense_symmetric_gen_partial();
 		tests::eigen::dense_non_symmetric_std_full();
 		tests::eigen::dense_non_symmetric_gen_full();
-		// tests::eigen::dense_singular_value_decomposition();
+		tests::eigen::sparse_symmetric_std_partial();
+		tests::eigen::dense_singular_value_decomposition();
 
-		// tests::eigen::sparse_symmetric_std_partial();
 
 		// tests::solvers::newton_raphson::spring_buckling();
 		// tests::solvers::newton_raphson::truss_von_mises();

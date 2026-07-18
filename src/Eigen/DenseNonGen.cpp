@@ -3,7 +3,7 @@
 #include <cstring>
 
 //Math
-#include "Math/inc/Eigen/EigenDenseNonGen.hpp"
+#include "Math/inc/Eigen/DenseNonGen.hpp"
 
 extern "C"
 {
@@ -15,20 +15,20 @@ namespace math
 	namespace eigen
 	{
 		//constructor
-		EigenDenseNonGen::EigenDenseNonGen(uint32_t order, double* A, double* B, double* sr, double* si, double* U, double* V) : 
-			EigenDenseNon{order}, m_A{A}, m_B{B}, m_U{U}, m_V{V}, m_sr{sr}, m_si{si}
+		DenseNonGen::DenseNonGen(uint32_t order, double* A, double* B, double* sr, double* si, double* U, double* V) : 
+			DenseNon{order}, m_A{A}, m_B{B}, m_U{U}, m_V{V}, m_sr{sr}, m_si{si}
 		{
 			return;
 		}
 
 		//destructor
-		EigenDenseNonGen::~EigenDenseNonGen(void)
+		DenseNonGen::~DenseNonGen(void)
 		{
 			return;
 		}
 
 		//compute
-		bool EigenDenseNonGen::compute(void)
+		bool DenseNonGen::compute(void)
 		{
 			//data
 			double query;

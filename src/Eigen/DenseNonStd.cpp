@@ -3,7 +3,7 @@
 #include <cstring>
 
 //Math
-#include "Math/inc/Eigen/EigenDenseNonStd.hpp"
+#include "Math/inc/Eigen/DenseNonStd.hpp"
 
 extern "C"
 {
@@ -15,20 +15,20 @@ namespace math
 	namespace eigen
 	{
 		//constructor
-		EigenDenseNonStd::EigenDenseNonStd(uint32_t order, double* A, double* sr, double* si, double* U, double* V) : 
-			EigenDenseNon{order}, m_A{A}, m_U{U}, m_V{V}, m_sr{sr}, m_si{si}
+		DenseNonStd::DenseNonStd(uint32_t order, double* A, double* sr, double* si, double* U, double* V) : 
+			DenseNon{order}, m_A{A}, m_U{U}, m_V{V}, m_sr{sr}, m_si{si}
 		{
 			return;
 		}
 
 		//destructor
-		EigenDenseNonStd::~EigenDenseNonStd(void)
+		DenseNonStd::~DenseNonStd(void)
 		{
 			return;
 		}
 
 		//compute
-		bool EigenDenseNonStd::compute(void)
+		bool DenseNonStd::compute(void)
 		{
 			//data
 			double query;

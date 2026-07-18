@@ -1,18 +1,18 @@
 //Math
-#include "Math/inc/Eigen/Eigen.hpp"
+#include "Math/inc/Eigen/Dense.hpp"
 
 namespace math
 {
 	namespace eigen
 	{
 		//constructor
-		Eigen::Eigen(uint32_t order) : m_order{order}
+		Dense::Dense(uint32_t order) : Base{order}
 		{
 			return;
 		}
 		
 		//destructor
-		Eigen::~Eigen(void)
+		Dense::~Dense(void)
 		{
 			return;
 		}
