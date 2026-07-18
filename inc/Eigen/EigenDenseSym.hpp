@@ -1,20 +1,20 @@
 #pragma once
 
 //Math
-#include "Math/inc/Eigen/EigenDenseStd.hpp"
+#include "Math/inc/Eigen/EigenDense.hpp"
 
 namespace math
 {
 	namespace eigen
 	{
-		class EigenDenseStdSym : public EigenDenseStd
+		class EigenDenseSym : public EigenDense
 		{
 		public:
 			//constructor
-			EigenDenseStdSym(uint32_t, double*, double*, double*);
+			EigenDenseSym(uint32_t);
 
 			//destructor
-			virtual ~EigenDenseStdSym(void);
+			virtual ~EigenDenseSym(void);
 
 			//data
 			char range(char);
@@ -34,17 +34,8 @@ namespace math
 			uint32_t index_max(uint32_t);
 			uint32_t index_max(void) const;
 
-			//compute
-			bool compute(void) override;
-
 		protected:
-			//compute
-			bool compute_full(void);
-			bool compute_partial(void);
-
 			//data
-			double* m_s;
-			double* m_U;
 			char m_range;
 			uint32_t m_modes;
 			double m_value_min;

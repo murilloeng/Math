@@ -1,0 +1,89 @@
+//std
+#include <cfloat>
+#include <cstring>
+
+//Math
+#include "Math/inc/Eigen/EigenDenseSymGen.hpp"
+
+extern "C"
+{
+	void dsygv_(const uint32_t*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, double*, double*, const int32_t*, int32_t*);
+	void dsygvx_(const uint32_t*, const char*, const char*, const char*, const uint32_t*, double*, const uint32_t*, double*, const uint32_t*, const double*, const double*, const uint32_t*, const uint32_t*, const double*, uint32_t*, double*, double*, const uint32_t*, double*, const int32_t*, int32_t*, int32_t*, int32_t*);
+}
+
+namespace math
+{
+	namespace eigen
+	{
+		//constructor
+		EigenDenseSymGen::EigenDenseSymGen(uint32_t order, double* A, double* B, double* s, double* U) : EigenDenseSym{order}, 
+			m_A{A}, m_B{B}, m_s{s}, m_U{U}
+		{
+			return;
+		}
+
+		//destructor
+		EigenDenseSymGen::~EigenDenseSymGen(void)
+		{
+			return;
+		}
+
+		//compute
+		bool EigenDenseSymGen::compute(void)
+		{
+			return m_range == 'A' ? compute_full() : compute_partial();
+		}
+		bool EigenDenseSymGen::compute_full(void)
+		{
+			//data
+			double query;
+			int32_t info;
+			int32_t lwork = -1;
+			uint32_t itype = 1;
+			const char uplo = 'U';
+			const char jobz = m_U ? 'V' : 'N';
+			memcpy(m_U, m_A, m_order * m_order * sizeof(double));
+			//query
+			dsygv_(&itype, &jobz, &uplo, &m_order, m_U, &m_order, m_B, &m_order, m_s, &query, &lwork, &info);
+			//compute
+			lwork = int32_t(query);
+			double* work = new double[lwork];
+			dsygv_(&itype, &jobz, &uplo, &m_order, m_U, &m_order, m_B, &m_order, m_s, work, &lwork, &info);
+			//delete
+			delete[] work;
+			//return
+			return info == 0;
+		}
+		bool EigenDenseSymGen::compute_partial(void)
+		{
+			//data
+			double query;
+			int32_t info;
+			int32_t lwork = -1;
+			uint32_t& m = m_modes;
+			const char uplo = 'U';
+			const char jobz = m_U ? 'V' : 'N';
+			//query
+			const double abstol = 0;
+			const uint32_t itype = 1;
+			const uint32_t* n = &m_order;
+			const double v1 = m_value_min;
+			const double v2 = m_value_max;
+			const uint32_t i1 = m_index_min + 1;
+			const uint32_t i2 = m_index_max + 1;
+			int32_t* ifail = new int32_t[m_order];
+			int32_t* iwork = new int32_t[5 * m_order];
+			dsygvx_(&itype, &jobz, &m_range, &uplo, n, m_A, n, m_B, n, &v1, &v2, &i1, &i2, &abstol, &m, m_s, m_U, n, &query, &lwork, iwork, ifail, &info);
+			//compute
+			lwork = int32_t(query);
+			double* work = new double[lwork];
+			dsygvx_(&itype, &jobz, &m_range, &uplo, n, m_A, n, m_B, n, &v1, &v2, &i1, &i2, &abstol, &m, m_s, m_U, n, work, &lwork, iwork, ifail, &info);
+			//delete
+			delete[] work;
+			delete[] ifail;
+			delete[] iwork;
+			//return
+			return info == 0;
+		}
+	}
+}

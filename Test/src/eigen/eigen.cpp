@@ -16,7 +16,8 @@
 #include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Miscellaneous/util.hpp"
 
-#include "Math/inc/Eigen/EigenDenseStdSym.hpp"
+#include "Math/inc/Eigen/EigenDenseSymStd.hpp"
+#include "Math/inc/Eigen/EigenDenseSymGen.hpp"
 
 static void setup_dense_random_matrix(double* A, uint32_t order)
 {
@@ -108,7 +109,7 @@ void tests::eigen::dense_symmetric_std_full(void)
 	{
 		setup_dense_symmetric_matrix(A, i);
 		memcpy(B, A, i * i * sizeof(double));
-		math::eigen::EigenDenseStdSym eigen(i, A, s, U);
+		math::eigen::EigenDenseSymStd eigen(i, A, s, U);
 		bool test = eigen.compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
@@ -138,7 +139,8 @@ void tests::eigen::dense_symmetric_gen_full(void)
 		setup_dense_symmetric_pd_matrix(B, i);
 		memcpy(C, A, i * i * sizeof(double));
 		memcpy(D, B, i * i * sizeof(double));
-		bool test = math::Eigen(A, B, i, s, U).compute();
+		math::eigen::EigenDenseSymGen eigen(i, A, B, s, U);
+		bool test = eigen.compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double w = s[j];
@@ -165,7 +167,7 @@ void tests::eigen::dense_symmetric_std_partial(void)
 	{
 		setup_dense_symmetric_matrix(A, i);
 		memcpy(B, A, i * i * sizeof(double));
-		math::eigen::EigenDenseStdSym eigen(i, A, s, U);
+		math::eigen::EigenDenseSymStd eigen(i, A, s, U);
 		eigen.range('I');
 		eigen.index_min(0);
 		eigen.index_max(modes - 1);
@@ -199,7 +201,11 @@ void tests::eigen::dense_symmetric_gen_partial(void)
 		setup_dense_symmetric_pd_matrix(B, i);
 		memcpy(C, A, i * i * sizeof(double));
 		memcpy(D, B, i * i * sizeof(double));
-		bool test = math::Eigen(A, B, i, s, U, 0, modes - 1).compute();
+		math::eigen::EigenDenseSymGen eigen(i, A, B, s, U);
+		eigen.range('I');
+		eigen.index_min(0);
+		eigen.index_max(modes - 1);
+		bool test = eigen.compute();
 		for(uint32_t j = 0; j < modes; j++)
 		{
 			const double w = s[j];

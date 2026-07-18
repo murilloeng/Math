@@ -3,7 +3,7 @@
 #include <cstring>
 
 //Math
-#include "Math/inc/Eigen/EigenDenseStdSym.hpp"
+#include "Math/inc/Eigen/EigenDenseSymStd.hpp"
 
 extern "C"
 {
@@ -16,75 +16,23 @@ namespace math
 	namespace eigen
 	{
 		//constructor
-		EigenDenseStdSym::EigenDenseStdSym(uint32_t order, double* A, double* s, double* U) : EigenDenseStd{order, A}, 
-			m_s{s}, m_U{U}, m_range{'A'}, m_value_min{-DBL_MAX}, m_value_max{+DBL_MAX}, m_index_min{0}, m_index_max{order}
+		EigenDenseSymStd::EigenDenseSymStd(uint32_t order, double* A, double* s, double* U) : EigenDenseSym{order}, m_A{A}, m_s{s}, m_U{U}
 		{
 			return;
 		}
 
 		//destructor
-		EigenDenseStdSym::~EigenDenseStdSym(void)
+		EigenDenseSymStd::~EigenDenseSymStd(void)
 		{
 			return;
 		}
 
-		//data
-		char EigenDenseStdSym::range(void) const
-		{
-			return m_range;
-		}
-		char EigenDenseStdSym::range(char range)
-		{
-			return m_range = range;
-		}
-
-		uint32_t EigenDenseStdSym::modes(void) const
-		{
-			return m_modes;
-		}
-
-		double EigenDenseStdSym::value_min(void) const
-		{
-			return m_value_min;
-		}
-		double EigenDenseStdSym::value_min(double value_min)
-		{
-			return m_value_min = value_min;
-		}
-
-		double EigenDenseStdSym::value_max(void) const
-		{
-			return m_value_max;
-		}
-		double EigenDenseStdSym::value_max(double value_max)
-		{
-			return m_value_max = value_max;
-		}
-
-		uint32_t EigenDenseStdSym::index_min(void) const
-		{
-			return m_index_min;
-		}
-		uint32_t EigenDenseStdSym::index_min(uint32_t index_min)
-		{
-			return m_index_min = index_min;
-		}
-
-		uint32_t EigenDenseStdSym::index_max(void) const
-		{
-			return m_index_max;
-		}
-		uint32_t EigenDenseStdSym::index_max(uint32_t index_max)
-		{
-			return m_index_max = index_max;
-		}
-
 		//compute
-		bool EigenDenseStdSym::compute(void)
+		bool EigenDenseSymStd::compute(void)
 		{
 			return m_range == 'A' ? compute_full() : compute_partial();
 		}
-		bool EigenDenseStdSym::compute_full(void)
+		bool EigenDenseSymStd::compute_full(void)
 		{
 			//data
 			double query;
@@ -105,7 +53,7 @@ namespace math
 			//return
 			return info == 0;
 		}
-		bool EigenDenseStdSym::compute_partial(void)
+		bool EigenDenseSymStd::compute_partial(void)
 		{
 			//data
 			double query;
