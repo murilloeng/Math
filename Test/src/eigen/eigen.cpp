@@ -18,6 +18,8 @@
 
 #include "Math/inc/Eigen/EigenDenseSymStd.hpp"
 #include "Math/inc/Eigen/EigenDenseSymGen.hpp"
+#include "Math/inc/Eigen/EigenDenseNonStd.hpp"
+#include "Math/inc/Eigen/EigenDenseNonGen.hpp"
 
 static void setup_dense_random_matrix(double* A, uint32_t order)
 {
@@ -109,8 +111,7 @@ void tests::eigen::dense_symmetric_std_full(void)
 	{
 		setup_dense_symmetric_matrix(A, i);
 		memcpy(B, A, i * i * sizeof(double));
-		math::eigen::EigenDenseSymStd eigen(i, A, s, U);
-		bool test = eigen.compute();
+		bool test = math::eigen::EigenDenseSymStd(i, A, s, U).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double w = s[j];
@@ -139,8 +140,7 @@ void tests::eigen::dense_symmetric_gen_full(void)
 		setup_dense_symmetric_pd_matrix(B, i);
 		memcpy(C, A, i * i * sizeof(double));
 		memcpy(D, B, i * i * sizeof(double));
-		math::eigen::EigenDenseSymGen eigen(i, A, B, s, U);
-		bool test = eigen.compute();
+		bool test = math::eigen::EigenDenseSymGen(i, A, B, s, U).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double w = s[j];
@@ -234,7 +234,7 @@ void tests::eigen::dense_non_symmetric_std_full(void)
 		math::Matrix Am(B, i, i);
 		setup_dense_random_matrix(A, i);
 		memcpy(B, A, i * i * sizeof(double));
-		bool test = math::Eigen(A, i, sr, si, U, V).compute();
+		bool test = math::eigen::EigenDenseNonStd(i, A, sr, si, U, V).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double wr = sr[j];
@@ -285,7 +285,7 @@ void tests::eigen::dense_non_symmetric_gen_full(void)
 		setup_dense_random_matrix(B, i);
 		memcpy(C, A, i * i * sizeof(double));
 		memcpy(D, B, i * i * sizeof(double));
-		bool test = math::Eigen(A, B, i, sr, si, U, V).compute();
+		bool test = math::eigen::EigenDenseNonGen(i, A, B, sr, si, U, V).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double wr = sr[j];
