@@ -232,6 +232,7 @@ namespace math
 			if(ss & 1 << uint32_t(State::x)) m_x_data = new double[m_size * (m_step_max + 1)];
 			if(ss & 1 << uint32_t(State::v)) m_v_data = new double[m_size * (m_step_max + 1)];
 			if(ss & 1 << uint32_t(State::a)) m_a_data = new double[m_size * (m_step_max + 1)];
+			if(m_stability) for(uint32_t i = 0; i < m_step_max + 1; i++) m_stability_data[i] = true;
 		}
 	}
 }
