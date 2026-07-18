@@ -21,6 +21,8 @@
 #include "Math/inc/Eigen/DenseNonStd.hpp"
 #include "Math/inc/Eigen/DenseNonGen.hpp"
 
+#include "Math/inc/Eigen/SparseSymStd.hpp"
+
 static void setup_dense_random_matrix(double* A, uint32_t order)
 {
 	for(uint32_t i = 0; i < order; i++)
@@ -350,7 +352,7 @@ void tests::eigen::sparse_symmetric_std_partial(void)
 	for(uint32_t i = 100; i <= n; i += 10)
 	{
 		setup_sparse_symmetric(Am, rm, cm, i);
-		bool test = math::Eigen(Am, i, rm, cm, s, U, nev, ncv).compute();
+		bool test = math::eigen::SparseSymStd(i, nev, ncv, rm, cm, Am, s, U).compute();
 		for(uint32_t j = 0; j < nev; j++)
 		{
 			test = test && fabs(math::Sparse(Am, rm, cm, i, i).bilinear(U + i * j) - s[j]) < 1e-5;
