@@ -43,6 +43,12 @@ namespace math
 			double velocity_data(uint32_t, uint32_t) const;
 			double acceleration_data(uint32_t, uint32_t) const;
 
+			bool stability(bool);
+			bool stability(void) const;
+
+			bool stability_data(uint32_t) const;
+			const bool* stability_data(void) const;
+
 			//serialization
 			void save(const char*) const override;
 			void save(const char*, std::vector<uint32_t>) const;
@@ -58,6 +64,8 @@ namespace math
 			void allocate_state(void) override;
 
 			//data
+			bool m_stability;
+			bool* m_stability_data;
 			uint32_t m_step, m_step_max;
 			StopCriteria m_stop_criteria;
 			double *m_x_data, *m_v_data, *m_a_data, *m_p_data, *m_t_data;

@@ -11,6 +11,7 @@ namespace math
 	{
 		//constructor
 		Incremental::Incremental(void) :
+			m_stability{false}, m_stability_data{nullptr},
 			m_step{0}, m_step_max{100}, m_stop_criteria{this},
 			m_x_data{nullptr}, m_v_data{nullptr}, m_a_data{nullptr}, m_p_data{nullptr}, m_t_data{nullptr}
 		{
@@ -30,6 +31,8 @@ namespace math
 				delete[] *ptr;
 				*ptr = nullptr;
 			}
+			delete[] m_stability_data;
+			m_stability_data = nullptr;
 		}
 
 		//solve
@@ -65,6 +68,8 @@ namespace math
 				delete[] *ptr;
 				*ptr = nullptr;
 			}
+			delete[] m_stability_data;
+			m_stability_data = nullptr;
 		}
 
 		//data
@@ -129,6 +134,24 @@ namespace math
 			return m_a_data[step * m_size + dof];
 		}
 
+		bool Incremental::stability(void) const
+		{
+			return m_stability;
+		}
+		bool Incremental::stability(bool stability)
+		{
+			return m_stability = stability;
+		}
+
+		const bool* Incremental::stability_data(void) const
+		{
+			return m_stability_data;
+		}
+		bool Incremental::stability_data(uint32_t step) const
+		{
+			return m_stability_data[step];
+		}
+
 		//serialization
 		void Incremental::save(const char* path) const
 		{
@@ -144,6 +167,7 @@ namespace math
 				}
 				if(ss & 1 << uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
 				if(ss & 1 << uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
+				if(m_stability) fprintf(file, "%d ", m_stability_data[i]);
 				fprintf(file, "\n");
 			}
 			fclose(file);
@@ -162,6 +186,7 @@ namespace math
 				}
 				if(ss & 1 << uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
 				if(ss & 1 << uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
+				if(m_stability) fprintf(file, "%d ", m_stability_data[i]);
 				fprintf(file, "\n");
 			}
 			fclose(file);
@@ -201,6 +226,7 @@ namespace math
 		{
 			Solver::allocate_state();
 			const uint32_t ss = state_set();
+			if(m_stability) m_stability_data = new bool[m_step_max + 1];
 			if(ss & 1 << uint32_t(State::t)) m_t_data = new double[m_step_max + 1];
 			if(ss & 1 << uint32_t(State::p)) m_p_data = new double[m_step_max + 1];
 			if(ss & 1 << uint32_t(State::x)) m_x_data = new double[m_size * (m_step_max + 1)];
