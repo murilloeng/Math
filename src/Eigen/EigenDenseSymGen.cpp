@@ -16,10 +16,24 @@ namespace math
 	namespace eigen
 	{
 		//constructor
-		EigenDenseSymGen::EigenDenseSymGen(uint32_t order, double* A, double* B, double* s, double* U) : EigenDenseSym{order}, 
-			m_A{A}, m_B{B}, m_s{s}, m_U{U}
+		EigenDenseSymGen::EigenDenseSymGen(uint32_t order, double* A, double* B, double* s, double* U) : 
+			EigenDenseSym{order}, m_A{A}, m_B{B}, m_s{s}, m_U{U}
 		{
 			return;
+		}
+		EigenDenseSymGen::EigenDenseSymGen(uint32_t order, double* A, double* B, double* s, double* U, double value_min, double value_max) : 
+			EigenDenseSym{order}, m_A{A}, m_B{B}, m_s{s}, m_U{U}
+		{
+			m_range = 'V';
+			m_value_min = value_min;
+			m_value_max = value_max;
+		}
+		EigenDenseSymGen::EigenDenseSymGen(uint32_t order, double* A, double* B, double* s, double* U, uint32_t index_min, uint32_t index_max) : 
+			EigenDenseSym{order}, m_A{A}, m_B{B}, m_s{s}, m_U{U}
+		{
+			m_range = 'I';
+			m_index_min = index_min;
+			m_index_max = index_max;
 		}
 
 		//destructor

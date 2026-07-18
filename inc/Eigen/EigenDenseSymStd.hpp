@@ -12,6 +12,8 @@ namespace math
 		public:
 			//constructor
 			EigenDenseSymStd(uint32_t, double*, double*, double*);
+			EigenDenseSymStd(uint32_t, double*, double*, double*, double, double);
+			EigenDenseSymStd(uint32_t, double*, double*, double*, uint32_t, uint32_t);
 
 			//destructor
 			virtual ~EigenDenseSymStd(void);

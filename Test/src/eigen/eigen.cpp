@@ -167,11 +167,7 @@ void tests::eigen::dense_symmetric_std_partial(void)
 	{
 		setup_dense_symmetric_matrix(A, i);
 		memcpy(B, A, i * i * sizeof(double));
-		math::eigen::EigenDenseSymStd eigen(i, A, s, U);
-		eigen.range('I');
-		eigen.index_min(0);
-		eigen.index_max(modes - 1);
-		bool test = eigen.compute();
+		bool test = math::eigen::EigenDenseSymStd(i, A, s, U, 0, modes - 1).compute();
 		for(uint32_t j = 0; j < modes; j++)
 		{
 			const double w = s[j];
@@ -201,11 +197,7 @@ void tests::eigen::dense_symmetric_gen_partial(void)
 		setup_dense_symmetric_pd_matrix(B, i);
 		memcpy(C, A, i * i * sizeof(double));
 		memcpy(D, B, i * i * sizeof(double));
-		math::eigen::EigenDenseSymGen eigen(i, A, B, s, U);
-		eigen.range('I');
-		eigen.index_min(0);
-		eigen.index_max(modes - 1);
-		bool test = eigen.compute();
+		bool test = math::eigen::EigenDenseSymGen(i, A, B, s, U, 0, modes - 1).compute();
 		for(uint32_t j = 0; j < modes; j++)
 		{
 			const double w = s[j];
