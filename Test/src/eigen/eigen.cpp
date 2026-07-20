@@ -10,12 +10,11 @@
 
 //Math
 #include "Math/Test/inc/eigen.hpp"
-#include "Math/inc/Linear/SVD.hpp"
-#include "Math/inc/Linear/Eigen.hpp"
 #include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Miscellaneous/util.hpp"
 
+#include "Math/inc/Eigen/SVD.hpp"
 #include "Math/inc/Eigen/DenseSymStd.hpp"
 #include "Math/inc/Eigen/DenseSymGen.hpp"
 #include "Math/inc/Eigen/DenseNonStd.hpp"
@@ -157,7 +156,7 @@ void tests::eigen::dense_svd(void)
 	{
 		setup_dense_random_matrix(A, i);
 		memcpy(B, A, i * i * sizeof(double));
-		bool test = math::SVD(A, i, i, s, U, V).compute();
+		bool test = math::eigen::SVD(A, i, i, s, U, V).compute();
 		for(uint32_t j = 0; j < i; j++)
 		{
 			const double sj = s[j];

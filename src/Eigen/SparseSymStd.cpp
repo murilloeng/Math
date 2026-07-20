@@ -59,7 +59,7 @@ namespace math
 			//eigenvalues
 			const uint32_t rvec = bool(m_U);
 			uint32_t* select = new uint32_t[ncv];
-			dseupd_(&rvec, "A", select, m_s, m_U, &n, nullptr, "I", &n, which, &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
+			dseupd_(&rvec, "A", select, m_s, m_U, &n, &m_shift, "I", &n, which, &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
 			//delete
 			delete[] v;
 			delete[] resid;

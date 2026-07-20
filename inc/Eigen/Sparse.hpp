@@ -29,6 +29,9 @@ namespace math
 			uint32_t iteration_max(uint32_t);
 			uint32_t iteration_max(void) const;
 
+			double shift(double);
+			double shift(void) const;
+
 			const char* type(void) const;
 			const char* type(const char*);
 
@@ -50,6 +53,7 @@ namespace math
 			uint32_t m_iteration_max;
 
 			char m_type[3];
+			double m_shift;
 			const int32_t* m_rows_map;
 			const int32_t* m_cols_map;
 		};
