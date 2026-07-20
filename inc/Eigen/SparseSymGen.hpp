@@ -12,6 +12,7 @@ namespace math
 		{
 		public:
 			//constructor
+			SparseSymGen(void);
 			SparseSymGen(uint32_t, uint32_t, uint32_t, const int32_t*, const int32_t*, const double*, const double*, double*, double*);
 
 			//destructor
@@ -19,6 +20,7 @@ namespace math
 
 			//compute
 			bool compute(void) override;
+			void setup(uint32_t, uint32_t, uint32_t, const int32_t*, const int32_t*, const double*, const double*, double*, double*);
 
 		protected:
 			//operation

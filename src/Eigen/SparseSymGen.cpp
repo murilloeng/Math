@@ -17,6 +17,10 @@ namespace math
 	namespace eigen
 	{
 		//constructor
+		SparseSymGen::SparseSymGen(void) : SparseSym{0U, 0U, 0U, nullptr, nullptr}, m_s{nullptr}, m_U{nullptr}, m_A{nullptr}, m_B{nullptr}
+		{
+			return;
+		}
 		SparseSymGen::SparseSymGen(uint32_t order, uint32_t modes, uint32_t vectors, const int32_t* rows_map, const int32_t* cols_map, const double* A, const double* B, double* s, double* U) : SparseSym{order, modes, vectors, rows_map, cols_map}, m_s{s}, m_U{U}, m_A{A}, m_B{B}
 		{
 			m_mode = 2;
@@ -73,6 +77,18 @@ namespace math
 			m_S->release();
 			//return
 			return info == 0;
+		}
+		void SparseSymGen::setup(uint32_t order, uint32_t modes, uint32_t vectors, const int32_t* rows_map, const int32_t* cols_map, const double* A, const double* B, double* s, double* U)
+		{
+			m_s = s;
+			m_U = U;
+			m_A = A;
+			m_B = B;
+			m_order = order;
+			m_modes = modes;
+			m_vectors = vectors;
+			m_rows_map = rows_map;
+			m_cols_map = cols_map;
 		}
 
 		//operation
