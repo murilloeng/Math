@@ -119,9 +119,11 @@ static void setup_sparse_symmetric_pd(double*& Bm, const int32_t* rm, const int3
 		{
 			if(rm[j] < int32_t(i))
 			{
-				const double v1 = Bs(rm[j], i);
-				const double v2 = Bs(i, rm[j]);
-				Bs(rm[j], i) = Bs(i, rm[j]) = (v1 + v2) / 2;
+				int32_t k;
+				for(k = cm[rm[j]]; k < cm[rm[j] + 1]; k++) if(rm[k] == int32_t(i)) break;
+				const double v1 = Bm[j];
+				const double v2 = Bm[k];
+				Bm[j] = Bm[k] = (v1 + v2) / 2;
 			}
 		}
 	}
