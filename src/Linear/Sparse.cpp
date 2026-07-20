@@ -174,19 +174,32 @@ namespace math
 		return bilinear(v1.data(), v2.data());
 	}
 
+	//solve
 	bool Sparse::solve(Vector& x, const Vector& f) const
 	{
 		//check
+		if(m_rows != m_cols || m_cols != x.rows() || m_rows != f.rows())
+		{
+			throw std::runtime_error("Error: Sparse solve called with incompatible data!");
+		}
+		//return
+		return solve(x.data(), f.data(), 1);
+	}
+	bool Sparse::solve(Matrix& x, const Matrix& f) const
+	{
+		//check
+		if(m_rows != m_cols || m_cols != x.rows() || m_rows != f.rows() || x.cols() != f.cols())
+		{
+			throw std::runtime_error("Error: Sparse solve called with incompatible data!");
+		}
+		//return
+		return solve(x.data(), f.data(), f.cols());
+	}
+	bool Sparse::solve(double* x, const double* f, uint32_t cols) const
+	{
+		//solve
 		bool test = false;
 		const uint32_t n = m_rows;
-		const uint32_t m = f.cols();
-		if(m_cols != x.rows() || m_rows != f.rows() || x.cols() != f.cols())
-		{
-			throw std::runtime_error("Sparse solve has incompatible vectors!");
-		}
-		//solve
-		double* xd = x.data();
-		const double* fd = f.data();
 		const double* Kd = m_data_ref;
 		const int32_t* r = m_rows_map_ref;
 		const int32_t* c = m_cols_map_ref;
@@ -195,10 +208,10 @@ namespace math
 			if(umfpack_di_numeric(c, r, Kd, m_symbolic, &m_numeric, nullptr, nullptr) == UMFPACK_OK)
 			{
 				test = true;
-				for(uint32_t i = 0; i < m; i++)
+				for(uint32_t i = 0; i < cols; i++)
 				{
-					double* xi = xd + i * n;
-					const double* fi = fd + i * n;
+					double* xi = x + i * n;
+					const double* fi = f + i * n;
 					test = test && umfpack_di_solve(UMFPACK_A, c, r, Kd, xi, fi, m_numeric, nullptr, nullptr) == UMFPACK_OK;
 				}
 			}
@@ -216,17 +229,12 @@ namespace math
 		//check
 		if(m_cols != v.rows())
 		{
-			throw std::runtime_error("Sparse Vector product has incompatible dimentions!");
+			throw std::runtime_error("Error: Sparse Vector product called with incompatible dimentions!");
 		}
 		//vector
-		Vector r(v.rows(), mode::zeros);
-		for(uint32_t i = 0; i < m_cols; i++)
-		{
-			for(int32_t j = m_cols_map_ref[i]; j < m_cols_map_ref[i + 1]; j++)
-			{
-				r[m_rows_map_ref[j]] += m_data_ref[j] * v[i];
-			}
-		}
+		Vector r(v.rows());
+		product(r.data(), v.data());
+		//return
 		return r;
 	}
 	double& Sparse::operator()(uint32_t i, uint32_t j)
@@ -266,7 +274,20 @@ namespace math
 		return M;
 	}
 
-	//spqn
+	//product
+	void Sparse::product(double* y, const double* x) const
+	{
+		memset(y, 0, m_rows * sizeof(double));
+		for(uint32_t i = 0; i < m_cols; i++)
+		{
+			for(int32_t j = m_cols_map_ref[i]; j < m_cols_map_ref[i + 1]; j++)
+			{
+				y[m_rows_map_ref[j]] += m_data_ref[j] * x[i];
+			}
+		}
+	}
+
+	//span
 	void Sparse::span(Sparse& Matrix, uint32_t i, uint32_t j) const
 	{
 		//data

@@ -6,7 +6,7 @@ namespace math
 	namespace eigen
 	{
 		//constructor
-		Dense::Dense(uint32_t order) : Base{order}
+		Dense::Dense(uint32_t order) : Eigen{order}
 		{
 			return;
 		}

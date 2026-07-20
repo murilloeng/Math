@@ -19,15 +19,19 @@ int main(void)
 {
 	try
 	{
-		// tests::eigen::dense_symmetric_std_full();
-		// tests::eigen::dense_symmetric_gen_full();
-		// tests::eigen::dense_symmetric_std_partial();
-		// tests::eigen::dense_symmetric_gen_partial();
-		// tests::eigen::dense_non_symmetric_std_full();
-		// tests::eigen::dense_non_symmetric_gen_full();
-		tests::eigen::sparse_symmetric_std_partial();
-		// tests::eigen::dense_singular_value_decomposition();
+		// tests::eigen::dense_svd();
+		// tests::eigen::dense_sym_std_full();
+		// tests::eigen::dense_sym_gen_full();
+		// tests::eigen::dense_sym_std_part();
+		// tests::eigen::dense_sym_gen_part();
+		// tests::eigen::dense_non_std_full();
+		// tests::eigen::dense_non_std_full();
 
+		// tests::eigen::sparse_svd();
+		// tests::eigen::sparse_sym_std_part();
+		tests::eigen::sparse_sym_gen_part();
+		// tests::eigen::sparse_non_std_part();
+		// tests::eigen::sparse_non_gen_part();
 
 		// tests::solvers::newton_raphson::spring_buckling();
 		// tests::solvers::newton_raphson::truss_von_mises();

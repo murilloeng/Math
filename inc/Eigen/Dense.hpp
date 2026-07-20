@@ -1,13 +1,13 @@
 #pragma once
 
 //Math
-#include "Math/inc/Eigen/Base.hpp"
+#include "Math/inc/Eigen/Eigen.hpp"
 
 namespace math
 {
 	namespace eigen
 	{
-		class Dense : public Base
+		class Dense : public Eigen
 		{
 		public:
 			//constructor

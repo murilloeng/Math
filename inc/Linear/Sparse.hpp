@@ -47,9 +47,11 @@ namespace math
 		double bilinear(const Vector&) const;
 		double bilinear(const double*, const double*) const;
 		double bilinear(const Vector&, const Vector&) const;
-
+		
 		//solve
 		bool solve(Vector&, const Vector&) const;
+		bool solve(Matrix&, const Matrix&) const;
+		bool solve(double*, const double*, uint32_t) const;
 		
 		//operators
 		Vector operator*(const Vector&) const;
@@ -58,6 +60,9 @@ namespace math
 		
 		//convert
 		Matrix convert(void) const;
+
+		//product
+		void product(double*, const double*) const;
 		
 		//span
 		void span(Sparse&, uint32_t, uint32_t) const;

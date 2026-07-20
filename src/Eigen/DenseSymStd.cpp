@@ -77,10 +77,10 @@ namespace math
 			const char uplo = 'U';
 			const char jobz = m_U ? 'V' : 'N';
 			//query
-			const double abstol = 0;
 			const uint32_t* n = &m_order;
 			const double v1 = m_value_min;
 			const double v2 = m_value_max;
+			const double abstol = m_tolerance;
 			const uint32_t i1 = m_index_min + 1;
 			const uint32_t i2 = m_index_max + 1;
 			int32_t* ifail = new int32_t[m_order];

@@ -2,6 +2,7 @@
 #include <cstring>
 
 //Math
+#include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Eigen/SparseSymStd.hpp"
 
 extern "C"
@@ -35,30 +36,30 @@ namespace math
 			const uint32_t ncv = m_vectors;
 			const uint32_t lworkl = (ncv + 8) * ncv;
 			//data
-			const double tol = 1.00e-10;
-			double* resid = new double[n];
-			double* v = new double[n * ncv];
-			double* workd = new double[3 * n];
-			double* workl = new double[lworkl];
-			int32_t ido = 0, info = 0, iparam[11], ipntr[11];
+			const char* which = m_type;
+			const double tol = m_tolerance;
+			int32_t info = 0, iparam[11], ipntr[11];
+			double *resid = new double[n], *v = new double[n * ncv];
+			double *workd = new double[3 * n], *workl = new double[lworkl];
 			//setup
+			m_ido = 0;
 			iparam[0] = 1;
-			iparam[6] = 1;
-			iparam[2] = 300;
+			iparam[6] = m_mode;
+			iparam[2] = m_iteration_max;
 			//Arnoldi
 			while(true)
 			{
 				//decomposition
-				dsaupd_(&ido, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
+				dsaupd_(&m_ido, "I", &n, which, &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
 				//compute
-				if(ido == 99) break;
-				if(ido == -1 || ido == 1) sparse_product(workd + ipntr[1] - 1, workd + ipntr[0] - 1);
+				if(m_ido == 99) break;
+				if(m_ido == -1 || m_ido == 1) operation(workd + ipntr[1] - 1, workd + ipntr[0] - 1);
 			}
 			if(info != 0) return false;
 			//eigenvalues
-			const uint32_t rvec = true;
+			const uint32_t rvec = bool(m_U);
 			uint32_t* select = new uint32_t[ncv];
-			dseupd_(&rvec, "A", select, m_s, m_U, &n, nullptr, "I", &n, "SA", &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
+			dseupd_(&rvec, "A", select, m_s, m_U, &n, nullptr, "I", &n, which, &nev, &tol, resid, &ncv, v, &n, iparam, ipntr, workd, workl, &lworkl, &info);
 			//delete
 			delete[] v;
 			delete[] resid;
@@ -70,16 +71,9 @@ namespace math
 		}
 
 		//operation
-		void SparseSymStd::sparse_product(double* y, const double* x) const
+		void SparseSymStd::operation(double* y, double* x) const
 		{
-			memset(y, 0, m_order * sizeof(double));
-			for(uint32_t i = 0; i < m_order; i++)
-			{
-				for(int32_t j = m_cols_map[i]; j < m_cols_map[i + 1]; j++)
-				{
-					y[m_rows_map[j]] += m_A[j] * x[i];
-				}
-			}
+			math::Sparse(m_A, m_rows_map, m_cols_map, m_order, m_order).product(y, x);
 		}
 	}
 }

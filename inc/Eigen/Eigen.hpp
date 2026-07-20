@@ -7,14 +7,21 @@ namespace math
 {
 	namespace eigen
 	{
-		class Base
+		class Eigen
 		{
 		public:
 			//constructor
-			Base(uint32_t);
+			Eigen(uint32_t);
 
 			//destructor
-			virtual ~Base(void);
+			virtual ~Eigen(void);
+
+			//data
+			uint32_t order(uint32_t);
+			uint32_t order(void) const;
+
+			double tolerance(double);
+			double tolerance(void) const;
 
 			//compute
 			virtual bool compute(void) = 0;
@@ -22,6 +29,7 @@ namespace math
 		protected:
 			//data
 			uint32_t m_order;
+			double m_tolerance;
 		};
 	}
 }

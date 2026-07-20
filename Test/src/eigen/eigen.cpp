@@ -22,6 +22,7 @@
 #include "Math/inc/Eigen/DenseNonGen.hpp"
 
 #include "Math/inc/Eigen/SparseSymStd.hpp"
+#include "Math/inc/Eigen/SparseSymGen.hpp"
 
 static void setup_dense_random_matrix(double* A, uint32_t order)
 {
@@ -78,7 +79,7 @@ static void setup_sparse_symmetric(double*& Am, int32_t*& rm, int32_t*& cm, uint
 	{
 		for(uint32_t j = i; j < n; j++)
 		{
-			if(math::randu() < density)
+			if(i == j || math::randu() < density)
 			{
 				//data
 				const double v = math::randu(v_min, v_max);
@@ -98,8 +99,75 @@ static void setup_sparse_symmetric(double*& Am, int32_t*& rm, int32_t*& cm, uint
 	Am = new double[At.size()];
 	umfpack_di_triplet_to_col(n, n, At.size(), rt.data(), ct.data(), At.data(), cm, rm, Am, nullptr);
 }
+static void setup_sparse_symmetric_pd(double*& Bm, const int32_t* rm, const int32_t* cm, uint32_t n)
+{
+	//data
+	const double v_min = -1.00e+00;
+	const double v_max = +1.00e+00;
+	//values
+	srand(time(nullptr));
+	Bm = new double[cm[n]];
+	for(int32_t i = 0; i < cm[n]; i++)
+	{
+		Bm[i] = math::randu(v_min, v_max);
+	}
+	//symmetry
+	math::Sparse Bs(Bm, rm, cm, n, n);
+	for(uint32_t i = 0; i < n; i++)
+	{
+		for(int32_t j = cm[i]; j < cm[i + 1]; j++)
+		{
+			if(rm[j] < int32_t(i))
+			{
+				const double v1 = Bs(rm[j], i);
+				const double v2 = Bs(i, rm[j]);
+				Bs(rm[j], i) = Bs(i, rm[j]) = (v1 + v2) / 2;
+			}
+		}
+	}
+	//diagonal
+	for(uint32_t i = 0; i < n; i++)
+	{
+		double d = 0;
+		for(int32_t j = cm[i]; j < cm[i + 1]; j++)
+		{
+			if(rm[j] != int32_t(i)) d += fabs(Bm[j]);
+		}
+		for(int32_t j = cm[i]; j < cm[i + 1]; j++)
+		{
+			if(rm[j] == int32_t(i)) Bm[j] = d + 1;
+		}
+	}
+}
 
-void tests::eigen::dense_symmetric_std_full(void)
+void tests::eigen::dense_svd(void)
+{
+	//data
+	srand(time(nullptr));
+	const uint32_t order_max = 100;
+	//test
+	double s[order_max];
+	double A[order_max * order_max];
+	double B[order_max * order_max];
+	double U[order_max * order_max];
+	double V[order_max * order_max];
+	for(uint32_t i = 1; i <= order_max; i++)
+	{
+		setup_dense_random_matrix(A, i);
+		memcpy(B, A, i * i * sizeof(double));
+		bool test = math::SVD(A, i, i, s, U, V).compute();
+		for(uint32_t j = 0; j < i; j++)
+		{
+			const double sj = s[j];
+			const double* u = U + i * j;
+			const double* v = V + i * j;
+			test = test && fabs(math::Matrix(B, i, i).bilinear(u, v) - sj) < 1e-5;
+		}
+		if(!test) throw std::runtime_error("Error");
+		printf("Test eigen dense svd %3d: ok!\n", i);
+	}
+}
+void tests::eigen::dense_sym_std_full(void)
 {
 	//data
 	srand(time(nullptr));
@@ -121,10 +189,10 @@ void tests::eigen::dense_symmetric_std_full(void)
 			test = test && fabs(math::Matrix(B, i, i).bilinear(z) - w) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
-		printf("Test dense symmetric std full %3d: ok!\n", i);
+		printf("Test eigen dense sym std full %3d: ok!\n", i);
 	}
 }
-void tests::eigen::dense_symmetric_gen_full(void)
+void tests::eigen::dense_sym_gen_full(void)
 {
 	//data
 	srand(time(nullptr));
@@ -151,10 +219,10 @@ void tests::eigen::dense_symmetric_gen_full(void)
 			test = test && fabs(math::Matrix(D, i, i).bilinear(z) - 1) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
-		printf("Test dense symmetric gen full %3d: ok!\n", i);
+		printf("Test eigen dense sym gen full %3d: ok!\n", i);
 	}
 }
-void tests::eigen::dense_symmetric_std_partial(void)
+void tests::eigen::dense_sym_std_part(void)
 {
 	//data
 	srand(time(nullptr));
@@ -177,10 +245,10 @@ void tests::eigen::dense_symmetric_std_partial(void)
 			test = test && fabs(math::Matrix(B, i, i).bilinear(z) - w) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
-		printf("Test dense symmetric std partial %3d: ok!\n", i);
+		printf("Test eigen dense sym std part %3d: ok!\n", i);
 	}
 }
-void tests::eigen::dense_symmetric_gen_partial(void)
+void tests::eigen::dense_sym_gen_part(void)
 {
 	//data
 	srand(time(nullptr));
@@ -208,10 +276,10 @@ void tests::eigen::dense_symmetric_gen_partial(void)
 			test = test && fabs(math::Matrix(D, i, i).bilinear(z) - 1) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
-		printf("Test dense symmetric gen partial %3d: ok!\n", i);
+		printf("Test eigen dense sym gen part %3d: ok!\n", i);
 	}
 }
-void tests::eigen::dense_non_symmetric_std_full(void)
+void tests::eigen::dense_non_std_full(void)
 {
 	//data
 	srand(time(nullptr));
@@ -254,10 +322,10 @@ void tests::eigen::dense_non_symmetric_std_full(void)
 			}
 		}
 		if(!test) throw std::runtime_error("Error");
-		printf("Test dense non symmetric std full %3d: ok!\n", i);
+		printf("Test eigen dense non std full %3d: ok!\n", i);
 	}
 }
-void tests::eigen::dense_non_symmetric_gen_full(void)
+void tests::eigen::dense_non_gen_full(void)
 {
 	//data
 	srand(time(nullptr));
@@ -311,44 +379,21 @@ void tests::eigen::dense_non_symmetric_gen_full(void)
 			}
 		}
 		if(!test) throw std::runtime_error("Error");
-		printf("Test dense non symmetric gen full %3d: ok!\n", i);
-	}
-}
-void tests::eigen::dense_singular_value_decomposition(void)
-{
-	//data
-	srand(time(nullptr));
-	const uint32_t order_max = 100;
-	//test
-	double s[order_max];
-	double A[order_max * order_max];
-	double B[order_max * order_max];
-	double U[order_max * order_max];
-	double V[order_max * order_max];
-	for(uint32_t i = 1; i <= order_max; i++)
-	{
-		setup_dense_random_matrix(A, i);
-		memcpy(B, A, i * i * sizeof(double));
-		bool test = math::SVD(A, i, i, s, U, V).compute();
-		for(uint32_t j = 0; j < i; j++)
-		{
-			const double sj = s[j];
-			const double* u = U + i * j;
-			const double* v = V + i * j;
-			test = test && fabs(math::Matrix(B, i, i).bilinear(u, v) - sj) < 1e-5;
-		}
-		if(!test) throw std::runtime_error("Error");
-		printf("Test dense singular value decomposition %3d: ok!\n", i);
+		printf("Test eigen dense non gen full %3d: ok!\n", i);
 	}
 }
 
-void tests::eigen::sparse_symmetric_std_partial(void)
+void tests::eigen::sparse_svd(void)
+{
+	return;
+}
+void tests::eigen::sparse_sym_std_part(void)
 {
 	int32_t *rm, *cm;
 	const uint32_t nev = 5;
 	const uint32_t ncv = 15;
 	const uint32_t n = 1000;
-	double *Am, s[nev], U[nev * n];
+	double *Am, s[nev], U[n * nev];
 	for(uint32_t i = 100; i <= n; i += 10)
 	{
 		setup_sparse_symmetric(Am, rm, cm, i);
@@ -361,22 +406,39 @@ void tests::eigen::sparse_symmetric_std_partial(void)
 		delete[] rm;
 		delete[] cm;
 		if(!test) throw std::runtime_error("Error");
-		printf("Test sparse symmetric std partial %3d: ok!\n", i);
+		printf("Test eigen sparse sym std part %3d: ok!\n", i);
 	}
 }
-void tests::eigen::sparse_symmetric_gen_partial(void)
+void tests::eigen::sparse_sym_gen_part(void)
+{
+	int32_t *rm, *cm;
+	const uint32_t nev = 5;
+	const uint32_t ncv = 15;
+	const uint32_t n = 1000;
+	double *Am, *Bm, s[nev], U[n * nev];
+	for(uint32_t i = 100; i <= n; i += 10)
+	{
+		setup_sparse_symmetric(Am, rm, cm, i);
+		setup_sparse_symmetric_pd(Bm, rm, cm, i);
+		bool test = math::eigen::SparseSymGen(i, nev, ncv, rm, cm, Am, Bm, s, U).compute();
+		for(uint32_t j = 0; j < nev; j++)
+		{
+			test = test && fabs(math::Sparse(Bm, rm, cm, i, i).bilinear(U + i * j) - 1) < 1e-5;
+			test = test && fabs(math::Sparse(Am, rm, cm, i, i).bilinear(U + i * j) - s[j]) < 1e-5;
+		}
+		delete[] Am;
+		delete[] Bm;
+		delete[] rm;
+		delete[] cm;
+		if(!test) throw std::runtime_error("Error");
+		printf("Test eigen sparse sym gen part %3d: ok!\n", i);
+	}
+}
+void tests::eigen::sparse_non_std_part(void)
 {
 	return;
 }
-void tests::eigen::sparse_non_symmetric_std_partial(void)
-{
-	return;
-}
-void tests::eigen::sparse_non_symmetric_gen_partial(void)
-{
-	return;
-}
-void tests::eigen::sparse_singular_value_decomposition(void)
+void tests::eigen::sparse_non_gen_part(void)
 {
 	return;
 }

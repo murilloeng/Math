@@ -14,14 +14,14 @@ namespace math
 			SparseSymStd(uint32_t, uint32_t, uint32_t, const int32_t*, const int32_t*, const double*, double*, double*);
 
 			//destructor
-			virtual ~SparseSymStd(void);
+			~SparseSymStd(void);
 
 			//compute
 			bool compute(void) override;
 
 		protected:
 			//operation
-			void sparse_product(double*, const double*) const;
+			void operation(double*, double*) const override;
 
 			//data
 			double* m_s;
