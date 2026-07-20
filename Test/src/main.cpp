@@ -28,7 +28,7 @@ int main(void)
 		// tests::eigen::dense_non_std_full();
 
 		// tests::eigen::sparse_svd();
-		// tests::eigen::sparse_sym_std_part();
+		tests::eigen::sparse_sym_std_part();
 		tests::eigen::sparse_sym_gen_part();
 		// tests::eigen::sparse_non_std_part();
 		// tests::eigen::sparse_non_gen_part();

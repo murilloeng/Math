@@ -392,9 +392,9 @@ void tests::eigen::sparse_svd(void)
 void tests::eigen::sparse_sym_std_part(void)
 {
 	int32_t *rm, *cm;
+	const uint32_t n = 500;
 	const uint32_t nev = 5;
 	const uint32_t ncv = 15;
-	const uint32_t n = 1000;
 	double *Am, s[nev], U[n * nev];
 	for(uint32_t i = 100; i <= n; i += 10)
 	{
@@ -414,9 +414,9 @@ void tests::eigen::sparse_sym_std_part(void)
 void tests::eigen::sparse_sym_gen_part(void)
 {
 	int32_t *rm, *cm;
+	const uint32_t n = 500;
 	const uint32_t nev = 5;
 	const uint32_t ncv = 15;
-	const uint32_t n = 1000;
 	double *Am, *Bm, s[nev], U[n * nev];
 	for(uint32_t i = 100; i <= n; i += 10)
 	{

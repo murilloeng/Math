@@ -1,6 +1,7 @@
 #pragma once
 
 //Math
+#include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Eigen/SparseSym.hpp"
 
 namespace math
@@ -28,6 +29,7 @@ namespace math
 			double* m_U;
 			const double* m_A;
 			const double* m_B;
+			const math::Sparse* m_S;
 		};
 	}
 }

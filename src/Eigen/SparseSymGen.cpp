@@ -36,7 +36,10 @@ namespace math
 			const uint32_t nev = m_modes;
 			const uint32_t ncv = m_vectors;
 			const uint32_t lworkl = (ncv + 8) * ncv;
+			const math::Sparse Bs(m_B, m_rows_map, m_cols_map, m_order, m_order);
 			//data
+			m_S = &Bs;
+			m_S->decompose();
 			const char* which = m_type;
 			const double tol = m_tolerance;
 			int32_t info = 0, iparam[11], ipntr[11];
@@ -67,6 +70,7 @@ namespace math
 			delete[] workd;
 			delete[] workl;
 			delete[] select;
+			m_S->release();
 			//return
 			return info == 0;
 		}
@@ -78,7 +82,8 @@ namespace math
 			{
 				math::Sparse(m_A, m_rows_map, m_cols_map, m_order, m_order).product(y, x);
 				memcpy(x, y, m_order * sizeof(double));
-				!math::Sparse(m_B, m_rows_map, m_cols_map, m_order, m_order).solve(y, x, 1);
+				// !math::Sparse(m_B, m_rows_map, m_cols_map, m_order, m_order).solve(y, x, 1);
+				m_S->substitute(y, x ,1);
 			}
 			if(m_ido == 2)
 			{

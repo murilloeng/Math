@@ -178,7 +178,7 @@ namespace math
 	bool Sparse::solve(Vector& x, const Vector& f) const
 	{
 		//check
-		if(m_rows != m_cols || m_cols != x.rows() || m_rows != f.rows())
+		if(m_cols != x.rows() || m_rows != f.rows())
 		{
 			throw std::runtime_error("Error: Sparse solve called with incompatible data!");
 		}
@@ -188,7 +188,7 @@ namespace math
 	bool Sparse::solve(Matrix& x, const Matrix& f) const
 	{
 		//check
-		if(m_rows != m_cols || m_cols != x.rows() || m_rows != f.rows() || x.cols() != f.cols())
+		if(m_cols != x.rows() || m_rows != f.rows() || x.cols() != f.cols())
 		{
 			throw std::runtime_error("Error: Sparse solve called with incompatible data!");
 		}
@@ -197,6 +197,11 @@ namespace math
 	}
 	bool Sparse::solve(double* x, const double* f, uint32_t cols) const
 	{
+		//check
+		if(m_rows != m_cols)
+		{
+			throw std::runtime_error("Error: Sparse solve called with incompatible data!");
+		}
 		//solve
 		bool test = false;
 		const uint32_t n = m_rows;
@@ -219,6 +224,71 @@ namespace math
 		//cleanup
 		umfpack_di_free_numeric(&m_numeric);
 		umfpack_di_free_symbolic(&m_symbolic);
+		//return
+		return test;
+	}
+
+	void Sparse::release(void) const
+	{
+		umfpack_di_free_numeric(&m_numeric);
+		umfpack_di_free_symbolic(&m_symbolic);
+	}
+	bool Sparse::decompose(void) const
+	{
+		//check
+		if(m_rows != m_cols)
+		{
+			throw std::runtime_error("Error: Sparse decompose called with incompatible data!");
+		}
+		//data
+		const uint32_t n = m_rows;
+		const double* Kd = m_data_ref;
+		const int32_t* r = m_rows_map_ref;
+		const int32_t* c = m_cols_map_ref;
+		//return
+		return 
+			umfpack_di_symbolic(n, n, c, r, Kd, &m_symbolic, nullptr, nullptr) == UMFPACK_OK &&
+			umfpack_di_numeric(c, r, Kd, m_symbolic, &m_numeric, nullptr, nullptr) == UMFPACK_OK;
+	}
+	bool Sparse::substitute(Vector& x, const Vector& f) const
+	{
+		//check
+		if(m_cols != x.rows() || m_rows != f.rows())
+		{
+			throw std::runtime_error("Error: Sparse substitute called with incompatible data!");
+		}
+		//return
+		return substitute(x.data(), f.data(), 1);
+	}
+	bool Sparse::substitute(Matrix& x, const Matrix& f) const
+	{
+		//check
+		if(m_cols != x.rows() || m_rows != f.rows() || x.cols() != f.cols())
+		{
+			throw std::runtime_error("Error: Sparse substitute called with incompatible data!");
+		}
+		//return
+		return substitute(x.data(), f.data(), f.cols());
+	}
+	bool Sparse::substitute(double* x, const double* f, uint32_t cols) const
+	{
+		//check
+		if(m_rows != m_cols)
+		{
+			throw std::runtime_error("Error: Sparse substitute called with incompatible data!");
+		}
+		//substitute
+		bool test = true;
+		const uint32_t n = m_rows;
+		const double* Kd = m_data_ref;
+		const int32_t* r = m_rows_map_ref;
+		const int32_t* c = m_cols_map_ref;
+		for(uint32_t i = 0; i < cols; i++)
+		{
+			double* xi = x + i * n;
+			const double* fi = f + i * n;
+			test = test && umfpack_di_solve(UMFPACK_A, c, r, Kd, xi, fi, m_numeric, nullptr, nullptr) == UMFPACK_OK;
+		}
 		//return
 		return test;
 	}

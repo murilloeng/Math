@@ -52,6 +52,12 @@ namespace math
 		bool solve(Vector&, const Vector&) const;
 		bool solve(Matrix&, const Matrix&) const;
 		bool solve(double*, const double*, uint32_t) const;
+
+		void release(void) const;
+		bool decompose(void) const;
+		bool substitute(Vector&, const Vector&) const;
+		bool substitute(Matrix&, const Matrix&) const;
+		bool substitute(double*, const double*, uint32_t) const;
 		
 		//operators
 		Vector operator*(const Vector&) const;
