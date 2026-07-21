@@ -23,6 +23,7 @@
 #include "Math/inc/Eigen/SparseSymStd.hpp"
 #include "Math/inc/Eigen/SparseSymGen.hpp"
 #include "Math/inc/Eigen/SparseNonStd.hpp"
+#include "Math/inc/Eigen/SparseNonGen.hpp"
 
 static void random_dense_non(double* A, uint32_t order)
 {
@@ -511,5 +512,54 @@ void tests::eigen::sparse_non_std_part(void)
 }
 void tests::eigen::sparse_non_gen_part(void)
 {
-	return;
+	int32_t *rm, *cm;
+	const uint32_t n = 500;
+	const uint32_t nev = 5;
+	const uint32_t ncv = 50;
+	double* U = new double[n * nev];
+	double *Am, *Bm, sr[nev], si[nev];
+	for(uint32_t i = 100; i <= n; i += 10)
+	{
+		random_sparse_non(Am, rm, cm, i);
+		random_sparse_sym_pd(Bm, rm, cm, i);
+		bool test = math::eigen::SparseNonGen(i, nev, ncv, rm, cm, Am, Bm, sr, si, U).compute();
+		for(uint32_t j = 0; j < nev; j++)
+		{
+			const double wr = sr[j];
+			const double wi = si[j];
+			const math::Sparse As(Am, rm, cm, i, i);
+			const math::Sparse Bs(Bm, rm, cm, i, i);
+			if(wi == 0)
+			{
+				const double* zr = U + i * j;
+				test = test && fabs(As.bilinear(zr, zr) - wr * Bs.bilinear(zr, zr)) < 1e-5;
+			}
+			else if(wi > 0)
+			{
+				math::Vector zr(U + i * (j + 0), i);
+				math::Vector zi(U + i * (j + 1), i);
+				const double Au = As.bilinear(zr, zr) + As.bilinear(zi, zi);
+				const double Ac = As.bilinear(zr, zi) - As.bilinear(zi, zr);
+				const double Bu = Bs.bilinear(zr, zr) + Bs.bilinear(zi, zi);
+				const double Bc = Bs.bilinear(zr, zi) - Bs.bilinear(zi, zr);
+				test = test && fabs(wr * Bu - wi * Bc - Au) < 1e-5 && fabs(wr * Bc + wi * Bu - Ac) < 1e-5;
+			}
+			else if(wi < 0)
+			{
+				math::Vector zr(U + i * (j - 1), i);
+				math::Vector zi(U + i * (j + 0), i);
+				const double Au = As.bilinear(zr, zr) + As.bilinear(zi, zi);
+				const double Ac = As.bilinear(zr, zi) - As.bilinear(zi, zr);
+				const double Bu = Bs.bilinear(zr, zr) + Bs.bilinear(zi, zi);
+				const double Bc = Bs.bilinear(zr, zi) - Bs.bilinear(zi, zr);
+				test = test && fabs(wr * Bu + wi * Bc - Au) < 1e-5 && fabs(wr * Bc - wi * Bu - Ac) < 1e-5;
+			}
+		}
+		delete[] Am;
+		delete[] rm;
+		delete[] cm;
+		if(!test) throw std::runtime_error("Error");
+		printf("Test eigen sparse non gen part %3d: ok!\n", i);
+	}
+	delete[] U;
 }

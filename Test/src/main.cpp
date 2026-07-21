@@ -30,7 +30,7 @@ int main(void)
 		// tests::eigen::sparse_svd();
 		// tests::eigen::sparse_sym_std_part();
 		// tests::eigen::sparse_sym_gen_part();
-		tests::eigen::sparse_non_std_part();
+		// tests::eigen::sparse_non_std_part();
 		tests::eigen::sparse_non_gen_part();
 
 		// tests::solvers::newton_raphson::spring_buckling();

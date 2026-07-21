@@ -19,7 +19,7 @@ namespace math
 		//constructor
 		SparseSymGen::SparseSymGen(void) : SparseSym{0U, 0U, 0U, nullptr, nullptr}, m_s{nullptr}, m_U{nullptr}, m_A{nullptr}, m_B{nullptr}
 		{
-			return;
+			m_mode = 2;
 		}
 		SparseSymGen::SparseSymGen(uint32_t order, uint32_t modes, uint32_t vectors, const int32_t* rows_map, const int32_t* cols_map, const double* A, const double* B, double* s, double* U) : SparseSym{order, modes, vectors, rows_map, cols_map}, m_s{s}, m_U{U}, m_A{A}, m_B{B}
 		{
@@ -98,7 +98,6 @@ namespace math
 			{
 				math::Sparse(m_A, m_rows_map, m_cols_map, m_order, m_order).product(y, x);
 				memcpy(x, y, m_order * sizeof(double));
-				// !math::Sparse(m_B, m_rows_map, m_cols_map, m_order, m_order).solve(y, x, 1);
 				m_S->substitute(y, x ,1);
 			}
 			if(m_ido == 2)
