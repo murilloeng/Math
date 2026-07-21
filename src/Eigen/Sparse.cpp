@@ -12,7 +12,7 @@ namespace math
 		//constructor
 		Sparse::Sparse(uint32_t order, uint32_t modes, uint32_t vectors, const int32_t* rows_map, const int32_t* cols_map) : 
 			Eigen{order}, m_mode{1U}, m_modes{modes}, m_vectors{vectors}, m_iteration_max{300U}, 
-			m_type{"SA"}, m_shift{0}, m_rows_map{rows_map}, m_cols_map{cols_map}
+			m_type{"SA"}, m_rows_map{rows_map}, m_cols_map{cols_map}
 		{
 			return;
 		}
@@ -58,15 +58,6 @@ namespace math
 		uint32_t Sparse::iteration_max(uint32_t iteration_max)
 		{
 			return m_iteration_max = iteration_max;
-		}
-
-		double Sparse::shift(void) const
-		{
-			return m_shift;
-		}
-		double Sparse::shift(double shift)
-		{
-			return m_shift = shift;
 		}
 
 		const char* Sparse::type(void) const

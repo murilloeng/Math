@@ -15,6 +15,14 @@ namespace math
 
 			//destructor
 			virtual ~SparseSym(void);
+
+			//data
+			double shift(double);
+			double shift(void) const;
+
+		protected:
+			//data
+			double m_shift;
 		};
 	}
 }
