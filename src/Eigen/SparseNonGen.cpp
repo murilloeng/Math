@@ -66,6 +66,7 @@ namespace math
 			if(info != 0) printf("info: %d\n", info);
 			if(info != 0) return false;
 			//eigenvalues
+			m_S->release();
 			const uint32_t rvec = bool(m_U);
 			double* workev = new double[3 * n];
 			uint32_t* select = new uint32_t[ncv];
