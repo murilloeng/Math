@@ -138,7 +138,7 @@ namespace math
 			//predictor
 			if(!Solver::solve(m_K, m_r, m_dxr) || !Solver::solve(m_K, m_fe, m_dxt))
 			{
-				if(!m_silent) printf("Unable to decompose stiffness Matrix in predictor!\n");
+				if(!m_silent) printf("Unable to decompose stiffness matrix in predictor!\n");
 			}
 			//continuation
 			if(m_step != 1)
@@ -152,7 +152,7 @@ namespace math
 			//corrector
 			if(!Solver::solve(m_K, m_r, m_ddxr) || !Solver::solve(m_K, m_fe, m_ddxt))
 			{
-				if(!m_silent) printf("Unable to decompose stiffness Matrix in corrector!\n");
+				if(!m_silent) printf("Unable to decompose stiffness matrix in corrector!\n");
 			}
 			m_ddp = m_continuation.corrector();
 			//update
