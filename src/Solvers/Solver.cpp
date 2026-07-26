@@ -227,51 +227,6 @@ namespace math
 			return m_K;
 		}
 
-		Solver::callback_1 Solver::callback_step(void) const
-		{
-			return m_callback_step;
-		}
-		Solver::callback_1 Solver::callback_step(callback_1 callback_step)
-		{
-			return m_callback_step = callback_step;
-		}
-
-		Solver::callback_2 Solver::callback_stop(void) const
-		{
-			return m_callback_stop;
-		}
-		Solver::callback_2 Solver::callback_stop(callback_2 callback_stop)
-		{
-			return m_callback_stop = callback_stop;
-		}
-
-		Solver::callback_1 Solver::callback_record(void) const
-		{
-			return m_callback_record;
-		}
-		Solver::callback_1 Solver::callback_record(callback_1 callback_record)
-		{
-			return m_callback_record = callback_record;
-		}
-
-		Solver::callback_1 Solver::callback_update(void) const
-		{
-			return m_callback_update;
-		}
-		Solver::callback_1 Solver::callback_update(callback_1 callback_update)
-		{
-			return m_callback_update = callback_update;
-		}
-
-		Solver::callback_1 Solver::callback_restore(void) const
-		{
-			return m_callback_restore;
-		}
-		Solver::callback_1 Solver::callback_restore(callback_1 callback_restore)
-		{
-			return m_callback_restore = callback_restore;
-		}
-
 		//data
 		void Solver::cleanup(void)
 		{
