@@ -589,29 +589,29 @@ namespace math
 	}
 	double Matrix::determinant(void) const
 	{
-		//data
-		int32_t info;
-		Matrix M(*this);
-		uint32_t* pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
 		//check
 		if(m_rows != m_cols)
 		{
 			throw std::runtime_error("Matrix determinant called on non-square Matrix!");
 		}
+		//data
+		int32_t info;
+		uint32_t* ipiv = new uint32_t[m_rows];
+		double* A = new double[m_rows * m_cols];
+		memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
 		//decompose
-		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &info);
-		//check
-		if(info != 0)
-		{
-			throw std::runtime_error("Matrix determinant computation failed!");
-		}
+		dgetrf_(&m_rows, &m_cols, A, &m_rows, ipiv, &info);
+		if(info < 0) throw std::runtime_error("Matrix determinant computation failed!");
 		//determinant
 		double d = 1;
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
-			d *= M.m_data_ptr[i + m_rows * i];
-			if(i + 1 != pivot[i]) d *= -1;
+			d *= A[i + m_rows * i];
+			if(i + 1 != ipiv[i]) d *= -1;
 		}
+		//delete
+		delete[] A;
+		delete[] ipiv;
 		//return
 		return d;
 	}
@@ -663,33 +663,34 @@ namespace math
 	Matrix Matrix::inverse(bool* test) const
 	{
 		//data
-		Matrix M(*this);
-		double query, *work;
+		double query;
+		Matrix A(*this);
 		int32_t info, lwork = -1;
-		uint32_t* pivot = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
+		uint32_t* ipiv = new uint32_t[m_rows];
 		//check
 		if(m_rows != m_cols)
 		{
 			throw std::runtime_error("Matrix inverse called on a non-square Matrix!");
 		}
 		//query
-		dgetrf_(&m_rows, &m_cols, M.m_data_ptr, &m_rows, pivot, &info);
-		dgetri_(&m_rows, M.m_data_ptr, &m_rows, pivot, &query, &lwork, &info);
+		dgetrf_(&m_rows, &m_cols, A.m_data_ptr, &m_rows, ipiv, &info);
+		dgetri_(&m_rows, A.m_data_ptr, &m_rows, ipiv, &query, &lwork, &info);
 		//inverse
 		lwork = int32_t(query);
-		work = (double*) alloca(lwork * sizeof(double));
-		dgetri_(&m_rows, M.m_data_ptr, &m_rows, pivot, work, &lwork, &info);
-		//test
+		double* work = new double[lwork];
+		dgetri_(&m_rows, A.m_data_ptr, &m_rows, ipiv, work, &lwork, &info);
+		//delete
+		delete[] ipiv;
 		if(test) *test = info == 0;
 		//return
-		return M;
+		return A;
 	}
 	bool Matrix::solve(Matrix& x, const Matrix& f) const
 	{
 		//data
 		int32_t info;
-		double* A = (double*) alloca(m_rows * m_cols * sizeof(double));
-		uint32_t* ipiv = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
+		uint32_t* ipiv = new uint32_t[m_rows];
+		double* A = new double[m_rows * m_cols];
 		//check
 		if(m_rows != m_cols)
 		{
@@ -703,6 +704,9 @@ namespace math
 		memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
 		memcpy(x.m_data_ptr, f.m_data_ref, x.m_rows * x.m_cols * sizeof(double));
 		dgesv_(&m_rows, &x.m_cols, A, &m_rows, ipiv, x.m_data_ptr, &m_rows, &info);
+		//delete
+		delete[] A;
+		delete[] ipiv;
 		//return
 		return info == 0;
 	}
@@ -710,12 +714,15 @@ namespace math
 	{
 		//data
 		int32_t info;
-		double* A = (double*) alloca(m_rows * m_cols * sizeof(double));
-		uint32_t* ipiv = (uint32_t*) alloca(m_rows * sizeof(uint32_t));
+		uint32_t* ipiv = new uint32_t[m_rows];
+		double* A = new double[m_rows * m_cols];
 		//solve
 		memcpy(x, f, m_rows * cols * sizeof(double));
 		memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
 		dgesv_(&m_rows, &cols, A, &m_rows, ipiv, x, &m_rows, &info);
+		//delete
+		delete[] A;
+		delete[] ipiv;
 		//return
 		return info == 0;
 	}
