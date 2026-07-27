@@ -34,7 +34,7 @@ namespace math
 	{
 		memcpy(m_data_ptr, m.m_data_ref, m_rows * m_cols * sizeof(double));
 	}
-	Matrix::Matrix(uint32_t rows, uint32_t cols, mode init) : m_own(true), m_rows(rows), m_cols(cols)
+	Matrix::Matrix(uint32_t rows, uint32_t cols, mode init) : m_own{true}, m_rows{rows}, m_cols{cols}
 	{
 		//data
 		if(rows * cols <= MATRIX_STATIC_SIZE)
@@ -56,7 +56,7 @@ namespace math
 		}
 	}
 	Matrix::Matrix(double* ptr, uint32_t rows, uint32_t cols, mode init) :
-		m_own(false), m_rows(rows), m_cols(cols), m_data_ptr(ptr), m_data_ref(ptr)
+		m_own{false}, m_rows{rows}, m_cols{cols}, m_data_ptr{ptr}, m_data_ref{ptr}
 	{
 		if(init == mode::eye)
 		{
@@ -68,12 +68,11 @@ namespace math
 		}
 	}
 	Matrix::Matrix(const double* ref, uint32_t rows, uint32_t cols) :
-		m_own(false), m_rows(rows), m_cols(cols), m_data_ptr(nullptr), m_data_ref(ref)
+		m_own{false}, m_rows{rows}, m_cols{cols}, m_data_ptr{nullptr}, m_data_ref{ref}
 	{
 		return;
 	}
-	Matrix::Matrix(std::initializer_list<std::initializer_list<double>> list, bool columns) :
-		m_own(true)
+	Matrix::Matrix(std::initializer_list<std::initializer_list<double>> list, bool columns) : m_own{true}
 	{
 		//data
 		const std::initializer_list<double>* data = std::data(list);
