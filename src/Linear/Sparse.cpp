@@ -316,7 +316,7 @@ namespace math
 				return m_data_ptr[k];
 			}
 		}
-		throw std::runtime_error("Sparse operator() has index out of range!");
+		throw std::runtime_error("Error: Sparse operator() has index out of range!");
 	}
 	const double Sparse::operator()(uint32_t i, uint32_t j) const
 	{
