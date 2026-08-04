@@ -53,10 +53,10 @@ void tests::solvers::harmonic::duffing(void)
 	solver.watch_dof(1);
 	solver.step_size(dp0);
 	solver.frequency(w_min);
-	solver.stop_criteria().parameter_max(w_max);
+	solver.stop_criteria().load_max(w_max);
 	solver.control(math::solvers::Harmonic::Control::Frequency);
 	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthCylindrical);
-	solver.stop_criteria().add_type(math::solvers::StopCriteria::Type::ParameterLimitMaximum);
+	solver.stop_criteria().add_type(math::solvers::StopCriteria::Type::LoadLimitMaximum);
 	//system
 	solver.inertia(inertia);
 	solver.damping(damping);
