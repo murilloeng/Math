@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <cstdint>
+#include <functional>
 
 //Math
 #include "Math/inc/Validation/Point.hpp"
@@ -35,7 +36,9 @@ namespace math
 		public:
 			//data
 			void tolerance(double);
-			void function(double(*)(double));
+			void function(std::function<double(double)>);
+			void adjuster_numeric(std::function<void(double&, double&)>);
+			void adjuster_reference(std::function<void(double&, double&)>);
 
 			//print
 			void print_numeric(void) const;
@@ -70,9 +73,11 @@ namespace math
 			double m_error;
 			double m_tolerance;
 			double m_bounds[4];
-			double(*m_function)(double);
 			std::vector<Point> m_points_numeric;
 			std::vector<Point> m_points_reference;
+			std::function<double(double)> m_function;
+			std::function<void(double&, double&)> m_adjuster_numeric;
+			std::function<void(double&, double&)> m_adjuster_reference;
 		};
 	}
 }

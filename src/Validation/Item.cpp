@@ -12,7 +12,7 @@ namespace math
 	namespace validation
 	{
 		//constructor
-		Item::Item(void) : m_silent{false}, m_tolerance{1e-2}, m_function{nullptr}
+		Item::Item(void) : m_silent{false}, m_tolerance{1e-2}
 		{
 			return;
 		}
@@ -28,9 +28,17 @@ namespace math
 		{
 			m_tolerance = tolerance;
 		}
-		void Item::function(double(*function)(double))
+		void Item::function(std::function<double(double)> function)
 		{
 			m_function = function;
+		}
+		void Item::adjuster_numeric(std::function<void(double&, double&)> adjuster_numeric)
+		{
+			m_adjuster_numeric = adjuster_numeric;
+		}
+		void Item::adjuster_reference(std::function<void(double&, double&)> adjuster_reference)
+		{
+			m_adjuster_reference = adjuster_reference;
 		}
 
 		//print
@@ -53,27 +61,33 @@ namespace math
 		void Item::load_numeric(const char* path, uint32_t col_1, uint32_t col_2)
 		{
 			load(m_points_numeric, path, col_1, col_2);
+			if(m_adjuster_numeric) for(Point& point : m_points_numeric) m_adjuster_numeric(point.m_data[0], point.m_data[1]);
 		}
 		void Item::load_numeric(const double* x1, const double* x2, uint32_t rows)
 		{
 			load(m_points_numeric, x1, x2, rows);
+			if(m_adjuster_numeric) for(Point& point : m_points_numeric) m_adjuster_numeric(point.m_data[0], point.m_data[1]);
 		}
 		void Item::load_numeric(const double* x, uint32_t rows, uint32_t cols, uint32_t col_1, uint32_t col_2)
 		{
 			load(m_points_numeric, x, rows, cols, col_1, col_2);
+			if(m_adjuster_numeric) for(Point& point : m_points_numeric) m_adjuster_numeric(point.m_data[0], point.m_data[1]);
 		}
 
 		void Item::load_reference(const char* path, uint32_t col_1, uint32_t col_2)
 		{
 			load(m_points_reference, path, col_1, col_2);
+			if(m_adjuster_reference) for(Point& point : m_points_numeric) m_adjuster_reference(point.m_data[0], point.m_data[1]);
 		}
 		void Item::load_reference(const double* x1, const double* x2, uint32_t rows)
 		{
 			load(m_points_reference, x1, x2, rows);
+			if(m_adjuster_reference) for(Point& point : m_points_numeric) m_adjuster_reference(point.m_data[0], point.m_data[1]);
 		}
 		void Item::load_reference(const double* x, uint32_t rows, uint32_t cols, uint32_t col_1, uint32_t col_2)
 		{
 			load(m_points_reference, x, rows, cols, col_1, col_2);
+			if(m_adjuster_reference) for(Point& point : m_points_numeric) m_adjuster_reference(point.m_data[0], point.m_data[1]);
 		}
 
 		//bounds
