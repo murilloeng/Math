@@ -52,7 +52,7 @@ namespace math
 		//data
 		uint32_t NewtonRaphson::state_set(void) const
 		{
-			return 1 << uint32_t(State::x) | 1 << uint32_t(State::p);
+			return 1 << uint32_t(State::x) | 1 << uint32_t(State::p) | 1 << uint32_t(State::t);
 		}
 		uint32_t NewtonRaphson::force_set(void) const
 		{
