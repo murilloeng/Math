@@ -9,7 +9,7 @@ namespace math
 	namespace geometry
 	{
 		//constructor
-		Circle::Circle(void) : m_center(0, 0, 0), m_normal(0, 0, 1), m_radius(1)
+		Circle::Circle(void) : m_center{0, 0, 0}, m_normal{0, 0, 1}, m_radius{1}
 		{
 			return;
 		}

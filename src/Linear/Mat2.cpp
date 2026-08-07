@@ -13,33 +13,33 @@
 namespace math
 {
 	//constructors
-	Mat2::Mat2(mode init) : Matrix(2, 2, init)
+	Mat2::Mat2(mode init) : Matrix{2, 2, init}
 	{
 		return;
 	}
-	Mat2::Mat2(double* ptr) : Matrix(ptr, 2, 2)
+	Mat2::Mat2(double* ptr) : Matrix{ptr, 2, 2}
 	{
 		return;
 	}
-	Mat2::Mat2(const Mat2& m) : Matrix(m)
+	Mat2::Mat2(const Mat2& m) : Matrix{m}
 	{
 		return;
 	}
-	Mat2::Mat2(const double* ref) : Matrix(ref, 2, 2)
+	Mat2::Mat2(const double* ref) : Matrix{ref, 2, 2}
 	{
 		return;
 	}
-	Mat2::Mat2(const Vec2& v1, const Vec2& v2) : Matrix(2, 2)
+	Mat2::Mat2(const Vec2& v1, const Vec2& v2) : Matrix{2, 2}
 	{
 		memcpy(m_data_ptr + 0, v1.data(), 2 * sizeof(double));
 		memcpy(m_data_ptr + 2, v2.data(), 2 * sizeof(double));
 	}
-	Mat2::Mat2(const double* s1, const double* s2) : Matrix(2, 2)
+	Mat2::Mat2(const double* s1, const double* s2) : Matrix{2, 2}
 	{
 		memcpy(m_data_ptr + 0, s1, 2 * sizeof(double));
 		memcpy(m_data_ptr + 2, s2, 2 * sizeof(double));
 	}
-	Mat2::Mat2(std::initializer_list<double> list) : Matrix(2, 2)
+	Mat2::Mat2(std::initializer_list<double> list) : Matrix{2, 2}
 	{
 		if(list.size() != 4)
 		{

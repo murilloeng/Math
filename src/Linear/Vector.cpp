@@ -11,23 +11,23 @@
 namespace math
 {
 	//constructors
-	Vector::Vector(void) : Matrix(0, 1)
+	Vector::Vector(void) : Matrix{0, 1}
 	{
 		return;
 	}
-	Vector::Vector(uint32_t rows, mode init) : Matrix(rows, 1, init)
+	Vector::Vector(uint32_t rows, mode init) : Matrix{rows, 1, init}
 	{
 		return;
 	}
-	Vector::Vector(const Matrix& m) : Matrix(m.rows() * m.cols(), 1)
+	Vector::Vector(const Matrix& m) : Matrix{m.rows() * m.cols(), 1}
 	{
 		memcpy(m_data_ptr, m.data(), m_rows * sizeof(double));
 	}
-	Vector::Vector(const double* ptr, uint32_t rows) : Matrix(ptr, rows, 1)
+	Vector::Vector(const double* ptr, uint32_t rows) : Matrix{ptr, rows, 1}
 	{
 		return;
 	}
-	Vector::Vector(std::initializer_list<double> list) : Matrix(list.size(), 1)
+	Vector::Vector(std::initializer_list<double> list) : Matrix{(uint32_t) list.size(), 1}
 	{
 		memcpy(m_data_ptr, std::data(list), list.size() * sizeof(double));
 	}

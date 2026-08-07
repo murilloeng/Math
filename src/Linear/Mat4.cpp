@@ -14,23 +14,23 @@
 namespace math
 {
 	//constructors
-	Mat4::Mat4(mode mode) : Matrix(4, 4, mode)
+	Mat4::Mat4(mode mode) : Matrix{4, 4, mode}
 	{
 		return;
 	}
-	Mat4::Mat4(double* ptr) : Matrix(ptr, 4, 4)
+	Mat4::Mat4(double* ptr) : Matrix{ptr, 4, 4}
 	{
 		return;
 	}
-	Mat4::Mat4(const Mat4& m) : Matrix(m)
+	Mat4::Mat4(const Mat4& m) : Matrix{m}
 	{
 		return;
 	}
-	Mat4::Mat4(const double* ref) : Matrix(ref, 4, 4)
+	Mat4::Mat4(const double* ref) : Matrix{ref, 4, 4}
 	{
 		return;
 	}
-	Mat4::Mat4(const Mat3& M, const Vec3& v) : Matrix(4, 4)
+	Mat4::Mat4(const Mat3& M, const Vec3& v) : Matrix{4, 4}
 	{
 		m_data_ptr[3 + 4 * 0] = 0;
 		m_data_ptr[3 + 4 * 1] = 0;
@@ -45,7 +45,7 @@ namespace math
 			}
 		}
 	}
-	Mat4::Mat4(std::initializer_list<double> list) : Matrix(4, 4)
+	Mat4::Mat4(std::initializer_list<double> list) : Matrix{4, 4}
 	{
 		if(list.size() != 16)
 		{

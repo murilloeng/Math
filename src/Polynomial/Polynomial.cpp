@@ -7,7 +7,7 @@
 namespace math
 {
 	//constructor
-	Polynomial::Polynomial(void) : m_bound(0), m_order(0), m_tolerance(1e-5), m_iteration_max(10000), m_roots(nullptr), m_coefficients(nullptr)
+	Polynomial::Polynomial(void) : m_bound{0}, m_order{0}, m_tolerance{1.00e-05}, m_iteration_max{10000}, m_roots{nullptr}, m_coefficients{nullptr}
 	{
 		return;
 	}

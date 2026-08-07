@@ -13,7 +13,7 @@ namespace math
 	namespace geometry
 	{
 		//constructor
-		Line::Line(Vec3 point, Vec3 direction) : m_point(point), m_direction(direction)
+		Line::Line(Vec3 point, Vec3 direction) : m_point{point}, m_direction{direction}
 		{
 			return;
 		}

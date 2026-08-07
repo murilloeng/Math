@@ -16,31 +16,31 @@ namespace math
 {
 	//constructors
 	Sparse::Sparse(uint32_t rows, uint32_t cols) :
-		m_own(true), m_data_ptr(nullptr), m_data_ref(nullptr), m_rows(rows), m_cols(cols),
-		m_rows_map_ptr(nullptr), m_cols_map_ptr(nullptr), m_rows_map_ref(nullptr), m_cols_map_ref(nullptr)
+		m_own{true}, m_data_ptr{nullptr}, m_data_ref{nullptr}, m_rows{rows}, m_cols{cols},
+		m_rows_map_ptr{nullptr}, m_cols_map_ptr{nullptr}, m_rows_map_ref{nullptr}, m_cols_map_ref{nullptr}
 	{
 		return;
 	}
 	Sparse::Sparse(double* data_ptr, int32_t* rows_map, int32_t* cols_map, uint32_t rows, uint32_t cols) :
-		m_own(false), m_data_ptr(data_ptr), m_data_ref(data_ptr), m_rows(rows), m_cols(cols),
-		m_rows_map_ptr(rows_map), m_cols_map_ptr(cols_map), m_rows_map_ref(rows_map), m_cols_map_ref(cols_map)
+		m_own{false}, m_data_ptr{data_ptr}, m_data_ref{data_ptr}, m_rows{rows}, m_cols{cols},
+		m_rows_map_ptr{rows_map}, m_cols_map_ptr{cols_map}, m_rows_map_ref{rows_map}, m_cols_map_ref{cols_map}
 	{
 		return;
 	}
 	Sparse::Sparse(double* data_ptr, const int32_t* rows_map, const int32_t* cols_map, uint32_t rows, uint32_t cols) :
-		m_own(false), m_data_ptr(data_ptr), m_data_ref(data_ptr), m_rows(rows), m_cols(cols),
-		m_rows_map_ptr(nullptr), m_cols_map_ptr(nullptr), m_rows_map_ref(rows_map), m_cols_map_ref(cols_map)
+		m_own{false}, m_data_ptr{data_ptr}, m_data_ref{data_ptr}, m_rows{rows}, m_cols{cols},
+		m_rows_map_ptr{nullptr}, m_cols_map_ptr{nullptr}, m_rows_map_ref{rows_map}, m_cols_map_ref{cols_map}
 	{
 		return;
 	}
 	Sparse::Sparse(const double* data_ref, const int32_t* rows_map, const int32_t* cols_map, uint32_t rows, uint32_t cols) :
-		m_own(false), m_data_ptr(nullptr), m_data_ref(data_ref), m_rows(rows), m_cols(cols),
-		m_rows_map_ptr(nullptr), m_cols_map_ptr(nullptr), m_rows_map_ref(rows_map), m_cols_map_ref(cols_map)
+		m_own{false}, m_data_ptr{nullptr}, m_data_ref{data_ref}, m_rows{rows}, m_cols{cols},
+		m_rows_map_ptr{nullptr}, m_cols_map_ptr{nullptr}, m_rows_map_ref{rows_map}, m_cols_map_ref{cols_map}
 	{
 		return;
 	}
 
-	//constructors
+	//destructor
 	Sparse::~Sparse(void)
 	{
 		cleanup();

@@ -13,7 +13,7 @@ namespace math
 	namespace geometry
 	{
 		//constructor
-		Point::Point(Vec3 coordinates) : m_position(coordinates)
+		Point::Point(Vec3 coordinates) : m_position{coordinates}
 		{
 			return;
 		}

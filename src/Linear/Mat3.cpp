@@ -14,23 +14,23 @@
 namespace math
 {
 	//constructors
-	Mat3::Mat3(mode mode) : Matrix(3, 3, mode)
+	Mat3::Mat3(mode mode) : Matrix{3, 3, mode}
 	{
 		return;
 	}
-	Mat3::Mat3(double* ptr) : Matrix(ptr, 3, 3)
+	Mat3::Mat3(double* ptr) : Matrix{ptr, 3, 3}
 	{
 		return;
 	}
-	Mat3::Mat3(const Mat3& m) : Matrix(m)
+	Mat3::Mat3(const Mat3& m) : Matrix{m}
 	{
 		return;
 	}
-	Mat3::Mat3(const double* ref) : Matrix(ref, 3, 3)
+	Mat3::Mat3(const double* ref) : Matrix{ref, 3, 3}
 	{
 		return;
 	}
-	Mat3::Mat3(std::initializer_list<double> list) : Matrix(3, 3)
+	Mat3::Mat3(std::initializer_list<double> list) : Matrix{3, 3}
 	{
 		if(list.size() != 9)
 		{
@@ -38,13 +38,13 @@ namespace math
 		}
 		memcpy(m_data_ptr, std::data(list), list.size() * sizeof(double));
 	}
-	Mat3::Mat3(const Vec3& v1, const Vec3& v2, const Vec3& v3) : Matrix(3, 3)
+	Mat3::Mat3(const Vec3& v1, const Vec3& v2, const Vec3& v3) : Matrix{3, 3}
 	{
 		memcpy(m_data_ptr + 0, v1.data(), 3 * sizeof(double));
 		memcpy(m_data_ptr + 3, v2.data(), 3 * sizeof(double));
 		memcpy(m_data_ptr + 6, v3.data(), 3 * sizeof(double));
 	}
-	Mat3::Mat3(const double* s1, const double* s2, const double* s3) : Matrix(3, 3)
+	Mat3::Mat3(const double* s1, const double* s2, const double* s3) : Matrix{3, 3}
 	{
 		memcpy(m_data_ptr + 0, s1, 3 * sizeof(double));
 		memcpy(m_data_ptr + 3, s2, 3 * sizeof(double));

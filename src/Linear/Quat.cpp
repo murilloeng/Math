@@ -10,45 +10,45 @@
 namespace math
 {
 	//constructors
-	Quat::Quat(void) : Vector(4)
+	Quat::Quat(void) : Vector{4}
 	{
 		return;
 	}
-	Quat::Quat(double* ptr) : Vector(ptr, 4)
+	Quat::Quat(double* ptr) : Vector{ptr, 4}
 	{
 		return;
 	}
-	Quat::Quat(const Quat& q) : Vector(q)
+	Quat::Quat(const Quat& q) : Vector{q}
 	{
 		return;
 	}
-	Quat::Quat(const double* ref) : Vector(ref, 4)
+	Quat::Quat(const double* ref) : Vector{ref, 4}
 	{
 		return;
 	}
-	Quat::Quat(double t, uint32_t i) : Vector(4)
+	Quat::Quat(double t, uint32_t i) : Vector{4}
 	{
 		m_data_ptr[0] = cos(t / 2);
 		m_data_ptr[1] = i == 0 ? sin(t / 2) : 0;
 		m_data_ptr[2] = i == 1 ? sin(t / 2) : 0;
 		m_data_ptr[3] = i == 2 ? sin(t / 2) : 0;
 	}
-	Quat::Quat(double t, const Vec3& v) : Vector(4)
+	Quat::Quat(double t, const Vec3& v) : Vector{4}
 	{
 		m_data_ptr[0] = cos(t / 2);
 		m_data_ptr[1] = sin(t / 2) * v[0];
 		m_data_ptr[2] = sin(t / 2) * v[1];
 		m_data_ptr[3] = sin(t / 2) * v[2];
 	}
-	Quat::Quat(double v0, double v1, double v2, double v3) : Vector({v0, v1, v2, v3})
+	Quat::Quat(double v0, double v1, double v2, double v3) : Vector{{v0, v1, v2, v3}}
 	{
 		return;
 	}
-	Quat::Quat(const Vec3& v1, const Vec3& v2, const Vec3& v3) : Vector(4)
+	Quat::Quat(const Vec3& v1, const Vec3& v2, const Vec3& v3) : Vector{4}
 	{
 		*this = Mat3(v1, v2, v3).quaternion();
 	}
-	Quat::Quat(const double* s1, const double* s2, const double* s3) : Vector(4)
+	Quat::Quat(const double* s1, const double* s2, const double* s3) : Vector{4}
 	{
 		*this = Mat3(s1, s2, s3).quaternion();
 	}

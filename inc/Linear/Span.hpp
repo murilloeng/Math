@@ -40,7 +40,7 @@ namespace math
 
 	protected:
 		//data
-		Matrix& m_k;
+		Matrix& m_K;
 		uint32_t m_row;
 		uint32_t m_col;
 		uint32_t m_rows;

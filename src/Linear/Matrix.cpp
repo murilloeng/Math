@@ -26,13 +26,13 @@ extern "C"
 namespace math
 {
 	//constructors
-	Matrix::Matrix(void) : Matrix(0, 0)
+	Matrix::Matrix(void) : Matrix{0, 0}
 	{
 		return;
 	}
-	Matrix::Matrix(const Matrix& m) : Matrix(m.m_rows, m.m_cols)
+	Matrix::Matrix(const Matrix& M) : Matrix{M.m_rows, M.m_cols}
 	{
-		memcpy(m_data_ptr, m.m_data_ref, m_rows * m_cols * sizeof(double));
+		memcpy(m_data_ptr, M.m_data_ref, m_rows * m_cols * sizeof(double));
 	}
 	Matrix::Matrix(uint32_t rows, uint32_t cols, mode init) : m_own{true}, m_rows{rows}, m_cols{cols}
 	{

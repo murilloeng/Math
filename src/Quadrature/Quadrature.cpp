@@ -17,11 +17,11 @@ namespace math
 	namespace quadrature
 	{
 		//constructor
-		Quadrature::Quadrature(uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(Rule::Legendre)
+		Quadrature::Quadrature(uint32_t order) : m_points{nullptr}, m_weights{nullptr}, m_rule{Rule::Legendre}
 		{
 			this->order(order);
 		}
-		Quadrature::Quadrature(quadrature::Rule rule, uint32_t order) : m_points(nullptr), m_weights(nullptr), m_rule(rule)
+		Quadrature::Quadrature(quadrature::Rule rule, uint32_t order) : m_points{nullptr}, m_weights{nullptr}, m_rule{rule}
 		{
 			this->order(order);
 		}

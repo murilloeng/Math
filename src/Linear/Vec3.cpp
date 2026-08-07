@@ -10,23 +10,23 @@
 namespace math
 {
 	//constructors
-	Vec3::Vec3(void) : Vector(3)
+	Vec3::Vec3(void) : Vector{3}
 	{
 		return;
 	}
-	Vec3::Vec3(double* ptr) : Vector(ptr, 3)
+	Vec3::Vec3(double* ptr) : Vector{ptr, 3}
 	{
 		return;
 	}
-	Vec3::Vec3(const Vec3& v) : Vector(v)
+	Vec3::Vec3(const Vec3& v) : Vector{v}
 	{
 		return;
 	}
-	Vec3::Vec3(const double* ref) : Vector(ref, 3)
+	Vec3::Vec3(const double* ref) : Vector{ref, 3}
 	{
 		return;
 	}
-	Vec3::Vec3(double v0, double v1, double v2) : Vector({v0, v1, v2})
+	Vec3::Vec3(double v0, double v1, double v2) : Vector{{v0, v1, v2}}
 	{
 		return;
 	}

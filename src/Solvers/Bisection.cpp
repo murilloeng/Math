@@ -10,7 +10,7 @@ namespace math
 	namespace solvers
 	{
 		//constructors
-		Bisection::Bisection(void) : m_tolerance(1e-5), m_iteration_max(100), m_system_1(nullptr), m_system_2(nullptr)
+		Bisection::Bisection(void) : m_tolerance{1e-5}, m_iteration_max{100}, m_system_1{nullptr}, m_system_2{nullptr}
 		{
 			return;
 		}

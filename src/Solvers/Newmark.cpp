@@ -28,7 +28,7 @@ namespace math
 	namespace solvers
 	{
 		//constructors
-		Newmark::Newmark(void) : m_g(0.50), m_b(0.25)
+		Newmark::Newmark(void) : m_g{0.50}, m_b{0.25}
 		{
 			return;
 		}

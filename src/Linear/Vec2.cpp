@@ -7,23 +7,23 @@
 namespace math
 {
 	//constructors
-	Vec2::Vec2(void) : Vector(2)
+	Vec2::Vec2(void) : Vector{2}
 	{
 		return;
 	}
-	Vec2::Vec2(double* ptr) : Vector(ptr, 2)
+	Vec2::Vec2(double* ptr) : Vector{ptr, 2}
 	{
 		return;
 	}
-	Vec2::Vec2(const Vec2& v) : Vector(v)
+	Vec2::Vec2(const Vec2& v) : Vector{v}
 	{
 		return;
 	}
-	Vec2::Vec2(const double* ref) : Vector(ref, 2)
+	Vec2::Vec2(const double* ref) : Vector{ref, 2}
 	{
 		return;
 	}
-	Vec2::Vec2(double v0, double v1) : Vector({v0, v1})
+	Vec2::Vec2(double v0, double v1) : Vector{{v0, v1}}
 	{
 		return;
 	}
