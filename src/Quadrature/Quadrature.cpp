@@ -77,6 +77,14 @@ namespace math
 		}
 		quadrature::Rule Quadrature::rule(quadrature::Rule rule)
 		{
+			if(rule == quadrature::Rule::Lobatto)
+			{
+				lobatto_set(m_order, m_points, m_weights);
+			}
+			else if(rule == quadrature::Rule::Legendre)
+			{
+				legendre_set(m_order, m_points, m_weights);
+			}
 			return m_rule = rule;
 		}
 
