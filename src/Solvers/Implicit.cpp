@@ -38,7 +38,7 @@ namespace math
 		}
 		uint32_t Implicit::attempt_max(uint32_t attempt_max)
 		{
-			return m_attempt_max;
+			return m_attempt_max = attempt_max;
 		}
 
 		uint32_t Implicit::iteration_max(void) const
