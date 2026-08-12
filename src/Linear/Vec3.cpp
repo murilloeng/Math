@@ -10,7 +10,7 @@
 namespace math
 {
 	//constructors
-	Vec3::Vec3(void) : Vector{3}
+	Vec3::Vec3(void) : Vector(3)
 	{
 		return;
 	}
