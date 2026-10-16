@@ -8,50 +8,39 @@
 
 namespace math
 {
-	class LieGroup;
-}
-
-namespace math
-{
-	class LieAlgebra
+	template <class Group, class Algebra> class LieAlgebra
 	{
 	public:
 		//constructor
-		LieAlgebra(void);
+		LieAlgebra(void) = default;
 
 		//destructor
-		~LieAlgebra(void);
+		virtual ~LieAlgebra(void) = default;
 
 		//data
-		double* data(void);
-		const double* data(void) const;
-		uint32_t dimension(void) const;
+		virtual double* data(void) = 0;
+		virtual const double* data(void) const = 0;
+		virtual uint32_t dimension(void) const = 0;
 
 		//group
-		virtual void exp(LieGroup&) const = 0;
+		virtual Group exp(void) const = 0;
 		virtual Matrix matrix(void) const = 0;
 		virtual Matrix adjoint(void) const = 0;
 		virtual Matrix gradient(void) const = 0;
-		virtual LieAlgebra bracket(const LieAlgebra&) const = 0;
+		virtual Matrix gradient_inverse(void) const = 0;
+		virtual Algebra bracket(const Algebra&) const = 0;
 
 		//operators
-		LieAlgebra& operator*=(double);
-		LieAlgebra& operator/=(double);
-		LieAlgebra& operator+=(const LieAlgebra&);
-		LieAlgebra& operator-=(const LieAlgebra&);
+		virtual Algebra& operator*=(double) = 0;
+		virtual Algebra& operator/=(double) = 0;
+		virtual Algebra& operator+=(const Algebra&) = 0;
+		virtual Algebra& operator-=(const Algebra&) = 0;
 
-		LieAlgebra operator+(void) const;
-		LieAlgebra operator-(void) const;
-		LieAlgebra operator*(double) const;
-		LieAlgebra operator/(double) const;
-		LieAlgebra operator+(const LieAlgebra&) const;
-		LieAlgebra operator-(const LieAlgebra&) const;
-
-		friend LieAlgebra operator*(double, const LieAlgebra&);
-
-	private:
-		//data
-		double m_data[6];
-		uint32_t m_dimension;
+		virtual Algebra operator+(void) const = 0;
+		virtual Algebra operator-(void) const = 0;
+		virtual Algebra operator*(double) const = 0;
+		virtual Algebra operator/(double) const = 0;
+		virtual Algebra operator+(const Algebra&) const = 0;
+		virtual Algebra operator-(const Algebra&) const = 0;
 	};
 }

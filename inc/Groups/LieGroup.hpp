@@ -1,31 +1,26 @@
 #pragma once
 
-//std
-#include <memory>
+//Math
+#include "Math/inc/Linear/Matrix.hpp"
 
 namespace math
 {
-	class LieAlgebra;
-}
-
-namespace math
-{
-	class LieGroup
+	template <class Group, class Algebra> class LieGroup
 	{
 	public:
 		//constructor
-		LieGroup(void);
+		LieGroup(void) = default;
 
 		//destructor
-		~LieGroup(void);
+		virtual ~LieGroup(void) = default;
 
 		//operations
-		virtual std::unique_ptr<LieAlgebra> log(void) const = 0;
-		virtual std::unique_ptr<LieGroup> inverse(void) const = 0;
-		virtual std::unique_ptr<LieGroup> identity(void) const = 0;
-		virtual std::unique_ptr<LieGroup> operator*(const LieGroup&) const = 0;
-
-		//interpolation
-		void interpolate(LieGroup&, const LieGroup&, double t);
+		virtual Algebra log(void) const = 0;
+		virtual Matrix matrix(void) const = 0;
+		virtual Group inverse(void) const = 0;
+		virtual Group identity(void) const = 0;
+		virtual Group operator*(const Group&) const = 0;
+		virtual void action(double*, const double*) const = 0;
+		virtual Group interpolate(const Group&, double) const = 0;
 	};
 }
