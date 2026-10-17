@@ -27,8 +27,8 @@ namespace math
 		Vector vector(void) const override;
 		Matrix matrix(void) const override;
 		Matrix adjoint(void) const override;
-		Matrix gradient(void) const override;
-		Matrix gradient_inverse(void) const override;
+		Matrix jacobian(void) const override;
+		Matrix jacobian_inverse(void) const override;
 
 		//operators
 		ASO2& operator*=(double) override;

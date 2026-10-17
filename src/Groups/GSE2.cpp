@@ -4,6 +4,7 @@
 //Math
 #include "Math/inc/Groups/ASE2.hpp"
 #include "Math/inc/Groups/GSE2.hpp"
+#include "Math/inc/Miscellaneous/rotations.hpp"
 
 namespace math
 {
@@ -38,7 +39,11 @@ namespace math
 	//operations
 	ASE2 GSE2::log(void) const
 	{
-		return ASE2(m_data);
+		const double x1 = m_data[0];
+		const double x2 = m_data[1];
+		const double tr = m_data[2];
+		const double fr = fn(tr, 1) / fn(tr, 2) / 2;
+		return ASE2(fr * x1 + tr * x2 / 2, fr * x2 - tr * x1 / 2, tr);
 	}
 	GSE2 GSE2::inverse(void) const
 	{

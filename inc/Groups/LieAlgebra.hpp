@@ -25,8 +25,8 @@ namespace math
 		virtual Vector vector(void) const = 0;
 		virtual Matrix matrix(void) const = 0;
 		virtual Matrix adjoint(void) const = 0;
-		virtual Matrix gradient(void) const = 0;
-		virtual Matrix gradient_inverse(void) const = 0;
+		virtual Matrix jacobian(void) const = 0;
+		virtual Matrix jacobian_inverse(void) const = 0;
 
 		//operators
 		virtual Algebra& operator*=(double) = 0;

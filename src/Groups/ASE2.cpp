@@ -1,6 +1,7 @@
 //Math
 #include "Math/inc/Groups/ASE2.hpp"
 #include "Math/inc/Groups/GSE2.hpp"
+#include "Math/inc/Miscellaneous/rotations.hpp"
 
 namespace math
 {
@@ -17,17 +18,22 @@ namespace math
 	//group
 	GSE2 ASE2::exp(void) const
 	{
-		return GSE2(m_data);
+		const double u1 = m_data[0];
+		const double u2 = m_data[1];
+		const double tr = m_data[2];
+		const double sr = fn(tr, 1);
+		const double cr = fn(tr, 2) * tr;
+		return GSE2(sr * u1 - cr * u2, sr * u2 + cr * u1, tr);
 	}
 	ASE2 ASE2::bracket(const ASE2& vector) const
 	{
-		const double x1 = m_data[0];
-		const double y1 = m_data[1];
+		const double u1 = m_data[0];
+		const double u2 = m_data[1];
 		const double t1 = m_data[2];
-		const double x2 = vector.m_data[0];
-		const double y2 = vector.m_data[1];
+		const double v1 = vector.m_data[0];
+		const double v2 = vector.m_data[1];
 		const double t2 = vector.m_data[2];
-		return ASE2(t2 * y1 - t1 * y2, t1 * x2 - t2 * x1, 0);
+		return ASE2(t2 * u2 - t1 * v2, t1 * v1 - t2 * u1, 0);
 	}
 
 	//linear
@@ -37,25 +43,46 @@ namespace math
 	}
 	Matrix ASE2::matrix(void) const
 	{
-		const double x = m_data[0];
-		const double y = m_data[1];
-		const double t = m_data[2];
-		return Matrix({{0, -t, x}, {t, 0, y}, {0, 0, 0}});
+		const double u1 = m_data[0];
+		const double u2 = m_data[1];
+		const double tr = m_data[2];
+		return Matrix({{0, -tr, u1}, {tr, 0, u2}, {0, 0, 0}});
 	}
 	Matrix ASE2::adjoint(void) const
 	{
-		const double x = m_data[0];
-		const double y = m_data[1];
-		const double t = m_data[2];
-		return Matrix({{0, -t, y}, {t, 0, -x}, {0, 0, 0}});
+		const double u1 = m_data[0];
+		const double u2 = m_data[1];
+		const double tr = m_data[2];
+		return Matrix({{0, -tr, u2}, {tr, 0, -u1}, {0, 0, 0}});
 	}
-	Matrix ASE2::gradient(void) const
+	Matrix ASE2::jacobian(void) const
 	{
-		return Matrix({{1}});
+		const double u1 = m_data[0];
+		const double u2 = m_data[1];
+		const double tr = m_data[2];
+		const double f1 = fn(tr, 1);
+		const double f2 = fn(tr, 2);
+		const double f3 = fn(tr, 3);
+		return Matrix({
+			{f1, +tr * f2, tr * f3 * u1 - f2 * u2},
+			{-tr * f2, f1, tr * f3 * u2 + f2 * u1},
+			{0, 0, 1}
+		});
 	}
-	Matrix ASE2::gradient_inverse(void) const
+	Matrix ASE2::jacobian_inverse(void) const
 	{
-		return Matrix({{1}});
+		const double u1 = m_data[0];
+		const double u2 = m_data[1];
+		const double tr = m_data[2];
+		const double f1 = fn(tr, 1);
+		const double f2 = fn(tr, 2);
+		const double f3 = fn(tr, 3);
+		const double f4 = fn(tr, 4);
+		return Matrix({
+			{f1 / f2 / 2, -tr / 2, tr * (f3 - 2 * f4) / f2 / 2 * u1 + u2 / 2},
+			{+tr / 2, f1 / f2 / 2, tr * (f3 - 2 * f4) / f2 / 2 * u2 - u1 / 2},
+			{0, 0, 1}
+		});
 	}
 
 	//operators

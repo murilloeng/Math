@@ -33,11 +33,11 @@ namespace math
 	{
 		return Matrix({{0}});
 	}
-	Matrix ASO2::gradient(void) const
+	Matrix ASO2::jacobian(void) const
 	{
 		return Matrix({{1}});
 	}
-	Matrix ASO2::gradient_inverse(void) const
+	Matrix ASO2::jacobian_inverse(void) const
 	{
 		return Matrix({{1}});
 	}
