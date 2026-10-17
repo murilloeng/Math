@@ -14,7 +14,7 @@ namespace math
 	{
 	public:
 		//constructor
-		explicit GSO2(double);
+		explicit GSO2(double = 0);
 
 		//destructor
 		~GSO2(void) = default;
@@ -26,7 +26,6 @@ namespace math
 		//operations
 		ASO2 log(void) const override;
 		GSO2 inverse(void) const override;
-		GSO2 identity(void) const override;
 		GSO2 operator*(const GSO2&) const override;
 		GSO2 interpolate(const GSO2&, double) const override;
 

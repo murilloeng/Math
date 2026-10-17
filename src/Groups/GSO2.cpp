@@ -36,10 +36,6 @@ namespace math
 	{
 		return GSO2(-m_data);
 	}
-	GSO2 GSO2::identity(void) const
-	{
-		return GSO2(0);
-	}
 	GSO2 GSO2::operator*(const GSO2& element) const
 	{
 		return GSO2(m_data + element.m_data);

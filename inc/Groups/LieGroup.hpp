@@ -21,7 +21,6 @@ namespace math
 		//operations
 		virtual Algebra log(void) const = 0;
 		virtual Group inverse(void) const = 0;
-		virtual Group identity(void) const = 0;
 		virtual Group operator*(const Group&) const = 0;
 		virtual Group interpolate(const Group&, double) const = 0;
 	};

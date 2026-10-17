@@ -14,7 +14,7 @@ namespace math
 	{
 	public:
 		//constructor
-		explicit ASO2(double);
+		explicit ASO2(double = 0);
 
 		//destructor
 		~ASO2(void) = default;
