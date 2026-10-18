@@ -29,6 +29,11 @@ namespace math
 		GSO2 operator*(const GSO2&) const override;
 		GSO2 interpolate(const GSO2&, double) const override;
 
+		//tests
+		static bool test_matrix(uint32_t, double);
+		static bool test_inverse(uint32_t, double);
+		static bool test_log_exp(uint32_t, double);
+
 	private:
 		//data
 		double m_data;

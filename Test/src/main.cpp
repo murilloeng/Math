@@ -3,9 +3,10 @@
 #include <cstdio>
 #include <stdexcept>
 
-#include <arpack/arpack.h>
-
 //Test
+#include "Math/inc/Groups/ASO2.hpp"
+#include "Math/inc/Groups/GSO2.hpp"
+
 #include "Math/Test/inc/fem.hpp"
 #include "Math/Test/inc/eigen.hpp"
 #include "Math/Test/inc/groups.hpp"
@@ -19,7 +20,15 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::newton_raphson::spring_buckling();
+		math::ASO2::test_adjoint(1000, 1e-5);
+		math::ASO2::test_bracket(1000, 1e-5);
+		math::ASO2::test_exp_log(1000, 1e-5);
+		math::ASO2::test_jacobian(1000, 1e-5);
+		math::ASO2::test_jacobian_inverse(1000, 1e-5);
+
+		math::GSO2::test_matrix(1000, 1e-5);
+		math::GSO2::test_inverse(1000, 1e-5);
+		math::GSO2::test_log_exp(1000, 1e-5);
 	}
 	catch(const std::exception& exception)
 	{

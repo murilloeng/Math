@@ -15,6 +15,7 @@ namespace math
 	public:
 		//constructor
 		explicit ASO2(double = 0);
+		explicit ASO2(const double*);
 
 		//destructor
 		~ASO2(void) = default;
@@ -42,6 +43,13 @@ namespace math
 		ASO2 operator/(double) const override;
 		ASO2 operator+(const ASO2&) const override;
 		ASO2 operator-(const ASO2&) const override;
+
+		//tests
+		static bool test_adjoint(uint32_t, double);
+		static bool test_bracket(uint32_t, double);
+		static bool test_exp_log(uint32_t, double);
+		static bool test_jacobian(uint32_t, double);
+		static bool test_jacobian_inverse(uint32_t, double);
 
 	private:
 		//data
