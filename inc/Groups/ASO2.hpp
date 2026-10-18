@@ -24,7 +24,11 @@ namespace math
 		GSO2 exp(void) const override;
 		ASO2 bracket(const ASO2&) const override;
 
+		//random
+		ASO2& randu(double, double) override;
+
 		//linear
+		Vector vector(void) override;
 		Vector vector(void) const override;
 		Matrix matrix(void) const override;
 		Matrix adjoint(void) const override;
@@ -43,6 +47,11 @@ namespace math
 		ASO2 operator/(double) const override;
 		ASO2 operator+(const ASO2&) const override;
 		ASO2 operator-(const ASO2&) const override;
+
+		friend ASO2 operator*(double, const ASO2&);
+
+		double& operator[](uint32_t) override;
+		const double& operator[](uint32_t) const override;
 
 		//tests
 		static bool test_adjoint(uint32_t, double);

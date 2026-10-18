@@ -14,6 +14,12 @@ namespace math
 		return;
 	}
 
+	//random
+	GSO2& GSO2::randu(double a, double b)
+	{
+		return *this = ASO2().randu(a, b).exp();
+	}
+
 	//actions
 	Matrix GSO2::matrix(void) const
 	{

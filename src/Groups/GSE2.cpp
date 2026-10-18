@@ -1,5 +1,6 @@
 //std
 #include <cmath>
+#include <cstdio>
 
 //Math
 #include "Math/inc/Groups/ASE2.hpp"
@@ -16,6 +17,12 @@ namespace math
 	GSE2::GSE2(double x1, double x2, double t) : m_data{x1, x2, t}
 	{
 		return;
+	}
+
+	//random
+	GSE2& GSE2::randu(double a, double b)
+	{
+		return *this = ASE2().randu(a, b).exp();
 	}
 
 	//actions
@@ -66,5 +73,53 @@ namespace math
 	GSE2 GSE2::interpolate(const GSE2& element, double t) const
 	{
 		return *this * (t * (inverse() * element).log()).exp();
+	}
+
+	//tests
+	bool GSE2::test_matrix(uint32_t nt, double tolerance)
+	{
+		//test
+		GSE2 g1, g2;
+		bool test = true;
+		for(uint32_t i = 0; i < nt; i++)
+		{
+			g1.randu(-1, +1);
+			g2.randu(-1, +1);
+			test = test && ((g1 * g2).matrix() - g1.matrix() * g2.matrix()).norm() < tolerance;
+		}
+		//print
+		printf("GSE2 matrix test:\t\t%s!\n", test ? "ok" : "not ok");
+		//return
+		return test;
+	}
+	bool GSE2::test_inverse(uint32_t nt, double tolerance)
+	{
+		//test
+		GSE2 g;
+		bool test = true;
+		for(uint32_t i = 0; i < nt; i++)
+		{
+			g.randu(-1, +1);
+			test = test && (g * g.inverse()).log().vector().norm() < tolerance;
+		}
+		//print
+		printf("GSE2 inverse test:\t\t%s!\n", test ? "ok" : "not ok");
+		//return
+		return test;
+	}
+	bool GSE2::test_log_exp(uint32_t nt, double tolerance)
+	{
+		//test
+		GSE2 g;
+		bool test = true;
+		for(uint32_t i = 0; i < nt; i++)
+		{
+			g.randu(-1, +1);
+			test = test && (g.matrix() - g.log().exp().matrix()).norm() < tolerance;
+		}
+		//print
+		printf("GSE2 log-exp test:\t\t%s!\n", test ? "ok" : "not ok");
+		//return
+		return test;
 	}
 }

@@ -19,6 +19,9 @@ namespace math
 		//destructor
 		~GSO2(void) = default;
 
+		//random
+		GSO2& randu(double, double) override;
+
 		//actions
 		Matrix matrix(void) const override;
 		Vector action(const Vector&) const override;

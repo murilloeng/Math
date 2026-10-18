@@ -14,6 +14,9 @@ namespace math
 		//destructor
 		virtual ~LieGroup(void) = default;
 
+		//random
+		virtual Group& randu(double, double) = 0;
+
 		//actions
 		virtual Matrix matrix(void) const = 0;
 		virtual Vector action(const Vector&) const = 0;

@@ -20,6 +20,9 @@ namespace math
 		//destructor
 		~GSE2(void) = default;
 
+		//random
+		GSE2& randu(double, double) override;
+
 		//actions
 		Matrix matrix(void) const override;
 		Vector action(const Vector&) const override;
@@ -29,6 +32,11 @@ namespace math
 		GSE2 inverse(void) const override;
 		GSE2 operator*(const GSE2&) const override;
 		GSE2 interpolate(const GSE2&, double) const override;
+
+		//tests
+		static bool test_matrix(uint32_t, double);
+		static bool test_inverse(uint32_t, double);
+		static bool test_log_exp(uint32_t, double);
 
 	private:
 		//data
