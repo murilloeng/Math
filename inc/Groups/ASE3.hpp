@@ -1,69 +1,67 @@
-// #pragma once
+#pragma once
 
-// //Math
-// #include "Math/inc/Linear/Vec3.hpp"
-// #include "Math/inc/Linear/Mat4.hpp"
+//Math
+#include "Math/inc/Groups/LieAlgebra.hpp"
 
-// namespace math
-// {
-// 	namespace groups
-// 	{
-// 		class GSE3;
-// 	}
-// }
+namespace math
+{
+	class GSE3;
+}
 
-// namespace math
-// {
-// 	namespace groups
-// 	{
-// 		class ASE3
-// 		{
-// 		public:
-// 			//constructors
-// 			ASE3(void);
-// 			ASE3(const ASE3&);
-// 			ASE3(const Vec3&, const Vec3&);
+namespace math
+{
+	class ASE3 : public LieAlgebra<GSE3, ASE3>
+	{
+	public:
+		//constructor
+		explicit ASE3(const double*);
+		explicit ASE3(double = 0, double = 0, double = 0, double = 0, double = 0, double = 0);
 
-// 			//destructor
-// 			~ASE3(void);
+		//destructor
+		~ASE3(void) = default;
 
-// 			//vector
-// 			Vec3& vector_u(void);
-// 			Vec3& vector_w(void);
-// 			const Vec3& vector_u(void) const;
-// 			const Vec3& vector_w(void) const;
+		//group
+		GSE3 exp(void) const override;
+		ASE3 bracket(const ASE3&) const override;
 
-// 			//exponential
-// 			GSE3 exponential(void) const;
+		//random
+		ASE3& randu(double, double) override;
 
-// 			//tangent
-// 			Matrix tangent(void) const;
-// 			Matrix tangent_inverse(void) const;
-// 			Matrix tangent_increment(void) const;
-// 			Matrix tangent_inverse_increment(void) const;
+		//linear
+		Vector vector(void) override;
+		Vector vector(void) const override;
+		Matrix matrix(void) const override;
+		Matrix adjoint(void) const override;
+		Matrix jacobian(void) const override;
+		Matrix jacobian_inverse(void) const override;
 
-// 			//operators
-// 			operator Mat4(void) const;
+		//operators
+		ASE3& operator*=(double) override;
+		ASE3& operator/=(double) override;
+		ASE3& operator+=(const ASE3&) override;
+		ASE3& operator-=(const ASE3&) override;
 
-// 			ASE3& operator*=(double);
-// 			ASE3& operator/=(double);
-// 			ASE3& operator+=(const ASE3&);
-// 			ASE3& operator-=(const ASE3&);
+		ASE3 operator+(void) const override;
+		ASE3 operator-(void) const override;
+		ASE3 operator*(double) const override;
+		ASE3 operator/(double) const override;
+		ASE3 operator+(const ASE3&) const override;
+		ASE3 operator-(const ASE3&) const override;
 
-// 			ASE3 operator*(double) const;
-// 			ASE3 operator/(double) const;
-// 			ASE3 operator+(const ASE3&) const;
-// 			ASE3 operator-(const ASE3&) const;
+		friend ASE3 operator*(double, const ASE3&);
 
-// 			friend ASE3 operator*(double, const ASE3&);
+		double& operator[](uint32_t) override;
+		const double& operator[](uint32_t) const override;
 
-// 		private:
-// 			//data
-// 			Vec3 m_vector_u;
-// 			Vec3 m_vector_w;
+		//tests
+		static bool test_adjoint(uint32_t, double);
+		static bool test_bracket(uint32_t, double);
+		static bool test_exp_log(uint32_t, double);
+		static bool test_jacobian(uint32_t, double);
+		static bool test_jacobian_inverse(uint32_t, double);
 
-// 			//friends
-// 			friend class GSE3;
-// 		};
-// 	}
-// }
+	private:
+		//data
+		double m_data[6];
+	};
+}

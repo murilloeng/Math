@@ -1,79 +1,161 @@
-// //Math
-// #include "Math/inc/Linear/Mat3.hpp"
-// #include "Math/inc/Groups/ASO3.hpp"
-// #include "Math/inc/Groups/ASE3.hpp"
-// #include "Math/inc/Groups/GSO3.hpp"
-// #include "Math/inc/Groups/GSE3.hpp"
+//std
+#include <cmath>
+#include <cstdio>
 
-// namespace math
-// {
-// 	namespace groups
-// 	{
-// 		//constructors
-// 		GSE3::GSE3(void)
-// 		{
-// 			return;
-// 		}
-// 		GSE3::GSE3(Vec3 Vector, Quat quaternion) : m_vector{Vector}, m_quaternion{quaternion}
-// 		{
-// 			return;
-// 		}
+//Math
+#include "Math/inc/Groups/ASE3.hpp"
+#include "Math/inc/Groups/GSE3.hpp"
+#include "Math/inc/Miscellaneous/rotations.hpp"
 
-// 		//destructor
-// 		GSE3::~GSE3(void)
-// 		{
-// 			return;
-// 		}
+namespace math
+{
+	//constructor
+	GSE3::GSE3(double u1, double u2, double u3, double t1, double t2, double t3)
+	{
+		//data
+		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
+		//quaternion
+		m_data[0] = fn(tn / 2, 0);
+		m_data[1] = fn(tn / 2, 1) * t1 / 2;
+		m_data[2] = fn(tn / 2, 1) * t2 / 2;
+		m_data[3] = fn(tn / 2, 1) * t3 / 2;
+	}
+	GSE3::GSE3(double x1, double x2, double x3, double q0, double q1, double q2, double q3) : m_data{x1, x2, x3, q0, q1, q2, q3}
+	{
+		return;
+	}
 
-// 		//inverse
-// 		GSE3 GSE3::inverse(void) const
-// 		{
-// 			return GSE3(-m_quaternion.conjugate(m_vector), m_quaternion.conjugate());
-// 		}
+	//random
+	GSE3& GSE3::randu(double a, double b)
+	{
+		return *this = ASE3().randu(a, b).exp();
+	}
 
-// 		//logarithm
-// 		ASE3 GSE3::logarithm(void) const
-// 		{
-// 			ASE3 object;
-// 			object.m_vector_w = GSO3(m_quaternion).logarithm().Vector();
-// 			object.m_vector_u = ASO3(object.m_vector_w).tangent_inverse().transpose() * m_vector;
-// 			return object;
-// 		}
+	//actions
+	Matrix GSE3::matrix(void) const
+	{
+		//data
+		Matrix R(3, 3);
+		const double q0 = m_data[0];
+		const double q1 = m_data[1];
+		const double q2 = m_data[2];
+		const double q3 = m_data[3];
+		//matrix
+		R[1 + 3 * 0] = 2 * (q1 * q2 + q0 * q3);
+		R[2 + 3 * 0] = 2 * (q1 * q3 - q0 * q2);
+		R[0 + 3 * 1] = 2 * (q1 * q2 - q0 * q3);
+		R[2 + 3 * 1] = 2 * (q2 * q3 + q0 * q1);
+		R[0 + 3 * 2] = 2 * (q1 * q3 + q0 * q2);
+		R[1 + 3 * 2] = 2 * (q2 * q3 - q0 * q1);
+		R[0 + 3 * 0] = q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3;
+		R[1 + 3 * 1] = q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3;
+		R[2 + 3 * 2] = q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3;
+		//return
+		return R;
+	}
+	Vector GSE3::action(const Vector& v) const
+	{
+		//data
+		Vector r(3);
+		const double v1 = v[0];
+		const double v2 = v[1];
+		const double v3 = v[2];
+		const double q0 = m_data[0];
+		const double q1 = m_data[1];
+		const double q2 = m_data[2];
+		const double q3 = m_data[3];
+		const double b = 2 * (q1 * v1 + q2 * v2 + q3 * v3);
+		const double a = q0 * q0 - q1 * q1 - q2 * q2 - q3 * q3;
+		//vector
+		r[0] = a * v1 + b * q1 + 2 * q0 * (q2 * v3 - q3 * v2);
+		r[1] = a * v2 + b * q2 + 2 * q0 * (q3 * v1 - q1 * v3);
+		r[2] = a * v3 + b * q3 + 2 * q0 * (q1 * v2 - q2 * v1);
+		//return
+		return r;
+	}
 
-// 		//vector
-// 		Vec3& GSE3::Vector(void)
-// 		{
-// 			return m_vector;
-// 		}
-// 		const Vec3& GSE3::Vector(void) const
-// 		{
-// 			return m_vector;
-// 		}
+	//operations
+	ASE3 GSE3::log(void) const
+	{
+		//data
+		const double q0 = m_data[0];
+		const double q1 = m_data[1];
+		const double q2 = m_data[2];
+		const double q3 = m_data[3];
+		const double tn = atan2(sqrt(q1 * q1 + q2 * q2 + q3 * q3), q0);
+		//return
+		const double f1 = fn(tn, 1);
+		return ASE3(2 * q1 / f1, 2 * q2 / f1, 2 * q3 / f1);
+	}
+	GSE3 GSE3::inverse(void) const
+	{
+		const double q0 = m_data[0];
+		const double q1 = m_data[1];
+		const double q2 = m_data[2];
+		const double q3 = m_data[3];
+		return GSE3(q0, -q1, -q2, -q3);
+	}
+	GSE3 GSE3::operator*(const GSE3& element) const
+	{
+		//data
+		GSE3 r;
+		r.m_data[0] = m_data[0] * element.m_data[0] - m_data[1] * element.m_data[1] - m_data[2] * element.m_data[2] - m_data[3] * element.m_data[3];
+		r.m_data[1] = m_data[0] * element.m_data[1] + m_data[1] * element.m_data[0] + m_data[2] * element.m_data[3] - m_data[3] * element.m_data[2];
+		r.m_data[2] = m_data[0] * element.m_data[2] + m_data[2] * element.m_data[0] + m_data[3] * element.m_data[1] - m_data[1] * element.m_data[3];
+		r.m_data[3] = m_data[0] * element.m_data[3] + m_data[3] * element.m_data[0] + m_data[1] * element.m_data[2] - m_data[2] * element.m_data[1];
+		//return
+		return r;
+	}
+	GSE3 GSE3::interpolate(const GSE3& element, double t) const
+	{
+		return *this * (t * (inverse() * element).log()).exp();
+	}
 
-// 		//quaternion
-// 		Quat& GSE3::quaternion(void)
-// 		{
-// 			return m_quaternion;
-// 		}
-// 		const Quat& GSE3::quaternion(void) const
-// 		{
-// 			return m_quaternion;
-// 		}
-
-// 		//operators
-// 		GSE3::operator Mat4(void) const
-// 		{
-// 			return Mat4(GSO3(m_quaternion), m_vector);
-// 		}
-// 		Vec3 GSE3::operator*(const Vec3& v) const
-// 		{
-// 			return GSO3(m_quaternion) * v + m_vector;
-// 		}
-// 		GSE3 GSE3::operator*(const GSE3& object) const
-// 		{
-// 			const Quat quaternion = m_quaternion * object.m_quaternion;
-// 			const Vec3 Vector = m_vector + GSO3(m_quaternion) * object.m_vector;
-// 			return GSE3(Vector, quaternion);
-// 		}
-// 	}
-// }
+	//tests
+	bool GSE3::test_matrix(uint32_t nt, double tolerance)
+	{
+		//test
+		GSE3 g1, g2;
+		bool test = true;
+		for(uint32_t i = 0; i < nt; i++)
+		{
+			g1.randu(-1, +1);
+			g2.randu(-1, +1);
+			test = test && ((g1 * g2).matrix() - g1.matrix() * g2.matrix()).norm() < tolerance;
+		}
+		//print
+		printf("GSE3 matrix test:\t\t%s!\n", test ? "ok" : "not ok");
+		//return
+		return test;
+	}
+	bool GSE3::test_inverse(uint32_t nt, double tolerance)
+	{
+		//test
+		GSE3 g;
+		bool test = true;
+		for(uint32_t i = 0; i < nt; i++)
+		{
+			g.randu(-1, +1);
+			test = test && (g * g.inverse()).log().vector().norm() < tolerance;
+		}
+		//print
+		printf("GSE3 inverse test:\t\t%s!\n", test ? "ok" : "not ok");
+		//return
+		return test;
+	}
+	bool GSE3::test_log_exp(uint32_t nt, double tolerance)
+	{
+		//test
+		GSE3 g;
+		bool test = true;
+		for(uint32_t i = 0; i < nt; i++)
+		{
+			g.randu(-1, +1);
+			test = test && (g.matrix() - g.log().exp().matrix()).norm() < tolerance;
+		}
+		//print
+		printf("GSE3 log-exp test:\t\t%s!\n", test ? "ok" : "not ok");
+		//return
+		return test;
+	}
+}

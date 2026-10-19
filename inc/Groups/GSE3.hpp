@@ -1,58 +1,45 @@
-// #pragma once
+#pragma once
 
-// //Math
-// #include "Math/inc/Linear/Vec3.hpp"
-// #include "Math/inc/Linear/Quat.hpp"
-// #include "Math/inc/Linear/Mat4.hpp"
+//Math
+#include "Math/inc/Groups/LieGroup.hpp"
 
-// namespace math
-// {
-// 	namespace groups
-// 	{
-// 		class ASE3;
-// 	}
-// }
+namespace math
+{
+	class ASE3;
+}
 
-// namespace math
-// {
-// 	namespace groups
-// 	{
-// 		class GSE3
-// 		{
-// 		public:
-// 			//constructors
-// 			GSE3(void);
-// 			GSE3(Vec3, Quat);
+namespace math
+{
+	class GSE3 : public LieGroup<GSE3, ASE3>
+	{
+	public:
+		//constructor
+		explicit GSE3(double, double, double, double, double, double, double);
+		explicit GSE3(double = 0, double = 0, double = 0, double = 0, double = 0, double = 0);
 
-// 			//destructor
-// 			~GSE3(void);
+		//destructor
+		~GSE3(void) = default;
 
-// 			//inverse
-// 			GSE3 inverse(void) const;
+		//random
+		GSE3& randu(double, double) override;
 
-// 			//logarithm
-// 			ASE3 logarithm(void) const;
+		//actions
+		Matrix matrix(void) const override;
+		Vector action(const Vector&) const override;
 
-// 			//vector
-// 			Vec3& Vector(void);
-// 			const Vec3& Vector(void) const;
+		//operations
+		ASE3 log(void) const override;
+		GSE3 inverse(void) const override;
+		GSE3 operator*(const GSE3&) const override;
+		GSE3 interpolate(const GSE3&, double) const override;
 
-// 			//quaternion
-// 			Quat& quaternion(void);
-// 			const Quat& quaternion(void) const;
+		//tests
+		static bool test_matrix(uint32_t, double);
+		static bool test_inverse(uint32_t, double);
+		static bool test_log_exp(uint32_t, double);
 
-// 			//operators
-// 			operator Mat4(void) const;
-// 			Vec3 operator*(const Vec3&) const;
-// 			GSE3 operator*(const GSE3&) const;
-
-// 		private:
-// 			//data
-// 			Vec3 m_vector;
-// 			Quat m_quaternion;
-
-// 			//friends
-// 			friend class ASE3;
-// 		};
-// 	}
-// }
+	private:
+		//data
+		double m_data[7];
+	};
+}
