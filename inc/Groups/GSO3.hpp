@@ -1,51 +1,45 @@
 #pragma once
 
 //Math
-#include "Math/inc/Linear/Quat.hpp"
+#include "Math/inc/Groups/LieGroup.hpp"
 
 namespace math
 {
-	namespace groups
-	{
-		class ASO3;
-	}
+	class ASO3;
 }
 
 namespace math
 {
-	namespace groups
+	class GSO3 : public LieGroup<GSO3, ASO3>
 	{
-		class GSO3
-		{
-		public:
-			//constructors
-			GSO3(void);
-			GSO3(Quat);
+	public:
+		//constructor
+		explicit GSO3(double, double, double, double);
+		explicit GSO3(double = 0, double = 0, double = 0);
 
-			//destructor
-			~GSO3(void);
+		//destructor
+		~GSO3(void) = default;
 
-			//inverse
-			GSO3 inverse(void) const;
+		//random
+		GSO3& randu(double, double) override;
 
-			//logarithm
-			ASO3 logarithm(void) const;
+		//actions
+		Matrix matrix(void) const override;
+		Vector action(const Vector&) const override;
 
-			//quaternion
-			Quat& quaternion(void);
-			const Quat& quaternion(void) const;
+		//operations
+		ASO3 log(void) const override;
+		GSO3 inverse(void) const override;
+		GSO3 operator*(const GSO3&) const override;
+		GSO3 interpolate(const GSO3&, double) const override;
 
-			//operators
-			operator Mat3(void) const;
-			Vec3 operator*(const Vec3&) const;
-			GSO3 operator*(const GSO3&) const;
+		//tests
+		static bool test_matrix(uint32_t, double);
+		static bool test_inverse(uint32_t, double);
+		static bool test_log_exp(uint32_t, double);
 
-		private:
-			//data
-			Quat m_quaternion;
-
-			//friends
-			friend class ASO3;
-		};
-	}
+	private:
+		//data
+		double m_data[4];
+	};
 }

@@ -1,101 +1,161 @@
 //std
 #include <cmath>
+#include <cstdio>
 
 //Math
-#include "Math/inc/Miscellaneous/util.hpp"
 #include "Math/inc/Groups/ASO3.hpp"
 #include "Math/inc/Groups/GSO3.hpp"
+#include "Math/inc/Miscellaneous/rotations.hpp"
 
 namespace math
 {
-	namespace groups
+	//constructor
+	GSO3::GSO3(double t1, double t2, double t3)
 	{
-		//constructor
-		GSO3::GSO3(void)
-		{
-			return;
-		}
-		GSO3::GSO3(Quat quaternion) : m_quaternion{quaternion}
-		{
-			return;
-		}
-
-		//destructor
-		GSO3::~GSO3(void)
-		{
-			return;
-		}
-
-		//inverse
-		GSO3 GSO3::inverse(void) const
-		{
-			return m_quaternion.conjugate();
-		}
-
-		//logarithm
-		ASO3 GSO3::logarithm(void) const
-		{
-			//angle
-			const double t = 2 * acos(bound(m_quaternion[0]));
-			//vector
-			Vec3 algebra;
-			const double s = sin(t / 2);
-			algebra[0] = s ? t * m_quaternion[1] / s : 0;
-			algebra[1] = s ? t * m_quaternion[2] / s : 0;
-			algebra[2] = s ? t * m_quaternion[3] / s : 0;
-			//return
-			return algebra;
-		}
-
+		//data
+		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
 		//quaternion
-		Quat& GSO3::quaternion(void)
-		{
-			return m_quaternion;
-		}
-		const Quat& GSO3::quaternion(void) const
-		{
-			return m_quaternion;
-		}
+		m_data[0] = fn(tn / 2, 0);
+		m_data[1] = fn(tn / 2, 1) * t1 / 2;
+		m_data[2] = fn(tn / 2, 1) * t2 / 2;
+		m_data[3] = fn(tn / 2, 1) * t3 / 2;
+	}
+	GSO3::GSO3(double q0, double q1, double q2, double q3) : m_data{q0, q1, q2, q3}
+	{
+		return;
+	}
 
-		//operators
-		GSO3::operator Mat3(void) const
+	//random
+	GSO3& GSO3::randu(double a, double b)
+	{
+		return *this = ASO3().randu(a, b).exp();
+	}
+
+	//actions
+	Matrix GSO3::matrix(void) const
+	{
+		//data
+		Matrix R(3, 3);
+		const double q0 = m_data[0];
+		const double q1 = m_data[1];
+		const double q2 = m_data[2];
+		const double q3 = m_data[3];
+		//matrix
+		R[1 + 3 * 0] = 2 * (q1 * q2 + q0 * q3);
+		R[2 + 3 * 0] = 2 * (q1 * q3 - q0 * q2);
+		R[0 + 3 * 1] = 2 * (q1 * q2 - q0 * q3);
+		R[2 + 3 * 1] = 2 * (q2 * q3 + q0 * q1);
+		R[0 + 3 * 2] = 2 * (q1 * q3 + q0 * q2);
+		R[1 + 3 * 2] = 2 * (q2 * q3 - q0 * q1);
+		R[0 + 3 * 0] = q0 * q0 + q1 * q1 - q2 * q2 - q3 * q3;
+		R[1 + 3 * 1] = q0 * q0 - q1 * q1 + q2 * q2 - q3 * q3;
+		R[2 + 3 * 2] = q0 * q0 - q1 * q1 - q2 * q2 + q3 * q3;
+		//return
+		return R;
+	}
+	Vector GSO3::action(const Vector& v) const
+	{
+		//data
+		Vector r(3);
+		const double v1 = v[0];
+		const double v2 = v[1];
+		const double v3 = v[2];
+		const double q0 = m_data[0];
+		const double q1 = m_data[1];
+		const double q2 = m_data[2];
+		const double q3 = m_data[3];
+		const double b = 2 * (q1 * v1 + q2 * v2 + q3 * v3);
+		const double a = q0 * q0 - q1 * q1 - q2 * q2 - q3 * q3;
+		//vector
+		r[0] = a * v1 + b * q1 + 2 * q0 * (q2 * v3 - q3 * v2);
+		r[1] = a * v2 + b * q2 + 2 * q0 * (q3 * v1 - q1 * v3);
+		r[2] = a * v3 + b * q3 + 2 * q0 * (q1 * v2 - q2 * v1);
+		//return
+		return r;
+	}
+
+	//operations
+	ASO3 GSO3::log(void) const
+	{
+		//data
+		const double q0 = m_data[0];
+		const double q1 = m_data[1];
+		const double q2 = m_data[2];
+		const double q3 = m_data[3];
+		const double tn = atan2(sqrt(q1 * q1 + q2 * q2 + q3 * q3), q0);
+		//return
+		const double f1 = fn(tn, 1);
+		return ASO3(2 * q1 / f1, 2 * q2 / f1, 2 * q3 / f1);
+	}
+	GSO3 GSO3::inverse(void) const
+	{
+		const double q0 = m_data[0];
+		const double q1 = m_data[1];
+		const double q2 = m_data[2];
+		const double q3 = m_data[3];
+		return GSO3(q0, -q1, -q2, -q3);
+	}
+	GSO3 GSO3::operator*(const GSO3& element) const
+	{
+		//data
+		GSO3 r;
+		r.m_data[0] = m_data[0] * element.m_data[0] - m_data[1] * element.m_data[1] - m_data[2] * element.m_data[2] - m_data[3] * element.m_data[3];
+		r.m_data[1] = m_data[0] * element.m_data[1] + m_data[1] * element.m_data[0] + m_data[2] * element.m_data[3] - m_data[3] * element.m_data[2];
+		r.m_data[2] = m_data[0] * element.m_data[2] + m_data[2] * element.m_data[0] + m_data[3] * element.m_data[1] - m_data[1] * element.m_data[3];
+		r.m_data[3] = m_data[0] * element.m_data[3] + m_data[3] * element.m_data[0] + m_data[1] * element.m_data[2] - m_data[2] * element.m_data[1];
+		//return
+		return r;
+	}
+	GSO3 GSO3::interpolate(const GSO3& element, double t) const
+	{
+		return *this * (t * (inverse() * element).log()).exp();
+	}
+
+	//tests
+	bool GSO3::test_matrix(uint32_t nt, double tolerance)
+	{
+		//test
+		GSO3 g1, g2;
+		bool test = true;
+		for(uint32_t i = 0; i < nt; i++)
 		{
-			Mat3 Matrix;
-			const double* p = m_quaternion.data();
-			Matrix[1 + 3 * 0] = 2 * (p[1] * p[2] + p[0] * p[3]);
-			Matrix[2 + 3 * 0] = 2 * (p[1] * p[3] - p[0] * p[2]);
-			Matrix[0 + 3 * 1] = 2 * (p[1] * p[2] - p[0] * p[3]);
-			Matrix[2 + 3 * 1] = 2 * (p[2] * p[3] + p[0] * p[1]);
-			Matrix[0 + 3 * 2] = 2 * (p[1] * p[3] + p[0] * p[2]);
-			Matrix[1 + 3 * 2] = 2 * (p[2] * p[3] - p[0] * p[1]);
-			Matrix[0 + 3 * 0] = p[0] * p[0] + p[1] * p[1] - p[2] * p[2] - p[3] * p[3];
-			Matrix[1 + 3 * 1] = p[0] * p[0] - p[1] * p[1] + p[2] * p[2] - p[3] * p[3];
-			Matrix[2 + 3 * 2] = p[0] * p[0] - p[1] * p[1] - p[2] * p[2] + p[3] * p[3];
-			return Matrix;
+			g1.randu(-1, +1);
+			g2.randu(-1, +1);
+			test = test && ((g1 * g2).matrix() - g1.matrix() * g2.matrix()).norm() < tolerance;
 		}
-		Vec3 GSO3::operator*(const Vec3& v) const
+		//print
+		printf("GSO3 matrix test:\t\t%s!\n", test ? "ok" : "not ok");
+		//return
+		return test;
+	}
+	bool GSO3::test_inverse(uint32_t nt, double tolerance)
+	{
+		//test
+		GSO3 g;
+		bool test = true;
+		for(uint32_t i = 0; i < nt; i++)
 		{
-			//data
-			Vec3 r;
-			const double s = m_quaternion[0];
-			const Vec3 x(m_quaternion.data() + 1);
-			//vector
-			const double b = 2 * x.inner(v);
-			const double a = s * s - x.inner(x);
-			r[0] = a * v[0] + b * x[0] + 2 * s * (x[1] * v[2] - x[2] * v[1]);
-			r[1] = a * v[1] + b * x[1] + 2 * s * (x[2] * v[0] - x[0] * v[2]);
-			r[2] = a * v[2] + b * x[2] + 2 * s * (x[0] * v[1] - x[1] * v[0]);
-			//return
-			return r;
+			g.randu(-1, +1);
+			test = test && (g * g.inverse()).log().vector().norm() < tolerance;
 		}
-		GSO3 GSO3::operator*(const GSO3& group) const
+		//print
+		printf("GSO3 inverse test:\t\t%s!\n", test ? "ok" : "not ok");
+		//return
+		return test;
+	}
+	bool GSO3::test_log_exp(uint32_t nt, double tolerance)
+	{
+		//test
+		GSO3 g;
+		bool test = true;
+		for(uint32_t i = 0; i < nt; i++)
 		{
-			//data
-			GSO3 r;
-			//product
-			r.m_quaternion = m_quaternion * group.m_quaternion;
-			//return
-			return r;
+			g.randu(-1, +1);
+			test = test && (g.matrix() - g.log().exp().matrix()).norm() < tolerance;
 		}
+		//print
+		printf("GSO3 log-exp test:\t\t%s!\n", test ? "ok" : "not ok");
+		//return
+		return test;
 	}
 }

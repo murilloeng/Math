@@ -10,9 +10,11 @@
 #include "Math/inc/Groups/ASE2.hpp"
 #include "Math/inc/Groups/GSE2.hpp"
 
+#include "Math/inc/Groups/ASO3.hpp"
+#include "Math/inc/Groups/GSO3.hpp"
+
 #include "Math/Test/inc/fem.hpp"
 #include "Math/Test/inc/eigen.hpp"
-#include "Math/Test/inc/groups.hpp"
 #include "Math/Test/inc/solvers.hpp"
 #include "Math/Test/inc/geometry.hpp"
 #include "Math/Test/inc/rotations.hpp"
@@ -43,6 +45,16 @@ int main(void)
 		math::GSE2::test_matrix(1000, 1e-12);
 		math::GSE2::test_inverse(1000, 1e-12);
 		math::GSE2::test_log_exp(1000, 1e-12);
+
+		math::ASO3::test_adjoint(1000, 1e-12);
+		math::ASO3::test_bracket(1000, 1e-12);
+		math::ASO3::test_exp_log(1000, 1e-12);
+		math::ASO3::test_jacobian(1000, 1e-08);
+		math::ASO3::test_jacobian_inverse(1000, 1e-12);
+
+		math::GSO3::test_matrix(1000, 1e-12);
+		math::GSO3::test_inverse(1000, 1e-12);
+		math::GSO3::test_log_exp(1000, 1e-12);
 	}
 	catch(const std::exception& exception)
 	{

@@ -1,76 +1,67 @@
 #pragma once
 
 //Math
-#include "Math/inc/Linear/Vec3.hpp"
-#include "Math/inc/Linear/Mat3.hpp"
+#include "Math/inc/Groups/LieAlgebra.hpp"
 
 namespace math
 {
-	namespace groups
-	{
-		class GSO3;
-	}
+	class GSO3;
 }
 
 namespace math
 {
-	namespace groups
+	class ASO3 : public LieAlgebra<GSO3, ASO3>
 	{
-		class ASO3
-		{
-		public:
-			//constructor
-			ASO3(void);
-			ASO3(Vec3);
+	public:
+		//constructor
+		explicit ASO3(const double*);
+		explicit ASO3(double = 0, double = 0, double = 0);
 
-			//destructor
-			~ASO3(void);
+		//destructor
+		~ASO3(void) = default;
 
-			//vector
-			Vec3& Vector(void);
-			const Vec3& Vector(void) const;
+		//group
+		GSO3 exp(void) const override;
+		ASO3 bracket(const ASO3&) const override;
 
-			//exponential
-			GSO3 exponential(void) const;
+		//random
+		ASO3& randu(double, double) override;
 
-			//tangent
-			Mat3 tangent(bool = false) const;
-			Vec3 tangent(const Vec3&, bool = false) const;
+		//linear
+		Vector vector(void) override;
+		Vector vector(void) const override;
+		Matrix matrix(void) const override;
+		Matrix adjoint(void) const override;
+		Matrix jacobian(void) const override;
+		Matrix jacobian_inverse(void) const override;
 
-			Mat3 tangent_inverse(bool = false) const;
-			Vec3 tangent_inverse(const Vec3&, bool = false) const;
+		//operators
+		ASO3& operator*=(double) override;
+		ASO3& operator/=(double) override;
+		ASO3& operator+=(const ASO3&) override;
+		ASO3& operator-=(const ASO3&) override;
 
-			Mat3 tangent_increment(const Vec3&, bool = false) const;
-			Vec3 tangent_increment(const Vec3&, const Vec3&, bool = false) const;
+		ASO3 operator+(void) const override;
+		ASO3 operator-(void) const override;
+		ASO3 operator*(double) const override;
+		ASO3 operator/(double) const override;
+		ASO3 operator+(const ASO3&) const override;
+		ASO3 operator-(const ASO3&) const override;
 
-			Mat3 tangent_inverse_increment(const Vec3&, bool = false) const;
-			Vec3 tangent_inverse_increment(const Vec3&, const Vec3&, bool = false) const;
+		friend ASO3 operator*(double, const ASO3&);
 
-			//operators
-			operator Mat3(void) const;
+		double& operator[](uint32_t) override;
+		const double& operator[](uint32_t) const override;
 
-			ASO3& operator*=(double);
-			ASO3& operator/=(double);
-			ASO3& operator+=(const ASO3&);
-			ASO3& operator-=(const ASO3&);
+		//tests
+		static bool test_adjoint(uint32_t, double);
+		static bool test_bracket(uint32_t, double);
+		static bool test_exp_log(uint32_t, double);
+		static bool test_jacobian(uint32_t, double);
+		static bool test_jacobian_inverse(uint32_t, double);
 
-			ASO3 operator*(double) const;
-			ASO3 operator/(double) const;
-			ASO3 operator+(const ASO3&) const;
-			ASO3 operator-(const ASO3&) const;
-
-			friend ASO3 operator*(double, const ASO3&);
-
-		private:
-			//rotation
-			static double fn(double, uint32_t);
-			static double dfn(double, uint32_t);
-			static double funt(double, uint32_t);
-			static double cost(double, uint32_t);
-			static double sint(double, uint32_t);
-
-			//data
-			Vec3 m_vector;
-		};
-	}
+	private:
+		//data
+		double m_data[3];
+	};
 }
