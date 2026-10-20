@@ -72,10 +72,10 @@ namespace math
 	ASO3 GSO3::log(void) const
 	{
 		//data
-		const double q0 = m_data[0];
-		const double q1 = m_data[1];
-		const double q2 = m_data[2];
-		const double q3 = m_data[3];
+		const double q0 = m_data[0] > 0 ? m_data[0] : -m_data[0];
+		const double q1 = m_data[0] > 0 ? m_data[1] : -m_data[1];
+		const double q2 = m_data[0] > 0 ? m_data[2] : -m_data[2];
+		const double q3 = m_data[0] > 0 ? m_data[3] : -m_data[3];
 		const double tn = atan2(sqrt(q1 * q1 + q2 * q2 + q3 * q3), q0);
 		//return
 		const double f1 = fn(tn, 1);

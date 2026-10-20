@@ -14,6 +14,7 @@ namespace math
 	{
 	public:
 		//constructor
+		explicit GSE3(const double*);
 		explicit GSE3(double = 0, double = 0, double = 0, double = 1, double = 0, double = 0, double = 0);
 
 		//destructor

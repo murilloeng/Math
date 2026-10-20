@@ -13,6 +13,10 @@
 namespace math
 {
 	//constructor
+	GSE3::GSE3(const double* data) : m_data{data[0], data[1], data[2], data[3], data[4], data[5], data[6]}
+	{
+		return;
+	}
 	GSE3::GSE3(double x1, double x2, double x3, double q0, double q1, double q2, double q3) : m_data{x1, x2, x3, q0, q1, q2, q3}
 	{
 		return;

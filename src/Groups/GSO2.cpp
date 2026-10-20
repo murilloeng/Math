@@ -37,7 +37,7 @@ namespace math
 	//operations
 	ASO2 GSO2::log(void) const
 	{
-		return ASO2(m_data);
+		return ASO2(std::remainder(m_data, 2 * M_PI));
 	}
 	GSO2 GSO2::inverse(void) const
 	{
@@ -45,11 +45,11 @@ namespace math
 	}
 	GSO2 GSO2::operator*(const GSO2& element) const
 	{
-		return GSO2(m_data + element.m_data);
+		return GSO2(std::remainder(m_data + element.m_data, 2 * M_PI));
 	}
 	GSO2 GSO2::interpolate(const GSO2& element, double t) const
 	{
-		return GSO2((1 - t) * m_data + t * element.m_data);
+		return GSO2(m_data + t * std::remainder(element.m_data - m_data, 2 * M_PI));
 	}
 
 	//tests
