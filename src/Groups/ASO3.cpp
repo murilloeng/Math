@@ -27,11 +27,14 @@ namespace math
 		const double t2 = m_data[1];
 		const double t3 = m_data[2];
 		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
+		//functions
+		const double f0 = fn(tn / 2, 0);
+		const double f1 = fn(tn / 2, 1);
 		//quaternion
-		const double q0 = fn(tn / 2, 0);
-		const double q1 = fn(tn / 2, 1) * t1 / 2;
-		const double q2 = fn(tn / 2, 1) * t2 / 2;
-		const double q3 = fn(tn / 2, 1) * t3 / 2;
+		const double q0 = f0;
+		const double q1 = f1 * t1 / 2;
+		const double q2 = f1 * t2 / 2;
+		const double q3 = f1 * t3 / 2;
 		//return
 		return GSO3(q0, q1, q2, q3);
 	}

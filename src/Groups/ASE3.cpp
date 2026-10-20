@@ -32,15 +32,20 @@ namespace math
 		const double t2 = m_data[4];
 		const double t3 = m_data[5];
 		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
+		//functions
+		const double f2 = fn(tn, 2);
+		const double f3 = fn(tn, 3);
+		const double f0 = fn(tn / 2, 0);
+		const double f1 = fn(tn / 2, 1);
 		//quaternion
-		const double q0 = fn(tn / 2, 0);
-		const double q1 = fn(tn / 2, 1) / 2 * t1;
-		const double q2 = fn(tn / 2, 1) / 2 * t2;
-		const double q3 = fn(tn / 2, 1) / 2 * t3;
+		const double q0 = f0;
+		const double q1 = f1 * t1 / 2;
+		const double q2 = f1 * t2 / 2;
+		const double q3 = f1 * t3 / 2;
 		//position
-		const double x1 = u1 + fn(tn, 2) * (t2 * u3 - t3 * u2) + fn(tn, 3) * (t1 * t2 * u2 + t1 * t3 * u3 - (t2 * t2 + t3 * t3) * u1);
-		const double x2 = u2 + fn(tn, 2) * (t3 * u1 - t1 * u3) + fn(tn, 3) * (t1 * t2 * u1 + t2 * t3 * u3 - (t1 * t1 + t3 * t3) * u2);
-		const double x3 = u3 + fn(tn, 2) * (t1 * u2 - t2 * u1) + fn(tn, 3) * (t1 * t3 * u1 + t2 * t3 * u2 - (t1 * t1 + t2 * t2) * u3);
+		const double x1 = u1 + f2 * (t2 * u3 - t3 * u2) + f3 * (t1 * t2 * u2 + t1 * t3 * u3 - (t2 * t2 + t3 * t3) * u1);
+		const double x2 = u2 + f2 * (t3 * u1 - t1 * u3) + f3 * (t1 * t2 * u1 + t2 * t3 * u3 - (t1 * t1 + t3 * t3) * u2);
+		const double x3 = u3 + f2 * (t1 * u2 - t2 * u1) + f3 * (t1 * t3 * u1 + t2 * t3 * u2 - (t1 * t1 + t2 * t2) * u3);
 		//return
 		return GSE3(x1, x2, x3, q0, q1, q2, q3);
 	}
