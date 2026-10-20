@@ -5,6 +5,8 @@
 //Math
 #include "Math/inc/Groups/ASE3.hpp"
 #include "Math/inc/Groups/GSE3.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
 #include "Math/inc/Miscellaneous/rotations.hpp"
 
 namespace math
@@ -22,7 +24,25 @@ namespace math
 	//group
 	GSE3 ASE3::exp(void) const
 	{
-		return GSE3(m_data[0], m_data[1], m_data[2], m_data[3], m_data[4], m_data[5]);
+		//data
+		const double u1 = m_data[0];
+		const double u2 = m_data[1];
+		const double u3 = m_data[2];
+		const double t1 = m_data[3];
+		const double t2 = m_data[4];
+		const double t3 = m_data[5];
+		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
+		//quaternion
+		const double q0 = fn(tn / 2, 0);
+		const double q1 = fn(tn / 2, 1) / 2 * t1;
+		const double q2 = fn(tn / 2, 1) / 2 * t2;
+		const double q3 = fn(tn / 2, 1) / 2 * t3;
+		//position
+		const double x1 = u1 + fn(tn, 2) * (t2 * u3 - t3 * u2) + fn(tn, 3) * (t1 * t2 * u2 + t1 * t3 * u3 - (t2 * t2 + t3 * t3) * u1);
+		const double x2 = u2 + fn(tn, 2) * (t3 * u1 - t1 * u3) + fn(tn, 3) * (t1 * t2 * u1 + t2 * t3 * u3 - (t1 * t1 + t3 * t3) * u2);
+		const double x3 = u3 + fn(tn, 2) * (t1 * u2 - t2 * u1) + fn(tn, 3) * (t1 * t3 * u1 + t2 * t3 * u2 - (t1 * t1 + t2 * t2) * u3);
+		//return
+		return GSE3(x1, x2, x3, q0, q1, q2, q3);
 	}
 	ASE3 ASE3::bracket(const ASE3& v) const
 	{
@@ -88,27 +108,57 @@ namespace math
 			{0, -t3, t2, 0, -u3, u2},
 			{t3, 0, -t1, u3, 0, -u1},
 			{-t2, t1, 0, -u2, u1, 0},
-			{0, 0, 0, 0, -t3, t2}, {0, 0, 0, t3, 0, -t1}, {0, 0, 0, -t2, t1, 0}});
+			{0, 0, 0, 0, -t3, t2}, {0, 0, 0, t3, 0, -t1}, {0, 0, 0, -t2, t1, 0}
+		});
 	}
 	Matrix ASE3::jacobian(void) const
 	{
-		// const Matrix A = matrix();
-		// const double t1 = m_data[0];
-		// const double t2 = m_data[1];
-		// const double t3 = m_data[2];
-		// const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
-		// return Matrix::eye(3, 3) - fn(tn, 2) * A + fn(tn, 3) * A * A;
-		return Matrix({{1}});
+		//data
+		Matrix J(6, 6);
+		const Vec3 u(m_data + 0), t(m_data + 3);
+		const Mat3 Su = u.spin(), St = t.spin();
+		const Vec3 a = t.cross(u), b = t.cross(t.cross(u));
+		//jacobian
+		const double tn = t.norm();
+		const double f1 = fn(tn, 1);
+		const double f2 = fn(tn, 2);
+		const double f3 = fn(tn, 3);
+		const double f4 = fn(tn, 4);
+		const double f5 = fn(tn, 5);
+		const Mat3 Ri = Mat3::eye() - f1 * St + f2 * St * St;
+		const Mat3 A1 = f2 * Su + f3 * (2 * St * Su - Su * St);
+		const Mat3 A2 = (2 * f4 - f3) * a.outer(t) + (3 * f5 - f4) * b.outer(t);
+		//jacobian
+		J.span(3, 0) = 0;
+		J.span(0, 3) = Ri * (A2 - A1);
+		J.span(0, 0) = J.span(3, 3) = Mat3::eye() - f2 * St + f3 * St * St;
+		//return
+		return J;
 	}
 	Matrix ASE3::jacobian_inverse(void) const
 	{
-		// const Matrix A = matrix();
-		// const double t1 = m_data[0];
-		// const double t2 = m_data[1];
-		// const double t3 = m_data[2];
-		// const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
-		// return Matrix::eye(3, 3) + A / 2 + (fn(tn, 3) - 2 * fn(tn, 4)) / fn(tn, 2) / 2 * A * A;
-		return Matrix({{1}});
+		//data
+		Matrix Ji(6, 6);
+		const Vec3 u(m_data + 0), t(m_data + 3);
+		const Mat3 Su = u.spin(), St = t.spin();
+		const Vec3 a = t.cross(u), b = t.cross(t.cross(u));
+		//jacobian
+		const double tn = t.norm();
+		const double f1 = fn(tn, 1);
+		const double f2 = fn(tn, 2);
+		const double f3 = fn(tn, 3);
+		const double f4 = fn(tn, 4);
+		const double f5 = fn(tn, 5);
+		const Mat3 Ri = Mat3::eye() - f1 * St + f2 * St * St;
+		const Mat3 A1 = f2 * Su + f3 * (2 * St * Su - Su * St);
+		const Mat3 A2 = (2 * f4 - f3) * a.outer(t) + (3 * f5 - f4) * b.outer(t);
+		const Mat3 Ti = Mat3::eye() + St / 2 + (f3 - 2 * f4) / f2 / 2 * St * St;
+		//jacobian
+		Ji.span(3, 0) = 0;
+		Ji.span(0, 0) = Ji.span(3, 3) = Ti;
+		Ji.span(0, 3) = -Ti * Ri * (A2 - A1) * Ti;
+		//return
+		return Ji;
 	}
 
 	//operators

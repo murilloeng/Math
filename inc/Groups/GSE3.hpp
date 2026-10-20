@@ -14,8 +14,7 @@ namespace math
 	{
 	public:
 		//constructor
-		explicit GSE3(double, double, double, double, double, double, double);
-		explicit GSE3(double = 0, double = 0, double = 0, double = 0, double = 0, double = 0);
+		explicit GSE3(double = 0, double = 0, double = 0, double = 1, double = 0, double = 0, double = 0);
 
 		//destructor
 		~GSE3(void) = default;

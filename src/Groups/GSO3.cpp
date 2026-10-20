@@ -10,15 +10,9 @@
 namespace math
 {
 	//constructor
-	GSO3::GSO3(double t1, double t2, double t3)
+	GSO3::GSO3(const double* data) : m_data{data[0], data[1], data[2], data[3]}
 	{
-		//data
-		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
-		//quaternion
-		m_data[0] = fn(tn / 2, 0);
-		m_data[1] = fn(tn / 2, 1) * t1 / 2;
-		m_data[2] = fn(tn / 2, 1) * t2 / 2;
-		m_data[3] = fn(tn / 2, 1) * t3 / 2;
+		return;
 	}
 	GSO3::GSO3(double q0, double q1, double q2, double q3) : m_data{q0, q1, q2, q3}
 	{
@@ -109,6 +103,15 @@ namespace math
 	GSO3 GSO3::interpolate(const GSO3& element, double t) const
 	{
 		return *this * (t * (inverse() * element).log()).exp();
+	}
+
+	double& GSO3::operator[](uint32_t index)
+	{
+		return m_data[index];
+	}
+	const double& GSO3::operator[](uint32_t index) const
+	{
+		return m_data[index];
 	}
 
 	//tests

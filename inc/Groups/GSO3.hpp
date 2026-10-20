@@ -14,8 +14,8 @@ namespace math
 	{
 	public:
 		//constructor
-		explicit GSO3(double, double, double, double);
-		explicit GSO3(double = 0, double = 0, double = 0);
+		explicit GSO3(const double*);
+		explicit GSO3(double = 1, double = 0, double = 0, double = 0);
 
 		//destructor
 		~GSO3(void) = default;
@@ -32,6 +32,9 @@ namespace math
 		GSO3 inverse(void) const override;
 		GSO3 operator*(const GSO3&) const override;
 		GSO3 interpolate(const GSO3&, double) const override;
+
+		double& operator[](uint32_t);
+		const double& operator[](uint32_t) const;
 
 		//tests
 		static bool test_matrix(uint32_t, double);

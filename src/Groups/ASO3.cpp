@@ -22,7 +22,18 @@ namespace math
 	//group
 	GSO3 ASO3::exp(void) const
 	{
-		return GSO3(m_data[0], m_data[1], m_data[2]);
+		//data
+		const double t1 = m_data[0];
+		const double t2 = m_data[1];
+		const double t3 = m_data[2];
+		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
+		//quaternion
+		const double q0 = fn(tn / 2, 0);
+		const double q1 = fn(tn / 2, 1) * t1 / 2;
+		const double q2 = fn(tn / 2, 1) * t2 / 2;
+		const double q3 = fn(tn / 2, 1) * t3 / 2;
+		//return
+		return GSO3(q0, q1, q2, q3);
 	}
 	ASO3 ASO3::bracket(const ASO3& v) const
 	{
