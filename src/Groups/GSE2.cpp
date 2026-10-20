@@ -48,9 +48,10 @@ namespace math
 	{
 		const double x1 = m_data[0];
 		const double x2 = m_data[1];
-		const double tr = std::remainder(m_data[2], 2 * M_PI);
-		const double fr = fn(tr, 1) / fn(tr, 2) / 2;
-		return ASE2(fr * x1 + tr * x2 / 2, fr * x2 - tr * x1 / 2, tr);
+		const double tr = m_data[2];
+		const double ar = remainder(tr, 2 * M_PI);
+		const double fr = fn(ar, 1) / fn(ar, 2) / 2;
+		return ASE2(fr * x1 + ar * x2 / 2, fr * x2 - ar * x1 / 2, ar);
 	}
 	GSE2 GSE2::inverse(void) const
 	{
@@ -64,11 +65,13 @@ namespace math
 	{
 		const double x1 = m_data[0];
 		const double x2 = m_data[1];
+		const double tr = m_data[2];
 		const double ct = cos(m_data[2]);
 		const double st = sin(m_data[2]);
 		const double z1 = element.m_data[0];
 		const double z2 = element.m_data[1];
-		return GSE2(x1 + ct * z1 - st * z2, x2 + st * z1 + ct * z2, m_data[2] + element.m_data[2]);
+		const double pr = element.m_data[2];
+		return GSE2(x1 + ct * z1 - st * z2, x2 + st * z1 + ct * z2, remainder(tr + pr, 2 * M_PI));
 	}
 	GSE2 GSE2::interpolate(const GSE2& element, double t) const
 	{
