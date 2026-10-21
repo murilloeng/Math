@@ -1,7 +1,8 @@
 //std
 #include <cmath>
 #include <cfloat>
-#include <cstring>
+#include <cstdio>
+#include <cstdlib>
 #include <stdexcept>
 
 //Math
@@ -77,17 +78,17 @@ namespace math
 		void Item::load_reference(const char* path, uint32_t col_1, uint32_t col_2)
 		{
 			load(m_points_reference, path, col_1, col_2);
-			if(m_adjuster_reference) for(Point& point : m_points_numeric) m_adjuster_reference(point.m_data[0], point.m_data[1]);
+			if(m_adjuster_reference) for(Point& point : m_points_reference) m_adjuster_reference(point.m_data[0], point.m_data[1]);
 		}
 		void Item::load_reference(const double* x1, const double* x2, uint32_t rows)
 		{
 			load(m_points_reference, x1, x2, rows);
-			if(m_adjuster_reference) for(Point& point : m_points_numeric) m_adjuster_reference(point.m_data[0], point.m_data[1]);
+			if(m_adjuster_reference) for(Point& point : m_points_reference) m_adjuster_reference(point.m_data[0], point.m_data[1]);
 		}
 		void Item::load_reference(const double* x, uint32_t rows, uint32_t cols, uint32_t col_1, uint32_t col_2)
 		{
 			load(m_points_reference, x, rows, cols, col_1, col_2);
-			if(m_adjuster_reference) for(Point& point : m_points_numeric) m_adjuster_reference(point.m_data[0], point.m_data[1]);
+			if(m_adjuster_reference) for(Point& point : m_points_reference) m_adjuster_reference(point.m_data[0], point.m_data[1]);
 		}
 
 		//bounds
@@ -112,6 +113,9 @@ namespace math
 				m_bounds[2] = fmin(m_bounds[2], point.m_data[1]);
 				m_bounds[3] = fmax(m_bounds[3], point.m_data[1]);
 			}
+			//restore
+			if(m_bounds[1] == m_bounds[0]) m_bounds[1] = m_bounds[0] + 1;
+			if(m_bounds[3] == m_bounds[2]) m_bounds[3] = m_bounds[2] + 1;
 		}
 		Point Item::transform(const Point& point) const
 		{
@@ -125,44 +129,33 @@ namespace math
 		void Item::load(std::vector<Point>& points, const char* path, uint32_t col_1, uint32_t col_2)
 		{
 			//open
-			char line[512];
-			uint32_t rows = 0, cols = 0;
+			char line[4096];
 			FILE* file = fopen(path, "r");
-			//rows
-			while(!feof(file))
-			{
-				if(fgetc(file) == '\n') rows++;
-			}
-			//cols
-			rewind(file);
-			if(!fgets(line, sizeof(line), file))
-			{
-				throw std::runtime_error("Error: Item file read failed!");
-			}
-			for(char c : line)
-			{
-				if(c == ' ') cols++; else if(c == '\n') break;
-			}
+			const uint32_t col_max = col_1 > col_2 ? col_1 : col_2;
+			if(!file) throw std::runtime_error("Error: Item file " + std::string(path) + " could not be opened!");
 			//read
-			rewind(file);
-			points.resize(rows);
-			for(uint32_t i = 0; i < rows; i++)
+			points.clear();
+			while(fgets(line, sizeof(line), file))
 			{
-				for(uint32_t j = 0; j < cols; j++)
+				Point point;
+				uint32_t col = 0;
+				char* end = nullptr;
+				const char* ptr = line;
+				for(col = 0; col <= col_max; col++)
 				{
-					if(j != col_1 && j != col_2)
-					{
-						if(fscanf(file, "%*f") != 0) throw std::runtime_error("Error: Item file read failed!");
-					}
-					else if(j == col_1)
-					{
-						if(fscanf(file, "%lf", &points[i].m_data[0]) != 1) throw std::runtime_error("Error: Item file read failed!");
-					}
-					else if(j == col_2)
-					{
-						if(fscanf(file, "%lf", &points[i].m_data[1]) != 1) throw std::runtime_error("Error: Item file read failed!");
-					}
+					const double value = strtod(ptr, &end);
+					if(end == ptr) break;
+					if(col == col_1) point.m_data[0] = value;
+					if(col == col_2) point.m_data[1] = value;
+					ptr = end;
 				}
+				if(col == 0) continue;
+				if(col <= col_max)
+				{
+					fclose(file);
+					throw std::runtime_error("Error: Item file " + std::string(path) + " has too few columns!");
+				}
+				points.push_back(point);
 			}
 			//close
 			fclose(file);
@@ -189,22 +182,32 @@ namespace math
 		//validation
 		bool Item::validate(void)
 		{
+			//check
+			if(m_points_numeric.empty() || (!m_function && m_points_reference.empty()))
+			{
+				if(!m_silent) printf("Item has no data loaded!\n");
+				return false;
+			}
+			//validate
 			compute_bounds();
 			return !m_function ? validate_data() : validate_function();
 		}
 		bool Item::validate_data(void)
 		{
+			//transform
+			std::vector<Point> pn;
+			pn.reserve(m_points_numeric.size());
+			for(const Point& point : m_points_numeric) pn.push_back(transform(point));
 			//validation
 			m_error = 0;
 			const uint64_t nr = m_points_reference.size();
 			for(const Point& point_reference : m_points_reference)
 			{
-				double distance = DBL_MAX;
 				const Point pr = transform(point_reference);
-				for(const Point& point_numeric : m_points_numeric)
+				double distance = pr.distance(pn[0]);
+				for(uint32_t i = 0; i + 1 < pn.size(); i++)
 				{
-					const Point& pn = transform(point_numeric);
-					distance = fmin(distance, pr.distance(pn));
+					distance = fmin(distance, pr.distance(pn[i], pn[i + 1]));
 				}
 				m_error += distance / nr;
 			}

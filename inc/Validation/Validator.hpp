@@ -16,6 +16,7 @@ namespace math
 		public:
 			//constructor
 			Validator(void);
+			Validator(const Validator&) = delete;
 
 			//destructor
 			~Validator(void);
@@ -29,6 +30,9 @@ namespace math
 
 			//validation
 			bool validate(void);
+
+			//operators
+			Validator& operator=(const Validator&) = delete;
 
 		private:
 			//data

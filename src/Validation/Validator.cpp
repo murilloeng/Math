@@ -1,5 +1,5 @@
 //std
-#include <cstring>
+#include <cstdio>
 
 //Math
 #include "Math/inc/Validation/Validator.hpp"
@@ -39,7 +39,9 @@ namespace math
 
 		void Validator::create_item(void)
 		{
-			m_items.push_back(new Item);
+			Item* item = new Item;
+			item->m_silent = m_silent;
+			m_items.push_back(item);
 		}
 		Item* Validator::item(uint32_t index) const
 		{
@@ -50,14 +52,17 @@ namespace math
 		bool Validator::validate(void)
 		{
 			//validation
-			bool test = true;
-			for(Item* item : m_items)
+			for(uint32_t i = 0; i < m_items.size(); i++)
 			{
-				test = test && item->validate();
+				if(!m_items[i]->validate())
+				{
+					if(!m_silent) printf("Status: ❌ - Item %u failed!\n", i);
+					return false;
+				}
 			}
-			if(!m_silent) printf("Status: %s\n", test ? "✅" : "❌");
+			if(!m_silent) printf("Status: ✅\n");
 			//return
-			return test;
+			return true;
 		}
 	}
 }

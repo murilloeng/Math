@@ -16,7 +16,7 @@ int main(void)
 {
 	try
 	{
-		tests::groups::groups();
+		tests::solvers::newton_raphson::spring_buckling();
 	}
 	catch(const std::exception& exception)
 	{

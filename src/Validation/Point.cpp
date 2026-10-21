@@ -52,7 +52,8 @@ namespace math
 		double Point::distance(const Point& p1, const Point& p2) const
 		{
 			const Point pr = p2 - p1;
-			const double t = (*this - p1).inner(pr) / pr.inner(pr);
+			const double l2 = pr.inner(pr);
+			const double t = l2 > 0 ? (*this - p1).inner(pr) / l2 : 0;
 			return (p1 + fmax(fmin(t, 1), 0) * pr - *this).norm();
 		}
 	}
