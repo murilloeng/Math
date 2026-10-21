@@ -103,17 +103,19 @@ namespace math
 			//compute
 			Solver::solve(m_M, m_fe, m_a_new);
 		}
-		void RungeKutta::predictor(void)
+		bool RungeKutta::predictor(void)
 		{
 			memset(m_dx, 0, m_size * sizeof(double));
 			memset(m_dv, 0, m_size * sizeof(double));
+			return true;
 		}
-		void RungeKutta::corrector(void)
+		bool RungeKutta::corrector(void)
 		{
 			compute_tangent_1();
 			compute_tangent_2();
 			compute_tangent_3();
 			compute_tangent_4();
+			return true;
 		}
 
 		//compute

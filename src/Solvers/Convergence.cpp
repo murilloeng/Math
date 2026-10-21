@@ -56,7 +56,6 @@ namespace math
 		bool Convergence::check(void) const
 		{
 			//data
-			const uint32_t iteration = m_solver->m_iteration;
 			const math::Vector r(m_solver->m_r, m_solver->m_size);
 			const math::Vector fe(m_solver->m_fe, m_solver->m_size);
 			const math::Vector dx(m_solver->m_dx, m_solver->m_size);
@@ -64,7 +63,7 @@ namespace math
 			//tests
 			const bool test_fixed = ~m_types & 1 << uint32_t(Type::Fixed) || r.norm() < m_tolerance;
 			const bool test_force = ~m_types & 1 << uint32_t(Type::Force) || r.norm() < m_tolerance * fe.norm();
-			const bool test_state = ~m_types & 1 << uint32_t(Type::State) || iteration != 0 && ddx.norm() < m_tolerance * dx.norm();
+			const bool test_state = ~m_types & 1 << uint32_t(Type::State) || ddx.norm() < m_tolerance * dx.norm();
 			//return
 			return test_fixed && test_force && test_state;
 		}

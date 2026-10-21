@@ -40,8 +40,8 @@ namespace math
 			void check(void) override;
 			void setup(void) override;
 			void compute(void) override;
-			void predictor(void) override;
-			void corrector(void) override;
+			bool predictor(void) override;
+			bool corrector(void) override;
 
 			//data
 			using Implicit::attempt, Implicit::attempt_max, Implicit::convergence, Implicit::continuation;

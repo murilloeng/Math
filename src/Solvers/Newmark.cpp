@@ -42,14 +42,15 @@ namespace math
 		//solve
 		void Newmark::compute_step(void)
 		{
+			m_status = false;
 			for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
 			{
-				predictor();
+				if(!predictor()) break;
 				for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
 				{
 					apply();
 					compute();
-					if(equilibrium()) break; else corrector();
+					if(equilibrium() || !corrector()) break;
 				}
 				if(m_status) break;
 				restore();
@@ -190,16 +191,19 @@ namespace math
 				}
 			}
 		}
-		void Newmark::predictor(void)
+		bool Newmark::predictor(void)
 		{
+			//predictor
 			for(uint32_t i = 0; i < m_size; i++)
 			{
 				m_da[i] = 0;
 				m_dv[i] = m_dt * m_a_old[i];
 				m_dx[i] = m_ddx[i] = m_dt * m_v_old[i] + m_dt * m_dt / 2 * m_a_old[i];
 			}
+			//return
+			return true;
 		}
-		void Newmark::corrector(void)
+		bool Newmark::corrector(void)
 		{
 			//tangent
 			for(uint32_t i = 0; i < m_size * m_size; i++)
@@ -210,6 +214,7 @@ namespace math
 			if(!Solver::solve(m_K, m_r, m_ddx))
 			{
 				if(!m_silent) printf("Unable to decompose system Matrix in corrector!\n");
+				return false;
 			}
 			//update
 			for(uint32_t i = 0; i < m_size; i++)
@@ -218,6 +223,8 @@ namespace math
 				m_dv[i] += m_g * m_ddx[i] / m_b / m_dt;
 				m_da[i] += m_ddx[i] / m_b / m_dt / m_dt;
 			}
+			//return
+			return true;
 		}
 	}
 }

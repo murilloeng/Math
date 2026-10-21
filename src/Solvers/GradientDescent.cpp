@@ -90,14 +90,16 @@ namespace math
 		{
 			m_gradient(m_r, m_x_new);
 		}
-		void GradientDescent::predictor(void)
+		bool GradientDescent::predictor(void)
 		{
 			math::Vector(m_dx, m_size).zeros();
 			math::Vector(m_ddx, m_size).zeros();
+			return true;
 		}
-		void GradientDescent::corrector(void)
+		bool GradientDescent::corrector(void)
 		{
 			math::Vector(m_dx, m_size) += math::Vector(m_ddx, m_size) = -m_dp0 * math::Vector(m_r, m_size);
+			return true;
 		}
 	}
 }

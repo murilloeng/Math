@@ -121,8 +121,8 @@ namespace math
 			virtual void update(void);
 			virtual void restore(void);
 			virtual void compute(void);
-			virtual void predictor(void);
-			virtual void corrector(void);
+			virtual bool predictor(void);
+			virtual bool corrector(void);
 
 			//allocate
 			virtual void allocate_state(void);
@@ -150,9 +150,9 @@ namespace math
 			double *m_x_old, *m_x_new, *m_dx;
 			double *m_v_old, *m_v_new, *m_dv;
 			double *m_a_old, *m_a_new, *m_da;
-			double m_p_old, m_p_new, m_dp, m_dp0, m_ddp;
 			double m_t_old, m_t_new, m_dt, m_t_min, m_t_max;
-			double *m_dxr, *m_dxt, *m_ddx, *m_ddxr, *m_ddxt;
+			double m_p_old, m_p_new, m_dp, m_dp0, m_dps, m_ddp;
+			double *m_dxs, *m_dxr, *m_dxt, *m_ddx, *m_ddxr, *m_ddxt;
 
 			//friends
 			friend class math::solvers::Continuation;

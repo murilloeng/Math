@@ -1,5 +1,6 @@
 //std
 #include <cstdio>
+#include <cstring>
 #include <stdexcept>
 
 //Math
@@ -33,14 +34,17 @@ namespace math
 		//solve
 		void NewtonRaphson::compute_step(void)
 		{
+			m_dps = m_dp;
+			m_status = false;
+			memcpy(m_dxs, m_dx, m_size * sizeof(double));
 			for(m_attempt = 0; m_attempt < m_attempt_max; m_attempt++)
 			{
-				predictor();
+				if(!predictor()) break;
 				for(m_iteration = 0; m_iteration < m_iteration_max; m_iteration++)
 				{
 					apply();
 					compute();
-					if(equilibrium()) break; else corrector();
+					if(equilibrium() || !corrector()) break;
 				}
 				if(m_status) break;
 				restore();
@@ -134,31 +138,36 @@ namespace math
 				m_tangent_p(m_fe, m_p_new, m_x_new);
 			}
 		}
-		void NewtonRaphson::predictor(void)
+		bool NewtonRaphson::predictor(void)
 		{
 			//predictor
+			m_dp = m_dps;
+			memcpy(m_dx, m_dxs, m_size * sizeof(double));
 			if(!Solver::solve(m_K, m_r, m_dxr) || !Solver::solve(m_K, m_fe, m_dxt))
 			{
 				if(!m_silent) printf("Unable to decompose stiffness matrix in predictor!\n");
+				return false;
 			}
 			//continuation
-			if(m_step != 1)
-			{
-				m_dp = m_continuation.predictor() / (1 << m_attempt);
-			}
+			m_dp = (m_step == 1? m_dps : m_continuation.predictor()) / (1 << m_attempt);
 			for(uint32_t i = 0; i < m_size; i++) m_dx[i] = m_ddx[i] = m_dxr[i] + m_dp * m_dxt[i];
+			//return
+			return true;
 		}
-		void NewtonRaphson::corrector(void)
+		bool NewtonRaphson::corrector(void)
 		{
 			//corrector
 			if(!Solver::solve(m_K, m_r, m_ddxr) || !Solver::solve(m_K, m_fe, m_ddxt))
 			{
 				if(!m_silent) printf("Unable to decompose stiffness matrix in corrector!\n");
+				return false;
 			}
 			m_ddp = m_continuation.corrector();
 			//update
 			m_dp += m_ddp;
 			for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_ddx[i] = m_ddxr[i] + m_ddp * m_ddxt[i];
+			//return
+			return true;
 		}
 	}
 }
