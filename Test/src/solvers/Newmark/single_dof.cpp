@@ -24,7 +24,7 @@ void tests::solvers::newmark::single_dof(void)
 	solver.size(1);
 	solver.step_max(1000);
 	solver.time_max(2 * M_PI * np / w0);
-	solver.convergence().type(math::solvers::Convergence::Type::Fixed);
+	solver.convergence().type_set(math::solvers::Convergence::Type::Fixed);
 	//initials
 	solver.allocate();
 	solver.state_old(0, x0);

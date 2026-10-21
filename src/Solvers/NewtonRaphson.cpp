@@ -44,6 +44,7 @@ namespace math
 				}
 				if(m_status) break;
 				restore();
+				compute();
 			}
 			update();
 			record();
@@ -145,7 +146,7 @@ namespace math
 			{
 				m_dp = m_continuation.predictor() / (1 << m_attempt);
 			}
-			for(uint32_t i = 0; i < m_size; i++) m_dx[i] = m_dxr[i] + m_dp * m_dxt[i];
+			for(uint32_t i = 0; i < m_size; i++) m_dx[i] = m_ddx[i] = m_dxr[i] + m_dp * m_dxt[i];
 		}
 		void NewtonRaphson::corrector(void)
 		{
@@ -157,7 +158,7 @@ namespace math
 			m_ddp = m_continuation.corrector();
 			//update
 			m_dp += m_ddp;
-			for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_ddxr[i] + m_ddp * m_ddxt[i];
+			for(uint32_t i = 0; i < m_size; i++) m_dx[i] += m_ddx[i] = m_ddxr[i] + m_ddp * m_ddxt[i];
 		}
 	}
 }

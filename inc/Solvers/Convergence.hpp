@@ -7,7 +7,7 @@ namespace math
 {
 	namespace solvers
 	{
-		class Solver;
+		class Implicit;
 	}
 }
 
@@ -21,18 +21,22 @@ namespace math
 			//types
 			enum class Type : uint32_t
 			{
-				Fixed, Force, Last
+				Fixed, Force, State, Last
 			};
 
 			//constructor
-			Convergence(Solver*);
+			Convergence(Implicit*);
 
 			//destructor
 			~Convergence(void);
 
 			//data
-			Type type(Type);
-			Type type(void) const;
+			uint32_t types(uint32_t);
+			uint32_t types(void) const;
+
+			uint32_t type_set(Type);
+			uint32_t type_add(Type);
+			uint32_t type_remove(Type);
 
 			double tolerance(double);
 			double tolerance(void) const;
@@ -42,8 +46,8 @@ namespace math
 
 		private:
 			//data
-			Type m_type;
-			Solver* m_solver;
+			uint32_t m_types;
+			Implicit* m_solver;
 			double m_tolerance;
 		};
 	}

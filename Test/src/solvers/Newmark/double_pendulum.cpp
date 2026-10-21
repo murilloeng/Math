@@ -20,7 +20,7 @@ void tests::solvers::newmark::double_pendulum(void)
 	solver.size(2);
 	solver.step_max(2000);
 	solver.time_max(1.00e+01);
-	solver.convergence().type(math::solvers::Convergence::Type::Fixed);
+	solver.convergence().type_set(math::solvers::Convergence::Type::Fixed);
 	//initials
 	solver.allocate();
 	solver.velocity_old(0, 0);

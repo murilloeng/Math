@@ -12,7 +12,7 @@ namespace math
 		//constructor
 		GradientDescent::GradientDescent(void)
 		{
-			m_convergence.type(Convergence::Type::Fixed);
+			m_convergence.type_set(Convergence::Type::Fixed);
 		}
 
 		//destructor
@@ -93,10 +93,11 @@ namespace math
 		void GradientDescent::predictor(void)
 		{
 			math::Vector(m_dx, m_size).zeros();
+			math::Vector(m_ddx, m_size).zeros();
 		}
 		void GradientDescent::corrector(void)
 		{
-			math::Vector(m_dx, m_size) -= m_dp0 * math::Vector(m_r, m_size);
+			math::Vector(m_dx, m_size) += math::Vector(m_ddx, m_size) = -m_dp0 * math::Vector(m_r, m_size);
 		}
 	}
 }

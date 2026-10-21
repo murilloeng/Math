@@ -1,6 +1,6 @@
 //Math
 #include "Math/inc/Linear/Vector.hpp"
-#include "Math/inc/Solvers/Solver.hpp"
+#include "Math/inc/Solvers/Implicit.hpp"
 #include "Math/inc/Solvers/Convergence.hpp"
 
 namespace math
@@ -8,8 +8,8 @@ namespace math
 	namespace solvers
 	{
 		//constructor
-		Convergence::Convergence(Solver* solver) :
-			m_type{Type::Force}, m_solver{solver}, m_tolerance{1.00e-5}
+		Convergence::Convergence(Implicit* solver) :
+			m_types{1 << uint32_t(Type::Force)}, m_solver{solver}, m_tolerance{1.00e-5}
 		{
 			return;
 		}
@@ -30,23 +30,43 @@ namespace math
 			return m_tolerance = tolerance;
 		}
 
-		Convergence::Type Convergence::type(Type type)
+		uint32_t Convergence::types(void) const
 		{
-			return m_type = type;
+			return m_types;
 		}
-		Convergence::Type Convergence::type(void) const
+		uint32_t Convergence::types(uint32_t types)
 		{
-			return m_type;
+			return m_types = types;
+		}
+
+		uint32_t Convergence::type_set(Type type)
+		{
+			return m_types = 1 << uint32_t(type);
+		}
+		uint32_t Convergence::type_add(Type type)
+		{
+			return m_types |= 1 << uint32_t(type);
+		}
+		uint32_t Convergence::type_remove(Type type)
+		{
+			return m_types = m_types & ~(1 << uint32_t(type));
 		}
 
 		//check
 		bool Convergence::check(void) const
 		{
 			//data
+			const uint32_t iteration = m_solver->m_iteration;
 			const math::Vector r(m_solver->m_r, m_solver->m_size);
 			const math::Vector fe(m_solver->m_fe, m_solver->m_size);
+			const math::Vector dx(m_solver->m_dx, m_solver->m_size);
+			const math::Vector ddx(m_solver->m_ddx, m_solver->m_size);
+			//tests
+			const bool test_fixed = ~m_types & 1 << uint32_t(Type::Fixed) || r.norm() < m_tolerance;
+			const bool test_force = ~m_types & 1 << uint32_t(Type::Force) || r.norm() < m_tolerance * fe.norm();
+			const bool test_state = ~m_types & 1 << uint32_t(Type::State) || iteration != 0 && ddx.norm() < m_tolerance * dx.norm();
 			//return
-			return r.norm() < m_tolerance * (m_type == Type::Fixed ? 1 : fe.norm());
+			return test_fixed && test_force && test_state;
 		}
 	}
 }

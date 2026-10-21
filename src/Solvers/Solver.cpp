@@ -23,9 +23,9 @@ namespace math
 			m_x_old{nullptr}, m_x_new{nullptr}, m_dx{nullptr},
 			m_v_old{nullptr}, m_v_new{nullptr}, m_dv{nullptr},
 			m_a_old{nullptr}, m_a_new{nullptr}, m_da{nullptr},
-			m_dxr{nullptr}, m_dxt{nullptr}, m_ddxr{nullptr}, m_ddxt{nullptr},
 			m_p_old{0}, m_p_new{0}, m_dp{0}, m_dp0{1.00e-02}, m_ddp{0},
-			m_t_old{0}, m_t_new{0}, m_dt{0}, m_t_min{0.00e+00}, m_t_max{1.00e+00}
+			m_t_old{0}, m_t_new{0}, m_dt{0}, m_t_min{0.00e+00}, m_t_max{1.00e+00},
+			m_dxr{nullptr}, m_dxt{nullptr}, m_ddx{nullptr}, m_ddxr{nullptr}, m_ddxt{nullptr}
 		{
 			return;
 		}
@@ -40,7 +40,7 @@ namespace math
 				m_x_old, m_x_new, m_dx,
 				m_v_old, m_v_new, m_dv,
 				m_a_old, m_a_new, m_da,
-				m_dxr, m_dxt, m_ddxr, m_ddxt
+				m_dxr, m_dxt, m_ddx, m_ddxr, m_ddxt
 			};
 			//delete
 			for(const double* ptr : data)
@@ -237,7 +237,7 @@ namespace math
 				&m_x_old, &m_x_new, &m_dx,
 				&m_v_old, &m_v_new, &m_dv,
 				&m_a_old, &m_a_new, &m_da,
-				&m_dxr, &m_dxt, &m_ddxr, &m_ddxt
+				&m_dxr, &m_dxt, &m_ddx, &m_ddxr, &m_ddxt
 			};
 			//cleanup
 			for(double** ptr : data)
@@ -357,6 +357,7 @@ namespace math
 			if(ss & 1 << uint32_t(State::a)) m_da = new double[m_size];
 			if(ss & 1 << uint32_t(State::x)) m_dxr = new double[m_size];
 			if(ss & 1 << uint32_t(State::x)) m_dxt = new double[m_size];
+			if(ss & 1 << uint32_t(State::x)) m_ddx = new double[m_size];
 			if(ss & 1 << uint32_t(State::x)) m_ddxr = new double[m_size];
 			if(ss & 1 << uint32_t(State::x)) m_ddxt = new double[m_size];
 			if(ss & 1 << uint32_t(State::x)) m_x_old = new double[m_size];

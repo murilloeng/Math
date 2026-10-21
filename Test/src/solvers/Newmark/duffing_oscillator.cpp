@@ -24,7 +24,7 @@ void tests::solvers::newmark::duffing_oscillator(void)
 	solver.size(1);
 	solver.step_max(2000);
 	solver.time_max(2 * M_PI * np / sqrt(k / m));
-	solver.convergence().type(math::solvers::Convergence::Type::Fixed);
+	solver.convergence().type_set(math::solvers::Convergence::Type::Fixed);
 	//initials
 	solver.allocate();
 	solver.state_old(0, x0);
