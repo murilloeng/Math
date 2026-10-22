@@ -27,7 +27,7 @@ namespace math
 		Matrix matrix(void) const override;
 		Vector action(const Vector&) const override;
 
-		//operations
+		//operators
 		double& operator[](uint32_t) override;
 		const double& operator[](uint32_t) const override;
 
