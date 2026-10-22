@@ -28,13 +28,14 @@ namespace math
 		Vector action(const Vector&) const override;
 
 		//operations
+		double& operator[](uint32_t) override;
+		const double& operator[](uint32_t) const override;
+
+		//group
 		ASO3 log(void) const override;
 		GSO3 inverse(void) const override;
 		GSO3 operator*(const GSO3&) const override;
 		GSO3 interpolate(const GSO3&, double) const override;
-
-		double& operator[](uint32_t);
-		const double& operator[](uint32_t) const;
 
 		//tests
 		static bool test_matrix(uint32_t, double);

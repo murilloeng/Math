@@ -69,6 +69,16 @@ namespace math
 	}
 
 	//operations
+	double& GSO3::operator[](uint32_t index)
+	{
+		return m_data[index];
+	}
+	const double& GSO3::operator[](uint32_t index) const
+	{
+		return m_data[index];
+	}
+
+	//group
 	ASO3 GSO3::log(void) const
 	{
 		//data
@@ -103,15 +113,6 @@ namespace math
 	GSO3 GSO3::interpolate(const GSO3& element, double t) const
 	{
 		return *this * (t * (inverse() * element).log()).exp();
-	}
-
-	double& GSO3::operator[](uint32_t index)
-	{
-		return m_data[index];
-	}
-	const double& GSO3::operator[](uint32_t index) const
-	{
-		return m_data[index];
 	}
 
 	//tests

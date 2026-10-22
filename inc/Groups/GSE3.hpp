@@ -28,6 +28,10 @@ namespace math
 		Vector action(const Vector&) const override;
 
 		//operations
+		double& operator[](uint32_t) override;
+		const double& operator[](uint32_t) const override;
+
+		//group
 		ASE3 log(void) const override;
 		GSE3 inverse(void) const override;
 		GSE3 operator*(const GSE3&) const override;

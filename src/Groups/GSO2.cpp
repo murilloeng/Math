@@ -35,6 +35,16 @@ namespace math
 	}
 
 	//operations
+	double& GSO2::operator[](uint32_t)
+	{
+		return m_data;
+	}
+	const double& GSO2::operator[](uint32_t) const
+	{
+		return m_data;
+	}
+
+	//group
 	ASO2 GSO2::log(void) const
 	{
 		return ASO2(std::remainder(m_data, 2 * M_PI));

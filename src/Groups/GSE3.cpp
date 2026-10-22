@@ -83,6 +83,16 @@ namespace math
 	}
 
 	//operations
+	double& GSE3::operator[](uint32_t index)
+	{
+		return m_data[index];
+	}
+	const double& GSE3::operator[](uint32_t index) const
+	{
+		return m_data[index];
+	}
+
+	//group
 	ASE3 GSE3::log(void) const
 	{
 		//data

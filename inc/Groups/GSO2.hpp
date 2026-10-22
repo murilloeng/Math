@@ -27,6 +27,10 @@ namespace math
 		Vector action(const Vector&) const override;
 
 		//operations
+		double& operator[](uint32_t) override;
+		const double& operator[](uint32_t) const override;
+
+		//group
 		ASO2 log(void) const override;
 		GSO2 inverse(void) const override;
 		GSO2 operator*(const GSO2&) const override;

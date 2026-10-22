@@ -44,6 +44,16 @@ namespace math
 	}
 
 	//operations
+	double& GSE2::operator[](uint32_t index)
+	{
+		return m_data[index];
+	}
+	const double& GSE2::operator[](uint32_t index) const
+	{
+		return m_data[index];
+	}
+
+	//group
 	ASE2 GSE2::log(void) const
 	{
 		const double x1 = m_data[0];

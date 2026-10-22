@@ -26,5 +26,8 @@ namespace math
 		virtual Group inverse(void) const = 0;
 		virtual Group operator*(const Group&) const = 0;
 		virtual Group interpolate(const Group&, double) const = 0;
+
+		virtual double& operator[](uint32_t) = 0;
+		virtual const double& operator[](uint32_t) const = 0;
 	};
 }
