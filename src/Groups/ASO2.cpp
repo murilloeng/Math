@@ -57,6 +57,10 @@ namespace math
 	{
 		return Matrix({{1}});
 	}
+	Matrix ASO2::jacobian_gradient(const Vector&) const
+	{
+		return Matrix({{0}});
+	}
 
 	//operators
 	ASO2& ASO2::operator*=(double s)

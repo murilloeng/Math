@@ -165,6 +165,62 @@ namespace math
 		//return
 		return Ji;
 	}
+	Matrix ASE3::jacobian_gradient(const Vector& vector) const
+	{
+		//data
+		Matrix G(6, 6, mode::zeros);
+		const Vec3 u(m_data + 0), t(m_data + 3);
+		const Mat3 Su = u.spin(), St = t.spin();
+		const Vec3 a = t.cross(u), b = t.cross(t.cross(u));
+		const Vec3 vu = vector.data(), vt = vector.data() + 3;
+		//jacobian
+		const double tn = t.norm();
+		const double f1 = fn(tn, 1);
+		const double f2 = fn(tn, 2);
+		const double f3 = fn(tn, 3);
+		const double f4 = fn(tn, 4);
+		const double f5 = fn(tn, 5);
+		const double f6 = fn(tn, 6);
+		const double f7 = fn(tn, 7);
+		const double df2 = 2 * f4 - f3;
+		const double df3 = 3 * f5 - f4;
+		const double ddf2 = 8 * f6 - 5 * f5 + f4;
+		const double ddf3 = 15 * f7 - 7 * f6 + f5;
+		const Mat3 R = Mat3::eye() + f1 * St + f2 * St * St;
+		const Mat3 J = Mat3::eye() - f2 * St + f3 * St * St;
+		const Mat3 A1 = f2 * Su + f3 * (2 * St * Su - Su * St);
+		const Mat3 A2 = (2 * f4 - f3) * a.outer(t) + (3 * f5 - f4) * b.outer(t);
+		const Vec3 ru = vu + f1 * t.cross(vu) + f2 * t.cross(t.cross(vu));
+		//gradient
+		G.span(0, 3) -= f2 * vu.spin();
+		G.span(3, 3) -= f2 * vt.spin();
+		G.span(3, 0) -= f2 * ru.spin();
+		G.span(0, 3) -= f3 * t.cross(vu).spin();
+		G.span(3, 3) -= f3 * t.cross(vt).spin();
+		G.span(3, 3) -= f3 * u.cross(ru).spin();
+		G.span(0, 3) -= f3 * t.spin() * vu.spin();
+		G.span(3, 3) -= f3 * t.spin() * vt.spin();
+		G.span(0, 3) += df2 * t.cross(vu).outer(t);
+		G.span(3, 3) += df2 * t.cross(vt).outer(t);
+		G.span(3, 3) += df2 * t.outer(u.cross(ru));
+		G.span(3, 3) += df2 * (u.cross(ru)).outer(t);
+		G.span(3, 3) += df2 * a.inner(ru) * Mat3::eye();
+		G.span(3, 3) += df3 * b.inner(ru) * Mat3::eye();
+		G.span(3, 3) += ddf2 * a.inner(ru) * t.outer(t);
+		G.span(3, 3) += ddf3 * b.inner(ru) * t.outer(t);
+		G.span(3, 0) += (2 * f4 - f3) * t.outer(ru) * St;
+		G.span(0, 3) += df3 * t.cross(t.cross(vu)).outer(t);
+		G.span(3, 3) += df3 * t.cross(t.cross(vt)).outer(t);
+		G.span(3, 3) += df3 * t.cross(u.cross(ru)).outer(t);
+		G.span(3, 0) += (3 * f5 - f4) * t.outer(ru) * St * St;
+		G.span(3, 3) -= 2 * df3 * u.cross(t.cross(ru)).outer(t);
+		G.span(3, 3) -= (A2 - A1).transpose() * R * vu.spin() * J;
+		G.span(3, 0) += f3 * (2 * t.cross(ru).spin() - St * ru.spin());
+		G.span(3, 3) -= 2 * f3 * (u.inner(ru) * Mat3::eye() - ru.outer(u));
+		G.span(3, 3) += df3 * t.outer(t.inner(ru) * u + t.inner(u) * ru - 2 * u.inner(ru) * t);
+		//return
+		return G;
+	}
 
 	//operators
 	ASE3& ASE3::operator*=(double s)

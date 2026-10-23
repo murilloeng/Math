@@ -34,6 +34,7 @@ namespace math
 		Matrix adjoint(void) const override;
 		Matrix jacobian(void) const override;
 		Matrix jacobian_inverse(void) const override;
+		Matrix jacobian_gradient(const Vector&) const override;
 
 		//operators
 		ASO3& operator*=(double) override;

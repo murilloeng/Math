@@ -31,6 +31,7 @@ namespace math
 		virtual Matrix adjoint(void) const = 0;
 		virtual Matrix jacobian(void) const = 0;
 		virtual Matrix jacobian_inverse(void) const = 0;
+		virtual Matrix jacobian_gradient(const Vector&) const = 0;
 
 		//operators
 		virtual Algebra& operator*=(double) = 0;

@@ -3,6 +3,8 @@
 #include <cstdio>
 
 //Math
+#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Mat3.hpp"
 #include "Math/inc/Groups/ASO3.hpp"
 #include "Math/inc/Groups/GSO3.hpp"
 #include "Math/inc/Miscellaneous/rotations.hpp"
@@ -96,6 +98,24 @@ namespace math
 		const double t3 = m_data[2];
 		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
 		return Matrix::eye(3, 3) + A / 2 + (fn(tn, 3) - 2 * fn(tn, 4)) / fn(tn, 2) / 2 * A * A;
+	}
+	Matrix ASO3::jacobian_gradient(const Vector& vector) const
+	{
+		//data
+		const Vec3 t = m_data;
+		const Vec3 u = vector;
+		const double tn = t.norm();
+		const double f2 = fn(tn, 2);
+		const double f3 = fn(tn, 3);
+		const double f4 = fn(tn, 4);
+		const double f5 = fn(tn, 5);
+		//gradient
+		Mat3 G(mode::zeros);
+		G += (2 * f4 - f3) * t.cross(u).outer(t);
+		G += (3 * f5 - f4) * t.cross(t.cross(u)).outer(t);
+		G -= f2 * u.spin() + f3 * t.cross(u).spin() + f3 * t.spin() * u.spin();
+		//return
+		return G;
 	}
 
 	//operators

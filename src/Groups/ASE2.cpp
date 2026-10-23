@@ -98,6 +98,30 @@ namespace math
 			{0, 0, 1}
 		});
 	}
+	Matrix ASE2::jacobian_gradient(const Vector& vector) const
+	{
+		//data
+		const double u1 = m_data[0];
+		const double u2 = m_data[1];
+		const double tr = m_data[2];
+		const double v1 = vector[0];
+		const double v2 = vector[1];
+		const double f2 = fn(tr, 2);
+		const double f3 = fn(tr, 3);
+		const double f4 = fn(tr, 4);
+		const double f5 = fn(tr, 5);
+		const double df1 = tr * (f3 - f2);
+		const double df2 = tr * (2 * f4 - f3);
+		const double df3 = tr * (3 * f5 - f4);
+		const double gv1 = (f3 * u1 + tr * df3 * u1 - df2 * u2) * v1;
+		const double gv2 = (f3 * u2 + tr * df3 * u2 + df2 * u1) * v2;
+		//gradient
+		return Matrix({
+			{0, 0, df1 * v1 - f2 * v2 - tr * df2 * v2},
+			{0, 0, df1 * v2 + f2 * v1 + tr * df2 * v1},
+			{tr * f3 * v1 + f2 * v2, tr * f3 * v2 - f2 * v1, gv1 + gv2}
+		});
+	}
 
 	//operators
 	ASE2& ASE2::operator*=(double s)
