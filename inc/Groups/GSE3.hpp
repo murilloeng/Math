@@ -1,6 +1,7 @@
 #pragma once
 
 //Math
+#include "Math/inc/Groups/GSO3.hpp"
 #include "Math/inc/Groups/LieGroup.hpp"
 
 namespace math
@@ -24,6 +25,7 @@ namespace math
 		GSE3& randu(double, double) override;
 
 		//actions
+		GSO3 gso3(void) const;
 		Matrix matrix(void) const override;
 		Vector action(const Vector&) const override;
 

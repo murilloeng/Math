@@ -11,7 +11,7 @@ namespace math
 	{
 		//constructor
 		StopCriteria::StopCriteria(Incremental* solver) : 
-			m_stop_type{Type::Last}, m_types{1 << uint32_t(Type::StepMaximum) & 1 << uint32_t(Type::TimeMaximum)}, 
+			m_stop_type{Type::Last}, m_types{1 << uint32_t(Type::StepMaximum) | 1 << uint32_t(Type::TimeMaximum)}, 
 			m_solver{solver}, m_state_min{-DBL_MAX}, m_load_min{-DBL_MAX}, m_state_max{+DBL_MAX}, m_load_max{+DBL_MAX}
 		{
 			return;
@@ -42,7 +42,7 @@ namespace math
 			{
 				if((i < 2 || m_types & 1 << i) && (this->*fun[i])())
 				{
-					m_stop_type = Type(1 << i);
+					m_stop_type = Type(i);
 					return true;
 				}
 			}

@@ -1,5 +1,4 @@
 //std
-#include <cmath>
 #include <cstdio>
 
 //Math
@@ -29,6 +28,10 @@ namespace math
 	}
 
 	//actions
+	GSO3 GSE3::gso3(void) const
+	{
+		return GSO3(m_data[3], m_data[4], m_data[5], m_data[6]);
+	}
 	Matrix GSE3::matrix(void) const
 	{
 		//data
