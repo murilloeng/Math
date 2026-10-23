@@ -1,5 +1,6 @@
 //std
 #include <cmath>
+#include <stdexcept>
 
 //Math
 #include "Math/inc/Linear/Quat.hpp"
@@ -22,17 +23,18 @@ namespace math
 	{
 		return;
 	}
+	Vec3::Vec3(const Vector& v) : Vector{v}
+	{
+		if(m_rows != 3)
+		{
+			throw std::runtime_error("Vec3 constructor has incompatible dimensions!");
+		}
+	}
 	Vec3::Vec3(const double* ref) : Vector{ref, 3}
 	{
 		return;
 	}
 	Vec3::Vec3(double v0, double v1, double v2) : Vector{{v0, v1, v2}}
-	{
-		return;
-	}
-
-	//destructor
-	Vec3::~Vec3(void)
 	{
 		return;
 	}

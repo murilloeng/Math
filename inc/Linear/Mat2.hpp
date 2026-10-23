@@ -19,6 +19,7 @@ namespace math
 		//constructors
 		Mat2(double*);
 		Mat2(const Mat2&);
+		Mat2(const Matrix&);
 		Mat2(const double*);
 		Mat2(mode = mode::null);
 		Mat2(const Vec2&, const Vec2&);

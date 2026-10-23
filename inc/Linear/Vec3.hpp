@@ -18,11 +18,12 @@ namespace math
 		Vec3(void);
 		Vec3(double*);
 		Vec3(const Vec3&);
+		Vec3(const Vector&);
 		Vec3(const double*);
 		Vec3(double, double, double);
 
 		//destructor
-		~Vec3(void);
+		~Vec3(void) = default;
 
 		//operators
 		Vec3 operator+(void) const;

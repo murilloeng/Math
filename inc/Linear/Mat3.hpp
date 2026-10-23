@@ -17,6 +17,7 @@ namespace math
 		//constructors
 		Mat3(double*);
 		Mat3(const Mat3&);
+		Mat3(const Matrix&);
 		Mat3(const double*);
 		Mat3(mode = mode::null);
 		Mat3(std::initializer_list<double>);
@@ -24,7 +25,7 @@ namespace math
 		Mat3(const double*, const double*, const double*);
 
 		//destructor
-		~Mat3(void);
+		~Mat3(void) = default;
 
 		//operators
 		Mat3 operator+(void) const;

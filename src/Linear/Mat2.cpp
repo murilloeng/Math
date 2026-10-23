@@ -1,8 +1,6 @@
 //std
 #include <cmath>
 #include <vector>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
 #include <stdexcept>
 
@@ -24,6 +22,13 @@ namespace math
 	Mat2::Mat2(const Mat2& m) : Matrix{m}
 	{
 		return;
+	}
+	Mat2::Mat2(const Matrix& m) : Matrix{m}
+	{
+		if(m_rows != 2 || m_cols != 2)
+		{
+			throw std::runtime_error("Mat2 constructor has incompatible dimensions!");
+		}
 	}
 	Mat2::Mat2(const double* ref) : Matrix{ref, 2, 2}
 	{

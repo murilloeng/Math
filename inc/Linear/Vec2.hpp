@@ -12,11 +12,12 @@ namespace math
 		Vec2(void);
 		Vec2(double*);
 		Vec2(const Vec2&);
+		Vec2(const Vector&);
 		Vec2(const double*);
 		Vec2(double, double);
 
 		//destructor
-		~Vec2(void);
+		~Vec2(void) = default;
 
 		//operators
 		Vec2 operator+(void) const;

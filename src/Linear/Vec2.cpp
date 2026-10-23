@@ -1,5 +1,5 @@
 //std
-#include <cmath>
+#include <stdexcept>
 
 //Math
 #include "Math/inc/Linear/Vec2.hpp"
@@ -19,17 +19,18 @@ namespace math
 	{
 		return;
 	}
+	Vec2::Vec2(const Vector& v) : Vector{v}
+	{
+		if(m_rows != 2)
+		{
+			throw std::runtime_error("Vec2 constructor has incompatible dimensions!");
+		}
+	}
 	Vec2::Vec2(const double* ref) : Vector{ref, 2}
 	{
 		return;
 	}
 	Vec2::Vec2(double v0, double v1) : Vector{{v0, v1}}
-	{
-		return;
-	}
-
-	//destructor
-	Vec2::~Vec2(void)
 	{
 		return;
 	}

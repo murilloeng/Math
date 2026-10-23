@@ -26,6 +26,13 @@ namespace math
 	{
 		return;
 	}
+	Mat3::Mat3(const Matrix& m) : Matrix{m}
+	{
+		if(m_rows != 3 || m_cols != 3)
+		{
+			throw std::runtime_error("Mat3 constructor has incompatible dimensions!");
+		}
+	}
 	Mat3::Mat3(const double* ref) : Matrix{ref, 3, 3}
 	{
 		return;
@@ -49,12 +56,6 @@ namespace math
 		memcpy(m_data_ptr + 0, s1, 3 * sizeof(double));
 		memcpy(m_data_ptr + 3, s2, 3 * sizeof(double));
 		memcpy(m_data_ptr + 6, s3, 3 * sizeof(double));
-	}
-
-	//destructor
-	Mat3::~Mat3(void)
-	{
-		return;
 	}
 
 	//operators
