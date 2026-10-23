@@ -14,6 +14,7 @@ namespace math
 	public:
 		//constructors
 		Vector(void);
+		Vector(const Vector&);
 		Vector(const Matrix&);
 		Vector(const double*, uint32_t);
 		Vector(uint32_t, mode = mode::null);

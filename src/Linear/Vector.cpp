@@ -1,7 +1,5 @@
 //std
 #include <vector>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
 #include <stdexcept>
 
@@ -19,9 +17,16 @@ namespace math
 	{
 		return;
 	}
-	Vector::Vector(const Matrix& m) : Matrix{m.rows() * m.cols(), 1}
+	Vector::Vector(const Vector& v) : Matrix{v}
 	{
-		memcpy(m_data_ptr, m.data(), m_rows * sizeof(double));
+		return;
+	}
+	Vector::Vector(const Matrix& m) : Matrix{m}
+	{
+		if(m_cols != 1)
+		{
+			throw std::runtime_error("Vector constructor has incompatible dimensions!");
+		}
 	}
 	Vector::Vector(const double* ptr, uint32_t rows) : Matrix{ptr, rows, 1}
 	{
