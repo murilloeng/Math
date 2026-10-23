@@ -58,7 +58,7 @@ namespace math
 			ExternalForce external_force(void) const;
 			ExternalForce external_force(ExternalForce);
 
-		private:
+		protected:
 			//solve
 			void check(void) override;
 			void print(void) override;
