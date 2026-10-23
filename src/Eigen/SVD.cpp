@@ -31,7 +31,7 @@ namespace math
 		{
 			return m_modes = modes;
 		}
-	
+
 		uint32_t SVD::rows(void) const
 		{
 			return m_rows;
@@ -52,7 +52,7 @@ namespace math
 		{
 			return index == 0 ? m_U : m_V;
 		}
-	
+
 		//compute
 		bool SVD::compute(void)
 		{

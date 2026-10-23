@@ -19,13 +19,13 @@ namespace math
 			//data
 			uint32_t mode(uint32_t);
 			uint32_t mode(void) const;
-			
+
 			uint32_t modes(uint32_t);
 			uint32_t modes(void) const;
-			
+
 			uint32_t vectors(uint32_t);
 			uint32_t vectors(void) const;
-			
+
 			uint32_t iteration_max(uint32_t);
 			uint32_t iteration_max(void) const;
 

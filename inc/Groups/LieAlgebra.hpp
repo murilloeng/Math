@@ -20,7 +20,7 @@ namespace math
 		//group
 		virtual Group exp(void) const = 0;
 		virtual Algebra bracket(const Algebra&) const = 0;
-		
+
 		//random
 		virtual Algebra& randu(double, double) = 0;
 
@@ -37,7 +37,7 @@ namespace math
 		virtual Algebra& operator/=(double) = 0;
 		virtual Algebra& operator+=(const Algebra&) = 0;
 		virtual Algebra& operator-=(const Algebra&) = 0;
-		
+
 		virtual Algebra operator+(void) const = 0;
 		virtual Algebra operator-(void) const = 0;
 		virtual Algebra operator*(double) const = 0;

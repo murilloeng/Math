@@ -52,10 +52,10 @@ namespace math
 			uint32_t types(void) const;
 
 			Type stop_type(void) const;
-			
+
 			double load_min(double);
 			double load_min(void) const;
-			
+
 			double load_max(double);
 			double load_max(void) const;
 

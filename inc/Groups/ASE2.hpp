@@ -40,7 +40,7 @@ namespace math
 		ASE2& operator/=(double) override;
 		ASE2& operator+=(const ASE2&) override;
 		ASE2& operator-=(const ASE2&) override;
-		
+
 		ASE2 operator+(void) const override;
 		ASE2 operator-(void) const override;
 		ASE2 operator*(double) const override;
