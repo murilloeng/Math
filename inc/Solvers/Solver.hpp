@@ -139,11 +139,11 @@ namespace math
 			int32_t* m_cols_map;
 			uint32_t m_size, m_watch_dof;
 
-			std::function<void(void)>  m_callback_step;
-			std::function<bool(void)>  m_callback_stop;
-			std::function<void(void)>  m_callback_record;
-			std::function<void(void)>  m_callback_update;
-			std::function<void(void)>  m_callback_restore;
+			std::function<void(void)> m_callback_step;
+			std::function<bool(void)> m_callback_stop;
+			std::function<void(void)> m_callback_record;
+			std::function<void(void)> m_callback_update;
+			std::function<void(void)> m_callback_restore;
 
 			double *m_K, *m_C, *m_M;
 			double *m_r, *m_fi, *m_fe;
