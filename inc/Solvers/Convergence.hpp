@@ -28,7 +28,7 @@ namespace math
 			Convergence(Implicit*);
 
 			//destructor
-			~Convergence(void);
+			~Convergence(void) = default;
 
 			//data
 			uint32_t types(uint32_t);

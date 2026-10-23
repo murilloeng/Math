@@ -14,7 +14,7 @@ namespace math
 			Bisection(void);
 
 			//destructor
-			virtual ~Bisection(void);
+			virtual ~Bisection(void) = default;
 
 		public:
 			//solve

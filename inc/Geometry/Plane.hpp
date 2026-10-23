@@ -17,7 +17,7 @@ namespace math
 			Plane(void);
 
 			//destructor
-			~Plane(void);
+			~Plane(void) = default;
 
 			//distance
 			double distance(const Line&) const;

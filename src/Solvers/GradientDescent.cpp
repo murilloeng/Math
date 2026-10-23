@@ -15,12 +15,6 @@ namespace math
 			m_convergence.type_set(Convergence::Type::Fixed);
 		}
 
-		//destructor
-		GradientDescent::~GradientDescent(void)
-		{
-			return;
-		}
-
 		//solve
 		void GradientDescent::solve(void)
 		{

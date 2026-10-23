@@ -14,7 +14,7 @@ namespace math
 			Sparse(uint32_t, uint32_t, uint32_t, const int32_t*, const int32_t*);
 
 			//destructor
-			virtual ~Sparse(void);
+			virtual ~Sparse(void) = default;
 
 			//data
 			uint32_t mode(uint32_t);

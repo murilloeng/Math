@@ -26,12 +26,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		SparseNonStd::~SparseNonStd(void)
-		{
-			return;
-		}
-
 		//compute
 		bool SparseNonStd::compute(void)
 		{

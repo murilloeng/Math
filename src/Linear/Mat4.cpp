@@ -1,8 +1,5 @@
 //std
-#include <cmath>
 #include <vector>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
 #include <stdexcept>
 
@@ -25,6 +22,13 @@ namespace math
 	Mat4::Mat4(const Mat4& m) : Matrix{m}
 	{
 		return;
+	}
+	Mat4::Mat4(const Matrix& m) : Matrix{m}
+	{
+		if(m_rows != 4 || m_cols != 4)
+		{
+			throw std::runtime_error("Mat4 constructor has incompatible dimensions!");
+		}
 	}
 	Mat4::Mat4(const double* ref) : Matrix{ref, 4, 4}
 	{
@@ -52,12 +56,6 @@ namespace math
 			throw std::runtime_error("Mat4 constructor has incompatible dimensions!");
 		}
 		memcpy(m_data_ptr, std::data(list), list.size() * sizeof(double));
-	}
-
-	//destructor
-	Mat4::~Mat4(void)
-	{
-		return;
 	}
 
 	//operators

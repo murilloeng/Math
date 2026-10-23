@@ -19,18 +19,6 @@ namespace math
 {
 	namespace solvers
 	{
-		//constructors
-		NewtonRaphson::NewtonRaphson(void)
-		{
-			return;
-		}
-
-		//destructor
-		NewtonRaphson::~NewtonRaphson(void)
-		{
-			return;
-		}
-
 		//solve
 		void NewtonRaphson::compute_step(void)
 		{

@@ -17,7 +17,7 @@ namespace math
 			Line(Vec3 = {0, 0, 0}, Vec3 = {1, 0, 0});
 
 			//destructor
-			~Line(void);
+			~Line(void) = default;
 
 			//distance
 			double distance(const Line&) const;

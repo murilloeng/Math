@@ -16,7 +16,7 @@ namespace math
 			DenseSymGen(uint32_t, double*, double*, double*, double*, uint32_t, uint32_t);
 
 			//destructor
-			virtual ~DenseSymGen(void);
+			virtual ~DenseSymGen(void) = default;
 
 			//compute
 			bool compute(void) override;

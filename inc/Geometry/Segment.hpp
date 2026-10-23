@@ -17,7 +17,7 @@ namespace math
 			Segment(Vec3 = {0, 0, 0}, Vec3 = {1, 0, 0});
 
 			//destructor
-			~Segment(void);
+			~Segment(void) = default;
 
 			//length
 			double length(void) const;

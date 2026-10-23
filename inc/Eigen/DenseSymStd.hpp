@@ -16,7 +16,7 @@ namespace math
 			DenseSymStd(uint32_t, double*, double*, double*, uint32_t, uint32_t);
 
 			//destructor
-			virtual ~DenseSymStd(void);
+			virtual ~DenseSymStd(void) = default;
 
 			//compute
 			bool compute(void) override;

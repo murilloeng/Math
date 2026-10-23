@@ -16,12 +16,6 @@ namespace math
 		{
 			return;
 		}
-		
-		//destructor
-		Sparse::~Sparse(void)
-		{
-			return;
-		}
 
 		//data
 		uint32_t Sparse::mode(void) const

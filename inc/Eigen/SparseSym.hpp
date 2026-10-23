@@ -14,7 +14,7 @@ namespace math
 			SparseSym(uint32_t, uint32_t, uint32_t, const int32_t*, const int32_t*);
 
 			//destructor
-			virtual ~SparseSym(void);
+			virtual ~SparseSym(void) = default;
 
 			//data
 			double shift(double);

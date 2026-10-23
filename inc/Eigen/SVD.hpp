@@ -14,7 +14,7 @@ namespace math
 			SVD(double*, uint32_t, uint32_t, double*, double*, double*);
 	
 			//destructor
-			~SVD(void);
+			~SVD(void) = default;
 	
 			//data
 			bool modes(bool);

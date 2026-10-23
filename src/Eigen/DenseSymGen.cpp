@@ -36,12 +36,6 @@ namespace math
 			m_index_max = index_max;
 		}
 
-		//destructor
-		DenseSymGen::~DenseSymGen(void)
-		{
-			return;
-		}
-
 		//compute
 		bool DenseSymGen::compute(void)
 		{

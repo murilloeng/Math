@@ -42,7 +42,7 @@ namespace math
 			StopCriteria(Incremental*);
 
 			//destructor
-			~StopCriteria(void);
+			~StopCriteria(void) = default;
 
 			//stop
 			bool stop(void);

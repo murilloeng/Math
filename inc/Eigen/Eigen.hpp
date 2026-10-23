@@ -14,7 +14,7 @@ namespace math
 			Eigen(uint32_t);
 
 			//destructor
-			virtual ~Eigen(void);
+			virtual ~Eigen(void) = default;
 
 			//data
 			uint32_t order(uint32_t);

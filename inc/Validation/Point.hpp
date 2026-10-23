@@ -10,7 +10,7 @@ namespace math
 			Point(double = 0, double = 0);
 
 			//destructor
-			~Point(void);
+			~Point(void) = default;
 
 			//algebra
 			double norm(void) const;

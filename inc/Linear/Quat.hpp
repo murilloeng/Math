@@ -29,7 +29,7 @@ namespace math
 		Quat(const double*, const double*, const double*);
 
 		//destructor
-		~Quat(void);
+		~Quat(void) = default;
 
 		//operators
 		Quat& operator=(const Quat&);

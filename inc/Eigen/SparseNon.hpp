@@ -14,7 +14,7 @@ namespace math
 			SparseNon(uint32_t, uint32_t, uint32_t, const int32_t*, const int32_t*);
 
 			//destructor
-			virtual ~SparseNon(void);
+			virtual ~SparseNon(void) = default;
 
 			//data
 			double shift(uint32_t) const;

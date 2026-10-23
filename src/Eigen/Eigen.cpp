@@ -10,12 +10,6 @@ namespace math
 		{
 			return;
 		}
-		
-		//destructor
-		Eigen::~Eigen(void)
-		{
-			return;
-		}
 
 		//data
 		uint32_t Eigen::order(void) const

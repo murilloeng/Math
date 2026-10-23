@@ -15,7 +15,7 @@ namespace math
 			SparseNonGen(uint32_t, uint32_t, uint32_t, const int32_t*, const int32_t*, const double*, const double*, double*, double*, double*);
 
 			//destructor
-			~SparseNonGen(void);
+			~SparseNonGen(void) = default;
 
 			//compute
 			bool compute(void) override;

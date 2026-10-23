@@ -21,13 +21,7 @@ namespace math
 		{
 			return;
 		}
-	
-		//destructor
-		SVD::~SVD(void)
-		{
-			return;
-		}
-	
+
 		//data
 		bool SVD::modes(void) const
 		{

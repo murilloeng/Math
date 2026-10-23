@@ -14,12 +14,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		Convergence::~Convergence(void)
-		{
-			return;
-		}
-
 		//data
 		double Convergence::tolerance(void) const
 		{

@@ -15,7 +15,7 @@ namespace math
 			SparseSymStd(uint32_t, uint32_t, uint32_t, const int32_t*, const int32_t*, const double*, double*, double*);
 
 			//destructor
-			~SparseSymStd(void);
+			~SparseSymStd(void) = default;
 
 			//compute
 			bool compute(void) override;

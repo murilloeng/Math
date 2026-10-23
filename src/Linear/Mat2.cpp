@@ -53,12 +53,6 @@ namespace math
 		memcpy(m_data_ptr, std::data(list), list.size() * sizeof(double));
 	}
 
-	//destructor
-	Mat2::~Mat2(void)
-	{
-		return;
-	}
-
 	//operators
 	Mat2 Mat2::operator+(void) const
 	{

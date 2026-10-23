@@ -17,12 +17,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		Continuation::~Continuation(void)
-		{
-			return;
-		}
-
 		//data
 		Continuation::Type Continuation::type(Type type)
 		{

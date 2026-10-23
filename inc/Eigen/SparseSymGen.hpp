@@ -16,7 +16,7 @@ namespace math
 			SparseSymGen(uint32_t, uint32_t, uint32_t, const int32_t*, const int32_t*, const double*, const double*, double*, double*);
 
 			//destructor
-			~SparseSymGen(void);
+			~SparseSymGen(void) = default;
 
 			//compute
 			bool compute(void) override;

@@ -14,12 +14,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		Point::~Point(void)
-		{
-			return;
-		}
-
 		//algebra
 		double Point::norm(void) const
 		{

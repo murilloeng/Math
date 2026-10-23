@@ -18,12 +18,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		Segment::~Segment(void)
-		{
-			return;
-		}
-
 		//length
 		double Segment::length(void) const
 		{

@@ -14,12 +14,6 @@ namespace math
 		{
 			strcpy(m_type, "SR");
 		}
-		
-		//destructor
-		SparseNon::~SparseNon(void)
-		{
-			return;
-		}
 
 		//data
 		double SparseNon::shift(uint32_t index) const

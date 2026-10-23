@@ -21,7 +21,7 @@ namespace math
 		Vector(double*, uint32_t, mode = mode::null);
 
 		//destructor
-		virtual ~Vector(void);
+		virtual ~Vector(void) = default;
 
 		//size
 		Vector& resize(uint32_t);

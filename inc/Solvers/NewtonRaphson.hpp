@@ -16,10 +16,10 @@ namespace math
 		{
 		public:
 			//constructors
-			NewtonRaphson(void);
+			NewtonRaphson(void) = default;
 
 			//destructor
-			~NewtonRaphson(void);
+			~NewtonRaphson(void) = default;
 
 			//solve
 			void compute_step(void) override;

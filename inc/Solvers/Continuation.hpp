@@ -33,7 +33,7 @@ namespace math
 			Continuation(Solver*);
 
 			//destructor
-			~Continuation(void);
+			~Continuation(void) = default;
 
 			//data
 			Type type(Type);

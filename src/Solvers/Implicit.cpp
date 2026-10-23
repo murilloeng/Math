@@ -16,12 +16,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		Implicit::~Implicit(void)
-		{
-			return;
-		}
-
 		//data
 		uint32_t Implicit::attempt(void) const
 		{

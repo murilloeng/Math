@@ -17,12 +17,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		StopCriteria::~StopCriteria(void)
-		{
-			return;
-		}
-
 		//stop
 		bool StopCriteria::stop(void)
 		{

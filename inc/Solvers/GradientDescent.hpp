@@ -14,7 +14,7 @@ namespace math
 			GradientDescent(void);
 
 			//destructor
-			~GradientDescent(void);
+			~GradientDescent(void) = default;
 
 			//types
 			typedef std::function<void(double*, const double*)> Gradient;

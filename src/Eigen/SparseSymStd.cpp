@@ -25,12 +25,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		SparseSymStd::~SparseSymStd(void)
-		{
-			return;
-		}
-
 		//compute
 		bool SparseSymStd::compute(void)
 		{

@@ -18,12 +18,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		Point::~Point(void)
-		{
-			return;
-		}
-
 		//distance
 		double Point::distance(const Line& line) const
 		{

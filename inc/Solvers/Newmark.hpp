@@ -18,7 +18,7 @@ namespace math
 			Newmark(void);
 
 			//destructor
-			~Newmark(void);
+			~Newmark(void) = default;
 
 			//solve
 			void compute_step(void) override;

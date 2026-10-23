@@ -10,18 +10,6 @@ namespace math
 {
 	namespace solvers
 	{
-		//constructors
-		RungeKutta::RungeKutta(void)
-		{
-			return;
-		}
-
-		//destructor
-		RungeKutta::~RungeKutta(void)
-		{
-			return;
-		}
-
 		//solve
 		void RungeKutta::compute_step(void)
 		{

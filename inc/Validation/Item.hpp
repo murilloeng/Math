@@ -31,7 +31,7 @@ namespace math
 			Item(void);
 
 			//destructor
-			~Item(void);
+			~Item(void) = default;
 
 		public:
 			//data

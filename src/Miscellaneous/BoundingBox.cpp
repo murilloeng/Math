@@ -17,12 +17,6 @@ namespace math
 		return;
 	}
 
-	//destructor
-	BoundingBox::~BoundingBox(void)
-	{
-		return;
-	}
-
 	//print
 	void BoundingBox::print(const char* header) const
 	{

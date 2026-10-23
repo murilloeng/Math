@@ -53,12 +53,6 @@ namespace math
 		*this = Mat3(s1, s2, s3).quaternion();
 	}
 
-	//destructor
-	Quat::~Quat(void)
-	{
-		return;
-	}
-
 	//operators
 	Quat& Quat::operator=(const Quat& q)
 	{

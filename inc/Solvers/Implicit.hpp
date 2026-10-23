@@ -16,7 +16,7 @@ namespace math
 			Implicit(void);
 
 			//destructor
-			~Implicit(void);
+			~Implicit(void) = default;
 
 		public:
 			//data

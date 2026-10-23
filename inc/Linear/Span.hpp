@@ -17,7 +17,11 @@ namespace math
 		Span(Matrix&, uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
 
 		//destructor
-		~Span(void);
+		~Span(void) = default;
+
+		//linear
+		void eye(void) const;
+		void zeros(void) const;
 
 		//operators
 		const Span& operator=(double) const;

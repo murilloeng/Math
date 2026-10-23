@@ -15,7 +15,7 @@ namespace math
 			Circle(const Vec3&, const Vec3&, const Vec3&);
 
 			//destructor
-			~Circle(void);
+			~Circle(void) = default;
 
 			//data
 			Vec3 m_center;

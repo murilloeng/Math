@@ -18,12 +18,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		Item::~Item(void)
-		{
-			return;
-		}
-
 		//data
 		void Item::tolerance(double tolerance)
 		{

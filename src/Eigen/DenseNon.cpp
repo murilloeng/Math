@@ -13,11 +13,5 @@ namespace math
 		{
 			return;
 		}
-		
-		//destructor
-		DenseNon::~DenseNon(void)
-		{
-			return;
-		}
 	}
 }

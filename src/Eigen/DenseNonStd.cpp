@@ -21,12 +21,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		DenseNonStd::~DenseNonStd(void)
-		{
-			return;
-		}
-
 		//compute
 		bool DenseNonStd::compute(void)
 		{

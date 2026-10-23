@@ -9,16 +9,16 @@ namespace math
 		BoundingBox(void);
 
 		//destructor
-		~BoundingBox(void);
-		
+		~BoundingBox(void) = default;
+
 		//data
 		double radius(void) const;
 		const double* min(void) const;
 		const double* max(void) const;
-		
+
 		//status
 		bool status(void) const;
-		
+
 		//compute
 		void reset(void);
 		void repair(void);

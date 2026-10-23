@@ -17,12 +17,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		Plane::~Plane(void)
-		{
-			return;
-		}
-
 		//distance
 		double Plane::distance(const Line& line) const
 		{

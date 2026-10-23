@@ -26,12 +26,6 @@ namespace math
 			m_mode = 2;
 		}
 
-		//destructor
-		SparseNonGen::~SparseNonGen(void)
-		{
-			return;
-		}
-
 		//compute
 		bool SparseNonGen::compute(void)
 		{

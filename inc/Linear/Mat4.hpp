@@ -16,13 +16,14 @@ namespace math
 		//constructors
 		Mat4(double*);
 		Mat4(const Mat4&);
+		Mat4(const Matrix&);
 		Mat4(const double*);
 		Mat4(mode = mode::null);
 		Mat4(const Mat3&, const Vec3&);
 		Mat4(std::initializer_list<double>);
 
 		//destructor
-		~Mat4(void);
+		~Mat4(void) = default;
 
 		//operators
 		Mat4 operator+(void) const;

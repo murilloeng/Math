@@ -11,12 +11,6 @@ namespace math
 		{
 			return;
 		}
-		
-		//destructor
-		SparseSym::~SparseSym(void)
-		{
-			return;
-		}
 
 		//data
 		double SparseSym::shift(void) const

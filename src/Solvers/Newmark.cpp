@@ -33,12 +33,6 @@ namespace math
 			return;
 		}
 
-		//destructor
-		Newmark::~Newmark(void)
-		{
-			return;
-		}
-
 		//solve
 		void Newmark::compute_step(void)
 		{

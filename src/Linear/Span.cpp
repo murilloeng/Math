@@ -16,10 +16,20 @@ namespace math
 		return;
 	}
 
-	//destructor
-	Span::~Span(void)
+	//linear
+	void Span::eye(void) const
 	{
-		return;
+		for(uint32_t i = 0; i < m_rows; i++)
+		{
+			for(uint32_t j = 0; j < m_cols; j++)
+			{
+				(*this)(i, j) = i == j;
+			}
+		}
+	}
+	void Span::zeros(void) const
+	{
+		*this = 0;
 	}
 
 	//opertors

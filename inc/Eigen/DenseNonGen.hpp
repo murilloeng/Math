@@ -14,7 +14,7 @@ namespace math
 			DenseNonGen(uint32_t, double*, double*, double*, double*, double*, double*);
 
 			//destructor
-			virtual ~DenseNonGen(void);
+			virtual ~DenseNonGen(void) = default;
 
 			//compute
 			bool compute(void) override;

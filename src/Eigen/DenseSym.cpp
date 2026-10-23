@@ -14,12 +14,6 @@ namespace math
 		{
 			return;
 		}
-		
-		//destructor
-		DenseSym::~DenseSym(void)
-		{
-			return;
-		}
 
 		//data
 		char DenseSym::range(void) const

@@ -14,7 +14,7 @@ namespace math
 			DenseSym(uint32_t);
 
 			//destructor
-			virtual ~DenseSym(void);
+			virtual ~DenseSym(void) = default;
 
 			//data
 			char range(char);

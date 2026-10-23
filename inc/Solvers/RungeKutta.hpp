@@ -11,10 +11,10 @@ namespace math
 		{
 		public:
 			//constructors
-			RungeKutta(void);
+			RungeKutta(void) = default;
 
 			//destructor
-			~RungeKutta(void);
+			~RungeKutta(void) = default;
 
 			//solve
 			void compute_step(void) override;

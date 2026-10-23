@@ -27,7 +27,7 @@ namespace math
 		Mat2(std::initializer_list<double>);
 
 		//destructor
-		~Mat2(void);
+		~Mat2(void) = default;
 
 		//operators
 		Mat2 operator+(void) const;

@@ -36,12 +36,6 @@ namespace math
 		return;
 	}
 
-	//destructor
-	Vector::~Vector(void)
-	{
-		return;
-	}
-
 	//size
 	Vector& Vector::resize(uint32_t rows)
 	{

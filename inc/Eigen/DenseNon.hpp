@@ -14,7 +14,7 @@ namespace math
 			DenseNon(uint32_t);
 
 			//destructor
-			virtual ~DenseNon(void);
+			virtual ~DenseNon(void) = default;
 		};
 	}
 }
