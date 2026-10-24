@@ -23,7 +23,7 @@ static math::Quat qn;
 	dr = -spin(r) * Rn * T(vm) * dvm
 */
 
-static void function(double* r, const double* v, void** args)
+static void function(double* r, const double* v, void**)
 {
 	//data
 	math::Vec3 rm = r;

@@ -156,17 +156,17 @@ static void stiffness(double* K)
 	math::Matrix(K, 12, 12).span(3, 3) -= t1.rotation_hessian(Rr * mp + Xr * Rr * nl, true);
 }
 
-static void energy_function(double* U, const double* d, void** args)
+static void energy_function(double* U, const double* d, void**)
 {
 	::d = d;
 	internal_energy(U);
 }
-static void energy_gradient(double* f, const double* d, void** args)
+static void energy_gradient(double* f, const double* d, void**)
 {
 	::d = d;
 	internal_force(f);
 }
-static void energy_hessian(double* K, const double* d, void** args)
+static void energy_hessian(double* K, const double* d, void**)
 {
 	::d = d;
 	stiffness(K);

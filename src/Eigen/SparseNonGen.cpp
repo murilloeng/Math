@@ -21,7 +21,7 @@ namespace math
 		{
 			m_mode = 2;
 		}
-		SparseNonGen::SparseNonGen(uint32_t order, uint32_t modes, uint32_t vectors, const int32_t* rows_map, const int32_t* cols_map, const double* A, const double* B, double* sr, double* si, double* U) : SparseNon{order, modes, vectors, rows_map, cols_map}, m_U{U}, m_sr{sr}, m_si{si}, m_A{A}
+		SparseNonGen::SparseNonGen(uint32_t order, uint32_t modes, uint32_t vectors, const int32_t* rows_map, const int32_t* cols_map, const double* A, const double*, double* sr, double* si, double* U) : SparseNon{order, modes, vectors, rows_map, cols_map}, m_U{U}, m_sr{sr}, m_si{si}, m_A{A}
 		{
 			m_mode = 2;
 		}

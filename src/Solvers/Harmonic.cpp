@@ -94,7 +94,7 @@ namespace math
 				math::Vector(r, nd) = l * fe - fi - M * math::Vector(a, nd);
 			};
 			//gradient
-			std::function<void(double*, const double*)> gradient = [this, nd, &xd](double* M, const double* a){
+			std::function<void(double*, const double*)> gradient = [this, nd, &xd](double* M, const double*){
 				m_inertia(M, xd.data());
 				math::Matrix(M, nd, nd) *= -1;
 			};
@@ -325,7 +325,7 @@ namespace math
 		void Harmonic::solve(void)
 		{
 			//setup
-			m_system = [this](double* r, double* g, double* K, double p, const double* z){
+			m_system = [this](double* r, double* g, double* K, double, const double* z){
 				compute_harmonic_residue(r, z);
 				compute_harmonic_tangent_p(g, z);
 				compute_harmonic_tangent_z(K, z);

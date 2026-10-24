@@ -17,7 +17,7 @@ static bool variable;
 static bool transpose;
 static math::Vec3 t, u, v;
 
-static void function(double* r, const double* x, void** args)
+static void function(double* r, const double* x, void**)
 {
 	//data
 	math::Vec3 rm = r;
@@ -28,7 +28,7 @@ static void function(double* r, const double* x, void** args)
 		tm.rotation_hessian(am, v, transpose) :
 		tm.rotation_hessian_inverse(am, transpose).transpose() * v;
 }
-static void gradient(double* dr, const double* x, void** args)
+static void gradient(double* dr, const double* x, void**)
 {
 	//data
 	math::Mat3 drm = dr;

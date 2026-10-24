@@ -62,7 +62,7 @@ namespace math
 		//operators
 		Vector operator*(const Vector&) const;
 		double& operator()(uint32_t, uint32_t);
-		const double operator()(uint32_t, uint32_t) const;
+		const double& operator()(uint32_t, uint32_t) const;
 
 		//convert
 		Matrix convert(void) const;

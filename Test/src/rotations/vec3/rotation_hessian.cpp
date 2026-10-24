@@ -16,7 +16,7 @@ static bool inverse;
 static bool transpose;
 static math::Vec3 u, v;
 
-static void function(double* r, const double* t, void** args)
+static void function(double* r, const double* t, void**)
 {
 	//data
 	const math::Vec3 tm = t;
@@ -29,7 +29,7 @@ static void function(double* r, const double* t, void** args)
 		coupled ? Tm.bilinear(u, v) : Tv.inner(u) :
 		coupled ? Tmi.bilinear(u, v) : Tvi.inner(u);
 }
-static void gradient(double* dr, const double* t, void** args)
+static void gradient(double* dr, const double* t, void**)
 {
 	//data
 	math::Vec3 drm = dr;

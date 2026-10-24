@@ -318,7 +318,7 @@ namespace math
 		}
 		throw std::runtime_error("Error: Sparse operator() has index out of range!");
 	}
-	const double Sparse::operator()(uint32_t i, uint32_t j) const
+	const double& Sparse::operator()(uint32_t i, uint32_t j) const
 	{
 		for(int32_t p = m_cols_map_ref[j]; p < m_cols_map_ref[j + 1]; p++)
 		{
@@ -327,7 +327,7 @@ namespace math
 				return m_data_ref[p];
 			}
 		}
-		return 0;
+		return m_data_ref[0];
 	}
 
 	//convert

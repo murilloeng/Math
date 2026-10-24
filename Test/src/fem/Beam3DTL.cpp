@@ -206,13 +206,13 @@ static void local_ss(void)
 	ss[3] = sh[3] - g[1] * sh[4] - g[2] * sh[5] + w[0] * (sh[7] + sh[8]);
 }
 
-static void strains(double* fun_es, const double* x, void** args)
+static void strains(double* fun_es, const double* x, void**)
 {
 	d = x;
 	local_es();
 	math::Vector(fun_es, 6) = es;
 }
-static void strains_gradient(double* fun_des, const double* x, void** args)
+static void strains_gradient(double* fun_des, const double* x, void**)
 {
 	//data
 	d = x;
@@ -227,7 +227,7 @@ static void strains_gradient(double* fun_des, const double* x, void** args)
 	T.span(9, 9) = T2;
 	math::Matrix(fun_des, 6, 12) = B * T;
 }
-static void strains_hessian(double* d2es, double* x, void** args)
+static void strains_hessian(double* d2es, double* x, void**)
 {
 	//data
 	d = x;
@@ -248,7 +248,7 @@ static void strains_hessian(double* d2es, double* x, void** args)
 	math::Matrix(d2es, 12, 12).span(3, 3) += t1.rotation_hessian((q10 * q1n).conjugate(m1), true);
 	math::Matrix(d2es, 12, 12).span(9, 9) += t2.rotation_hessian((q20 * q2n).conjugate(m2), true);
 }
-static void strains_hessian_function(double* r, const double* x, void** args)
+static void strains_hessian_function(double* r, const double* x, void**)
 {
 	//data
 	d = x;
@@ -264,14 +264,14 @@ static void strains_hessian_function(double* r, const double* x, void** args)
 	math::Vector(r, 12) = T.transpose() * B.transpose() * ss;
 }
 
-static void energy(double* U, const double* x, void** args)
+static void energy(double* U, const double* x, void**)
 {
 	d = x;
 	local_es();
 	local_eh();
 	U[0] = lr / 2 * Kh.bilinear(eh, eh);
 }
-static void energy_gradient(double* dU, const double* x, void** args)
+static void energy_gradient(double* dU, const double* x, void**)
 {
 	//data
 	d = x;
@@ -288,7 +288,7 @@ static void energy_gradient(double* dU, const double* x, void** args)
 	local_ss();
 	math::Vector(dU, 12) = lr * T.transpose() * B.transpose() * ss;
 }
-static void energy_hessian(double* d2U, const double* x, void** args)
+static void energy_hessian(double* d2U, const double* x, void**)
 {
 	//data
 	d = x;

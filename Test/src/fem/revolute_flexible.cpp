@@ -64,13 +64,13 @@ static void global_dof(const double* d)
 	q1 = t1.quaternion() * q0;
 	q2 = t2.quaternion() * q0;
 }
-static void energy(double* U, const double* d, void** args)
+static void energy(double* U, const double* d, void**)
 {
 	global_dof(d);
 	local_dof();
 	U[0] = ur.inner(Ku * ur) / 2 + tr.inner(Kp * tr) / 2;
 }
-static void internal_force_1(double* fi, const double* d, void** args)
+static void internal_force_1(double* fi, const double* d, void**)
 {
 	global_dof(d);
 	local_dof();
@@ -79,7 +79,7 @@ static void internal_force_1(double* fi, const double* d, void** args)
 	math::Vec3(fi + 9) = +q1.rotate(mr);
 	math::Vec3(fi + 3) = -q1.rotate(mr + xr.cross(fr));
 }
-static void internal_force_2(double* fi, const double* d, void** args)
+static void internal_force_2(double* fi, const double* d, void**)
 {
 	global_dof(d);
 	local_dof();
@@ -90,7 +90,7 @@ static void internal_force_2(double* fi, const double* d, void** args)
 	math::Vec3(fi + 3) = t1.rotation_gradient(math::Vec3(fi + 3), true);
 	math::Vec3(fi + 9) = t2.rotation_gradient(math::Vec3(fi + 9), true);
 }
-static void stiffness(double* K, const double* d, void** args)
+static void stiffness(double* K, const double* d, void**)
 {
 	global_dof(d);
 	local_dof();

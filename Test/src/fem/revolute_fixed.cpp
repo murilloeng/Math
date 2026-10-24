@@ -48,7 +48,7 @@ static void setup(void)
 	u3.triad(u1, u2);
 }
 
-static void constraint_1(double* constraint, const double* d, void** args)
+static void constraint_1(double* constraint, const double* d, void**)
 {
 	//data
 	const math::Quat q1 = math::Vec3(d + 3).quaternion() * q1r;
@@ -59,7 +59,7 @@ static void constraint_1(double* constraint, const double* d, void** args)
 	//constraint
 	constraint[0] = a1.inner(b3);
 }
-static void constraint_2(double* constraint, const double* d, void** args)
+static void constraint_2(double* constraint, const double* d, void**)
 {
 	//data
 	const math::Vec3 x1 = z1 + math::Vec3(d + 0);
@@ -74,7 +74,7 @@ static void constraint_2(double* constraint, const double* d, void** args)
 	//constraint
 	constraint[0] = a2.inner(b3);
 }
-static void constraint_3(double* constraint, const double* d, void** args)
+static void constraint_3(double* constraint, const double* d, void**)
 {
 	//data
 	const math::Vec3 x1 = z1 + math::Vec3(d + 0);
@@ -85,7 +85,7 @@ static void constraint_3(double* constraint, const double* d, void** args)
 	//constraint
 	constraint[0] = a1.inner(x2 - x1);
 }
-static void constraint_4(double* constraint, const double* d, void** args)
+static void constraint_4(double* constraint, const double* d, void**)
 {
 	//data
 	const math::Vec3 x1 = z1 + math::Vec3(d + 0);
@@ -96,7 +96,7 @@ static void constraint_4(double* constraint, const double* d, void** args)
 	//constraints
 	constraint[0] = a2.inner(x2 - x1);
 }
-static void constraint_5(double* constraint, const double* d, void** args)
+static void constraint_5(double* constraint, const double* d, void**)
 {
 	//data
 	const math::Vec3 x1 = z1 + math::Vec3(d + 0);
@@ -117,7 +117,7 @@ void constraint(double* constraint, const double* d, void** args)
 	constraints[what](constraint, d, args);
 }
 
-static void gradient_1(double* gradient, const double* d, void** args)
+static void gradient_1(double* gradient, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);
@@ -132,7 +132,7 @@ static void gradient_1(double* gradient, const double* d, void** args)
 	math::Vector(gradient, 12).span(3, 0, 3, 1) = t1.rotation_gradient(a1.cross(b3), true);
 	math::Vector(gradient, 12).span(9, 0, 3, 1) = t2.rotation_gradient(b3.cross(a1), true);
 }
-static void gradient_2(double* gradient, const double* d, void** args)
+static void gradient_2(double* gradient, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);
@@ -147,7 +147,7 @@ static void gradient_2(double* gradient, const double* d, void** args)
 	math::Vector(gradient, 12).span(3, 0, 3, 1) = t1.rotation_gradient(a2.cross(b3), true);
 	math::Vector(gradient, 12).span(9, 0, 3, 1) = t2.rotation_gradient(b3.cross(a2), true);
 }
-static void gradient_3(double* gradient, const double* d, void** args)
+static void gradient_3(double* gradient, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);
@@ -162,7 +162,7 @@ static void gradient_3(double* gradient, const double* d, void** args)
 	math::Vector(gradient, 12).span(6, 0, 3, 1) = +a1;
 	math::Vector(gradient, 12).span(3, 0, 3, 1) = t1.rotation_gradient(a1.cross(x2 - x1), true);
 }
-static void gradient_4(double* gradient, const double* d, void** args)
+static void gradient_4(double* gradient, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);
@@ -177,7 +177,7 @@ static void gradient_4(double* gradient, const double* d, void** args)
 	math::Vector(gradient, 12).span(6, 0, 3, 1) = +a2;
 	math::Vector(gradient, 12).span(3, 0, 3, 1) = t1.rotation_gradient(a2.cross(x2 - x1), true);
 }
-static void gradient_5(double* gradient, const double* d, void** args)
+static void gradient_5(double* gradient, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);
@@ -202,7 +202,7 @@ void gradient(double* gradient, const double* d, void** args)
 	gradients[what](gradient, d, args);
 }
 
-static void hessian_1(double* hessian, const double* d, void** args)
+static void hessian_1(double* hessian, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);
@@ -223,7 +223,7 @@ static void hessian_1(double* hessian, const double* d, void** args)
 	math::Matrix(hessian, 12, 12).span(3, 3) = +T1.transpose() * b3.spin() * a1.spin() * T1 + A11;
 	math::Matrix(hessian, 12, 12).span(9, 9) = +T2.transpose() * a1.spin() * b3.spin() * T2 + A21;
 }
-static void hessian_2(double* hessian, const double* d, void** args)
+static void hessian_2(double* hessian, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);
@@ -244,7 +244,7 @@ static void hessian_2(double* hessian, const double* d, void** args)
 	math::Matrix(hessian, 12, 12).span(3, 3) = +T1.transpose() * b3.spin() * a2.spin() * T1 + A11;
 	math::Matrix(hessian, 12, 12).span(9, 9) = +T2.transpose() * a2.spin() * b3.spin() * T2 + A21;
 }
-static void hessian_3(double* hessian, const double* d, void** args)
+static void hessian_3(double* hessian, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);
@@ -263,7 +263,7 @@ static void hessian_3(double* hessian, const double* d, void** args)
 	math::Matrix(hessian, 12, 12).span(3, 6) = +T1.transpose() * a1.spin();
 	math::Matrix(hessian, 12, 12).span(3, 3) = +T1.transpose() * (x2 - x1).spin() * a1.spin() * T1 + A13;
 }
-static void hessian_4(double* hessian, const double* d, void** args)
+static void hessian_4(double* hessian, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);
@@ -282,7 +282,7 @@ static void hessian_4(double* hessian, const double* d, void** args)
 	math::Matrix(hessian, 12, 12).span(3, 6) = +T1.transpose() * a2.spin();
 	math::Matrix(hessian, 12, 12).span(3, 3) = +T1.transpose() * (x2 - x1).spin() * a2.spin() * T1 + A14;
 }
-static void hessian_5(double* hessian, const double* d, void** args)
+static void hessian_5(double* hessian, const double* d, void**)
 {
 	//data
 	const math::Vec3 t1(d + 3);

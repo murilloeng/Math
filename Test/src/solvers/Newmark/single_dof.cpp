@@ -40,10 +40,10 @@ void tests::solvers::newmark::single_dof(void)
 	solver.inertia([m](double* M, const double*){
 		M[0] = m;
 	});
-	solver.damping([c](double* C, const double*, const double*, double t){
+	solver.damping([c](double* C, const double*, const double*, double){
 		C[0] = c;
 	});
-	solver.stiffness([k](double* K, const double*, const double*, const double*, double t){
+	solver.stiffness([k](double* K, const double*, const double*, const double*, double){
 		K[0] = k;
 	});
 	//solve

@@ -27,10 +27,10 @@ void tests::solvers::runge_kutta::single_pendulum(void)
 	solver.inertia([](double* M, const double*){
 		M[0] = 1;
 	});
-	solver.internal_force([g, L](double* fi, const double* x, const double* v){
+	solver.internal_force([g, L](double* fi, const double* x, const double*){
 		fi[0] = g / L * sin(x[0]);
 	});
-	solver.external_force([](double* fe, const double*, const double*, double t){
+	solver.external_force([](double* fe, const double*, const double*, double){
 		fe[0] = 0;
 	});
 	//solve

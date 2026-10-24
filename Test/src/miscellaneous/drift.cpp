@@ -18,7 +18,7 @@ static const double b = 0.25;
 static math::Mat3 J;
 static math::Vec3 qn, wn, an, t, dt, ddt;
 
-static void fun(double* r, const double* x, void** args)
+static void fun(double* r, const double* x, void**)
 {
 	math::Vec3 rm(r);
 	const math::Vec3 t(x);
@@ -28,7 +28,7 @@ static void fun(double* r, const double* x, void** args)
 	const math::Vec3 a = t.rotation_gradient(ddt, true) + t.rotation_hessian(dt, dt, true);
 	rm = J * a + w.cross(J * w);
 }
-static void dfun(math::Mat3& Ka, const double* x, void** args)
+static void dfun(math::Mat3& Ka, const double* x, void**)
 {
 	//data
 	const math::Vec3 t(x);

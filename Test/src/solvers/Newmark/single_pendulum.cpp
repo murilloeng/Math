@@ -25,20 +25,20 @@ void tests::solvers::newmark::single_pendulum(void)
 	solver.state_old(0, x0);
 	solver.velocity_old(0, v0);
 	//forces
-	solver.internal_force([g, L](double* fi, const double* x, const double* v){
+	solver.internal_force([g, L](double* fi, const double* x, const double*){
 		fi[0] = g / L * sin(x[0]);
 	});
-	solver.external_force([](double* fe, const double*, const double*, double t){
+	solver.external_force([](double* fe, const double*, const double*, double){
 		fe[0] = 0;
 	});
 	//tangents
 	solver.inertia([](double* M, const double*){
 		M[0] = 1;
 	});
-	solver.damping([](double* C, const double*, const double*, double t){
+	solver.damping([](double* C, const double*, const double*, double){
 		C[0] = 0;
 	});
-	solver.stiffness([g, L](double* K, const double* x, const double*, const double*, double t){
+	solver.stiffness([g, L](double* K, const double* x, const double*, const double*, double){
 		K[0] = g / L * cos(x[0]);
 	});
 	//solve

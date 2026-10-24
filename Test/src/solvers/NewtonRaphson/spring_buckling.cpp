@@ -19,11 +19,11 @@ static void residue(double* r, double p, const double* x)
 {
 	r[0] = p - Ks / (Fs * Ls) * x[0] / sin(x[0] + qs);
 }
-static void tangent_p(double* g, double p, const double* x)
+static void tangent_p(double* g, double, const double*)
 {
 	g[0] = 1;
 }
-static void tangent_x(double* K, double p, const double* x)
+static void tangent_x(double* K, double, const double* x)
 {
 	K[0] = Ks / (Fs * Ls) * (1 - x[0] * cos(x[0] + qs) / sin(x[0] + qs)) / sin(x[0] + qs);
 }
