@@ -10,7 +10,7 @@
 namespace math
 {
 	//constructors
-	Quat::Quat(void) : Vector{4}
+	Quat::Quat(void) : Vector(4)
 	{
 		return;
 	}

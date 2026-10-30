@@ -7,7 +7,7 @@
 namespace math
 {
 	//constructors
-	Vec2::Vec2(void) : Vector{2}
+	Vec2::Vec2(void) : Vector(2)
 	{
 		return;
 	}
