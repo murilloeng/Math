@@ -118,7 +118,8 @@ namespace math
 			const double s = math::sign(dxt.inner(dx));
 			const double c = dxr.inner(dxr) - dx.inner(dx) - dl * dl;
 			//predictor
-			return -b / a + s * sqrt(b * b - c * a) / a;
+			return b * b < c * a ? -b / a : -b / a + s * sqrt(b * b - c * a) / a;
+
 		}
 		double Continuation::corrector_arc_length_spherical(void) const
 		{
@@ -133,7 +134,8 @@ namespace math
 			const double b = ddxt.inner(ddxr + dx) + dl;
 			const double s = math::sign(ddxt.inner(dx));
 			//predictor
-			return -b / a + s * sqrt(b * b - c * a) / a;
+			return b * b < c * a ? -b / a : -b / a + s * sqrt(b * b - c * a) / a;
+
 		}
 		double Continuation::predictor_arc_length_cylindrical(void) const
 		{
@@ -147,7 +149,7 @@ namespace math
 			const double s = math::sign(dxt.inner(dx));
 			const double c = dxr.inner(dxr) - dx.inner(dx);
 			//predictor
-			return -b / a + s * sqrt(b * b - c * a) / a;
+			return b * b < c * a ? -b / a : -b / a + s * sqrt(b * b - c * a) / a;
 		}
 		double Continuation::corrector_arc_length_cylindrical(void) const
 		{
@@ -161,7 +163,7 @@ namespace math
 			const double c = ddxr.inner(ddxr + 2 * dx);
 			const double s = math::sign(ddxt.inner(dx));
 			//predictor
-			return -b / a + s * sqrt(b * b - c * a) / a;
+			return b * b < c * a ? -b / a : -b / a + s * sqrt(b * b - c * a) / a;
 		}
 	}
 }
