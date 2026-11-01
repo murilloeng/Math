@@ -228,7 +228,7 @@ namespace math
 	}
 	double Mat2::deviatoric_J2(void) const
 	{
-		return -(m_data_ref[0] - m_data_ref[3]) * (m_data_ref[0] - m_data_ref[3]) / 4 - m_data_ref[1] * m_data_ref[2];
+		return (m_data_ref[0] - m_data_ref[3]) * (m_data_ref[0] - m_data_ref[3]) / 4 + m_data_ref[1] * m_data_ref[2];
 	}
 
 	//friends

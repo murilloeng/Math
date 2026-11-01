@@ -201,7 +201,7 @@ namespace math
 	double Mat3::invariant_I3(void) const
 	{
 		return
-			m_data_ref[0] * m_data_ref[4] * m_data_ref[8] - 2 * m_data_ref[1] * m_data_ref[2] * m_data_ref[5] -
+			m_data_ref[0] * m_data_ref[4] * m_data_ref[8] + 2 * m_data_ref[1] * m_data_ref[2] * m_data_ref[5] -
 			m_data_ref[0] * m_data_ref[5] * m_data_ref[5] - m_data_ref[4] * m_data_ref[2] * m_data_ref[2] - m_data_ref[8] * m_data_ref[1] * m_data_ref[1];
 	}
 	double Mat3::deviatoric_J2(void) const
