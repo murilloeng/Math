@@ -62,7 +62,6 @@ namespace math
 			Mat2 inverse(void) const;
 			Mat2 transpose(void) const;
 			Vec2 eigenvalues(void) const;
-			Mat2 eigenvectors(void) const;
 
 			double trace(void) const;
 			double determinant(void) const;
