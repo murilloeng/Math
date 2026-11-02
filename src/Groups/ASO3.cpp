@@ -102,15 +102,15 @@ namespace math
 	Matrix ASO3::jacobian_gradient(const Vector& vector) const
 	{
 		//data
-		const Vec3 t = m_data;
-		const Vec3 u = vector;
+		const Vec3 t(m_data);
+		const Vec3 u(vector);
 		const double tn = t.norm();
 		const double f2 = fn(tn, 2);
 		const double f3 = fn(tn, 3);
 		const double f4 = fn(tn, 4);
 		const double f5 = fn(tn, 5);
 		//gradient
-		Mat3 G(mode::zeros);
+		Matrix G(3, 3, Mode::zeros);
 		G += (2 * f4 - f3) * t.cross(u).outer(t);
 		G += (3 * f5 - f4) * t.cross(t.cross(u)).outer(t);
 		G -= f2 * u.spin() + f3 * t.cross(u).spin() + f3 * t.spin() * u.spin();

@@ -2,7 +2,6 @@
 #include <cmath>
 #include <cstdio>
 #include <cstring>
-#include <malloc.h>
 #include <stdexcept>
 
 //umfpack
@@ -11,6 +10,7 @@
 //Math
 #include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/Matrix.hpp"
 
 namespace math
 {
@@ -333,7 +333,10 @@ namespace math
 	//convert
 	Matrix Sparse::convert(void) const
 	{
-		Matrix M(m_rows, m_cols, mode::zeros);
+		//data
+		Matrix M(m_rows, m_cols);
+		//convert
+		M.zeros();
 		for(uint32_t i = 0; i < m_cols; i++)
 		{
 			for(int32_t j = m_cols_map_ref[i]; j < m_cols_map_ref[i + 1]; j++)
@@ -341,6 +344,7 @@ namespace math
 				M(m_rows_map_ref[j], i) = m_data_ref[j];
 			}
 		}
+		//return
 		return M;
 	}
 

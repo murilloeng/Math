@@ -1,29 +1,31 @@
 #pragma once
 
-//Math
-#include "Math/inc/Linear/Vector.hpp"
+//std
+#include <cstdint>
 
 namespace math
 {
-	class Quat;
 	class Mat3;
+	class Vector;
 }
 
 namespace math
 {
-	class Vec3 : public Vector
+	class Vec3
 	{
 	public:
 		//constructors
-		Vec3(void);
-		Vec3(double*);
-		Vec3(const Vec3&);
-		Vec3(const Vector&);
-		Vec3(const double*);
-		Vec3(double, double, double);
+		Vec3(const Vec3&) = default;
+		explicit Vec3(const double*);
+		explicit Vec3(const Vector&);
+		explicit Vec3(double = 0, double = 0, double = 0);
 
 		//destructor
 		~Vec3(void) = default;
+
+		//data
+		double* data(void);
+		const double* data(void) const;
 
 		//operators
 		Vec3 operator+(void) const;
@@ -38,60 +40,44 @@ namespace math
 		Vec3& operator*=(double);
 		Vec3& operator/=(double);
 
-		Vec3& operator=(const Vec3&);
-
 		Vec3& operator+=(const Vec3&);
 		Vec3& operator-=(const Vec3&);
-		Vec3& operator*=(const Mat3&);
 
-		//linear
+		Vec3& operator=(const Vec3&) = default;
+
+		double& operator[](uint32_t);
+		const double& operator[](uint32_t) const;
+
+		//norm
+		double norm(void) const;
+
+		//direction
 		Vec3 unit(void) const;
 		Vec3& normalize(void);
 		Vec3& project(const Vec3&);
-		const Vec3& triad(Vec3&, Vec3&, double = 0) const;
 
+		//projection
 		Mat3 spin(void) const;
-		Quat quaternion(void) const;
 		Mat3 projection(void) const;
 
+		//products
 		Mat3 outer(const Vec3&) const;
 		Vec3 cross(const Vec3&) const;
-		Vec3 rotate(const Vec3&) const;
 		double inner(const Vec3&) const;
 
+		//utility
+		void triad(Vec3&, Vec3&) const;
 		Vec3 lerp(const Vec3&, double) const;
-
-		//static
-		static Vec3 base(uint32_t);
-
-		//rotation
-		Mat3 rotation_tensor(void) const;
-
-		Mat3 rotation_gradient(bool = false) const;
-		Vec3 rotation_gradient(const Vec3&, bool = false) const;
-
-		Mat3 rotation_class(uint32_t, bool = false) const;
-		Vec3 rotation_class(const Vec3&, uint32_t, bool = false) const;
-
-		Mat3 rotation_gradient_inverse(bool = false) const;
-		Vec3 rotation_gradient_inverse(const Vec3&, bool = false) const;
-
-		Mat3 rotation_hessian(uint32_t, bool = false) const;
-		Mat3 rotation_hessian(const Vec3&, bool = false) const;
-		Vec3 rotation_hessian(const Vec3&, const Vec3&, bool = false) const;
-
-		Mat3 rotation_hessian_inverse(uint32_t, bool = false) const;
-		Mat3 rotation_hessian_inverse(const Vec3&, bool = false) const;
-		Vec3 rotation_hessian_inverse(const Vec3&, const Vec3&, bool = false) const;
-
-		Mat3 rotation_class_increment(const Vec3&, uint32_t, bool = false) const;
-		Vec3 rotation_class_increment(const Vec3&, const Vec3&, uint32_t, bool = false) const;
-
-		Mat3 rotation_third(uint32_t, uint32_t, bool = false) const;
-		Mat3 rotation_third(const Vec3&, const Vec3&, bool = false, bool = true) const;
-		Mat3 rotation_third_inverse(const Vec3&, const Vec3&, bool = false, bool = true) const;
+		Vec3& randu(double = -1, double = +1);
 
 		//friends
 		friend Vec3 operator*(double, const Vec3&);
+
+	private:
+		//data
+		double m_data[3];
+
+		//friends
+		friend class math::Mat3;
 	};
 }

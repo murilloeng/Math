@@ -1,61 +1,50 @@
 //std
 #include <cmath>
-#include <vector>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
 #include <stdexcept>
 
 //Math
-#include "Math/inc/Linear/Quat.hpp"
 #include "Math/inc/Linear/Vec3.hpp"
 #include "Math/inc/Linear/Mat3.hpp"
 
 namespace math
 {
 	//constructors
-	Mat3::Mat3(mode mode) : Matrix{3, 3, mode}
+	Mat3::Mat3(Mode mode)
 	{
-		return;
+		memset(m_data, 0, 9 * sizeof(double));
+		if(mode == Mode::eye) m_data[0] = m_data[4] = m_data[8] = 1;
 	}
-	Mat3::Mat3(double* ptr) : Matrix{ptr, 3, 3}
+	Mat3::Mat3(const double* data)
 	{
-		return;
+		memcpy(m_data, data, 9 * sizeof(double));
 	}
-	Mat3::Mat3(const Mat3& m) : Matrix{m}
+	Mat3::Mat3(const Vec3& v1, const Vec3& v2, const Vec3& v3)
 	{
-		return;
+		memcpy(m_data + 0, v1.m_data, 3 * sizeof(double));
+		memcpy(m_data + 3, v2.m_data, 3 * sizeof(double));
+		memcpy(m_data + 6, v3.m_data, 3 * sizeof(double));
 	}
-	Mat3::Mat3(const Matrix& m) : Matrix{m}
+	Mat3::Mat3(std::initializer_list<std::initializer_list<double>> data)
 	{
-		if(m_rows != 3 || m_cols != 3)
+		const std::initializer_list<double>* ptr = data.begin();
+		if(data.size() != 3 || ptr[0].size() != 3 || ptr[1].size() != 3 || ptr[2].size() != 3)
 		{
 			throw std::runtime_error("Mat3 constructor has incompatible dimensions!");
 		}
+		memcpy(m_data + 0, ptr[0].begin(), 3 * sizeof(double));
+		memcpy(m_data + 3, ptr[1].begin(), 3 * sizeof(double));
+		memcpy(m_data + 6, ptr[2].begin(), 3 * sizeof(double));
 	}
-	Mat3::Mat3(const double* ref) : Matrix{ref, 3, 3}
+
+	//data
+	double* Mat3::data(void)
 	{
-		return;
+		return m_data;
 	}
-	Mat3::Mat3(std::initializer_list<double> list) : Matrix{3, 3}
+	const double* Mat3::data(void) const
 	{
-		if(list.size() != 9)
-		{
-			throw std::runtime_error("Mat3 constructor has incompatible dimensions!");
-		}
-		memcpy(m_data_ptr, std::data(list), list.size() * sizeof(double));
-	}
-	Mat3::Mat3(const Vec3& v1, const Vec3& v2, const Vec3& v3) : Matrix{3, 3}
-	{
-		memcpy(m_data_ptr + 0, v1.data(), 3 * sizeof(double));
-		memcpy(m_data_ptr + 3, v2.data(), 3 * sizeof(double));
-		memcpy(m_data_ptr + 6, v3.data(), 3 * sizeof(double));
-	}
-	Mat3::Mat3(const double* s1, const double* s2, const double* s3) : Matrix{3, 3}
-	{
-		memcpy(m_data_ptr + 0, s1, 3 * sizeof(double));
-		memcpy(m_data_ptr + 3, s2, 3 * sizeof(double));
-		memcpy(m_data_ptr + 6, s3, 3 * sizeof(double));
+		return m_data;
 	}
 
 	//operators
@@ -83,97 +72,140 @@ namespace math
 	Mat3 Mat3::operator*(const Mat3& m) const
 	{
 		Mat3 r;
-		(Matrix&) r = (Matrix&) *this * m;
+		r.m_data[0] = m_data[0] * m.m_data[0] + m_data[3] * m.m_data[1] + m_data[6] * m.m_data[2];
+		r.m_data[1] = m_data[1] * m.m_data[0] + m_data[4] * m.m_data[1] + m_data[7] * m.m_data[2];
+		r.m_data[2] = m_data[2] * m.m_data[0] + m_data[5] * m.m_data[1] + m_data[8] * m.m_data[2];
+		r.m_data[3] = m_data[0] * m.m_data[3] + m_data[3] * m.m_data[4] + m_data[6] * m.m_data[5];
+		r.m_data[4] = m_data[1] * m.m_data[3] + m_data[4] * m.m_data[4] + m_data[7] * m.m_data[5];
+		r.m_data[5] = m_data[2] * m.m_data[3] + m_data[5] * m.m_data[4] + m_data[8] * m.m_data[5];
+		r.m_data[6] = m_data[0] * m.m_data[6] + m_data[3] * m.m_data[7] + m_data[6] * m.m_data[8];
+		r.m_data[7] = m_data[1] * m.m_data[6] + m_data[4] * m.m_data[7] + m_data[7] * m.m_data[8];
+		r.m_data[8] = m_data[2] * m.m_data[6] + m_data[5] * m.m_data[7] + m_data[8] * m.m_data[8];
 		return r;
 	}
 	Vec3 Mat3::operator*(const Vec3& v) const
 	{
 		Vec3 r;
-		(Vector&) r = (Matrix&) * this * v;
+		r.m_data[0] = m_data[0] * v.m_data[0] + m_data[3] * v.m_data[1] + m_data[6] * v.m_data[2];
+		r.m_data[1] = m_data[1] * v.m_data[0] + m_data[4] * v.m_data[1] + m_data[7] * v.m_data[2];
+		r.m_data[2] = m_data[2] * v.m_data[0] + m_data[5] * v.m_data[1] + m_data[8] * v.m_data[2];
 		return r;
 	}
 
 	Mat3& Mat3::operator+=(double s)
 	{
-		(Matrix&) *this += s;
+		for(uint32_t i = 0; i < 9; i++)
+		{
+			m_data[i] += s;
+		}
 		return *this;
 	}
 	Mat3& Mat3::operator-=(double s)
 	{
-		(Matrix&) *this -= s;
+		for(uint32_t i = 0; i < 9; i++)
+		{
+			m_data[i] -= s;
+		}
 		return *this;
 	}
 	Mat3& Mat3::operator*=(double s)
 	{
-		(Matrix&) *this *= s;
+		for(uint32_t i = 0; i < 9; i++)
+		{
+			m_data[i] *= s;
+		}
 		return *this;
 	}
 	Mat3& Mat3::operator/=(double s)
 	{
-		(Matrix&) *this /= s;
-		return *this;
-	}
-
-	Mat3& Mat3::operator=(const Mat3& m)
-	{
-		(Matrix&) *this = m;
+		for(uint32_t i = 0; i < 9; i++)
+		{
+			m_data[i] /= s;
+		}
 		return *this;
 	}
 
 	Mat3& Mat3::operator+=(const Mat3& m)
 	{
-		(Matrix&) *this += m;
+		for(uint32_t i = 0; i < 9; i++)
+		{
+			m_data[i] += m.m_data[i];
+		}
 		return *this;
 	}
 	Mat3& Mat3::operator-=(const Mat3& m)
 	{
-		(Matrix&) *this -= m;
+		for(uint32_t i = 0; i < 9; i++)
+		{
+			m_data[i] -= m.m_data[i];
+		}
 		return *this;
+	}
+
+	double& Mat3::operator[](uint32_t i)
+	{
+		return m_data[i];
+	}
+	double& Mat3::operator()(uint32_t i, uint32_t j)
+	{
+		return m_data[i + 3 * j];
+	}
+
+	const double& Mat3::operator[](uint32_t i) const
+	{
+		return m_data[i];
+	}
+	const double& Mat3::operator()(uint32_t i, uint32_t j) const
+	{
+		return m_data[i + 3 * j];
 	}
 
 	//linear
 	Mat3 Mat3::eye(void)
 	{
-		Mat3 m;
-		((Matrix&) m).eye();
-		return m;
+		return Mat3({{1, 0, 0}, {0, 1, 0}, {0, 0, 1}});
 	}
-	Vec3 Mat3::eigen(void) const
+	Vec3 Mat3::eigenvalues(void) const
 	{
 		Vec3 s;
 		const double tl = lode_angle();
 		const double I1 = invariant_I1();
 		const double J2 = deviatoric_J2();
-		s[2] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl);
-		s[0] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl + 2 * M_PI / 3);
-		s[1] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl - 2 * M_PI / 3);
+		s.m_data[2] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl);
+		s.m_data[0] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl + 2 * M_PI / 3);
+		s.m_data[1] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl - 2 * M_PI / 3);
 		return s;
 	}
 	Mat3 Mat3::inverse(void) const
 	{
 		Mat3 r;
 		const double d = determinant();
-		r.m_data_ptr[0] = (m_data_ref[4] * m_data_ref[8] - m_data_ref[5] * m_data_ref[7]) / d;
-		r.m_data_ptr[1] = (m_data_ref[2] * m_data_ref[7] - m_data_ref[1] * m_data_ref[8]) / d;
-		r.m_data_ptr[2] = (m_data_ref[1] * m_data_ref[5] - m_data_ref[2] * m_data_ref[4]) / d;
-		r.m_data_ptr[3] = (m_data_ref[5] * m_data_ref[6] - m_data_ref[3] * m_data_ref[8]) / d;
-		r.m_data_ptr[4] = (m_data_ref[0] * m_data_ref[8] - m_data_ref[2] * m_data_ref[6]) / d;
-		r.m_data_ptr[5] = (m_data_ref[2] * m_data_ref[3] - m_data_ref[0] * m_data_ref[5]) / d;
-		r.m_data_ptr[6] = (m_data_ref[3] * m_data_ref[7] - m_data_ref[4] * m_data_ref[6]) / d;
-		r.m_data_ptr[7] = (m_data_ref[6] * m_data_ref[1] - m_data_ref[0] * m_data_ref[7]) / d;
-		r.m_data_ptr[8] = (m_data_ref[0] * m_data_ref[4] - m_data_ref[1] * m_data_ref[3]) / d;
+		r.m_data[0] = (m_data[4] * m_data[8] - m_data[5] * m_data[7]) / d;
+		r.m_data[1] = (m_data[2] * m_data[7] - m_data[1] * m_data[8]) / d;
+		r.m_data[2] = (m_data[1] * m_data[5] - m_data[2] * m_data[4]) / d;
+		r.m_data[3] = (m_data[5] * m_data[6] - m_data[3] * m_data[8]) / d;
+		r.m_data[4] = (m_data[0] * m_data[8] - m_data[2] * m_data[6]) / d;
+		r.m_data[5] = (m_data[2] * m_data[3] - m_data[0] * m_data[5]) / d;
+		r.m_data[6] = (m_data[3] * m_data[7] - m_data[4] * m_data[6]) / d;
+		r.m_data[7] = (m_data[6] * m_data[1] - m_data[0] * m_data[7]) / d;
+		r.m_data[8] = (m_data[0] * m_data[4] - m_data[1] * m_data[3]) / d;
 		return r;
 	}
 	Mat3 Mat3::transpose(void) const
 	{
-		Mat3 r;
-		(Matrix&) r = ((Matrix&) *this).transpose();
+		Mat3 r(*this);
+		r.m_data[1] = m_data[3];
+		r.m_data[3] = m_data[1];
+		r.m_data[2] = m_data[6];
+		r.m_data[6] = m_data[2];
+		r.m_data[5] = m_data[7];
+		r.m_data[7] = m_data[5];
 		return r;
 	}
 
 	double Mat3::trace(void) const
 	{
-		return m_data_ref[0] + m_data_ref[4] + m_data_ref[8];
+		return m_data[0] + m_data[4] + m_data[8];
 	}
 	double Mat3::lode_angle(void) const
 	{
@@ -184,25 +216,25 @@ namespace math
 	double Mat3::determinant(void) const
 	{
 		return
-			m_data_ref[0] * (m_data_ref[4] * m_data_ref[8] - m_data_ref[5] * m_data_ref[7]) +
-			m_data_ref[3] * (m_data_ref[2] * m_data_ref[7] - m_data_ref[1] * m_data_ref[8]) +
-			m_data_ref[6] * (m_data_ref[1] * m_data_ref[5] - m_data_ref[2] * m_data_ref[4]);
+			m_data[0] * (m_data[4] * m_data[8] - m_data[5] * m_data[7]) +
+			m_data[3] * (m_data[2] * m_data[7] - m_data[1] * m_data[8]) +
+			m_data[6] * (m_data[1] * m_data[5] - m_data[2] * m_data[4]);
 	}
 	double Mat3::invariant_I1(void) const
 	{
-		return m_data_ref[0] + m_data_ref[4] + m_data_ref[8];
+		return m_data[0] + m_data[4] + m_data[8];
 	}
 	double Mat3::invariant_I2(void) const
 	{
 		return
-			m_data_ref[0] * m_data_ref[4] + m_data_ref[0] * m_data_ref[8] + m_data_ref[4] * m_data_ref[8] -
-			m_data_ref[1] * m_data_ref[1] - m_data_ref[2] * m_data_ref[2] - m_data_ref[5] * m_data_ref[5];
+			m_data[0] * m_data[4] + m_data[0] * m_data[8] + m_data[4] * m_data[8] -
+			m_data[1] * m_data[1] - m_data[2] * m_data[2] - m_data[5] * m_data[5];
 	}
 	double Mat3::invariant_I3(void) const
 	{
 		return
-			m_data_ref[0] * m_data_ref[4] * m_data_ref[8] + 2 * m_data_ref[1] * m_data_ref[2] * m_data_ref[5] -
-			m_data_ref[0] * m_data_ref[5] * m_data_ref[5] - m_data_ref[4] * m_data_ref[2] * m_data_ref[2] - m_data_ref[8] * m_data_ref[1] * m_data_ref[1];
+			m_data[0] * m_data[4] * m_data[8] + 2 * m_data[1] * m_data[2] * m_data[5] -
+			m_data[0] * m_data[5] * m_data[5] - m_data[4] * m_data[2] * m_data[2] - m_data[8] * m_data[1] * m_data[1];
 	}
 	double Mat3::deviatoric_J2(void) const
 	{
@@ -216,49 +248,6 @@ namespace math
 		const double I2 = invariant_I2();
 		const double I3 = invariant_I3();
 		return 2 * I1 * I1 * I1 / 27 - I1 * I2 / 3 + I3;
-	}
-
-	//rotation
-	Vec3 Mat3::rotation(void) const
-	{
-		return quaternion().pseudo();
-	}
-	Quat Mat3::quaternion(void) const
-	{
-		Quat q;
-		const double d0 = m_data_ref[0];
-		const double d1 = m_data_ref[4];
-		const double d2 = m_data_ref[8];
-		const double tr = d0 + d1 + d2;
-		if(tr >= d0 && tr >= d1 && tr >= d2)
-		{
-			q[0] = sqrt(1 + tr) / 2;
-			q[1] = (m_data_ref[2 + 3 * 1] - m_data_ref[1 + 3 * 2]) / (4 * q[0]);
-			q[2] = (m_data_ref[0 + 3 * 2] - m_data_ref[2 + 3 * 0]) / (4 * q[0]);
-			q[3] = (m_data_ref[1 + 3 * 0] - m_data_ref[0 + 3 * 1]) / (4 * q[0]);
-		}
-		else if(d0 >= d1 && d0 >= d2)
-		{
-			q[1] = sqrt(1 - tr + 2 * d0) / 2;
-			q[0] = (m_data_ref[2 + 3 * 1] - m_data_ref[1 + 3 * 2]) / (4 * q[1]);
-			q[2] = (m_data_ref[0 + 3 * 1] + m_data_ref[1 + 3 * 0]) / (4 * q[1]);
-			q[3] = (m_data_ref[0 + 3 * 2] + m_data_ref[2 + 3 * 0]) / (4 * q[1]);
-		}
-		else if(d1 >= d2)
-		{
-			q[2] = sqrt(1 - tr + 2 * d1) / 2;
-			q[0] = (m_data_ref[0 + 3 * 2] - m_data_ref[2 + 3 * 0]) / (4 * q[2]);
-			q[1] = (m_data_ref[0 + 3 * 1] + m_data_ref[1 + 3 * 0]) / (4 * q[2]);
-			q[3] = (m_data_ref[1 + 3 * 2] + m_data_ref[2 + 3 * 1]) / (4 * q[2]);
-		}
-		else
-		{
-			q[3] = sqrt(1 - tr + 2 * d2) / 2;
-			q[0] = (m_data_ref[1 + 3 * 0] - m_data_ref[0 + 3 * 1]) / (4 * q[3]);
-			q[1] = (m_data_ref[0 + 3 * 2] + m_data_ref[2 + 3 * 0]) / (4 * q[3]);
-			q[2] = (m_data_ref[1 + 3 * 2] + m_data_ref[2 + 3 * 1]) / (4 * q[3]);
-		}
-		return q;
 	}
 
 	//friends

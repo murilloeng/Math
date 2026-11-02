@@ -1,38 +1,30 @@
 //std
-#include <stdexcept>
+#include <cmath>
 
 //Math
 #include "Math/inc/Linear/Vec2.hpp"
+#include "Math/inc/Linear/Mat2.hpp"
 
 namespace math
 {
 	//constructors
-	Vec2::Vec2(void) : Vector(2)
+	Vec2::Vec2(const double* data) : m_data{data[0], data[1]}
 	{
 		return;
 	}
-	Vec2::Vec2(double* ptr) : Vector{ptr, 2}
+	Vec2::Vec2(double v0, double v1) : m_data{v0, v1}
 	{
 		return;
 	}
-	Vec2::Vec2(const Vec2& v) : Vector{v}
+
+	//data
+	double* Vec2::data(void)
 	{
-		return;
+		return m_data;
 	}
-	Vec2::Vec2(const Vector& v) : Vector{v}
+	const double* Vec2::data(void) const
 	{
-		if(m_rows != 2)
-		{
-			throw std::runtime_error("Vec2 constructor has incompatible dimensions!");
-		}
-	}
-	Vec2::Vec2(const double* ref) : Vector{ref, 2}
-	{
-		return;
-	}
-	Vec2::Vec2(double v0, double v1) : Vector{{v0, v1}}
-	{
-		return;
+		return m_data;
 	}
 
 	//operators
@@ -60,84 +52,92 @@ namespace math
 
 	Vec2& Vec2::operator+=(double s)
 	{
-		m_data_ptr[0] += s;
-		m_data_ptr[1] += s;
+		m_data[0] += s;
+		m_data[1] += s;
 		return *this;
 	}
 	Vec2& Vec2::operator-=(double s)
 	{
-		m_data_ptr[0] -= s;
-		m_data_ptr[1] -= s;
+		m_data[0] -= s;
+		m_data[1] -= s;
 		return *this;
 	}
 	Vec2& Vec2::operator*=(double s)
 	{
-		m_data_ptr[0] *= s;
-		m_data_ptr[1] *= s;
+		m_data[0] *= s;
+		m_data[1] *= s;
 		return *this;
 	}
 	Vec2& Vec2::operator/=(double s)
 	{
-		m_data_ptr[0] /= s;
-		m_data_ptr[1] /= s;
-		return *this;
-	}
-
-	Vec2& Vec2::operator=(const Vec2& v)
-	{
-		m_data_ptr[0] = v.m_data_ref[0];
-		m_data_ptr[1] = v.m_data_ref[1];
+		m_data[0] /= s;
+		m_data[1] /= s;
 		return *this;
 	}
 
 	Vec2& Vec2::operator+=(const Vec2& v)
 	{
-		m_data_ptr[0] += v.m_data_ref[0];
-		m_data_ptr[1] += v.m_data_ref[1];
+		m_data[0] += v.m_data[0];
+		m_data[1] += v.m_data[1];
 		return *this;
 	}
 	Vec2& Vec2::operator-=(const Vec2& v)
 	{
-		m_data_ptr[0] -= v.m_data_ref[0];
-		m_data_ptr[1] -= v.m_data_ref[1];
+		m_data[0] -= v.m_data[0];
+		m_data[1] -= v.m_data[1];
 		return *this;
 	}
 
 	double& Vec2::operator[](uint32_t i)
 	{
-		return m_data_ptr[i];
+		return m_data[i];
 	}
-	double& Vec2::operator()(uint32_t i)
-	{
-		return m_data_ptr[i];
-	}
-
 	const double& Vec2::operator[](uint32_t i) const
 	{
-		return m_data_ref[i];
-	}
-	const double& Vec2::operator()(uint32_t i) const
-	{
-		return m_data_ref[i];
+		return m_data[i];
 	}
 
-	//linear
+	//norm
+	double Vec2::norm(void) const
+	{
+		return sqrt(inner(*this));
+	}
+
+	//direction
+	Vec2 Vec2::unit(void) const
+	{
+		return *this / norm();
+	}
 	Vec2& Vec2::normalize(void)
 	{
 		return *this /= norm();
 	}
-	Vec2& Vec2::project(const Vec2& v)
+
+	//projection
+	Mat2 Vec2::projection(void) const
 	{
-		return *this -= inner(v) * v;
+		const double v0 = m_data[0];
+		const double v1 = m_data[1];
+		return {{1 - v0 * v0, -v0 * v1}, {-v0 * v1, 1 - v1 * v1}};
 	}
 
+	//products
 	double Vec2::inner(const Vec2& v) const
 	{
-		return m_data_ref[0] * v.m_data_ref[0] + m_data_ref[1] * v.m_data_ref[1];
+		return m_data[0] * v.m_data[0] + m_data[1] * v.m_data[1];
 	}
 	double Vec2::cross(const Vec2& v) const
 	{
-		return m_data_ref[0] * v.m_data_ref[1] - m_data_ref[1] * v.m_data_ref[0];
+		return m_data[0] * v.m_data[1] - m_data[1] * v.m_data[0];
+	}
+
+	//interpolation
+	Vec2 Vec2::lerp(const Vec2& v, double s) const
+	{
+		Vec2 r;
+		r.m_data[0] = (1 - s) * m_data[0] + s * v.m_data[0];
+		r.m_data[1] = (1 - s) * m_data[1] + s * v.m_data[1];
+		return r;
 	}
 
 	//friends

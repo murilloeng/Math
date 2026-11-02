@@ -99,9 +99,8 @@ namespace math
 	ASE3 GSE3::log(void) const
 	{
 		//data
-		const Vec3 x(m_data + 0);
 		const ASO3 t = GSO3(m_data + 3).log();
-		const Vector u = t.jacobian_inverse().transpose() * x;
+		const Vector u = t.jacobian_inverse().transpose() * Vector(m_data, 3);
 		//return
 		return ASE3(u[0], u[1], u[2], t[0], t[1], t[2]);
 	}

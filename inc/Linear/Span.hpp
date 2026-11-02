@@ -5,6 +5,7 @@
 
 namespace math
 {
+	class Mat3;
 	class Matrix;
 }
 
@@ -14,26 +15,29 @@ namespace math
 	{
 	public:
 		//constructors
-		Span(Matrix&, uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
+		Span(Matrix&, uint32_t, uint32_t, uint32_t, uint32_t);
 
 		//destructor
 		~Span(void) = default;
 
-		//linear
+		//utility
 		void eye(void) const;
 		void zeros(void) const;
 
 		//operators
 		const Span& operator=(double) const;
 		const Span& operator=(const Span&) const;
+		const Span& operator=(const Mat3&) const;
 		const Span& operator=(const Matrix&) const;
 
 		const Span& operator+=(double) const;
 		const Span& operator+=(const Span&) const;
+		const Span& operator+=(const Mat3&) const;
 		const Span& operator+=(const Matrix&) const;
 
 		const Span& operator-=(double) const;
 		const Span& operator-=(const Span&) const;
+		const Span& operator-=(const Mat3&) const;
 		const Span& operator-=(const Matrix&) const;
 
 		double& operator()(uint32_t, uint32_t) const;

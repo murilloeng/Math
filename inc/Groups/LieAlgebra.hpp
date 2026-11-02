@@ -5,6 +5,7 @@
 
 //Math
 #include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/Matrix.hpp"
 
 namespace math
 {

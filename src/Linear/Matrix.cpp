@@ -1,16 +1,14 @@
 //std
 #include <cmath>
-#include <vector>
-#include <cstdio>
-#include <cstdlib>
 #include <cstring>
+#include <algorithm>
 #include <stdexcept>
 
 //Math
+#include "Math/inc/Linear/Span.hpp"
 #include "Math/inc/Linear/Mat3.hpp"
 #include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Linear/Matrix.hpp"
-#include "Math/inc/Miscellaneous/util.hpp"
 
 //extern
 extern "C"
@@ -26,17 +24,12 @@ extern "C"
 namespace math
 {
 	//constructors
-	Matrix::Matrix(void) : Matrix{0, 0}
-	{
-		return;
-	}
 	Matrix::Matrix(const Matrix& M) : Matrix{M.m_rows, M.m_cols}
 	{
 		memcpy(m_data_ptr, M.m_data_ref, m_rows * m_cols * sizeof(double));
 	}
-	Matrix::Matrix(uint32_t rows, uint32_t cols, mode init) : m_own{true}, m_rows{rows}, m_cols{cols}
+	Matrix::Matrix(uint32_t rows, uint32_t cols) : m_own{true}, m_rows{rows}, m_cols{cols}
 	{
-		//data
 		if(rows * cols <= MATRIX_STATIC_SIZE)
 		{
 			m_data_ref = m_data_ptr = m_data_mem;
@@ -45,38 +38,31 @@ namespace math
 		{
 			m_data_ref = m_data_ptr = new double[rows * cols];
 		}
-		//setup
-		if(init == mode::eye)
-		{
-			eye();
-		}
-		else if(init == mode::zeros)
-		{
-			zeros();
-		}
 	}
-	Matrix::Matrix(double* ptr, uint32_t rows, uint32_t cols, mode init) :
+	Matrix::Matrix(uint32_t rows, uint32_t cols, Mode mode) : Matrix(rows, cols)
+	{
+		memset(m_data_ptr, 0, m_rows * m_cols * sizeof(double));
+		if(mode == Mode::eye) for(uint32_t i = 0; i < std::min(m_rows, m_cols); i++) m_data_ptr[i + m_rows * i] = 1;
+	}
+	Matrix::Matrix(double* ptr, uint32_t rows, uint32_t cols) :
 		m_own{false}, m_rows{rows}, m_cols{cols}, m_data_ptr{ptr}, m_data_ref{ptr}
 	{
-		if(init == mode::eye)
-		{
-			eye();
-		}
-		else if(init == mode::zeros)
-		{
-			zeros();
-		}
+		return;
 	}
 	Matrix::Matrix(const double* ref, uint32_t rows, uint32_t cols) :
 		m_own{false}, m_rows{rows}, m_cols{cols}, m_data_ptr{nullptr}, m_data_ref{ref}
 	{
 		return;
 	}
-	Matrix::Matrix(std::initializer_list<std::initializer_list<double>> list, bool columns) : m_own{true}
+	Matrix::Matrix(std::initializer_list<std::initializer_list<double>> list) : m_own{true}
 	{
 		//data
 		const std::initializer_list<double>* data = std::data(list);
 		//check
+		if(list.size() == 0)
+		{
+			throw std::runtime_error("Matrix constructor has incompatible dimensions!");
+		}
 		for(uint32_t i = 1; i < list.size(); i++)
 		{
 			if(data[i].size() != data[0].size())
@@ -85,8 +71,8 @@ namespace math
 			}
 		}
 		//sizes
-		m_cols = columns ? list.size() : data[0].size();
-		m_rows = columns ? data[0].size() : list.size();
+		m_cols = data[0].size();
+		m_rows = list.size();
 		//allocate
 		if(m_rows * m_cols <= MATRIX_STATIC_SIZE)
 		{
@@ -97,22 +83,12 @@ namespace math
 			m_data_ref = m_data_ptr = new double[m_rows * m_cols];
 		}
 		//assign
-		if(columns)
+		for(uint32_t i = 0; i < m_rows; i++)
 		{
-			for(uint32_t i = 0; i < m_cols; i++)
+			const double* row_data = std::data(data[i]);
+			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				memcpy(m_data_ptr + i * m_rows, std::data(data[i]), m_rows * sizeof(double));
-			}
-		}
-		else
-		{
-			for(uint32_t i = 0; i < m_rows; i++)
-			{
-				const double* row_data = std::data(data[i]);
-				for(uint32_t j = 0; j < m_cols; j++)
-				{
-					m_data_ptr[i + m_rows * j] = row_data[j];
-				}
+				m_data_ptr[i + m_rows * j] = row_data[j];
 			}
 		}
 	}
@@ -124,56 +100,6 @@ namespace math
 		{
 			delete[] m_data_ptr;
 		}
-	}
-
-	//serialization
-	void Matrix::load(const char* path)
-	{
-		//file
-		FILE* file = fopen(path, "r");
-		//sizes
-		if(fscanf(file, "%d %d", &m_rows, &m_cols) != 2)
-		{
-			throw std::runtime_error("Matrix loading error!\n");
-		}
-		//allocate
-		if(m_own && m_data_ptr != m_data_mem)
-		{
-			delete[] m_data_ptr;
-		}
-		m_data_ref = m_data_ptr = new double[m_rows * m_cols];
-		//read
-		rewind(file);
-		for(uint32_t i = 0; i < m_rows; i++)
-		{
-			for(uint32_t j = 0; j < m_cols; j++)
-			{
-				if(fscanf(file, "%lf", &m_data_ptr[i + m_rows * j]) != 1)
-				{
-					throw std::runtime_error("Matrix loading error!\n");
-				}
-			}
-		}
-		//close
-		fclose(file);
-	}
-	void Matrix::save(const char* path) const
-	{
-		//file
-		FILE* file = fopen(path, "w");
-		//size
-		fprintf(file, "%04d %04d\n", m_rows, m_cols);
-		//save
-		for(uint32_t i = 0; i < m_rows; i++)
-		{
-			for(uint32_t j = 0; j < m_cols; j++)
-			{
-				fprintf(file, "%+.6e ", m_data_ref[i + m_rows * j]);
-			}
-			fprintf(file, "\n");
-		}
-		//close
-		fclose(file);
 	}
 
 	//operators
@@ -200,8 +126,22 @@ namespace math
 	}
 	Vector Matrix::operator*(const Vector& v) const
 	{
-		const Matrix& m = v;
-		return Vector(operator*(m));
+		//check
+		if(m_cols != v.m_rows)
+		{
+			throw std::runtime_error("Matrix-Vector product has incompatible dimensions!");
+		}
+		//compute
+		Vector r(m_rows);
+		for(uint32_t i = 0; i < m_rows; i++)
+		{
+			r.m_data_ptr[i] = 0;
+			for(uint32_t j = 0; j < m_cols; j++)
+			{
+				r.m_data_ptr[i] += m_data_ref[i + m_rows * j] * v.m_data_ref[j];
+			}
+		}
+		return r;
 	}
 	Matrix Matrix::operator*(const Matrix& m) const
 	{
@@ -320,6 +260,37 @@ namespace math
 		return *this;
 	}
 
+	Matrix& Matrix::operator+=(const Mat3& m)
+	{
+		//check
+		if(m_rows != 3 || m_cols != 3)
+		{
+			throw std::runtime_error("Matrix increment has incompatible dimensions!");
+		}
+		//compute
+		for(uint32_t i = 0; i < m_rows * m_cols; i++)
+		{
+			m_data_ptr[i] += m.m_data[i];
+		}
+		//return
+		return *this;
+	}
+	Matrix& Matrix::operator-=(const Mat3& m)
+	{
+		//check
+		if(m_rows != 3 || m_cols != 3)
+		{
+			throw std::runtime_error("Matrix increment has incompatible dimensions!");
+		}
+		//compute
+		for(uint32_t i = 0; i < m_rows * m_cols; i++)
+		{
+			m_data_ptr[i] -= m.m_data[i];
+		}
+		//return
+		return *this;
+	}
+
 	Matrix& Matrix::operator+=(const Matrix& m)
 	{
 		//check
@@ -413,37 +384,6 @@ namespace math
 		return m_data_ref;
 	}
 
-	//size
-	Matrix& Matrix::resize(uint32_t rows, uint32_t cols)
-	{
-		//check
-		if(!m_own)
-		{
-			throw std::runtime_error("Matrix resize called on a Matrix that does not own its memory!");
-		}
-		//memory
-		if(rows * cols != m_rows * m_cols)
-		{
-			if(m_data_ptr != m_data_mem)
-			{
-				delete[] m_data_ptr;
-			}
-			if(rows * cols <= MATRIX_STATIC_SIZE)
-			{
-				m_data_ref = m_data_ptr = m_data_mem;
-			}
-			else
-			{
-				m_data_ref = m_data_ptr = new double[rows * cols];
-			}
-		}
-		//setup
-		m_rows = rows;
-		m_cols = cols;
-		//return
-		return *this;
-	}
-
 	//bounds
 	double Matrix::min(bool q, uint32_t* p) const
 	{
@@ -476,7 +416,7 @@ namespace math
 		return v;
 	}
 
-	//util
+	//utility
 	Matrix& Matrix::eye(void)
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
@@ -493,40 +433,6 @@ namespace math
 		memset(m_data_ptr, 0, m_rows * m_cols * sizeof(double));
 		return *this;
 	}
-	Matrix& Matrix::swap_rows(uint32_t a, uint32_t b)
-	{
-		//check
-		if(a >= m_rows || b >= m_rows)
-		{
-			throw std::runtime_error("Matrix swap_rows called with index out of range!");
-		}
-		//swap
-		if(a != b)
-		{
-			for(uint32_t i = 0; i < m_cols; i++)
-			{
-				swap(m_data_ptr[a + m_rows * i], m_data_ptr[b + m_rows * i]);
-			}
-		}
-		return *this;
-	}
-	Matrix& Matrix::swap_cols(uint32_t a, uint32_t b)
-	{
-		//check
-		if(a >= m_cols || b >= m_cols)
-		{
-			throw std::runtime_error("Matrix swap_cols called with index out of range!");
-		}
-		//swap
-		if(a != b)
-		{
-			for(uint32_t i = 0; i < m_rows; i++)
-			{
-				swap(m_data_ptr[i + m_rows * a], m_data_ptr[i + m_rows * b]);
-			}
-		}
-		return *this;
-	}
 	Matrix& Matrix::randu(double a, double b)
 	{
 		for(uint32_t i = 0; i < m_rows * m_cols; i++)
@@ -536,18 +442,18 @@ namespace math
 		return *this;
 	}
 
-	//info
-	void Matrix::print(const char* s, double v) const
+	//print
+	void Matrix::print(const char* header, double cutoff) const
 	{
-		if(strlen(s) != 0)
+		if(strlen(header) != 0)
 		{
-			printf("%s\n", s);
+			printf("%s\n", header);
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
 			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				if(v != 0 && fabs(m_data_ref[i + m_rows * j]) < v)
+				if(cutoff != 0 && fabs(m_data_ref[i + m_rows * j]) < cutoff)
 				{
 					printf("--------- ");
 				}
@@ -572,19 +478,12 @@ namespace math
 	}
 	double Matrix::trace(void) const
 	{
-		if(m_rows == m_cols)
+		double s = 0;
+		for(uint32_t i = 0; i < std::min(m_rows, m_cols); i++)
 		{
-			double s = 0;
-			for(uint32_t i = 0; i < m_rows; i++)
-			{
-				for(uint32_t j = 0; j < m_cols; j++)
-				{
-					s += m_data_ref[i + m_rows * j];
-				}
-			}
-			return s;
+			s += m_data_ref[i + m_rows * i];
 		}
-		return 0;
+		return s;
 	}
 	double Matrix::determinant(void) const
 	{
@@ -661,17 +560,16 @@ namespace math
 	}
 	Matrix Matrix::inverse(bool* test) const
 	{
-		//data
-		double query;
-		Matrix A(*this);
-		int32_t info, lwork = -1;
-		uint32_t* ipiv = new uint32_t[m_rows];
 		//check
 		if(m_rows != m_cols)
 		{
 			throw std::runtime_error("Matrix inverse called on a non-square Matrix!");
 		}
 		//query
+		double query;
+		Matrix A(*this);
+		int32_t info, lwork = -1;
+		uint32_t* ipiv = new uint32_t[m_rows];
 		dgetrf_(&m_rows, &m_cols, A.m_data_ptr, &m_rows, ipiv, &info);
 		dgetri_(&m_rows, A.m_data_ptr, &m_rows, ipiv, &query, &lwork, &info);
 		//inverse
@@ -680,16 +578,13 @@ namespace math
 		dgetri_(&m_rows, A.m_data_ptr, &m_rows, ipiv, work, &lwork, &info);
 		//delete
 		delete[] ipiv;
+		delete[] work;
 		if(test) *test = info == 0;
 		//return
 		return A;
 	}
 	bool Matrix::solve(Matrix& x, const Matrix& f) const
 	{
-		//data
-		int32_t info;
-		uint32_t* ipiv = new uint32_t[m_rows];
-		double* A = new double[m_rows * m_cols];
 		//check
 		if(m_rows != m_cols)
 		{
@@ -700,6 +595,9 @@ namespace math
 			throw std::runtime_error("Matrix solve called with incompatible matrices!");
 		}
 		//solve
+		int32_t info;
+		uint32_t* ipiv = new uint32_t[m_rows];
+		double* A = new double[m_rows * m_cols];
 		memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
 		memcpy(x.m_data_ptr, f.m_data_ref, x.m_rows * x.m_cols * sizeof(double));
 		dgesv_(&m_rows, &x.m_cols, A, &m_rows, ipiv, x.m_data_ptr, &m_rows, &info);
@@ -709,13 +607,42 @@ namespace math
 		//return
 		return info == 0;
 	}
+	bool Matrix::solve(Vector& x, const Vector& f) const
+	{
+		//check
+		if(m_rows != m_cols)
+		{
+			throw std::runtime_error("Matrix solve called on a non-square Matrix!");
+		}
+		if(m_cols != x.m_rows || m_rows != f.m_rows)
+		{
+			throw std::runtime_error("Matrix solve called with incompatible matrices!");
+		}
+		//solve
+		int32_t info;
+		const uint32_t cols = 1;
+		uint32_t* ipiv = new uint32_t[m_rows];
+		double* A = new double[m_rows * m_cols];
+		memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
+		memcpy(x.m_data_ptr, f.m_data_ref, x.m_rows * sizeof(double));
+		dgesv_(&m_rows, &cols, A, &m_rows, ipiv, x.m_data_ptr, &m_rows, &info);
+		//delete
+		delete[] A;
+		delete[] ipiv;
+		//return
+		return info == 0;
+	}
 	bool Matrix::solve(double* x, const double* f, uint32_t cols) const
 	{
-		//data
+		//check
+		if(m_rows != m_cols)
+		{
+			throw std::runtime_error("Matrix solve called on a non-square Matrix!");
+		}
+		//solve
 		int32_t info;
 		uint32_t* ipiv = new uint32_t[m_rows];
 		double* A = new double[m_rows * m_cols];
-		//solve
 		memcpy(x, f, m_rows * cols * sizeof(double));
 		memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
 		dgesv_(&m_rows, &cols, A, &m_rows, ipiv, x, &m_rows, &info);
@@ -739,7 +666,7 @@ namespace math
 		//return
 		return info == 0;
 	}
-	bool Matrix::solve_substitute(const uint32_t* pivot, math::Matrix& x)
+	bool Matrix::solve_substitute(const uint32_t* pivot, Matrix& x)
 	{
 		//check
 		if(x.m_rows != m_cols)
@@ -760,9 +687,9 @@ namespace math
 		uint32_t info;
 		dgetrs_("N", &m_rows, &nhrs, m_data_ptr, &m_cols, pivot, x, &m_cols, &info);
 		//return
-		return info;
+		return info == 0;
 	}
-	bool Matrix::solve_substitute(const uint32_t* pivot, const math::Matrix& f, math::Matrix& x)
+	bool Matrix::solve_substitute(const uint32_t* pivot, const Matrix& f, Matrix& x)
 	{
 		//check
 		if(f.m_rows != m_rows || x.m_rows != m_cols || f.m_cols != x.m_cols)
@@ -779,44 +706,9 @@ namespace math
 		return solve_substitute(pivot, x, nrhs);
 	}
 
-	bool Matrix::symmetric(double t) const
+	Span Matrix::span(uint32_t row, uint32_t col, uint32_t rows, uint32_t cols)
 	{
-		if(m_rows != m_cols)
-		{
-			return false;
-		}
-		else
-		{
-			double s = 0, v = 0;
-			for(uint32_t i = 0; i < m_rows; i++)
-			{
-				s = fmax(s, m_data_ref[i + m_rows * i]);
-				for(uint32_t j = i + 1; j < m_cols; j++)
-				{
-					s = fmax(s, m_data_ref[i + m_rows * j]);
-					s = fmax(s, m_data_ref[j + m_rows * i]);
-					v = fmax(v, fabs(m_data_ref[i + m_rows * j] - m_data_ref[j + m_rows * i]));
-				}
-			}
-			return m_rows == 1 || v < t * s;
-		}
-	}
-
-	Mat3 Matrix::span3(uint32_t r, uint32_t c) const
-	{
-		Mat3 m;
-		for(uint32_t i = 0; i < 3; i++)
-		{
-			for(uint32_t j = 0; j < 3; j++)
-			{
-				m[i + 3 * j] = m_data_ref[i + r + m_rows * (j + c)];
-			}
-		}
-		return m;
-	}
-	math::Span Matrix::span(uint32_t r, uint32_t c, uint32_t n, uint32_t m)
-	{
-		return math::Span(*this, r, c, n, m);
+		return Span(*this, row, col, rows, cols);
 	}
 
 	//stats

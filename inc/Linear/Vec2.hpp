@@ -1,23 +1,29 @@
 #pragma once
 
-//Math
-#include "Math/inc/Linear/Vector.hpp"
+//std
+#include <cstdint>
 
 namespace math
 {
-	class Vec2 : public Vector
+	class Mat2;
+}
+
+namespace math
+{
+	class Vec2
 	{
 	public:
 		//constructors
-		Vec2(void);
-		Vec2(double*);
-		Vec2(const Vec2&);
-		Vec2(const Vector&);
-		Vec2(const double*);
-		Vec2(double, double);
+		Vec2(const Vec2&) = default;
+		explicit Vec2(const double*);
+		explicit Vec2(double = 0, double = 0);
 
 		//destructor
 		~Vec2(void) = default;
+
+		//data
+		double* data(void);
+		const double* data(void) const;
 
 		//operators
 		Vec2 operator+(void) const;
@@ -32,25 +38,39 @@ namespace math
 		Vec2& operator*=(double);
 		Vec2& operator/=(double);
 
-		Vec2& operator=(const Vec2&);
-
 		Vec2& operator+=(const Vec2&);
 		Vec2& operator-=(const Vec2&);
 
+		Vec2& operator=(const Vec2&) = default;
+
 		double& operator[](uint32_t);
-		double& operator()(uint32_t);
-
 		const double& operator[](uint32_t) const;
-		const double& operator()(uint32_t) const;
 
-		//linear
+		//norm
+		double norm(void) const;
+
+		//direction
+		Vec2 unit(void) const;
 		Vec2& normalize(void);
-		Vec2& project(const Vec2&);
 
+		//projection
+		Mat2 projection(void) const;
+
+		//products
 		double inner(const Vec2&) const;
 		double cross(const Vec2&) const;
 
+		//interpolation
+		Vec2 lerp(const Vec2&, double) const;
+
 		//friends
 		friend Vec2 operator*(double, const Vec2&);
+
+	private:
+		//data
+		double m_data[2];
+
+		//friends
+		friend class math::Mat2;
 	};
 }

@@ -4,9 +4,11 @@
 #include <stdexcept>
 
 //Math
-#include "Math/inc/Miscellaneous/util.hpp"
+#include "Math/inc/Linear/Span.hpp"
 #include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/Matrix.hpp"
 #include "Math/inc/Solvers/Harmonic.hpp"
+#include "Math/inc/Miscellaneous/util.hpp"
 
 extern "C"
 {

@@ -6,6 +6,7 @@
 
 //Math
 #include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Geometry/Circle.hpp"
 
 //Tests

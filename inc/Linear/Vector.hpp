@@ -4,33 +4,52 @@
 #include <cstdint>
 #include <initializer_list>
 
-//Math
-#include "Math/inc/Linear/Matrix.hpp"
+//defines
+#ifndef VECTOR_STATIC_SIZE
+#define VECTOR_STATIC_SIZE 18
+#endif
 
 namespace math
 {
-	class Vector : public Matrix
+	class Vec3;
+	class Matrix;
+}
+
+namespace math
+{
+	class Vector
 	{
 	public:
 		//constructors
-		Vector(void);
 		Vector(const Vector&);
-		Vector(const Matrix&);
+		explicit Vector(uint32_t);
+		Vector(double*, uint32_t);
 		Vector(const double*, uint32_t);
-		Vector(uint32_t, mode = mode::null);
 		Vector(std::initializer_list<double>);
-		Vector(double*, uint32_t, mode = mode::null);
 
 		//destructor
-		virtual ~Vector(void) = default;
+		virtual ~Vector(void);
 
 		//size
-		Vector& resize(uint32_t);
-		Vector& resize(uint32_t, uint32_t);
+		uint32_t rows(void) const;
 
-		//linear
+		//data
+		double* data(void);
+		const double* data(void) const;
+
+		//direction
+		double norm(void) const;
 		Vector& normalize(void);
 		Vector unit(void) const;
+		
+		//utility
+		Vector& zeros(void);
+		Vector& randu(double = - 1, double = +1);
+
+		//print
+		void print(const char* = "", double = 0) const;
+
+		//products
 		Matrix outer(void) const;
 		Matrix outer(const Vector&) const;
 		double inner(const Vector&) const;
@@ -58,5 +77,22 @@ namespace math
 		Vector& operator-=(const double*);
 		Vector& operator+=(const Vector&);
 		Vector& operator-=(const Vector&);
+
+		double& operator[](uint32_t);
+		const double& operator[](uint32_t) const;
+
+		friend Vector operator*(double, const Vector&);
+
+	private:
+		//data
+		bool m_own;
+		uint32_t m_rows;
+		double* m_data_ptr;
+		const double* m_data_ref;
+		double m_data_mem[VECTOR_STATIC_SIZE];
+
+		//friends
+		friend class math::Vec3;
+		friend class math::Matrix;
 	};
 }

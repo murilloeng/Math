@@ -7,6 +7,7 @@
 #include "Math/inc/Groups/GSE3.hpp"
 #include "Math/inc/Linear/Vec3.hpp"
 #include "Math/inc/Linear/Mat3.hpp"
+#include "Math/inc/Linear/Span.hpp"
 #include "Math/inc/Miscellaneous/rotations.hpp"
 
 namespace math
@@ -168,11 +169,11 @@ namespace math
 	Matrix ASE3::jacobian_gradient(const Vector& vector) const
 	{
 		//data
-		Matrix G(6, 6, mode::zeros);
+		Matrix G(6, 6);
 		const Vec3 u(m_data + 0), t(m_data + 3);
 		const Mat3 Su = u.spin(), St = t.spin();
 		const Vec3 a = t.cross(u), b = t.cross(t.cross(u));
-		const Vec3 vu = vector.data(), vt = vector.data() + 3;
+		const Vec3 vu(vector.data()), vt(vector.data() + 3);
 		//jacobian
 		const double tn = t.norm();
 		const double f1 = fn(tn, 1);
@@ -192,6 +193,7 @@ namespace math
 		const Mat3 A2 = (2 * f4 - f3) * a.outer(t) + (3 * f5 - f4) * b.outer(t);
 		const Vec3 ru = vu + f1 * t.cross(vu) + f2 * t.cross(t.cross(vu));
 		//gradient
+		G.zeros();
 		G.span(0, 3) -= f2 * vu.spin();
 		G.span(3, 3) -= f2 * vt.spin();
 		G.span(3, 0) -= f2 * ru.spin();

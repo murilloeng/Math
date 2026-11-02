@@ -14,7 +14,7 @@ namespace math
 		{
 		public:
 			//constructor
-			Point(Vec3 = {0, 0, 0});
+			Point(Vec3);
 
 			//destructor
 			~Point(void) = default;

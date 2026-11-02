@@ -14,7 +14,7 @@ namespace math
 		{
 		public:
 			//constructors
-			Segment(Vec3 = {0, 0, 0}, Vec3 = {1, 0, 0});
+			Segment(Vec3, Vec3);
 
 			//destructor
 			~Segment(void) = default;

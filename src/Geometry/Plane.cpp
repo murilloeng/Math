@@ -1,7 +1,6 @@
-//std
-#include <cmath>
-
 //Math
+#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/Matrix.hpp"
 #include "Math/inc/Geometry/Line.hpp"
 #include "Math/inc/Geometry/Point.hpp"
 #include "Math/inc/Geometry/Plane.hpp"
@@ -29,6 +28,7 @@ namespace math
 		double Plane::distance(const Plane& plane) const
 		{
 			//data
+			Vector p(4);
 			const Vec3& x1 = m_point;
 			const Vec3& n1 = m_normal;
 			const Vec3& x2 = plane.m_point;
@@ -38,17 +38,19 @@ namespace math
 			Vec3 u2, v2;
 			n1.triad(u1, v1);
 			n2.triad(u2, v2);
-			Vector b(4), p(4);
-			Matrix A(4, 4, mode::eye);
 			//distance
-			b(0) = +(x2 - x1).inner(u1);
-			b(1) = +(x2 - x1).inner(v1);
-			b(2) = -(x2 - x1).inner(u2);
-			b(3) = -(x2 - x1).inner(v2);
-			A(0, 2) = A(2, 0) = -u1.inner(u2);
-			A(0, 3) = A(3, 0) = -u1.inner(v2);
-			A(1, 3) = A(3, 1) = -v1.inner(u2);
-			A(1, 4) = A(4, 1) = -v1.inner(v2);
+			const Vector b = {
+				+(x2 - x1).inner(u1),
+				+(x2 - x1).inner(v1),
+				-(x2 - x1).inner(u2),
+				-(x2 - x1).inner(v2)
+			};
+			const Matrix A = {
+				{1, 0, -u1.inner(u2), -u1.inner(v2)},
+				{0, 1, -v1.inner(u2), -v1.inner(v2)},
+				{-u2.inner(u1), -u2.inner(v1), 1, 0},
+				{-v2.inner(u1), -v2.inner(v1), 0, 1}
+			};
 			//distance
 			A.solve(p, b);
 			return (x2 + p[2] * u2 + p[3] * v2 - x1 - p[0] * u1 - p[1] * v1).norm();

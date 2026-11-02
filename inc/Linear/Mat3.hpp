@@ -1,31 +1,36 @@
 #pragma once
 
+//std
+#include <cstdint>
+#include <initializer_list>
+
 //Math
-#include "Math/inc/Linear/Matrix.hpp"
+#include "Math/inc/Linear/Modes.hpp"
 
 namespace math
 {
 	class Vec3;
-	class Quat;
+	class Matrix;
 }
 
 namespace math
 {
-	class Mat3 : public Matrix
+	class Mat3
 	{
 	public:
 		//constructors
-		Mat3(double*);
-		Mat3(const Mat3&);
-		Mat3(const Matrix&);
-		Mat3(const double*);
-		Mat3(mode = mode::null);
-		Mat3(std::initializer_list<double>);
-		Mat3(const Vec3&, const Vec3&, const Vec3&);
-		Mat3(const double*, const double*, const double*);
+		Mat3(Mode = Mode::zeros);
+		Mat3(const Mat3&) = default;
+		explicit Mat3(const double*);
+		explicit Mat3(const Vec3&, const Vec3&, const Vec3&);
+		Mat3(std::initializer_list<std::initializer_list<double>>);
 
 		//destructor
 		~Mat3(void) = default;
+
+		//data
+		double* data(void);
+		const double* data(void) const;
 
 		//operators
 		Mat3 operator+(void) const;
@@ -42,16 +47,20 @@ namespace math
 		Mat3& operator*=(double);
 		Mat3& operator/=(double);
 
-		Mat3& operator=(const Mat3&);
-
 		Mat3& operator+=(const Mat3&);
 		Mat3& operator-=(const Mat3&);
 
+		double& operator[](uint32_t);
+		double& operator()(uint32_t, uint32_t);
+
+		const double& operator[](uint32_t) const;
+		const double& operator()(uint32_t, uint32_t) const;
+
 		//linear
 		static Mat3 eye(void);
-		Vec3 eigen(void) const;
 		Mat3 inverse(void) const;
 		Mat3 transpose(void) const;
+		Vec3 eigenvalues(void) const;
 
 		double trace(void) const;
 		double lode_angle(void) const;
@@ -62,11 +71,15 @@ namespace math
 		double deviatoric_J2(void) const;
 		double deviatoric_J3(void) const;
 
-		//rotation
-		Vec3 rotation(void) const;
-		Quat quaternion(void) const;
-
 		//friends
 		friend Mat3 operator*(double, const Mat3&);
+
+	private:
+		//data
+		double m_data[9];
+
+		//friends
+		friend class math::Vec3;
+		friend class math::Matrix;
 	};
 }

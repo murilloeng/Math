@@ -14,7 +14,7 @@ namespace math
 		{
 		public:
 			//constructors
-			Line(Vec3 = {0, 0, 0}, Vec3 = {1, 0, 0});
+			Line(Vec3, Vec3);
 
 			//destructor
 			~Line(void) = default;

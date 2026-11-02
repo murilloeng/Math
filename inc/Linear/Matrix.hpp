@@ -5,7 +5,7 @@
 #include <initializer_list>
 
 //Math
-#include "Math/inc/Linear/Span.hpp"
+#include "Math/inc/Linear/Modes.hpp"
 
 //defines
 #ifndef MATRIX_STATIC_SIZE
@@ -14,14 +14,9 @@
 
 namespace math
 {
+	class Span;
 	class Mat3;
 	class Vector;
-	enum class mode : uint32_t
-	{
-		eye,
-		null,
-		zeros
-	};
 }
 
 namespace math
@@ -30,19 +25,15 @@ namespace math
 	{
 	public:
 		//constructors
-		Matrix(void);
 		Matrix(const Matrix&);
+		Matrix(uint32_t, uint32_t);
+		Matrix(uint32_t, uint32_t, Mode);
+		Matrix(double*, uint32_t, uint32_t);
 		Matrix(const double*, uint32_t, uint32_t);
-		Matrix(uint32_t, uint32_t, mode = mode::null);
-		Matrix(double*, uint32_t, uint32_t, mode = mode::null);
-		Matrix(std::initializer_list<std::initializer_list<double>>, bool = false);
+		Matrix(std::initializer_list<std::initializer_list<double>>);
 
 		//destructor
 		virtual ~Matrix(void);
-
-		//serialization
-		void load(const char*);
-		void save(const char*) const;
 
 		//operators
 		Matrix operator+(void) const;
@@ -65,10 +56,12 @@ namespace math
 		Matrix& operator*=(double);
 		Matrix& operator/=(double);
 
-		Matrix& operator+=(const double*);
-		Matrix& operator-=(const double*);
+		Matrix& operator+=(const Mat3&);
+		Matrix& operator-=(const Mat3&);
 		Matrix& operator+=(const Matrix&);
 		Matrix& operator-=(const Matrix&);
+		Matrix& operator+=(const double*);
+		Matrix& operator-=(const double*);
 
 		double& operator[](uint32_t);
 		double& operator()(uint32_t);
@@ -85,21 +78,16 @@ namespace math
 		double* data(void);
 		const double* data(void) const;
 
-		//size
-		Matrix& resize(uint32_t, uint32_t);
-
 		//bounds
 		double min(bool = false, uint32_t* = nullptr) const;
 		double max(bool = false, uint32_t* = nullptr) const;
 
-		//util
+		//utility
 		Matrix& eye(void);
 		Matrix& zeros(void);
-		Matrix& swap_rows(uint32_t, uint32_t);
-		Matrix& swap_cols(uint32_t, uint32_t);
 		Matrix& randu(double = -1, double = +1);
 
-		//info
+		//print
 		void print(const char* = "", double = 0) const;
 
 		//linear
@@ -114,6 +102,7 @@ namespace math
 		Matrix transpose(void) const;
 		Matrix inverse(bool* = nullptr) const;
 		bool solve(Matrix&, const Matrix&) const;
+		bool solve(Vector&, const Vector&) const;
 		bool solve(double*, const double*, uint32_t = 1) const;
 
 		bool solve_decompose(uint32_t*);
@@ -122,10 +111,7 @@ namespace math
 		bool solve_substitute(const uint32_t*, const Matrix&, Matrix&);
 		bool solve_substitute(const uint32_t*, const double*, double*, uint32_t);
 
-		bool symmetric(double = 1e-5) const;
-
-		Mat3 span3(uint32_t, uint32_t) const;
-		math::Span span(uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
+		Span span(uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
 
 		//stats
 		double mean(void) const;
@@ -137,8 +123,8 @@ namespace math
 
 		//friends
 		friend Matrix operator*(double, const Matrix&);
-		friend Matrix operator*(const Matrix&, const math::Span&);
-		friend Matrix operator*(const math::Span&, const Matrix&);
+		friend Matrix operator*(const Matrix&, const Span&);
+		friend Matrix operator*(const Span&, const Matrix&);
 
 	protected:
 		//data
@@ -150,6 +136,7 @@ namespace math
 		double m_data_mem[MATRIX_STATIC_SIZE];
 
 		//friends
-		friend class Span;
+		friend class math::Span;
+		friend class math::Vector;
 	};
 }
