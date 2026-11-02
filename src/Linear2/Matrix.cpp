@@ -632,32 +632,9 @@ namespace math
 			return solve_substitute(pivot, x, nrhs);
 		}
 
-		bool Matrix::symmetric(double t) const
+		Span Matrix::span(uint32_t row, uint32_t col, uint32_t rows, uint32_t cols)
 		{
-			if(m_rows != m_cols)
-			{
-				return false;
-			}
-			else
-			{
-				double s = 0, v = 0;
-				for(uint32_t i = 0; i < m_rows; i++)
-				{
-					s = fmax(s, m_data_ref[i + m_rows * i]);
-					for(uint32_t j = i + 1; j < m_cols; j++)
-					{
-						s = fmax(s, m_data_ref[i + m_rows * j]);
-						s = fmax(s, m_data_ref[j + m_rows * i]);
-						v = fmax(v, fabs(m_data_ref[i + m_rows * j] - m_data_ref[j + m_rows * i]));
-					}
-				}
-				return m_rows == 1 || v < t * s;
-			}
-		}
-
-		Span Matrix::span(uint32_t r, uint32_t c, uint32_t n, uint32_t m)
-		{
-			return Span(*this, r, c, n, m);
+			return Span(*this, row, col, rows, cols);
 		}
 
 		//stats

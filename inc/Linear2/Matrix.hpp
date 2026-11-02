@@ -110,8 +110,6 @@ namespace math
 			bool solve_substitute(const uint32_t*, const Matrix&, Matrix&);
 			bool solve_substitute(const uint32_t*, const double*, double*, uint32_t);
 
-			bool symmetric(double = 1e-5) const;
-
 			Span span(uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
 
 			//stats
