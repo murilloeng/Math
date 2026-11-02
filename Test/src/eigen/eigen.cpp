@@ -20,6 +20,7 @@
 #include "Math/inc/Eigen/DenseNonStd.hpp"
 #include "Math/inc/Eigen/DenseNonGen.hpp"
 
+#include "Math/inc/Eigen/SparseSVD.hpp"
 #include "Math/inc/Eigen/SparseSymStd.hpp"
 #include "Math/inc/Eigen/SparseSymGen.hpp"
 #include "Math/inc/Eigen/SparseNonStd.hpp"
@@ -66,6 +67,34 @@ static void random_dense_sym_pd(double* B, uint32_t order)
 	delete[] A;
 }
 
+static void random_sparse_rec(double*& Am, int32_t*& rm, int32_t*& cm, uint32_t rows, uint32_t cols)
+{
+	//data
+	const double v_min = -1.00e+00;
+	const double v_max = +1.00e+00;
+	const double density = 5.00e-02;
+	//triplets
+	srand(time(nullptr));
+	std::vector<double> At;
+	std::vector<int32_t> rt, ct;
+	for(uint32_t i = 0; i < rows; i++)
+	{
+		for(uint32_t j = 0; j < cols; j++)
+		{
+			if(math::randu() < density)
+			{
+				rt.push_back(i);
+				ct.push_back(j);
+				At.push_back(math::randu(v_min, v_max));
+			}
+		}
+	}
+	//sparse
+	cm = new int32_t[cols + 1];
+	rm = new int32_t[At.size()];
+	Am = new double[At.size()];
+	umfpack_di_triplet_to_col(rows, cols, At.size(), rt.data(), ct.data(), At.data(), cm, rm, Am, nullptr);
+}
 static void random_sparse_sym(double*& Am, int32_t*& rm, int32_t*& cm, uint32_t n)
 {
 	//data
@@ -419,7 +448,71 @@ void tests::eigen::dense_non_gen_full(void)
 
 void tests::eigen::sparse_svd(void)
 {
-	return;
+	int32_t *rm, *cm;
+	const uint32_t n = 500;
+	const uint32_t nev = 5;
+	const uint32_t ncv = 30;
+	const uint32_t extra = 50;
+	double *Am, s[nev];
+	double* w = new double[n + extra];
+	double* U = new double[(n + extra) * nev];
+	double* V = new double[(n + extra) * nev];
+	for(uint32_t i = 100; i <= n; i += 10)
+	{
+		for(uint32_t k = 0; k < 3; k++)
+		{
+			//setup
+			const uint32_t rows = i + (k == 0 ? extra : 0);
+			const uint32_t cols = i + (k == 1 ? extra : 0);
+			random_sparse_rec(Am, rm, cm, rows, cols);
+			bool test = math::eigen::SparseSVD(rows, cols, nev, ncv, rm, cm, Am, s, U, V).compute();
+			//reference
+			const uint32_t order = rows < cols ? rows : cols;
+			const math::Sparse As(Am, rm, cm, rows, cols);
+			math::Matrix D = As.convert();
+			double* sd = new double[order];
+			double* Ud = new double[rows * rows];
+			double* Vd = new double[cols * cols];
+			test = test && math::eigen::SVD(D.data(), rows, cols, sd, Ud, Vd).compute();
+			//test
+			for(uint32_t j = 0; j < nev; j++)
+			{
+				const double* u = U + rows * j;
+				const double* v = V + cols * j;
+				test = test && fabs(s[j] - sd[j]) < 1e-5;
+				test = test && fabs(As.bilinear(u, v) - s[j]) < 1e-5;
+				//A * v = s * u
+				As.product(w, v);
+				for(uint32_t p = 0; p < rows; p++) w[p] -= s[j] * u[p];
+				test = test && math::Vector(w, rows).norm() < 1e-5;
+				//A^T * u = s * v
+				for(uint32_t p = 0; p < cols; p++)
+				{
+					w[p] = -s[j] * v[p];
+					for(int32_t q = cm[p]; q < cm[p + 1]; q++) w[p] += Am[q] * u[rm[q]];
+				}
+				test = test && math::Vector(w, cols).norm() < 1e-5;
+				//orthonormality
+				for(uint32_t p = 0; p <= j; p++)
+				{
+					const double e = p == j;
+					test = test && fabs(math::Vector(u, rows).inner(U + rows * p) - e) < 1e-5;
+					test = test && fabs(math::Vector(v, cols).inner(V + cols * p) - e) < 1e-5;
+				}
+			}
+			delete[] Am;
+			delete[] rm;
+			delete[] cm;
+			delete[] sd;
+			delete[] Ud;
+			delete[] Vd;
+			if(!test) throw std::runtime_error("Error");
+			printf("Test eigen sparse svd %3d x %3d: ok!\n", rows, cols);
+		}
+	}
+	delete[] w;
+	delete[] U;
+	delete[] V;
 }
 void tests::eigen::sparse_sym_std_part(void)
 {
