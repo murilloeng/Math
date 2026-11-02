@@ -88,7 +88,7 @@ namespace math
 				}
 			}
 		}
-	
+
 		//destructor
 		Matrix::~Matrix(void)
 		{
@@ -97,7 +97,7 @@ namespace math
 				delete[] m_data_ptr;
 			}
 		}
-	
+
 		//operators
 		Matrix Matrix::operator+(void) const
 		{
@@ -111,7 +111,7 @@ namespace math
 		{
 			return Matrix(*this) /= s;
 		}
-	
+
 		Matrix Matrix::operator+(const Matrix& m) const
 		{
 			return Matrix(*this) += m;
@@ -147,7 +147,7 @@ namespace math
 			}
 			return r;
 		}
-	
+
 		Matrix& Matrix::operator=(double s)
 		{
 			for(uint32_t i = 0; i < m_rows * m_cols; i++)
@@ -208,7 +208,7 @@ namespace math
 			//return
 			return *this;
 		}
-	
+
 		Matrix& Matrix::operator+=(double s)
 		{
 			for(uint32_t i = 0; i < m_rows * m_cols; i++)
@@ -241,7 +241,7 @@ namespace math
 			}
 			return *this;
 		}
-	
+
 		Matrix& Matrix::operator+=(const Matrix& m)
 		{
 			//check
@@ -272,7 +272,7 @@ namespace math
 			//return
 			return *this;
 		}
-	
+
 		Matrix& Matrix::operator+=(const double* ref)
 		{
 			for(uint32_t i = 0; i < m_rows * m_cols; i++)
@@ -289,7 +289,7 @@ namespace math
 			}
 			return *this;
 		}
-	
+
 		double& Matrix::operator[](uint32_t i)
 		{
 			return m_data_ptr[i];
@@ -302,7 +302,7 @@ namespace math
 		{
 			return m_data_ptr[i + m_rows * j];
 		}
-	
+
 		const double& Matrix::operator[](uint32_t i) const
 		{
 			return m_data_ref[i];
@@ -315,7 +315,7 @@ namespace math
 		{
 			return m_data_ref[i + m_rows * j];
 		}
-	
+
 		//data
 		uint32_t Matrix::rows(void) const
 		{
@@ -325,7 +325,7 @@ namespace math
 		{
 			return m_cols;
 		}
-	
+
 		double* Matrix::data(void)
 		{
 			return m_data_ptr;
@@ -334,7 +334,7 @@ namespace math
 		{
 			return m_data_ref;
 		}
-	
+
 		//bounds
 		double Matrix::min(bool q, uint32_t* p) const
 		{
@@ -366,7 +366,7 @@ namespace math
 			}
 			return v;
 		}
-	
+
 		//util
 		Matrix& Matrix::eye(void)
 		{
@@ -392,7 +392,7 @@ namespace math
 			}
 			return *this;
 		}
-	
+
 		//info
 		void Matrix::print(const char* s, double v) const
 		{
@@ -416,7 +416,7 @@ namespace math
 				printf("\n");
 			}
 		}
-	
+
 		//linear
 		double Matrix::norm(void) const
 		{
@@ -496,7 +496,7 @@ namespace math
 			//return
 			return bilinear(v1.m_data_ref, v2.m_data_ref);
 		}
-	
+
 		Matrix Matrix::transpose(void) const
 		{
 			Matrix M(m_cols, m_rows);
@@ -578,7 +578,7 @@ namespace math
 			//return
 			return info == 0;
 		}
-	
+
 		bool Matrix::solve_decompose(uint32_t* pivot)
 		{
 			//check
@@ -631,7 +631,7 @@ namespace math
 			Matrix(x, m_cols, nrhs) = f;
 			return solve_substitute(pivot, x, nrhs);
 		}
-	
+
 		bool Matrix::symmetric(double t) const
 		{
 			if(m_rows != m_cols)
@@ -654,12 +654,12 @@ namespace math
 				return m_rows == 1 || v < t * s;
 			}
 		}
-	
+
 		Span Matrix::span(uint32_t r, uint32_t c, uint32_t n, uint32_t m)
 		{
 			return Span(*this, r, c, n, m);
 		}
-	
+
 		//stats
 		double Matrix::mean(void) const
 		{
@@ -680,7 +680,7 @@ namespace math
 			}
 			return s / m_rows / m_cols - m * m;
 		}
-	
+
 		//static
 		Matrix Matrix::eye(uint32_t rows, uint32_t cols)
 		{
@@ -690,7 +690,7 @@ namespace math
 		{
 			return Matrix(rows, cols).zeros();
 		}
-	
+
 		//friends
 		Matrix operator*(double s, const Matrix& m)
 		{

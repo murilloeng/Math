@@ -14,7 +14,7 @@ namespace math
 		{
 			return;
 		}
-	
+
 		//linear
 		void Span::eye(void) const
 		{
@@ -30,7 +30,7 @@ namespace math
 		{
 			*this = 0;
 		}
-	
+
 		//opertors
 		const Span& Span::operator=(double v) const
 		{
@@ -73,7 +73,7 @@ namespace math
 			}
 			return *this;
 		}
-	
+
 		const Span& Span::operator+=(double v) const
 		{
 			for(uint32_t i = 0; i < m_rows; i++)
@@ -115,7 +115,7 @@ namespace math
 			}
 			return *this;
 		}
-	
+
 		const Span& Span::operator-=(double v) const
 		{
 			for(uint32_t i = 0; i < m_rows; i++)
@@ -157,12 +157,12 @@ namespace math
 			}
 			return *this;
 		}
-	
+
 		double& Span::operator()(uint32_t i, uint32_t j) const
 		{
 			return m_K(i + m_row, j + m_col);
 		}
-	
+
 		//friends
 		Matrix operator*(const Span& s, const Matrix& k)
 		{

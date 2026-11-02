@@ -37,7 +37,7 @@ namespace math
 		{
 			memcpy(m_data_ptr, std::data(list), list.size() * sizeof(double));
 		}
-	
+
 		//linear
 		Vector& Vector::normalize(void)
 		{
@@ -85,7 +85,7 @@ namespace math
 			}
 			return s;
 		}
-	
+
 		//operators
 		Vector Vector::operator+(void) const
 		{
@@ -99,7 +99,7 @@ namespace math
 		{
 			return Vector(*this) /= s;
 		}
-	
+
 		Vector Vector::operator+(const Vector& v) const
 		{
 			return Vector(*this) += v;
@@ -108,7 +108,7 @@ namespace math
 		{
 			return Vector(*this) -= v;
 		}
-	
+
 		Vector& Vector::operator=(double s)
 		{
 			Matrix::operator=(s);
@@ -129,7 +129,7 @@ namespace math
 			Matrix::operator=(list);
 			return *this;
 		}
-	
+
 		Vector& Vector::operator+=(double s)
 		{
 			Matrix::operator+=(s);
@@ -150,7 +150,7 @@ namespace math
 			Matrix::operator/=(s);
 			return *this;
 		}
-	
+
 		Vector& Vector::operator+=(const double* v)
 		{
 			Matrix::operator+=(v);

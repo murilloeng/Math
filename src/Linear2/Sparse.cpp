@@ -40,13 +40,13 @@ namespace math
 		{
 			return;
 		}
-	
+
 		//destructor
 		Sparse::~Sparse(void)
 		{
 			cleanup();
 		}
-	
+
 		//data
 		double* Sparse::data(void)
 		{
@@ -56,7 +56,7 @@ namespace math
 		{
 			return m_data_ref;
 		}
-	
+
 		uint32_t Sparse::rows(void) const
 		{
 			return m_rows;
@@ -65,7 +65,7 @@ namespace math
 		{
 			return m_cols;
 		}
-	
+
 		int32_t* Sparse::rows_map(void)
 		{
 			return m_rows_map_ptr;
@@ -82,7 +82,7 @@ namespace math
 		{
 			return m_cols_map_ref;
 		}
-	
+
 		//pattern
 		void Sparse::pattern(int32_t* rows_map, int32_t* cols_map)
 		{
@@ -109,7 +109,7 @@ namespace math
 			memcpy(cols_map, m_cols_map_ref, (m_cols + 1) * sizeof(int32_t));
 			memcpy(rows_map, m_rows_map_ref, m_cols_map_ref[m_cols] * sizeof(int32_t));
 		}
-	
+
 		//linear
 		void Sparse::zeros(void)
 		{
@@ -174,7 +174,7 @@ namespace math
 			//return
 			return bilinear(v1.data(), v2.data());
 		}
-	
+
 		//solve
 		bool Sparse::solve(Vector& x, const Vector& f) const
 		{
@@ -228,7 +228,7 @@ namespace math
 			//return
 			return test;
 		}
-	
+
 		void Sparse::release(void) const
 		{
 			umfpack_di_free_numeric(&m_numeric);
@@ -293,7 +293,7 @@ namespace math
 			//return
 			return test;
 		}
-	
+
 		//operators
 		Vector Sparse::operator*(const Vector& v) const
 		{
@@ -330,7 +330,7 @@ namespace math
 			}
 			return m_data_ref[0];
 		}
-	
+
 		//convert
 		Matrix Sparse::convert(void) const
 		{
@@ -348,7 +348,7 @@ namespace math
 			//return
 			return M;
 		}
-	
+
 		//product
 		void Sparse::product(double* y, const double* x) const
 		{
@@ -361,7 +361,7 @@ namespace math
 				}
 			}
 		}
-	
+
 		//span
 		void Sparse::span(Sparse& Matrix, uint32_t i, uint32_t j) const
 		{
@@ -426,7 +426,7 @@ namespace math
 				}
 			}
 		}
-	
+
 		//print
 		void Sparse::print(const char* header, bool dense, double v) const
 		{
@@ -438,7 +438,7 @@ namespace math
 			//print
 			dense ? print_dense(v) : print_sparse(v);
 		}
-	
+
 		//data
 		void Sparse::cleanup(void)
 		{
@@ -452,7 +452,7 @@ namespace math
 				m_cols_map_ref = m_cols_map_ptr = nullptr;
 			}
 		}
-	
+
 		//print
 		void Sparse::print_dense(double v) const
 		{
@@ -486,7 +486,7 @@ namespace math
 				}
 			}
 		}
-	
+
 		//Span
 		void Sparse::span_count(Sparse& Matrix, uint32_t i, uint32_t j, bool data) const
 		{
