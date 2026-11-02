@@ -2,6 +2,7 @@
 
 //std
 #include <cstdint>
+#include <initializer_list>
 
 namespace math
 {
@@ -18,6 +19,7 @@ namespace math
 		Vec3(const double*);
 		Vec3(const Vec3&) = default;
 		explicit Vec3(const Vector&);
+		Vec3(std::initializer_list<double>);
 		explicit Vec3(double = 0, double = 0, double = 0);
 
 		//destructor

@@ -28,6 +28,16 @@ namespace math
 	{
 		return;
 	}
+	Vec3::Vec3(std::initializer_list<double> list)
+	{
+		if(list.size() != 3)
+		{
+			throw std::runtime_error("Vec3 constructor has incompatible dimensions!");
+		}
+		m_data[0] = *(list.begin() + 0);
+		m_data[1] = *(list.begin() + 1);
+		m_data[2] = *(list.begin() + 2);
+	}
 
 	//data
 	double* Vec3::data(void)

@@ -1,5 +1,6 @@
 //std
 #include <cmath>
+#include <stdexcept>
 
 //Math
 #include "Math/inc/Linear/Vec2.hpp"
@@ -15,6 +16,15 @@ namespace math
 	Vec2::Vec2(double v0, double v1) : m_data{v0, v1}
 	{
 		return;
+	}
+	Vec2::Vec2(std::initializer_list<double> list)
+	{
+		if(list.size() != 2)
+		{
+			throw std::runtime_error("Vec2 constructor has incompatible dimensions!");
+		}
+		m_data[0] = *(list.begin() + 0);
+		m_data[1] = *(list.begin() + 1);
 	}
 
 	//data
