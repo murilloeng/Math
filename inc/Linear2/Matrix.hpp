@@ -82,12 +82,12 @@ namespace math
 			double min(bool = false, uint32_t* = nullptr) const;
 			double max(bool = false, uint32_t* = nullptr) const;
 
-			//util
+			//utility
 			Matrix& eye(void);
 			Matrix& zeros(void);
 			Matrix& randu(double = -1, double = +1);
 
-			//info
+			//print
 			void print(const char* = "", double = 0) const;
 
 			//linear
@@ -102,6 +102,7 @@ namespace math
 			Matrix transpose(void) const;
 			Matrix inverse(bool* = nullptr) const;
 			bool solve(Matrix&, const Matrix&) const;
+			bool solve(Vector&, const Vector&) const;
 			bool solve(double*, const double*, uint32_t = 1) const;
 
 			bool solve_decompose(uint32_t*);
@@ -136,6 +137,7 @@ namespace math
 
 			//friends
 			friend class math::linear::Span;
+			friend class math::linear::Vector;
 		};
 	}
 }

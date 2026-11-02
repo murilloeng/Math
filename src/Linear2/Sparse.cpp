@@ -10,6 +10,7 @@
 //Math
 #include "Math/inc/Linear2/Sparse.hpp"
 #include "Math/inc/Linear2/Vector.hpp"
+#include "Math/inc/Linear2/Matrix.hpp"
 
 namespace math
 {

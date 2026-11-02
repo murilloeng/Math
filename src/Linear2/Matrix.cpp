@@ -30,7 +30,6 @@ namespace math
 		}
 		Matrix::Matrix(uint32_t rows, uint32_t cols) : m_own{true}, m_rows{rows}, m_cols{cols}
 		{
-			//data
 			if(rows * cols <= MATRIX_STATIC_SIZE)
 			{
 				m_data_ref = m_data_ptr = m_data_mem;
@@ -122,8 +121,22 @@ namespace math
 		}
 		Vector Matrix::operator*(const Vector& v) const
 		{
-			const Matrix& m = v;
-			return Vector(operator*(m));
+			//check
+			if(m_cols != v.m_rows)
+			{
+				throw std::runtime_error("Matrix-Vector product has incompatible dimensions!");
+			}
+			//compute
+			Vector r(m_rows);
+			for(uint32_t i = 0; i < m_rows; i++)
+			{
+				r.m_data_ptr[i] = 0;
+				for(uint32_t j = 0; j < m_cols; j++)
+				{
+					r.m_data_ptr[i] += m_data_ref[i + m_rows * j] * v.m_data_ref[j];
+				}
+			}
+			return r;
 		}
 		Matrix Matrix::operator*(const Matrix& m) const
 		{
@@ -367,7 +380,7 @@ namespace math
 			return v;
 		}
 
-		//util
+		//utility
 		Matrix& Matrix::eye(void)
 		{
 			for(uint32_t i = 0; i < m_rows; i++)
@@ -393,18 +406,18 @@ namespace math
 			return *this;
 		}
 
-		//info
-		void Matrix::print(const char* s, double v) const
+		//print
+		void Matrix::print(const char* header, double cutoff) const
 		{
-			if(strlen(s) != 0)
+			if(strlen(header) != 0)
 			{
-				printf("%s\n", s);
+				printf("%s\n", header);
 			}
 			for(uint32_t i = 0; i < m_rows; i++)
 			{
 				for(uint32_t j = 0; j < m_cols; j++)
 				{
-					if(v != 0 && fabs(m_data_ref[i + m_rows * j]) < v)
+					if(cutoff != 0 && fabs(m_data_ref[i + m_rows * j]) < cutoff)
 					{
 						printf("--------- ");
 					}
@@ -552,6 +565,31 @@ namespace math
 			memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
 			memcpy(x.m_data_ptr, f.m_data_ref, x.m_rows * x.m_cols * sizeof(double));
 			dgesv_(&m_rows, &x.m_cols, A, &m_rows, ipiv, x.m_data_ptr, &m_rows, &info);
+			//delete
+			delete[] A;
+			delete[] ipiv;
+			//return
+			return info == 0;
+		}
+		bool Matrix::solve(Vector& x, const Vector& f) const
+		{
+			//check
+			if(m_rows != m_cols)
+			{
+				throw std::runtime_error("Matrix solve called on a non-square Matrix!");
+			}
+			if(m_cols != x.m_rows || m_rows != f.m_rows)
+			{
+				throw std::runtime_error("Matrix solve called with incompatible matrices!");
+			}
+			//solve
+			int32_t info;
+			const uint32_t cols = 1;
+			uint32_t* ipiv = new uint32_t[m_rows];
+			double* A = new double[m_rows * m_cols];
+			memcpy(A, m_data_ref, m_rows * m_cols * sizeof(double));
+			memcpy(x.m_data_ptr, f.m_data_ref, x.m_rows * sizeof(double));
+			dgesv_(&m_rows, &cols, A, &m_rows, ipiv, x.m_data_ptr, &m_rows, &info);
 			//delete
 			delete[] A;
 			delete[] ipiv;
