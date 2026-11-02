@@ -14,8 +14,8 @@ namespace math
 	{
 	public:
 		//constructors
+		Vec2(const double*);
 		Vec2(const Vec2&) = default;
-		explicit Vec2(const double*);
 		explicit Vec2(double = 0, double = 0);
 
 		//destructor
