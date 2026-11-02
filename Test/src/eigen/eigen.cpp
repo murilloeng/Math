@@ -114,11 +114,14 @@ static void random_sparse_non(double*& Am, int32_t*& rm, int32_t*& cm, uint32_t 
 	{
 		for(uint32_t j = i; j < n; j++)
 		{
-			if(math::randu() < density)
+			if(i == j || math::randu() < density)
 			{
 				rt.push_back(i);
 				ct.push_back(j);
 				At.push_back(math::randu(v_min, v_max));
+				if(i != j) rt.push_back(j);
+				if(i != j) ct.push_back(i);
+				if(i != j) At.push_back(math::randu(v_min, v_max));
 			}
 		}
 	}
@@ -471,8 +474,8 @@ void tests::eigen::sparse_non_std_part(void)
 	const uint32_t n = 500;
 	const uint32_t nev = 5;
 	const uint32_t ncv = 50;
-	double *Am, sr[nev], si[nev];
-	double* U = new double[n * nev];
+	double *Am, sr[nev + 1], si[nev + 1];
+	double* U = new double[n * (nev + 1)];
 	for(uint32_t i = 100; i <= n; i += 10)
 	{
 		random_sparse_non(Am, rm, cm, i);
@@ -516,8 +519,8 @@ void tests::eigen::sparse_non_gen_part(void)
 	const uint32_t n = 500;
 	const uint32_t nev = 5;
 	const uint32_t ncv = 50;
-	double* U = new double[n * nev];
-	double *Am, *Bm, sr[nev], si[nev];
+	double* U = new double[n * (nev + 1)];
+	double *Am, *Bm, sr[nev + 1], si[nev + 1];
 	for(uint32_t i = 100; i <= n; i += 10)
 	{
 		random_sparse_non(Am, rm, cm, i);
@@ -556,6 +559,7 @@ void tests::eigen::sparse_non_gen_part(void)
 			}
 		}
 		delete[] Am;
+		delete[] Bm;
 		delete[] rm;
 		delete[] cm;
 		if(!test) throw std::runtime_error("Error");

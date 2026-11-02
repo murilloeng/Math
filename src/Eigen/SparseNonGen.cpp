@@ -17,11 +17,11 @@ namespace math
 	namespace eigen
 	{
 		//constructor
-		SparseNonGen::SparseNonGen(void) : SparseNon{0U, 0U, 0U, nullptr, nullptr}, m_U{nullptr}, m_sr{nullptr}, m_si{nullptr}, m_A{nullptr}
+		SparseNonGen::SparseNonGen(void) : SparseNon{0U, 0U, 0U, nullptr, nullptr}, m_U{nullptr}, m_sr{nullptr}, m_si{nullptr}, m_A{nullptr}, m_B{nullptr}
 		{
 			m_mode = 2;
 		}
-		SparseNonGen::SparseNonGen(uint32_t order, uint32_t modes, uint32_t vectors, const int32_t* rows_map, const int32_t* cols_map, const double* A, const double*, double* sr, double* si, double* U) : SparseNon{order, modes, vectors, rows_map, cols_map}, m_U{U}, m_sr{sr}, m_si{si}, m_A{A}
+		SparseNonGen::SparseNonGen(uint32_t order, uint32_t modes, uint32_t vectors, const int32_t* rows_map, const int32_t* cols_map, const double* A, const double* B, double* sr, double* si, double* U) : SparseNon{order, modes, vectors, rows_map, cols_map}, m_U{U}, m_sr{sr}, m_si{si}, m_A{A}, m_B{B}
 		{
 			m_mode = 2;
 		}

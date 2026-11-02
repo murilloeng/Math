@@ -1,7 +1,7 @@
 //std
 #include <cmath>
-#include <cstdio>
 #include <cstring>
+#include <algorithm>
 #include <stdexcept>
 
 //Math
@@ -30,7 +30,15 @@ namespace math
 		}
 		Matrix::Matrix(uint32_t rows, uint32_t cols) : m_own{true}, m_rows{rows}, m_cols{cols}
 		{
-			m_data_ref = m_data_ptr = new double[rows * cols];
+			//data
+			if(rows * cols <= MATRIX_STATIC_SIZE)
+			{
+				m_data_ref = m_data_ptr = m_data_mem;
+			}
+			else
+			{
+				m_data_ref = m_data_ptr = new double[rows * cols];
+			}
 		}
 		Matrix::Matrix(double* ptr, uint32_t rows, uint32_t cols) :
 			m_own{false}, m_rows{rows}, m_cols{cols}, m_data_ptr{ptr}, m_data_ref{ptr}
@@ -45,7 +53,7 @@ namespace math
 		Matrix::Matrix(std::initializer_list<std::initializer_list<double>> list) : m_own{true}
 		{
 			//data
-			const std::initializer_list<double>* data = list.begin();
+			const std::initializer_list<double>* data = std::data(list);
 			//check
 			if(list.size() == 0)
 			{
@@ -58,14 +66,22 @@ namespace math
 					throw std::runtime_error("Matrix constructor has incompatible dimensions!");
 				}
 			}
-			//allocate
-			m_rows = list.size();
+			//sizes
 			m_cols = data[0].size();
-			m_data_ref = m_data_ptr = new double[m_rows * m_cols];
+			m_rows = list.size();
+			//allocate
+			if(m_rows * m_cols <= MATRIX_STATIC_SIZE)
+			{
+				m_data_ref = m_data_ptr = m_data_mem;
+			}
+			else
+			{
+				m_data_ref = m_data_ptr = new double[m_rows * m_cols];
+			}
 			//assign
 			for(uint32_t i = 0; i < m_rows; i++)
 			{
-				const double* row_data = data[i].begin();
+				const double* row_data = std::data(data[i]);
 				for(uint32_t j = 0; j < m_cols; j++)
 				{
 					m_data_ptr[i + m_rows * j] = row_data[j];
@@ -76,7 +92,10 @@ namespace math
 		//destructor
 		Matrix::~Matrix(void)
 		{
-			if(m_own) delete[] m_data_ptr;
+			if(m_own && m_data_ptr != m_data_mem)
+			{
+				delete[] m_data_ptr;
+			}
 		}
 	
 		//operators
@@ -410,16 +429,12 @@ namespace math
 		}
 		double Matrix::trace(void) const
 		{
-			if(m_rows == m_cols)
+			double s = 0;
+			for(uint32_t i = 0; i < std::min(m_rows, m_cols); i++)
 			{
-				double s = 0;
-				for(uint32_t i = 0; i < m_rows; i++)
-				{
-					s += m_data_ref[i + m_rows * i];
-				}
-				return s;
+				s += m_data_ref[i + m_rows * i];
 			}
-			return 0;
+			return s;
 		}
 		double Matrix::determinant(void) const
 		{
@@ -496,16 +511,15 @@ namespace math
 		}
 		Matrix Matrix::inverse(bool* test) const
 		{
-			//data
-			double query;
-			Matrix A(*this);
-			int32_t info, lwork = -1;
 			//check
 			if(m_rows != m_cols)
 			{
 				throw std::runtime_error("Matrix inverse called on a non-square Matrix!");
 			}
 			//query
+			double query;
+			Matrix A(*this);
+			int32_t info, lwork = -1;
 			uint32_t* ipiv = new uint32_t[m_rows];
 			dgetrf_(&m_rows, &m_cols, A.m_data_ptr, &m_rows, ipiv, &info);
 			dgetri_(&m_rows, A.m_data_ptr, &m_rows, ipiv, &query, &lwork, &info);
@@ -514,8 +528,8 @@ namespace math
 			double* work = new double[lwork];
 			dgetri_(&m_rows, A.m_data_ptr, &m_rows, ipiv, work, &lwork, &info);
 			//delete
-			delete[] work;
 			delete[] ipiv;
+			delete[] work;
 			if(test) *test = info == 0;
 			//return
 			return A;
@@ -618,10 +632,33 @@ namespace math
 			return solve_substitute(pivot, x, nrhs);
 		}
 	
-		// math::Span Matrix::span(uint32_t r, uint32_t c, uint32_t n, uint32_t m)
-		// {
-		// 	return math::Span(*this, r, c, n, m);
-		// }
+		bool Matrix::symmetric(double t) const
+		{
+			if(m_rows != m_cols)
+			{
+				return false;
+			}
+			else
+			{
+				double s = 0, v = 0;
+				for(uint32_t i = 0; i < m_rows; i++)
+				{
+					s = fmax(s, m_data_ref[i + m_rows * i]);
+					for(uint32_t j = i + 1; j < m_cols; j++)
+					{
+						s = fmax(s, m_data_ref[i + m_rows * j]);
+						s = fmax(s, m_data_ref[j + m_rows * i]);
+						v = fmax(v, fabs(m_data_ref[i + m_rows * j] - m_data_ref[j + m_rows * i]));
+					}
+				}
+				return m_rows == 1 || v < t * s;
+			}
+		}
+	
+		Span Matrix::span(uint32_t r, uint32_t c, uint32_t n, uint32_t m)
+		{
+			return Span(*this, r, c, n, m);
+		}
 	
 		//stats
 		double Matrix::mean(void) const

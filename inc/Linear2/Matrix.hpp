@@ -5,7 +5,12 @@
 #include <initializer_list>
 
 //Math
-#include "Math/inc/Linear/Span.hpp"
+#include "Math/inc/Linear2/Span.hpp"
+
+//defines
+#ifndef MATRIX_STATIC_SIZE
+#define MATRIX_STATIC_SIZE 324
+#endif
 
 namespace math
 {
@@ -69,10 +74,10 @@ namespace math
 			//data
 			uint32_t rows(void) const;
 			uint32_t cols(void) const;
-
+	
 			double* data(void);
 			const double* data(void) const;
-
+	
 			//bounds
 			double min(bool = false, uint32_t* = nullptr) const;
 			double max(bool = false, uint32_t* = nullptr) const;
@@ -105,7 +110,9 @@ namespace math
 			bool solve_substitute(const uint32_t*, const Matrix&, Matrix&);
 			bool solve_substitute(const uint32_t*, const double*, double*, uint32_t);
 	
-			math::Span span(uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
+			bool symmetric(double = 1e-5) const;
+	
+			Span span(uint32_t, uint32_t, uint32_t = 3, uint32_t = 3);
 	
 			//stats
 			double mean(void) const;
@@ -117,8 +124,8 @@ namespace math
 	
 			//friends
 			friend Matrix operator*(double, const Matrix&);
-			friend Matrix operator*(const Matrix&, const math::Span&);
-			friend Matrix operator*(const math::Span&, const Matrix&);
+			friend Matrix operator*(const Matrix&, const Span&);
+			friend Matrix operator*(const Span&, const Matrix&);
 	
 		protected:
 			//data
@@ -127,9 +134,10 @@ namespace math
 			uint32_t m_cols;
 			double* m_data_ptr;
 			const double* m_data_ref;
+			double m_data_mem[MATRIX_STATIC_SIZE];
 	
 			//friends
-			friend class Span;
+			friend class math::linear::Span;
 		};
 	}
 }
