@@ -107,12 +107,6 @@ namespace math
 		return m_data[i];
 	}
 
-	//norm
-	double Vec2::norm(void) const
-	{
-		return sqrt(inner(*this));
-	}
-
 	//direction
 	Vec2 Vec2::unit(void) const
 	{
@@ -121,6 +115,14 @@ namespace math
 	Vec2& Vec2::normalize(void)
 	{
 		return *this /= norm();
+	}
+	double Vec2::norm(void) const
+	{
+		return sqrt(inner(*this));
+	}
+	double Vec2::direction(void) const
+	{
+		return atan2(m_data[1], m_data[0]);
 	}
 
 	//projection

@@ -48,12 +48,11 @@ namespace math
 		double& operator[](uint32_t);
 		const double& operator[](uint32_t) const;
 
-		//norm
-		double norm(void) const;
-
 		//direction
 		Vec2 unit(void) const;
 		Vec2& normalize(void);
+		double norm(void) const;
+		double direction(void) const;
 
 		//projection
 		Mat2 projection(void) const;
