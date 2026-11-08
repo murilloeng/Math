@@ -51,6 +51,7 @@ namespace math
 		//direction
 		Vec2 unit(void) const;
 		Vec2& normalize(void);
+
 		double norm(void) const;
 		double direction(void) const;
 

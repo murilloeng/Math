@@ -116,6 +116,7 @@ namespace math
 	{
 		return *this /= norm();
 	}
+
 	double Vec2::norm(void) const
 	{
 		return sqrt(inner(*this));
