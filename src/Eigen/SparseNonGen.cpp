@@ -41,8 +41,8 @@ namespace math
 			const char* which = m_type;
 			const double tol = m_tolerance;
 			int32_t info = 0, iparam[11], ipntr[11];
-			double *resid = new double[n], *v = new double[n * ncv];
-			double *workd = new double[3 * n], *workl = new double[lworkl];
+			double* resid = new double[n], *v = new double[n * ncv];
+			double* workd = new double[3 * n], *workl = new double[lworkl];
 			//setup
 			m_ido = 0;
 			iparam[0] = 1;
