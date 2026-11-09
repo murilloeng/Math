@@ -21,11 +21,14 @@ namespace math
 			{
 				Load, Frequency
 			};
-
+			
 			//tests
 			void test_inertia(void) const;
 			void test_damping(void) const;
 			void test_stiffness(void) const;
+
+			//data
+			uint32_t energy_set(void) const override;
 
 			//types
 			typedef std::function<void(double*, const double*, const double*)> InternalForce;

@@ -19,6 +19,7 @@ namespace math
 			m_rows_map{nullptr},
 			m_cols_map{nullptr},
 			m_size{1}, m_watch_dof{0},
+			m_T{0}, m_U{0}, m_V{0},
 			m_K{nullptr}, m_C{nullptr}, m_M{nullptr},
 			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr},
 			m_x_old{nullptr}, m_x_new{nullptr}, m_dx{nullptr},
@@ -251,6 +252,7 @@ namespace math
 		{
 			allocate_state();
 			allocate_forces();
+			allocate_energies();
 			allocate_tangents();
 		}
 		void Solver::allocate(uint32_t size)
@@ -258,6 +260,7 @@ namespace math
 			m_size = size;
 			allocate_state();
 			allocate_forces();
+			allocate_energies();
 			allocate_tangents();
 		}
 
@@ -375,6 +378,10 @@ namespace math
 			if(fs & 1 << uint32_t(Force::r)) m_r = new double[m_size];
 			if(fs & 1 << uint32_t(Force::fi)) m_fi = new double[m_size];
 			if(fs & 1 << uint32_t(Force::fe)) m_fe = new double[m_size];
+		}
+		void Solver::allocate_energies(void)
+		{
+			return;
 		}
 		void Solver::allocate_tangents(void)
 		{

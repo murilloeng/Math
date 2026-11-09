@@ -27,15 +27,20 @@ namespace math
 			//data
 			uint32_t state_set(void) const override;
 			uint32_t force_set(void) const override;
+			uint32_t energy_set(void) const override;
 			uint32_t tangent_set(void) const override;
 
 			//types
+			typedef std::function<void(double&, double&, double, const double*)> Energies;
 			typedef std::function<void(double*, double, const double*)> Function;
 			typedef std::function<void(double*, double*, double*, double, const double*)> System;
 
 			//data
 			System system(System);
 			System system(void) const;
+
+			Energies energies(Energies);
+			Energies energies(void) const;
 
 			Function residue(Function);
 			Function residue(void) const;
@@ -58,6 +63,7 @@ namespace math
 			//data
 			System m_system;
 			Function m_residue;
+			Energies m_energies;
 			Function m_tangent_p;
 			Function m_tangent_x;
 		};

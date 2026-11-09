@@ -13,7 +13,7 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::newton_raphson::spring_buckling();
+		tests::solvers::harmonic::duffing();
 	}
 	catch(const std::exception& exception)
 	{

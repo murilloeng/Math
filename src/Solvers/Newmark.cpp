@@ -62,6 +62,10 @@ namespace math
 		{
 			return 1 << uint32_t(Force::r) | 1 << uint32_t(Force::fi) | 1 << uint32_t(Force::fe);
 		}
+		uint32_t Newmark::energy_set(void) const
+		{
+			return 1 << uint32_t(Energy::T) | 1 << uint32_t(Energy::U) | 1 << uint32_t(Energy::V);
+		}
 		uint32_t Newmark::tangent_set(void) const
 		{
 			return 1 << uint32_t(Tangent::K) | 1 << uint32_t(Tangent::C) | 1 << uint32_t(Tangent::M);

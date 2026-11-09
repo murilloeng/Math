@@ -37,6 +37,10 @@ namespace math
 			{
 				r, fi, fe
 			};
+			enum class Energy : uint32_t
+			{
+				T, U, V
+			};
 			enum class Tangent : uint32_t
 			{
 				K, C, M
@@ -56,6 +60,7 @@ namespace math
 			//data
 			virtual uint32_t state_set(void) const = 0;
 			virtual uint32_t force_set(void) const = 0;
+			virtual uint32_t energy_set(void) const = 0;
 			virtual uint32_t tangent_set(void) const = 0;
 
 			//data
@@ -127,6 +132,7 @@ namespace math
 			//allocate
 			virtual void allocate_state(void);
 			virtual void allocate_forces(void);
+			virtual void allocate_energies(void);
 			virtual void allocate_tangents(void);
 
 			//solve
@@ -145,6 +151,7 @@ namespace math
 			std::function<void(void)> m_callback_update;
 			std::function<void(void)> m_callback_restore;
 
+			double m_T, m_U, m_V;
 			double *m_K, *m_C, *m_M;
 			double *m_r, *m_fi, *m_fe;
 			double *m_x_old, *m_x_new, *m_dx;

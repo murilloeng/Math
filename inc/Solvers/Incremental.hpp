@@ -36,9 +36,17 @@ namespace math
 			const double* state_data(void) const;
 			const double* velocity_data(void) const;
 			const double* acceleration_data(void) const;
+			const double* kinetic_energy_data(void) const;
+			const double* internal_energy_data(void) const;
+			const double* potential_energy_data(void) const;
 
 			double time_data(uint32_t) const;
 			double load_data(uint32_t) const;
+
+			double kinetic_energy_data(uint32_t) const;
+			double internal_energy_data(uint32_t) const;
+			double potential_energy_data(uint32_t) const;
+
 			double state_data(uint32_t, uint32_t) const;
 			double velocity_data(uint32_t, uint32_t) const;
 			double acceleration_data(uint32_t, uint32_t) const;
@@ -62,13 +70,17 @@ namespace math
 
 			//allocate
 			void allocate_state(void) override;
+			void allocate_energies(void) override;
 
 			//data
 			bool m_stability;
 			bool* m_stability_data;
 			uint32_t m_step, m_step_max;
 			StopCriteria m_stop_criteria;
-			double *m_x_data, *m_v_data, *m_a_data, *m_p_data, *m_t_data;
+
+			double *m_p_data, *m_t_data;
+			double *m_x_data, *m_v_data, *m_a_data;
+			double *m_T_data, *m_U_data, *m_V_data;
 
 			//friends
 			friend class math::solvers::StopCriteria;

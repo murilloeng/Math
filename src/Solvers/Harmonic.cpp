@@ -224,6 +224,12 @@ namespace math
 		}
 
 		//data
+		uint32_t Harmonic::energy_set(void) const
+		{
+			return 0;
+		}
+
+		//data
 		uint32_t Harmonic::dofs(void) const
 		{
 			return m_dofs;

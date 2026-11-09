@@ -13,7 +13,9 @@ namespace math
 		Incremental::Incremental(void) :
 			m_stability{false}, m_stability_data{nullptr},
 			m_step{0}, m_step_max{100}, m_stop_criteria{this},
-			m_x_data{nullptr}, m_v_data{nullptr}, m_a_data{nullptr}, m_p_data{nullptr}, m_t_data{nullptr}
+			m_p_data{nullptr}, m_t_data{nullptr},
+			m_x_data{nullptr}, m_v_data{nullptr}, m_a_data{nullptr},
+			m_T_data{nullptr}, m_U_data{nullptr}, m_V_data{nullptr}
 		{
 			return;
 		}
@@ -23,7 +25,9 @@ namespace math
 		{
 			//data
 			double** data[] = {
-				&m_x_data, &m_v_data, &m_a_data, &m_p_data, &m_t_data
+				&m_p_data, &m_t_data, 
+				&m_x_data, &m_v_data, &m_a_data,
+				&m_T_data, &m_U_data, &m_V_data
 			};
 			//cleanup
 			for(double** ptr : data)
@@ -59,7 +63,9 @@ namespace math
 		{
 			//data
 			double** data[] = {
-				&m_x_data, &m_v_data, &m_a_data, &m_p_data, &m_t_data
+				&m_p_data, &m_t_data,
+				&m_x_data, &m_v_data, &m_a_data,
+				&m_T_data, &m_U_data, &m_V_data
 			};
 			//cleanup
 			Solver::cleanup();
@@ -112,6 +118,18 @@ namespace math
 		{
 			return m_a_data;
 		}
+		const double* Incremental::kinetic_energy_data(void) const
+		{
+			return m_T_data;
+		}
+		const double* Incremental::internal_energy_data(void) const
+		{
+			return m_U_data;
+		}
+		const double* Incremental::potential_energy_data(void) const
+		{
+			return m_V_data;
+		}
 
 		double Incremental::time_data(uint32_t step) const
 		{
@@ -120,6 +138,18 @@ namespace math
 		double Incremental::load_data(uint32_t step) const
 		{
 			return m_p_data[step];
+		}
+		double Incremental::kinetic_energy_data(uint32_t step) const
+		{
+			return m_T_data[step];
+		}
+		double Incremental::internal_energy_data(uint32_t step) const
+		{
+			return m_U_data[step];
+		}
+		double Incremental::potential_energy_data(uint32_t step) const
+		{
+			return m_V_data[step];
 		}
 		double Incremental::state_data(uint32_t step, uint32_t dof) const
 		{
@@ -157,6 +187,7 @@ namespace math
 		{
 			FILE* file = fopen(path, "w");
 			const uint32_t ss = state_set();
+			const uint32_t es = energy_set();
 			for(uint32_t i = 0; i < m_step; i++)
 			{
 				for(uint32_t j = 0; j < m_size; j++)
@@ -167,6 +198,9 @@ namespace math
 				}
 				if(ss & 1 << uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
 				if(ss & 1 << uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
+				if(es & 1 << uint32_t(Energy::T)) fprintf(file, "%+.6e ", m_T_data[i]);
+				if(es & 1 << uint32_t(Energy::U)) fprintf(file, "%+.6e ", m_U_data[i]);
+				if(es & 1 << uint32_t(Energy::V)) fprintf(file, "%+.6e ", m_V_data[i]);
 				if(m_stability) fprintf(file, "%d ", m_stability_data[i]);
 				fprintf(file, "\n");
 			}
@@ -176,6 +210,7 @@ namespace math
 		{
 			FILE* file = fopen(path, "w");
 			const uint32_t ss = state_set();
+			const uint32_t es = energy_set();
 			for(uint32_t i = 0; i < m_step; i++)
 			{
 				for(uint32_t dof : dof_list)
@@ -186,6 +221,9 @@ namespace math
 				}
 				if(ss & 1 << uint32_t(State::p)) fprintf(file, "%+.6e ", m_p_data[i]);
 				if(ss & 1 << uint32_t(State::t)) fprintf(file, "%+.6e ", m_t_data[i]);
+				if(es & 1 << uint32_t(Energy::T)) fprintf(file, "%+.6e ", m_T_data[i]);
+				if(es & 1 << uint32_t(Energy::U)) fprintf(file, "%+.6e ", m_U_data[i]);
+				if(es & 1 << uint32_t(Energy::V)) fprintf(file, "%+.6e ", m_V_data[i]);
 				if(m_stability) fprintf(file, "%d ", m_stability_data[i]);
 				fprintf(file, "\n");
 			}
@@ -211,12 +249,16 @@ namespace math
 		{
 			Solver::record();
 			const uint32_t ss = state_set();
+			const uint32_t es = energy_set();
 			for(uint32_t i = 0; i < m_size; i++)
 			{
 				if(ss & 1 << uint32_t(State::x)) m_x_data[m_step * m_size + i] = m_x_new[i];
 				if(ss & 1 << uint32_t(State::v)) m_v_data[m_step * m_size + i] = m_v_new[i];
 				if(ss & 1 << uint32_t(State::a)) m_a_data[m_step * m_size + i] = m_a_new[i];
 			}
+			if(es & 1 << uint32_t(Energy::T)) m_T_data[m_step] = m_T;
+			if(es & 1 << uint32_t(Energy::U)) m_U_data[m_step] = m_U;
+			if(es & 1 << uint32_t(Energy::V)) m_V_data[m_step] = m_V;
 			if(ss & 1 << uint32_t(State::t)) m_t_data[m_step] = m_t_new;
 			if(ss & 1 << uint32_t(State::p)) m_p_data[m_step] = m_p_new;
 		}
@@ -233,6 +275,14 @@ namespace math
 			if(ss & 1 << uint32_t(State::v)) m_v_data = new double[m_size * (m_step_max + 1)];
 			if(ss & 1 << uint32_t(State::a)) m_a_data = new double[m_size * (m_step_max + 1)];
 			if(m_stability) for(uint32_t i = 0; i < m_step_max + 1; i++) m_stability_data[i] = true;
+		}
+		void Incremental::allocate_energies(void)
+		{
+			Solver::allocate_energies();
+			const uint32_t es = energy_set();
+			if(es & 1 << uint32_t(Energy::T)) m_T_data = new double[m_step_max + 1];
+			if(es & 1 << uint32_t(Energy::U)) m_U_data = new double[m_step_max + 1];
+			if(es & 1 << uint32_t(Energy::V)) m_V_data = new double[m_step_max + 1];
 		}
 	}
 }

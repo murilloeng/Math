@@ -62,6 +62,10 @@ namespace math
 		{
 			return 1 << uint32_t(Force::r);
 		}
+		uint32_t GradientDescent::energy_set(void) const
+		{
+			return 0;
+		}
 		uint32_t GradientDescent::tangent_set(void) const
 		{
 			return 0;

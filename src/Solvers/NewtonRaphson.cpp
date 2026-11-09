@@ -51,6 +51,10 @@ namespace math
 		{
 			return 1 << uint32_t(Force::r) | 1 << uint32_t(Force::fe);
 		}
+		uint32_t NewtonRaphson::energy_set(void) const
+		{
+			return 1 << uint32_t(Energy::U) | 1 << uint32_t(Energy::V);
+		}
 		uint32_t NewtonRaphson::tangent_set(void) const
 		{
 			return 1 << uint32_t(Tangent::K);
@@ -64,6 +68,15 @@ namespace math
 		NewtonRaphson::System NewtonRaphson::system(NewtonRaphson::System system)
 		{
 			return m_system = system;
+		}
+
+		NewtonRaphson::Energies NewtonRaphson::energies(void) const
+		{
+			return m_energies;
+		}
+		NewtonRaphson::Energies NewtonRaphson::energies(NewtonRaphson::Energies energies)
+		{
+			return m_energies = energies;
 		}
 
 		NewtonRaphson::Function NewtonRaphson::residue(void) const
@@ -118,12 +131,14 @@ namespace math
 			if(m_system)
 			{
 				m_system(m_r, m_fe, m_K, m_p_new, m_x_new);
+				if(m_energies) m_energies(m_U, m_V, m_p_new, m_x_new);
 			}
 			else
 			{
 				m_residue(m_r, m_p_new, m_x_new);
 				m_tangent_x(m_K, m_p_new, m_x_new);
 				m_tangent_p(m_fe, m_p_new, m_x_new);
+				if(m_energies) m_energies(m_U, m_V, m_p_new, m_x_new);
 			}
 		}
 		bool NewtonRaphson::predictor(void)
