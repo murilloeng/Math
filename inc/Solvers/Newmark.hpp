@@ -30,12 +30,8 @@ namespace math
 			uint32_t tangent_set(void) const override;
 
 			//types
-			typedef std::function<void(double*, const double*, const double*)> InternalForce;
-			typedef std::function<void(double*, const double*, const double*, double)> ExternalForce;
-
-			typedef std::function<void(double*, const double*)> Inertia;
-			typedef std::function<void(double*, const double*, const double*, double)> Damping;
-			typedef std::function<void(double*, const double*, const double*, const double*, double)> Stiffness;
+			typedef std::function<void(double&, double&, double&, const double*, const double*, double)> EnergyCallback;
+			typedef std::function<void(double*, double*, double*, double*, double*, const double*, const double*, const double*, double)> SystemCallback;
 
 			//data
 			double beta(double);
@@ -44,20 +40,11 @@ namespace math
 			double gamma(double);
 			double gamma(void) const;
 
-			Inertia inertia(Inertia);
-			Inertia inertia(void) const;
+			EnergyCallback energy(void) const;
+			EnergyCallback energy(EnergyCallback);
 
-			Damping damping(Damping);
-			Damping damping(void) const;
-
-			Stiffness stiffness(Stiffness);
-			Stiffness stiffness(void) const;
-
-			InternalForce internal_force(void) const;
-			InternalForce internal_force(InternalForce);
-
-			ExternalForce external_force(void) const;
-			ExternalForce external_force(ExternalForce);
+			SystemCallback system(void) const;
+			SystemCallback system(SystemCallback);
 
 		protected:
 			//solve
@@ -70,13 +57,8 @@ namespace math
 
 			//data
 			double m_g, m_b;
-
-			Inertia m_inertia;
-			Damping m_damping;
-			Stiffness m_stiffness;
-
-			InternalForce m_internal_force;
-			ExternalForce m_external_force;
+			SystemCallback m_system;
+			EnergyCallback m_energy;
 		};
 	}
 }

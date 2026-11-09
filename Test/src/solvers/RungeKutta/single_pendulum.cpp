@@ -17,21 +17,17 @@ void tests::solvers::runge_kutta::single_pendulum(void)
 	math::validation::Validator validator;
 	//setup
 	solver.size(1);
+	solver.silent(true);
 	solver.step_max(1000);
 	solver.time_max(1.00e+01);
-	//initials
+	//system
 	solver.allocate();
 	solver.state_old(0, x0);
 	solver.velocity_old(0, v0);
-	//system
-	solver.inertia([](double* M, const double*){
+	solver.system([g, L](double* M, double* fi, double* fe, const double* x, const double*, double){
 		M[0] = 1;
-	});
-	solver.internal_force([g, L](double* fi, const double* x, const double*){
-		fi[0] = g / L * sin(x[0]);
-	});
-	solver.external_force([](double* fe, const double*, const double*, double){
 		fe[0] = 0;
+		fi[0] = g / L * sin(x[0]);
 	});
 	//solve
 	solver.solve();

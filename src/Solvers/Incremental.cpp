@@ -25,7 +25,7 @@ namespace math
 		{
 			//data
 			double** data[] = {
-				&m_p_data, &m_t_data, 
+				&m_p_data, &m_t_data,
 				&m_x_data, &m_v_data, &m_a_data,
 				&m_T_data, &m_U_data, &m_V_data
 			};
@@ -283,6 +283,9 @@ namespace math
 			if(es & 1 << uint32_t(Energy::T)) m_T_data = new double[m_step_max + 1];
 			if(es & 1 << uint32_t(Energy::U)) m_U_data = new double[m_step_max + 1];
 			if(es & 1 << uint32_t(Energy::V)) m_V_data = new double[m_step_max + 1];
+			if(es & 1 << uint32_t(Energy::T)) for(uint32_t i = 0; i <= m_step_max; i++) m_T_data[i] = 0;
+			if(es & 1 << uint32_t(Energy::U)) for(uint32_t i = 0; i <= m_step_max; i++) m_U_data[i] = 0;
+			if(es & 1 << uint32_t(Energy::V)) for(uint32_t i = 0; i <= m_step_max; i++) m_V_data[i] = 0;
 		}
 	}
 }

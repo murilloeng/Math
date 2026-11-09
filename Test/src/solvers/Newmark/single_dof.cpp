@@ -22,29 +22,20 @@ void tests::solvers::newmark::single_dof(void)
 	math::validation::Validator validator;
 	//setup
 	solver.size(1);
+	solver.silent(true);
 	solver.step_max(1000);
 	solver.time_max(2 * M_PI * np / w0);
 	solver.convergence().type_set(math::solvers::Convergence::Type::Fixed);
-	//initials
+	//system
 	solver.allocate();
 	solver.state_old(0, x0);
 	solver.velocity_old(0, v0);
-	//forces
-	solver.internal_force([k, c](double* fi, const double* x, const double* v){
-		fi[0] = k * x[0] + c * v[0];
-	});
-	solver.external_force([f, w](double* fe, const double*, const double*, double t){
-		fe[0] = f * sin(w * t);
-	});
-	//tangents
-	solver.inertia([m](double* M, const double*){
-		M[0] = m;
-	});
-	solver.damping([c](double* C, const double*, const double*, double){
-		C[0] = c;
-	});
-	solver.stiffness([k](double* K, const double*, const double*, const double*, double){
+	solver.system([k, c, m, f, w](double* fi, double* fe, double* K, double* C, double* M, const double* x, const double* v, const double*, double t){
 		K[0] = k;
+		C[0] = c;
+		M[0] = m;
+		fe[0] = f * sin(w * t);
+		fi[0] = k * x[0] + c * v[0];
 	});
 	//solve
 	solver.solve();

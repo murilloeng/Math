@@ -7,7 +7,7 @@ static double function(double x)
 {
 	return x * (1 - x * x);
 }
-static void example_system(double* r, double* g, double* K, double p, const double* x)
+static void example_system(double* r, double* g, double* K, const double* x, double p)
 {
 	g[0] = -1;
 	K[0] = 3 * x[0] * x[0] - 1;
@@ -21,6 +21,7 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	math::validation::Validator validator;
 	//setup
 	solver.size(1);
+	solver.silent(true);
 	solver.step_max(400);
 	solver.step_size(1.00e-02);
 	solver.system(example_system);

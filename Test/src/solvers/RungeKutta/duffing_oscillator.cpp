@@ -22,22 +22,17 @@ void tests::solvers::runge_kutta::duffing_oscillator(void)
 	math::validation::Validator validator;
 	//setup
 	solver.size(1);
+	solver.silent(true);
 	solver.step_max(1000);
 	solver.time_max(2 * M_PI * np / sqrt(k / m));
-	//initials
+	//system
 	solver.allocate();
 	solver.state_old(0, x0);
 	solver.velocity_old(0, v0);
-	//forces
-	solver.internal_force([k, c, knl](double* fi, const double* x, const double* v){
-		fi[0] = k * x[0] + c * v[0] + knl * x[0] * x[0] * x[0];
-	});
-	solver.external_force([F, w](double* fe, const double*, const double*, double t){
-		fe[0] = F * sin(w * t);
-	});
-	//tangents
-	solver.inertia([m](double* M, const double*){
+	solver.system([m, c, k, knl, F, w](double* M, double* fi, double* fe, const double* x, const double* v, double t){
 		M[0] = m;
+		fe[0] = F * sin(w * t);
+		fi[0] = k * x[0] + c * v[0] + knl * x[0] * x[0] * x[0];
 	});
 	//solve
 	solver.solve();

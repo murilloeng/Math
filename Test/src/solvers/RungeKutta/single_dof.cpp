@@ -22,21 +22,17 @@ void tests::solvers::runge_kutta::single_dof(void)
 	math::validation::Validator validator;
 	//setup
 	solver.size(1);
+	solver.silent(true);
 	solver.step_max(2000);
 	solver.time_max(2 * M_PI * n / w0);
-	//initials
+	//system
 	solver.allocate();
 	solver.state_old(0, x0);
 	solver.velocity_old(0, v0);
-	//system
-	solver.inertia([m](double* M, const double*){
+	solver.system([m, c, k, f, w](double* M, double* fi, double* fe, const double* x, const double* v, double t){
 		M[0] = m;
-	});
-	solver.internal_force([k, c](double* fi, const double* x, const double* v){
-		fi[0] = k * x[0] + c * v[0];
-	});
-	solver.external_force([f, w](double* fe, const double*, const double*, double t){
 		fe[0] = f * sin(w * t);
+		fi[0] = k * x[0] + c * v[0];
 	});
 	//solve
 	solver.solve();

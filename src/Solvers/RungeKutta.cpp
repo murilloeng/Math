@@ -20,6 +20,7 @@ namespace math
 			compute();
 			corrector();
 			m_status = true;
+			if(m_energy) m_energy(m_T, m_U, m_V, m_x_new, m_v_new, m_t_new);
 			//update
 			update();
 			//record
@@ -45,39 +46,30 @@ namespace math
 		}
 
 		//data
-		RungeKutta::Inertia RungeKutta::inertia(void) const
+		RungeKutta::EnergyCallback RungeKutta::energy(void) const
 		{
-			return m_inertia;
+			return m_energy;
 		}
-		RungeKutta::Inertia RungeKutta::inertia(Inertia inertia)
+		RungeKutta::EnergyCallback RungeKutta::energy(EnergyCallback energy)
 		{
-			return m_inertia = inertia;
-		}
-
-		RungeKutta::InternalForce RungeKutta::internal_force(void) const
-		{
-			return m_internal_force;
-		}
-		RungeKutta::InternalForce RungeKutta::internal_force(InternalForce internal_force)
-		{
-			return m_internal_force = internal_force;
+			return m_energy = energy;
 		}
 
-		RungeKutta::ExternalForce RungeKutta::external_force(void) const
+		RungeKutta::SystemCallback RungeKutta::system(void) const
 		{
-			return m_external_force;
+			return m_system;
 		}
-		RungeKutta::ExternalForce RungeKutta::external_force(ExternalForce external_force)
+		RungeKutta::SystemCallback RungeKutta::system(SystemCallback system)
 		{
-			return m_external_force = external_force;
+			return m_system = system;
 		}
 
 		//solve
 		void RungeKutta::check(void)
 		{
-			if(!m_inertia || !m_internal_force || !m_external_force)
+			if(!m_system)
 			{
-				throw std::runtime_error("Runge Kutta solver called with at least one method not set!");
+				throw std::runtime_error("Runge Kutta solver called with system unset!");
 			}
 		}
 		void RungeKutta::print(void)
@@ -85,12 +77,30 @@ namespace math
 			Incremental::print();
 			Solver::print();
 		}
+		void RungeKutta::setup(void)
+		{
+			//setup
+			Solver::setup();
+			Incremental::setup();
+			m_system(m_M, m_fi, m_fe, m_x_new, m_v_new, m_t_new);
+			//residue
+			for(uint32_t i = 0; i < m_size; i++)
+			{
+				m_fe[i] -= m_fi[i];
+			}
+			//acceleration
+			if(!Solver::solve(m_M, m_fe, m_a_new))
+			{
+				if(!m_silent) printf("Unable to compute acceleration in setup!\n");
+			}
+			memcpy(m_a_old, m_a_new, m_size * sizeof(double));
+			//energy
+			if(m_energy) m_energy(m_T, m_U, m_V, m_x_new, m_v_new, m_t_new);
+		}
 		void RungeKutta::compute(void)
 		{
 			//setup
-			m_inertia(m_M, m_x_new);
-			m_internal_force(m_fi, m_x_new, m_v_new);
-			m_external_force(m_fe, m_x_new, m_v_new, m_t_new);
+			m_system(m_M, m_fi, m_fe, m_x_new, m_v_new, m_t_new);
 			for(uint32_t i = 0; i < m_size; i++) m_fe[i] -= m_fi[i];
 			//compute
 			Solver::solve(m_M, m_fe, m_a_new);

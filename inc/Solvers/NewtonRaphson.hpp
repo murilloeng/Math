@@ -31,15 +31,15 @@ namespace math
 			uint32_t tangent_set(void) const override;
 
 			//types
-			typedef std::function<void(double&, double&, double, const double*)> Energies;
-			typedef std::function<void(double*, double*, double*, double, const double*)> System;
+			typedef std::function<void(double&, double&, const double*, double)> EnergyCallback;
+			typedef std::function<void(double*, double*, double*, const double*, double)> SystemCallback;
 
 			//data
-			System system(System);
-			System system(void) const;
+			EnergyCallback energy(void) const;
+			EnergyCallback energy(EnergyCallback);
 
-			Energies energies(Energies);
-			Energies energies(void) const;
+			SystemCallback system(void) const;
+			SystemCallback system(SystemCallback);
 
 		protected:
 			//solve
@@ -51,8 +51,8 @@ namespace math
 			bool corrector(void) override;
 
 			//data
-			System m_system;
-			Energies m_energies;
+			EnergyCallback m_energy;
+			SystemCallback m_system;
 		};
 	}
 }

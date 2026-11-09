@@ -57,6 +57,7 @@ void tests::solvers::harmonic::duffing(void)
 	//setup
 	solver.load(p);
 	solver.dofs(1);
+	solver.silent(true);
 	solver.step_max(ns);
 	solver.harmonics(1);
 	solver.watch_dof(1);

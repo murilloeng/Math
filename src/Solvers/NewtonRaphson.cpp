@@ -38,6 +38,7 @@ namespace math
 				restore();
 				compute();
 			}
+			if(m_energy) m_energy(m_U, m_V, m_x_new, m_p_new);
 			update();
 			record();
 		}
@@ -61,22 +62,22 @@ namespace math
 		}
 
 		//data
-		NewtonRaphson::System NewtonRaphson::system(void) const
+		NewtonRaphson::SystemCallback NewtonRaphson::system(void) const
 		{
 			return m_system;
 		}
-		NewtonRaphson::System NewtonRaphson::system(NewtonRaphson::System system)
+		NewtonRaphson::SystemCallback NewtonRaphson::system(NewtonRaphson::SystemCallback system)
 		{
 			return m_system = system;
 		}
 
-		NewtonRaphson::Energies NewtonRaphson::energies(void) const
+		NewtonRaphson::EnergyCallback NewtonRaphson::energy(void) const
 		{
-			return m_energies;
+			return m_energy;
 		}
-		NewtonRaphson::Energies NewtonRaphson::energies(NewtonRaphson::Energies energies)
+		NewtonRaphson::EnergyCallback NewtonRaphson::energy(NewtonRaphson::EnergyCallback energy)
 		{
-			return m_energies = energies;
+			return m_energy = energy;
 		}
 
 		//solve
@@ -98,11 +99,11 @@ namespace math
 			Solver::setup();
 			Implicit::setup();
 			Incremental::setup();
+			if(m_energy) m_energy(m_U, m_V, m_x_new, m_p_new);
 		}
 		void NewtonRaphson::compute(void)
 		{
-			m_system(m_r, m_fe, m_K, m_p_new, m_x_new);
-			if(m_energies) m_energies(m_U, m_V, m_p_new, m_x_new);
+			m_system(m_r, m_fe, m_K, m_x_new, m_p_new);
 		}
 		bool NewtonRaphson::predictor(void)
 		{

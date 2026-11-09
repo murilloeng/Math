@@ -17,29 +17,22 @@ void tests::solvers::newmark::single_pendulum(void)
 	math::validation::Validator validator;
 	//setup
 	solver.size(1);
+	solver.silent(true);
 	solver.step_max(1000);
 	solver.time_max(1.00e+01);
 	solver.convergence().type_set(math::solvers::Convergence::Type::Fixed);
-	//initials
+	//system
 	solver.allocate();
 	solver.state_old(0, x0);
 	solver.velocity_old(0, v0);
-	//forces
-	solver.internal_force([g, L](double* fi, const double* x, const double*){
-		fi[0] = g / L * sin(x[0]);
-	});
-	solver.external_force([](double* fe, const double*, const double*, double){
-		fe[0] = 0;
-	});
-	//tangents
-	solver.inertia([](double* M, const double*){
+	solver.system([g, L](double* fi, double* fe, double* K, double* C, double* M, const double* x, const double*, const double*, double){
+		//tangent
 		M[0] = 1;
-	});
-	solver.damping([](double* C, const double*, const double*, double){
 		C[0] = 0;
-	});
-	solver.stiffness([g, L](double* K, const double* x, const double*, const double*, double){
 		K[0] = g / L * cos(x[0]);
+		//forces
+		fe[0] = 0;
+		fi[0] = g / L * sin(x[0]);
 	});
 	//solve
 	solver.solve();

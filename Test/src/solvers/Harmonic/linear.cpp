@@ -57,6 +57,7 @@ void tests::solvers::harmonic::linear(void)
 	//setup
 	solver.dofs(1);
 	solver.load(p);
+	solver.silent(true);
 	solver.step_max(ns);
 	solver.harmonics(1);
 	solver.watch_dof(1);

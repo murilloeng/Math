@@ -26,24 +26,21 @@ namespace math
 			uint32_t tangent_set(void) const override;
 
 			//types
-			typedef std::function<void(double*, const double*)> Inertia;
-			typedef std::function<void(double*, const double*, const double*)> InternalForce;
-			typedef std::function<void(double*, const double*, const double*, double)> ExternalForce;
+			typedef std::function<void(double&, double&, double&, const double*, const double*, double)> EnergyCallback;
+			typedef std::function<void(double*, double*, double*, const double*, const double*, double)> SystemCallback;
 
 			//data
-			Inertia inertia(Inertia);
-			Inertia inertia(void) const;
+			EnergyCallback energy(void) const;
+			EnergyCallback energy(EnergyCallback);
 
-			InternalForce internal_force(void) const;
-			InternalForce internal_force(InternalForce);
-
-			ExternalForce external_force(void) const;
-			ExternalForce external_force(ExternalForce);
+			SystemCallback system(void) const;
+			SystemCallback system(SystemCallback);
 
 		private:
 			//solve
 			void check(void) override;
 			void print(void) override;
+			void setup(void) override;
 			void compute(void) override;
 			bool predictor(void) override;
 			bool corrector(void) override;
@@ -55,10 +52,8 @@ namespace math
 			void compute_tangent_4(void);
 
 			//data
-			Inertia m_inertia;
-			InternalForce m_internal_force;
-			ExternalForce m_external_force;
-
+			EnergyCallback m_energy;
+			SystemCallback m_system;
 		};
 	}
 }

@@ -18,7 +18,7 @@ namespace math
 			m_status{false},
 			m_rows_map{nullptr},
 			m_cols_map{nullptr},
-			m_size{1}, m_watch_dof{0}, 
+			m_size{1}, m_watch_dof{0},
 			m_T{0.0}, m_U{0.0}, m_V{0.0},
 			m_K{nullptr}, m_C{nullptr}, m_M{nullptr},
 			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr},

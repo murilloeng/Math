@@ -49,6 +49,7 @@ namespace math
 				if(m_status) break;
 				restore();
 			}
+			if(m_energy) m_energy(m_T, m_U, m_V, m_x_new, m_v_new, m_t_new);
 			update();
 			record();
 		}
@@ -90,57 +91,30 @@ namespace math
 			return m_g = gamma;
 		}
 
-		Newmark::Inertia Newmark::inertia(void) const
+		Newmark::EnergyCallback Newmark::energy(void) const
 		{
-			return m_inertia;
+			return m_energy;
 		}
-		Newmark::Inertia Newmark::inertia(Inertia inertia)
+		Newmark::EnergyCallback Newmark::energy(EnergyCallback energy)
 		{
-			return m_inertia = inertia;
-		}
-
-		Newmark::Damping Newmark::damping(void) const
-		{
-			return m_damping;
-		}
-		Newmark::Damping Newmark::damping(Damping damping)
-		{
-			return m_damping = damping;
+			return m_energy = energy;
 		}
 
-		Newmark::Stiffness Newmark::stiffness(void) const
+		Newmark::SystemCallback Newmark::system(void) const
 		{
-			return m_stiffness;
+			return m_system;
 		}
-		Newmark::Stiffness Newmark::stiffness(Stiffness stiffness)
+		Newmark::SystemCallback Newmark::system(SystemCallback system)
 		{
-			return m_stiffness = stiffness;
-		}
-
-		Newmark::InternalForce Newmark::internal_force(void) const
-		{
-			return m_internal_force;
-		}
-		Newmark::InternalForce Newmark::internal_force(InternalForce internal_force)
-		{
-			return m_internal_force = internal_force;
-		}
-
-		Newmark::ExternalForce Newmark::external_force(void) const
-		{
-			return m_external_force;
-		}
-		Newmark::ExternalForce Newmark::external_force(ExternalForce external_force)
-		{
-			return m_external_force = external_force;
+			return m_system = system;
 		}
 
 		//solve
 		void Newmark::check(void)
 		{
-			if(!m_internal_force || !m_external_force || !m_inertia || !m_damping || !m_stiffness)
+			if(!m_system)
 			{
-				throw std::runtime_error("Newmark solver called with at least one method not set!");
+				throw std::runtime_error("Newmark solver called with system unset!");
 			}
 		}
 		void Newmark::print(void)
@@ -155,9 +129,7 @@ namespace math
 			Solver::setup();
 			Implicit::setup();
 			Incremental::setup();
-			m_inertia(m_M, m_x_new);
-			m_internal_force(m_fi, m_x_new, m_v_new);
-			m_external_force(m_fe, m_x_new, m_v_new, m_t_new);
+			m_system(m_fi, m_fe, m_K, m_C, m_M, m_x_new, m_v_new, m_a_new, m_t_new);
 			//residue
 			for(uint32_t i = 0; i < m_size; i++)
 			{
@@ -169,16 +141,13 @@ namespace math
 				if(!m_silent) printf("Unable to compute acceleration in setup!\n");
 			}
 			memcpy(m_a_old, m_a_new, m_size * sizeof(double));
+			//energy
+			if(m_energy) m_energy(m_T, m_U, m_V, m_x_new, m_v_new, m_t_new);
 		}
 		void Newmark::compute(void)
 		{
-			//forces
-			m_internal_force(m_fi, m_x_new, m_v_new);
-			m_external_force(m_fe, m_x_new, m_v_new, m_t_new);
-			//tangents
-			m_inertia(m_M, m_x_new);
-			m_damping(m_C, m_x_new, m_v_new, m_t_new);
-			m_stiffness(m_K, m_x_new, m_v_new, m_a_new, m_t_new);
+			//compute
+			m_system(m_fi, m_fe, m_K, m_C, m_M, m_x_new, m_v_new, m_a_new, m_t_new);
 			//residue
 			for(uint32_t i = 0; i < m_size; i++)
 			{
