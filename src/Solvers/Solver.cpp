@@ -18,14 +18,14 @@ namespace math
 			m_status{false},
 			m_rows_map{nullptr},
 			m_cols_map{nullptr},
-			m_size{1}, m_watch_dof{0},
-			m_T{0}, m_U{0}, m_V{0},
+			m_size{1}, m_watch_dof{0}, 
+			m_T{0.0}, m_U{0.0}, m_V{0.0},
 			m_K{nullptr}, m_C{nullptr}, m_M{nullptr},
 			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr},
 			m_x_old{nullptr}, m_x_new{nullptr}, m_dx{nullptr},
 			m_v_old{nullptr}, m_v_new{nullptr}, m_dv{nullptr},
 			m_a_old{nullptr}, m_a_new{nullptr}, m_da{nullptr},
-			m_t_old{0}, m_t_new{0}, m_dt{0}, m_t_min{0.00e+00}, m_t_max{1.00e+00},
+			m_t_old{0}, m_t_new{0}, m_dt{0}, m_t_min{0}, m_t_max{1},
 			m_p_old{0}, m_p_new{0}, m_dp{0}, m_dp0{1.00e-02}, m_dps{0}, m_ddp{0},
 			m_dxs{nullptr}, m_dxr{nullptr}, m_dxt{nullptr}, m_ddx{nullptr}, m_ddxr{nullptr}, m_ddxt{nullptr}
 		{

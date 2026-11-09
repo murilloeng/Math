@@ -6,8 +6,8 @@
 //Math
 #include "Math/inc/Solvers/NewtonRaphson.hpp"
 
-//x: state Vector
-//r: residual force Vector
+//x: state
+//r: residue
 //p: continuation parameter
 
 //target system: r(x, p) = 0
@@ -79,39 +79,12 @@ namespace math
 			return m_energies = energies;
 		}
 
-		NewtonRaphson::Function NewtonRaphson::residue(void) const
-		{
-			return m_residue;
-		}
-		NewtonRaphson::Function NewtonRaphson::residue(NewtonRaphson::Function residue)
-		{
-			return m_residue = residue;
-		}
-
-		NewtonRaphson::Function NewtonRaphson::tangent_p(void) const
-		{
-			return m_tangent_p;
-		}
-		NewtonRaphson::Function NewtonRaphson::tangent_p(NewtonRaphson::Function tangent_p)
-		{
-			return m_tangent_p = tangent_p;
-		}
-
-		NewtonRaphson::Function NewtonRaphson::tangent_x(void) const
-		{
-			return m_tangent_x;
-		}
-		NewtonRaphson::Function NewtonRaphson::tangent_x(NewtonRaphson::Function tangent_x)
-		{
-			return m_tangent_x = tangent_x;
-		}
-
 		//solve
 		void NewtonRaphson::check(void)
 		{
-			if(!m_system && !(m_residue && m_tangent_p && m_tangent_x))
+			if(!m_system)
 			{
-				throw std::runtime_error("Newton-Raphson solver called with at least one method not set!");
+				throw std::runtime_error("Newton-Raphson solver called with system unset!");
 			}
 		}
 		void NewtonRaphson::print(void)
@@ -128,18 +101,8 @@ namespace math
 		}
 		void NewtonRaphson::compute(void)
 		{
-			if(m_system)
-			{
-				m_system(m_r, m_fe, m_K, m_p_new, m_x_new);
-				if(m_energies) m_energies(m_U, m_V, m_p_new, m_x_new);
-			}
-			else
-			{
-				m_residue(m_r, m_p_new, m_x_new);
-				m_tangent_x(m_K, m_p_new, m_x_new);
-				m_tangent_p(m_fe, m_p_new, m_x_new);
-				if(m_energies) m_energies(m_U, m_V, m_p_new, m_x_new);
-			}
+			m_system(m_r, m_fe, m_K, m_p_new, m_x_new);
+			if(m_energies) m_energies(m_U, m_V, m_p_new, m_x_new);
 		}
 		bool NewtonRaphson::predictor(void)
 		{

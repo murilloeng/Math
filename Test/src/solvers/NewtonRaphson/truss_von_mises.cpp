@@ -7,17 +7,11 @@ static double function(double x)
 {
 	return x * (1 - x * x);
 }
-static void residue(double* r, double p, const double* x)
-{
-	r[0] = -p - x[0] * (x[0] * x[0] - 1);
-}
-static void tangent_p(double* g, double, const double*)
+static void example_system(double* r, double* g, double* K, double p, const double* x)
 {
 	g[0] = -1;
-}
-static void tangent_x(double* K, double, const double* x)
-{
 	K[0] = 3 * x[0] * x[0] - 1;
+	r[0] = -p - x[0] * (x[0] * x[0] - 1);
 }
 
 void tests::solvers::newton_raphson::truss_von_mises(void)
@@ -29,11 +23,8 @@ void tests::solvers::newton_raphson::truss_von_mises(void)
 	solver.size(1);
 	solver.step_max(400);
 	solver.step_size(1.00e-02);
+	solver.system(example_system);
 	solver.continuation().type(math::solvers::Continuation::Type::ArcLengthSpherical);
-	//system
-	solver.residue(residue);
-	solver.tangent_p(tangent_p);
-	solver.tangent_x(tangent_x);
 	//initial
 	solver.allocate();
 	solver.state_old(0, 1);

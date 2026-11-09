@@ -10,5 +10,5 @@ set xlabel "{/Symbol q}"
 set ylabel "{/Symbol l}"
 
 plot\
-	"numeric.txt" using 1:2 with lines linecolor rgb "#0000ff" title "Numeric",\
+	"Test/data/Solvers/Newton Raphson/Spring buckling/numeric.txt" using 1:2 with lines linecolor rgb "#0000ff" title "Numeric",\
 	K / (F * L) * x / sin(x + q) with points pointtype 7 linecolor rgb "#ff0000" title "Reference"

@@ -13,7 +13,7 @@ int main(void)
 {
 	try
 	{
-		tests::solvers::harmonic::duffing();
+		tests::solvers::harmonic::linear();
 	}
 	catch(const std::exception& exception)
 	{

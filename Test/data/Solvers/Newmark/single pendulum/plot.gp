@@ -4,5 +4,5 @@ set xlabel "t (s)"
 set ylabel "{/Symbol q} (rad)"
 
 plot\
-	"numeric.txt" using 4:1 with lines linecolor rgb "#0000ff" title "Numeric",\
-	"reference.txt" using 1:2 every 10 with points pointtype 7 linecolor rgb "#ff0000" title "Reference"
+	"Test/data/Solvers/Newmark/single pendulum/numeric.txt" using 4:1 with lines linecolor rgb "#0000ff" title "Numeric",\
+	"Test/data/Solvers/Newmark/single pendulum/reference.txt" using 1:2 every 10 with points pointtype 7 linecolor rgb "#ff0000" title "Reference"
