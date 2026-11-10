@@ -7,8 +7,9 @@
 //Math
 #include "Math/inc/Linear/Span.hpp"
 #include "Math/inc/Linear/Mat3.hpp"
-#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/Vec3.hpp"
 #include "Math/inc/Linear/Matrix.hpp"
+#include "Math/inc/Linear/Vector.hpp"
 
 //extern
 extern "C"
@@ -116,6 +117,50 @@ namespace math
 		return Matrix(*this) /= s;
 	}
 
+	Vector Matrix::operator*(const Vec3& v) const
+	{
+		//check
+		if(m_cols != 3)
+		{
+			throw std::runtime_error("Matrix::operator*(const Vec3&) has incompatible dimensions!");
+		}
+		//data
+		Vector r(m_rows);
+		for(uint32_t i = 0; i < m_rows; i++)
+		{
+			r[i] = 0;
+			r[i] += m_data_ref[i + m_rows * 0] * v[0];
+			r[i] += m_data_ref[i + m_rows * 1] * v[1];
+			r[i] += m_data_ref[i + m_rows * 2] * v[2];
+		}
+		return r;
+	}
+	Matrix Matrix::operator*(const Mat3& M) const
+	{
+		//check
+		if(m_cols != 3)
+		{
+			throw std::runtime_error("Matrix::operator*(const Mat3&) has incompatible dimensions!");
+		}
+		//data
+		Matrix r(m_rows, 3);
+		for(uint32_t i = 0; i < m_rows; i++)
+		{
+			r.m_data_ptr[i + m_rows * 0] = 0;
+			r.m_data_ptr[i + m_rows * 1] = 0;
+			r.m_data_ptr[i + m_rows * 2] = 0;
+			r.m_data_ptr[i + m_rows * 0] += m_data_ref[i + m_rows * 0] * M(0, 0);
+			r.m_data_ptr[i + m_rows * 0] += m_data_ref[i + m_rows * 1] * M(1, 0);
+			r.m_data_ptr[i + m_rows * 0] += m_data_ref[i + m_rows * 2] * M(2, 0);
+			r.m_data_ptr[i + m_rows * 1] += m_data_ref[i + m_rows * 0] * M(0, 1);
+			r.m_data_ptr[i + m_rows * 1] += m_data_ref[i + m_rows * 1] * M(1, 1);
+			r.m_data_ptr[i + m_rows * 1] += m_data_ref[i + m_rows * 2] * M(2, 1);
+			r.m_data_ptr[i + m_rows * 2] += m_data_ref[i + m_rows * 0] * M(0, 2);
+			r.m_data_ptr[i + m_rows * 2] += m_data_ref[i + m_rows * 1] * M(1, 2);
+			r.m_data_ptr[i + m_rows * 2] += m_data_ref[i + m_rows * 2] * M(2, 2);
+		}
+		return r;
+	}
 	Matrix Matrix::operator+(const Matrix& m) const
 	{
 		return Matrix(*this) += m;

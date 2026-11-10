@@ -5,6 +5,7 @@
 #include "Math/inc/Linear/Span.hpp"
 #include "Math/inc/Linear/Mat3.hpp"
 #include "Math/inc/Linear/Matrix.hpp"
+#include "Math/inc/Linear/Vector.hpp"
 
 namespace math
 {
@@ -57,7 +58,7 @@ namespace math
 		}
 		return *this;
 	}
-	const Span& Span::operator=(const Mat3& k) const
+	const Span& Span::operator=(const Mat3& M) const
 	{
 		if(m_rows != 3 || m_cols != 3)
 		{
@@ -67,14 +68,14 @@ namespace math
 		{
 			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				(*this)(i, j) = k(i, j);
+				(*this)(i, j) = M(i, j);
 			}
 		}
 		return *this;
 	}
-	const Span& Span::operator=(const Matrix& k) const
+	const Span& Span::operator=(const Matrix& M) const
 	{
-		if(m_rows != k.m_rows || m_cols != k.m_cols)
+		if(m_rows != M.m_rows || m_cols != M.m_cols)
 		{
 			throw std::runtime_error("Span assign has incompatible dimensions!");
 		}
@@ -82,8 +83,20 @@ namespace math
 		{
 			for(uint32_t j = 0; j < m_cols; j++)
 			{
-				(*this)(i, j) = k(i, j);
+				(*this)(i, j) = M(i, j);
 			}
+		}
+		return *this;
+	}
+	const Span& Span::operator=(const Vector& v) const
+	{
+		if(m_rows != v.m_rows || m_cols != 1)
+		{
+			throw std::runtime_error("Span assign has incompatible dimensions!");
+		}
+		for(uint32_t i = 0; i < m_rows; i++)
+		{
+			(*this)(i, 0) = v[i];
 		}
 		return *this;
 	}

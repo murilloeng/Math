@@ -6,6 +6,7 @@
 #include <stdexcept>
 
 //Math
+#include "Math/inc/Linear/Vec3.hpp"
 #include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Linear/Matrix.hpp"
 
@@ -22,6 +23,10 @@ namespace math
 		{
 			m_data_ref = m_data_ptr = new double[m_rows];
 		}
+	}
+	Vector::Vector(const Vec3& v) : Vector(3)
+	{
+		memcpy(m_data_ptr, v.m_data, m_rows * sizeof(double));
 	}
 	Vector::Vector(const Vector& v) : Vector(v.m_rows)
 	{

@@ -15,6 +15,7 @@
 namespace math
 {
 	class Span;
+	class Vec3;
 	class Mat3;
 	class Vector;
 }
@@ -40,6 +41,8 @@ namespace math
 		Matrix operator-(void) const;
 		Matrix operator/(double) const;
 
+		Vector operator*(const Vec3&) const;
+		Matrix operator*(const Mat3&) const;
 		Matrix operator+(const Matrix&) const;
 		Matrix operator-(const Matrix&) const;
 		Vector operator*(const Vector&) const;
@@ -137,6 +140,7 @@ namespace math
 
 		//friends
 		friend class math::Span;
+		friend class math::Mat3;
 		friend class math::Vector;
 	};
 }

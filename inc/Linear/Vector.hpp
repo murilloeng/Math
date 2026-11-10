@@ -11,6 +11,7 @@
 
 namespace math
 {
+	class Span;
 	class Vec3;
 	class Matrix;
 }
@@ -21,6 +22,7 @@ namespace math
 	{
 	public:
 		//constructors
+		Vector(const Vec3&);
 		Vector(const Vector&);
 		explicit Vector(uint32_t);
 		Vector(double*, uint32_t);
@@ -92,6 +94,7 @@ namespace math
 		double m_data_mem[VECTOR_STATIC_SIZE];
 
 		//friends
+		friend class math::Span;
 		friend class math::Vec3;
 		friend class math::Matrix;
 	};

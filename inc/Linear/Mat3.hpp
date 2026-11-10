@@ -19,6 +19,7 @@ namespace math
 	{
 	public:
 		//constructors
+		Mat3(const Matrix&);
 		Mat3(Mode = Mode::zeros);
 		Mat3(const Mat3&) = default;
 		explicit Mat3(const double*);
@@ -41,6 +42,7 @@ namespace math
 		Mat3 operator-(const Mat3&) const;
 		Mat3 operator*(const Mat3&) const;
 		Vec3 operator*(const Vec3&) const;
+		Matrix operator*(const Matrix&) const;
 
 		Mat3& operator+=(double);
 		Mat3& operator-=(double);

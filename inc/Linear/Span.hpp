@@ -7,6 +7,7 @@ namespace math
 {
 	class Mat3;
 	class Matrix;
+	class Vector;
 }
 
 namespace math
@@ -29,16 +30,19 @@ namespace math
 		const Span& operator=(const Span&) const;
 		const Span& operator=(const Mat3&) const;
 		const Span& operator=(const Matrix&) const;
+		const Span& operator=(const Vector&) const;
 
 		const Span& operator+=(double) const;
 		const Span& operator+=(const Span&) const;
 		const Span& operator+=(const Mat3&) const;
 		const Span& operator+=(const Matrix&) const;
+		const Span& operator+=(const Vector&) const;
 
 		const Span& operator-=(double) const;
 		const Span& operator-=(const Span&) const;
 		const Span& operator-=(const Mat3&) const;
 		const Span& operator-=(const Matrix&) const;
+		const Span& operator-=(const Vector&) const;
 
 		double& operator()(uint32_t, uint32_t) const;
 

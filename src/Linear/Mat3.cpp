@@ -6,6 +6,7 @@
 //Math
 #include "Math/inc/Linear/Vec3.hpp"
 #include "Math/inc/Linear/Mat3.hpp"
+#include "Math/inc/Linear/Matrix.hpp"
 
 namespace math
 {
@@ -18,6 +19,14 @@ namespace math
 	Mat3::Mat3(const double* data)
 	{
 		memcpy(m_data, data, 9 * sizeof(double));
+	}
+	Mat3::Mat3(const Matrix& M)
+	{
+		if(M.m_rows != 3 || M.m_cols != 3)
+		{
+			throw std::runtime_error("Mat3 constructor has incompatible dimensions!");
+		}
+		memcpy(m_data, M.m_data_ref, 9 * sizeof(double));
 	}
 	Mat3::Mat3(const Vec3& v1, const Vec3& v2, const Vec3& v3)
 	{
@@ -89,6 +98,23 @@ namespace math
 		r.m_data[0] = m_data[0] * v.m_data[0] + m_data[3] * v.m_data[1] + m_data[6] * v.m_data[2];
 		r.m_data[1] = m_data[1] * v.m_data[0] + m_data[4] * v.m_data[1] + m_data[7] * v.m_data[2];
 		r.m_data[2] = m_data[2] * v.m_data[0] + m_data[5] * v.m_data[1] + m_data[8] * v.m_data[2];
+		return r;
+	}
+	Matrix Mat3::operator*(const Matrix& M) const
+	{
+		//check
+		if(M.m_rows != 3)
+		{
+			throw std::runtime_error("Mat3::operator*(const Matrix&) has incompatible dimensions!");
+		}
+		//data
+		Matrix r(3, M.m_cols);
+		for(uint32_t i = 0; i < M.m_cols; i++)
+		{
+			r(0, i) = m_data[0] * M(0, i) + m_data[3] * M(1, i) + m_data[6] * M(2, i);
+			r(1, i) = m_data[1] * M(0, i) + m_data[4] * M(1, i) + m_data[7] * M(2, i);
+			r(2, i) = m_data[2] * M(0, i) + m_data[5] * M(1, i) + m_data[8] * M(2, i);
+		}
 		return r;
 	}
 
