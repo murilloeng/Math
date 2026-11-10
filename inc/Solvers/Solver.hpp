@@ -122,6 +122,7 @@ namespace math
 			virtual void apply(void);
 			virtual void print(void);
 			virtual void setup(void);
+			virtual void reset(void);
 			virtual void record(void);
 			virtual void update(void);
 			virtual void restore(void);

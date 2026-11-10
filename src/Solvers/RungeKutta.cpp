@@ -6,6 +6,13 @@
 //Math
 #include "Math/inc/Solvers/RungeKutta.hpp"
 
+//x: state
+//v: velocity
+//a: acceleration
+//p: continuation parameter
+
+//target system: a(t) = M(x(t))^{-1} (fe(x(t), v(t), t) - fi(x(t), v(t)))
+
 namespace math
 {
 	namespace solvers

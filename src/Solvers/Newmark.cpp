@@ -7,10 +7,10 @@
 #include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Solvers/Newmark.hpp"
 
-//x: state Vector
-//r: residue Vector
-//v: velocity Vector
-//a: acceleration Vector
+//x: state
+//r: residue
+//v: velocity
+//a: acceleration
 //p: continuation parameter
 
 //target system: r(x(t), v(t), a(t)) = fe(x(t), v(t), t) - fi(x(t), v(t)) - M(x(t)) * a(t) = 0

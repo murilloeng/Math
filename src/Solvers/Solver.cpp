@@ -311,6 +311,14 @@ namespace math
 			if(ss & 1 << uint32_t(State::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
 			if(ss & 1 << uint32_t(State::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
 		}
+		void Solver::reset(void)
+		{
+			m_T = m_U = m_V = 0;
+			double* const tangents[] = {m_K, m_C, m_M};
+			double* const forces[] = {m_r, m_fi, m_fe};
+			for(double* ptr : forces) if(ptr) memset(ptr, 0, m_size * sizeof(double));
+			for(double* ptr : tangents) if(ptr) memset(ptr, 0, m_size * m_size * sizeof(double));
+		}
 		void Solver::record(void)
 		{
 			if(m_callback_record) m_callback_record();
