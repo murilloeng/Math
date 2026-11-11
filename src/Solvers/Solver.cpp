@@ -21,7 +21,7 @@ namespace math
 			m_size{1}, m_watch_dof{0},
 			m_T{0.0}, m_U{0.0}, m_V{0.0},
 			m_K{nullptr}, m_C{nullptr}, m_M{nullptr},
-			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr},
+			m_r{nullptr}, m_fi{nullptr}, m_fe{nullptr}, m_fd{nullptr},
 			m_x_old{nullptr}, m_x_new{nullptr}, m_dx{nullptr},
 			m_v_old{nullptr}, m_v_new{nullptr}, m_dv{nullptr},
 			m_a_old{nullptr}, m_a_new{nullptr}, m_da{nullptr},
@@ -235,7 +235,7 @@ namespace math
 			//data
 			double** data[] = {
 				&m_K, &m_C, &m_M,
-				&m_r, &m_fi, &m_fe,
+				&m_r, &m_fi, &m_fe, &m_fd,
 				&m_x_old, &m_x_new, &m_dx,
 				&m_v_old, &m_v_new, &m_dv,
 				&m_a_old, &m_a_new, &m_da,
