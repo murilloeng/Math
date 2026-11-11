@@ -1,5 +1,6 @@
 //std
 #include <cstdio>
+#include <cstring>
 
 //Math
 #include "Math/inc/Solvers/Implicit.hpp"
@@ -186,8 +187,8 @@ namespace math
 		void Incremental::save(const char* path) const
 		{
 			FILE* file = fopen(path, "w");
-			const uint32_t ss = state_set();
-			const uint32_t es = energy_set();
+			const uint32_t ss = states_set();
+			const uint32_t es = energies_set();
 			for(uint32_t i = 0; i < m_step; i++)
 			{
 				for(uint32_t j = 0; j < m_size; j++)
@@ -209,8 +210,8 @@ namespace math
 		void Incremental::save(const char* path, std::vector<uint32_t> dof_list) const
 		{
 			FILE* file = fopen(path, "w");
-			const uint32_t ss = state_set();
-			const uint32_t es = energy_set();
+			const uint32_t ss = states_set();
+			const uint32_t es = energies_set();
 			for(uint32_t i = 0; i < m_step; i++)
 			{
 				for(uint32_t dof : dof_list)
@@ -248,8 +249,8 @@ namespace math
 		void Incremental::record(void)
 		{
 			Solver::record();
-			const uint32_t ss = state_set();
-			const uint32_t es = energy_set();
+			const uint32_t ss = states_set();
+			const uint32_t es = energies_set();
 			for(uint32_t i = 0; i < m_size; i++)
 			{
 				if(ss & 1 << uint32_t(State::x)) m_x_data[m_step * m_size + i] = m_x_new[i];
@@ -267,7 +268,7 @@ namespace math
 		void Incremental::allocate_state(void)
 		{
 			Solver::allocate_state();
-			const uint32_t ss = state_set();
+			const uint32_t ss = states_set();
 			if(m_stability) m_stability_data = new bool[m_step_max + 1];
 			if(ss & 1 << uint32_t(State::t)) m_t_data = new double[m_step_max + 1];
 			if(ss & 1 << uint32_t(State::p)) m_p_data = new double[m_step_max + 1];
@@ -279,13 +280,13 @@ namespace math
 		void Incremental::allocate_energies(void)
 		{
 			Solver::allocate_energies();
-			const uint32_t es = energy_set();
+			const uint32_t es = energies_set();
 			if(es & 1 << uint32_t(Energy::T)) m_T_data = new double[m_step_max + 1];
 			if(es & 1 << uint32_t(Energy::U)) m_U_data = new double[m_step_max + 1];
 			if(es & 1 << uint32_t(Energy::V)) m_V_data = new double[m_step_max + 1];
-			if(es & 1 << uint32_t(Energy::T)) for(uint32_t i = 0; i <= m_step_max; i++) m_T_data[i] = 0;
-			if(es & 1 << uint32_t(Energy::U)) for(uint32_t i = 0; i <= m_step_max; i++) m_U_data[i] = 0;
-			if(es & 1 << uint32_t(Energy::V)) for(uint32_t i = 0; i <= m_step_max; i++) m_V_data[i] = 0;
+			if(es & 1 << uint32_t(Energy::T)) memset(m_T_data, 0, (m_step_max + 1) * sizeof(double));
+			if(es & 1 << uint32_t(Energy::U)) memset(m_U_data, 0, (m_step_max + 1) * sizeof(double));
+			if(es & 1 << uint32_t(Energy::V)) memset(m_V_data, 0, (m_step_max + 1) * sizeof(double));
 		}
 	}
 }

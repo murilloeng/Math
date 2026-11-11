@@ -224,7 +224,7 @@ namespace math
 		}
 
 		//data
-		uint32_t Harmonic::energy_set(void) const
+		uint32_t Harmonic::energies_set(void) const
 		{
 			return 0;
 		}

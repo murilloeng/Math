@@ -25,10 +25,9 @@ namespace math
 			void compute_step(void) override;
 
 			//data
-			uint32_t state_set(void) const override;
-			uint32_t force_set(void) const override;
-			uint32_t energy_set(void) const override;
-			uint32_t tangent_set(void) const override;
+			uint32_t states_set(void) const override;
+			uint32_t energies_set(void) const override;
+			uint32_t tangents_set(void) const override;
 
 			//types
 			typedef std::function<void(double&, double&, const double*, double)> EnergyCallback;

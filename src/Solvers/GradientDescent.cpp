@@ -54,19 +54,15 @@ namespace math
 		}
 
 		//data
-		uint32_t GradientDescent::state_set(void) const
+		uint32_t GradientDescent::states_set(void) const
 		{
 			return 1 << uint32_t(State::x);
 		}
-		uint32_t GradientDescent::force_set(void) const
-		{
-			return 1 << uint32_t(Force::r);
-		}
-		uint32_t GradientDescent::energy_set(void) const
+		uint32_t GradientDescent::energies_set(void) const
 		{
 			return 0;
 		}
-		uint32_t GradientDescent::tangent_set(void) const
+		uint32_t GradientDescent::tangents_set(void) const
 		{
 			return 0;
 		}

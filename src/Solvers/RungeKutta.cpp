@@ -35,19 +35,15 @@ namespace math
 		}
 
 		//data
-		uint32_t RungeKutta::state_set(void) const
+		uint32_t RungeKutta::states_set(void) const
 		{
 			return 1 << uint32_t(State::x) | 1 << uint32_t(State::v) | 1 << uint32_t(State::a) | 1 << uint32_t(State::t);
 		}
-		uint32_t RungeKutta::force_set(void) const
-		{
-			return 1 << uint32_t(Force::fi) | 1 << uint32_t(Force::fe);
-		}
-		uint32_t RungeKutta::energy_set(void) const
+		uint32_t RungeKutta::energies_set(void) const
 		{
 			return 1 << uint32_t(Energy::T) | 1 << uint32_t(Energy::U) | 1 << uint32_t(Energy::V);
 		}
-		uint32_t RungeKutta::tangent_set(void) const
+		uint32_t RungeKutta::tangents_set(void) const
 		{
 			return 1 << uint32_t(Tangent::M);
 		}

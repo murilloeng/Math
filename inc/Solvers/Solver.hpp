@@ -58,10 +58,9 @@ namespace math
 			virtual void save(const char*) const;
 
 			//data
-			virtual uint32_t state_set(void) const = 0;
-			virtual uint32_t force_set(void) const = 0;
-			virtual uint32_t energy_set(void) const = 0;
-			virtual uint32_t tangent_set(void) const = 0;
+			virtual uint32_t states_set(void) const = 0;
+			virtual uint32_t energies_set(void) const = 0;
+			virtual uint32_t tangents_set(void) const = 0;
 
 			//data
 			bool silent(bool);

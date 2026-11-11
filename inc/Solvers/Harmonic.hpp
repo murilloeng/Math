@@ -28,7 +28,7 @@ namespace math
 			void test_stiffness(void) const;
 
 			//data
-			uint32_t energy_set(void) const override;
+			uint32_t energies_set(void) const override;
 
 			//types
 			typedef std::function<void(double*, const double*, const double*)> InternalForce;

@@ -44,19 +44,15 @@ namespace math
 		}
 
 		//data
-		uint32_t NewtonRaphson::state_set(void) const
+		uint32_t NewtonRaphson::states_set(void) const
 		{
 			return 1 << uint32_t(State::x) | 1 << uint32_t(State::p) | 1 << uint32_t(State::t);
 		}
-		uint32_t NewtonRaphson::force_set(void) const
-		{
-			return 1 << uint32_t(Force::r) | 1 << uint32_t(Force::fe);
-		}
-		uint32_t NewtonRaphson::energy_set(void) const
+		uint32_t NewtonRaphson::energies_set(void) const
 		{
 			return 1 << uint32_t(Energy::U) | 1 << uint32_t(Energy::V);
 		}
-		uint32_t NewtonRaphson::tangent_set(void) const
+		uint32_t NewtonRaphson::tangents_set(void) const
 		{
 			return 1 << uint32_t(Tangent::K);
 		}

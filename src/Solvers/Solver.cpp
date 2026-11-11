@@ -276,7 +276,7 @@ namespace math
 		void Solver::apply(void)
 		{
 			//data
-			const uint32_t ss = state_set();
+			const uint32_t ss = states_set();
 			//apply
 			for(uint32_t i = 0; i < m_size; i++)
 			{
@@ -291,7 +291,7 @@ namespace math
 		{
 			//data
 			if(m_silent) return;
-			const uint32_t ss = state_set();
+			const uint32_t ss = states_set();
 			//print
 			if(ss & 1 << uint32_t(State::t)) printf("Time: %+.6e ", m_t_new);
 			if(ss & 1 << uint32_t(State::p)) printf("Load: %+.6e ", m_p_new);
@@ -306,18 +306,24 @@ namespace math
 			m_status = false;
 			m_p_new = m_p_old;
 			m_t_new = m_t_old = m_t_min;
-			const uint32_t ss = state_set();
+			const uint32_t ss = states_set();
 			if(ss & 1 << uint32_t(State::x)) memcpy(m_x_new, m_x_old, m_size * sizeof(double));
 			if(ss & 1 << uint32_t(State::v)) memcpy(m_v_new, m_v_old, m_size * sizeof(double));
 			if(ss & 1 << uint32_t(State::a)) memcpy(m_a_new, m_a_old, m_size * sizeof(double));
 		}
 		void Solver::reset(void)
 		{
+			//data
+			const uint32_t ts = tangents_set();
+			const uint32_t nz = m_cols_map ? m_cols_map[m_size] : m_size * m_size;
+			//reset
 			m_T = m_U = m_V = 0;
-			double* const tangents[] = {m_K, m_C, m_M};
-			double* const forces[] = {m_r, m_fi, m_fe};
-			for(double* ptr : forces) if(ptr) memset(ptr, 0, m_size * sizeof(double));
-			for(double* ptr : tangents) if(ptr) memset(ptr, 0, m_size * m_size * sizeof(double));
+			memset(m_r, 0, m_size * sizeof(double));
+			memset(m_fi, 0, m_size * sizeof(double));
+			memset(m_fe, 0, m_size * sizeof(double));
+			if(ts & 1 << uint32_t(Tangent::K)) memset(m_K, 0, nz * sizeof(double));
+			if(ts & 1 << uint32_t(Tangent::C)) memset(m_C, 0, nz * sizeof(double));
+			if(ts & 1 << uint32_t(Tangent::M)) memset(m_M, 0, nz * sizeof(double));
 		}
 		void Solver::record(void)
 		{
@@ -325,9 +331,7 @@ namespace math
 		}
 		void Solver::update(void)
 		{
-			//data
-			const uint32_t ss = state_set();
-			//update
+			const uint32_t ss = states_set();
 			if(m_callback_update) m_callback_update();
 			if(ss & 1 << uint32_t(State::t)) m_t_old = m_t_new;
 			if(ss & 1 << uint32_t(State::p)) m_p_old = m_p_new;
@@ -337,9 +341,7 @@ namespace math
 		}
 		void Solver::restore(void)
 		{
-			//data
-			const uint32_t ss = state_set();
-			//update
+			const uint32_t ss = states_set();
 			if(m_callback_restore) m_callback_restore();
 			if(ss & 1 << uint32_t(State::t)) m_t_new = m_t_old;
 			if(ss & 1 << uint32_t(State::p)) m_p_new = m_p_old;
@@ -363,7 +365,7 @@ namespace math
 		//allocate
 		void Solver::allocate_state(void)
 		{
-			const uint32_t ss = state_set();
+			const uint32_t ss = states_set();
 			if(ss & 1 << uint32_t(State::x)) m_dx = new double[m_size];
 			if(ss & 1 << uint32_t(State::v)) m_dv = new double[m_size];
 			if(ss & 1 << uint32_t(State::a)) m_da = new double[m_size];
@@ -382,10 +384,9 @@ namespace math
 		}
 		void Solver::allocate_forces(void)
 		{
-			const uint32_t fs = force_set();
-			if(fs & 1 << uint32_t(Force::r)) m_r = new double[m_size];
-			if(fs & 1 << uint32_t(Force::fi)) m_fi = new double[m_size];
-			if(fs & 1 << uint32_t(Force::fe)) m_fe = new double[m_size];
+			m_r = new double[m_size];
+			m_fi = new double[m_size];
+			m_fe = new double[m_size];
 		}
 		void Solver::allocate_energies(void)
 		{
@@ -393,7 +394,7 @@ namespace math
 		}
 		void Solver::allocate_tangents(void)
 		{
-			const uint32_t ts = tangent_set();
+			const uint32_t ts = tangents_set();
 			if(ts & 1 << uint32_t(Tangent::K)) m_K = new double[m_cols_map ? m_cols_map[m_size] : m_size * m_size];
 			if(ts & 1 << uint32_t(Tangent::C)) m_C = new double[m_cols_map ? m_cols_map[m_size] : m_size * m_size];
 			if(ts & 1 << uint32_t(Tangent::M)) m_M = new double[m_cols_map ? m_cols_map[m_size] : m_size * m_size];
