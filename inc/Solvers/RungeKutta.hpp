@@ -21,6 +21,7 @@ namespace math
 
 			//data
 			uint32_t states_set(void) const override;
+			uint32_t forces_set(void) const override;
 			uint32_t energies_set(void) const override;
 			uint32_t tangents_set(void) const override;
 

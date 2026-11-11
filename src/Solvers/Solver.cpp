@@ -314,16 +314,18 @@ namespace math
 		void Solver::reset(void)
 		{
 			//data
+			const uint32_t fs = forces_set();
 			const uint32_t ts = tangents_set();
 			const uint32_t nz = m_cols_map ? m_cols_map[m_size] : m_size * m_size;
 			//reset
 			m_T = m_U = m_V = 0;
-			memset(m_r, 0, m_size * sizeof(double));
-			memset(m_fi, 0, m_size * sizeof(double));
-			memset(m_fe, 0, m_size * sizeof(double));
 			if(ts & 1 << uint32_t(Tangent::K)) memset(m_K, 0, nz * sizeof(double));
 			if(ts & 1 << uint32_t(Tangent::C)) memset(m_C, 0, nz * sizeof(double));
 			if(ts & 1 << uint32_t(Tangent::M)) memset(m_M, 0, nz * sizeof(double));
+			if(fs & 1 << uint32_t(Force::r)) memset(m_r, 0, m_size * sizeof(double));
+			if(fs & 1 << uint32_t(Force::fi)) memset(m_fi, 0, m_size * sizeof(double));
+			if(fs & 1 << uint32_t(Force::fe)) memset(m_fe, 0, m_size * sizeof(double));
+			if(fs & 1 << uint32_t(Force::fd)) memset(m_fd, 0, m_size * sizeof(double));
 		}
 		void Solver::record(void)
 		{
@@ -384,9 +386,11 @@ namespace math
 		}
 		void Solver::allocate_forces(void)
 		{
-			m_r = new double[m_size];
-			m_fi = new double[m_size];
-			m_fe = new double[m_size];
+			const uint32_t fs = forces_set();
+			if(fs & 1 << uint32_t(Force::r)) m_r = new double[m_size];
+			if(fs & 1 << uint32_t(Force::fi)) m_fi = new double[m_size];
+			if(fs & 1 << uint32_t(Force::fe)) m_fe = new double[m_size];
+			if(fs & 1 << uint32_t(Force::fd)) m_fd = new double[m_size];
 		}
 		void Solver::allocate_energies(void)
 		{

@@ -35,7 +35,7 @@ namespace math
 			};
 			enum class Force : uint32_t
 			{
-				r, fi, fe
+				r, fi, fe, fd
 			};
 			enum class Energy : uint32_t
 			{
@@ -59,6 +59,7 @@ namespace math
 
 			//data
 			virtual uint32_t states_set(void) const = 0;
+			virtual uint32_t forces_set(void) const = 0;
 			virtual uint32_t energies_set(void) const = 0;
 			virtual uint32_t tangents_set(void) const = 0;
 
@@ -153,7 +154,7 @@ namespace math
 
 			double m_T, m_U, m_V;
 			double *m_K, *m_C, *m_M;
-			double *m_r, *m_fi, *m_fe;
+			double *m_r, *m_fi, *m_fe, *m_fd;
 			double *m_x_old, *m_x_new, *m_dx;
 			double *m_v_old, *m_v_new, *m_dv;
 			double *m_a_old, *m_a_new, *m_da;

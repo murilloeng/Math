@@ -59,6 +59,10 @@ namespace math
 		{
 			return 1 << uint32_t(State::x) | 1 << uint32_t(State::v) | 1 << uint32_t(State::a) | 1 << uint32_t(State::t);
 		}
+		uint32_t Newmark::forces_set(void) const
+		{
+			return 1 << uint32_t(Force::r) | 1 << uint32_t(Force::fi) | 1 << uint32_t(Force::fe);
+		}
 		uint32_t Newmark::energies_set(void) const
 		{
 			return 1 << uint32_t(Energy::T) | 1 << uint32_t(Energy::U) | 1 << uint32_t(Energy::V);
