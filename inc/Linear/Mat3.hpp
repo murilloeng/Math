@@ -20,9 +20,9 @@ namespace math
 	public:
 		//constructors
 		Mat3(const Matrix&);
-		Mat3(Mode = Mode::zeros);
 		Mat3(const Mat3&) = default;
 		explicit Mat3(const double*);
+		explicit Mat3(Mode = Mode::zeros);
 		explicit Mat3(const Vec3&, const Vec3&, const Vec3&);
 		Mat3(std::initializer_list<std::initializer_list<double>>);
 
@@ -59,7 +59,8 @@ namespace math
 		const double& operator()(uint32_t, uint32_t) const;
 
 		//linear
-		static Mat3 eye(void);
+		Mat3& eye(void);
+		Mat3& zeros(void);
 		Mat3 inverse(void) const;
 		Mat3 transpose(void) const;
 		Vec3 eigenvalues(void) const;

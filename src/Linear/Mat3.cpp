@@ -187,9 +187,17 @@ namespace math
 	}
 
 	//linear
-	Mat3 Mat3::eye(void)
+	Mat3& Mat3::eye(void)
 	{
-		return Mat3({{1, 0, 0}, {0, 1, 0}, {0, 0, 1}});
+		m_data[0] = m_data[4] = m_data[8] = 1;
+		m_data[1] = m_data[2] = m_data[3] = 0;
+		m_data[5] = m_data[6] = m_data[7] = 0;
+		return *this;
+	}
+	Mat3& Mat3::zeros(void)
+	{
+		memset(m_data, 0, 9 * sizeof(double));
+		return *this;
 	}
 	Vec3 Mat3::eigenvalues(void) const
 	{
