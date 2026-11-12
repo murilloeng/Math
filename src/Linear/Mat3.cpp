@@ -199,17 +199,6 @@ namespace math
 		memset(m_data, 0, 9 * sizeof(double));
 		return *this;
 	}
-	Vec3 Mat3::eigenvalues(void) const
-	{
-		Vec3 s;
-		const double tl = lode_angle();
-		const double I1 = invariant_I1();
-		const double J2 = deviatoric_J2();
-		s.m_data[2] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl);
-		s.m_data[0] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl + 2 * M_PI / 3);
-		s.m_data[1] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl - 2 * M_PI / 3);
-		return s;
-	}
 	Mat3 Mat3::inverse(void) const
 	{
 		Mat3 r;
@@ -235,6 +224,25 @@ namespace math
 		r.m_data[5] = m_data[7];
 		r.m_data[7] = m_data[5];
 		return r;
+	}
+	Vec3 Mat3::eigenvalues(void) const
+	{
+		Vec3 s;
+		const double tl = lode_angle();
+		const double I1 = invariant_I1();
+		const double J2 = deviatoric_J2();
+		s.m_data[2] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl);
+		s.m_data[0] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl + 2 * M_PI / 3);
+		s.m_data[1] = I1 / 3 + 2 * sqrt(J2 / 3) * cos(tl - 2 * M_PI / 3);
+		return s;
+	}
+	double Mat3::bilinear(const Vec3& v) const
+	{
+		return bilinear(v, v);
+	}
+	double Mat3::bilinear(const Vec3& v1, const Vec3& v2) const
+	{
+		return v1.inner(operator*(v2));
 	}
 
 	double Mat3::trace(void) const

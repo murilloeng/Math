@@ -64,6 +64,8 @@ namespace math
 		Mat3 inverse(void) const;
 		Mat3 transpose(void) const;
 		Vec3 eigenvalues(void) const;
+		double bilinear(const Vec3&) const;
+		double bilinear(const Vec3&, const Vec3&) const;
 
 		double trace(void) const;
 		double lode_angle(void) const;
