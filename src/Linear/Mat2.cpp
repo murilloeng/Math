@@ -158,7 +158,7 @@ namespace math
 		m_data[1] = m_data[2] = 0;
 		return *this;
 	}
-	Mat2& Mat2::eye(void)
+	Mat2& Mat2::zeros(void)
 	{
 		memset(m_data, 0, 4 * sizeof(double));
 		return *this;
