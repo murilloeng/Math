@@ -152,9 +152,16 @@ namespace math
 	}
 
 	//linear
-	Mat2 Mat2::eye(void)
+	Mat2& Mat2::eye(void)
 	{
-		return Mat2({{1, 0}, {0, 1}});
+		m_data[0] = m_data[3] = 1;
+		m_data[1] = m_data[2] = 0;
+		return *this;
+	}
+	Mat2& Mat2::eye(void)
+	{
+		memset(m_data, 0, 4 * sizeof(double));
+		return *this;
 	}
 	Mat2 Mat2::inverse(void) const
 	{
@@ -182,6 +189,14 @@ namespace math
 		s[0] = a / 2 - sqrt(b * b + 4 * c) / 2;
 		s[1] = a / 2 + sqrt(b * b + 4 * c) / 2;
 		return s;
+	}
+	double Mat2::bilinear(const Vec2& v) const
+	{
+		return bilinear(v, v);
+	}
+	double Mat2::bilinear(const Vec2& v1, const Vec2& v2) const
+	{
+		return v1.inner(operator*(v2));
 	}
 
 	double Mat2::trace(void) const

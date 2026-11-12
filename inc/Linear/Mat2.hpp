@@ -53,10 +53,13 @@ namespace math
 		const double& operator()(uint32_t, uint32_t) const;
 
 		//linear
-		static Mat2 eye(void);
+		Mat2& eye(void);
+		Mat2& zeros(void);
 		Mat2 inverse(void) const;
 		Mat2 transpose(void) const;
 		Vec2 eigenvalues(void) const;
+		double bilinear(const Vec2&) const;
+		double bilinear(const Vec2&, const Vec2&) const;
 
 		double trace(void) const;
 		double determinant(void) const;
