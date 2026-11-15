@@ -57,7 +57,7 @@ namespace math
 
 	protected:
 		//data
-		double m_data[r * c] = {};
+		double m_data[r * c];
 
 		//friends
 		template<uint32_t, uint32_t> friend class MatrixFixed;

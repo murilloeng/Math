@@ -20,9 +20,6 @@ namespace math
 		//destructor
 		~VectorFixed(void) = default;
 
-		//operators
-		VectorFixed& operator=(const MatrixFixed<n, 1>&);
-
 		//linear
 		double norm(void) const;
 		double inner(const VectorFixed&) const;
@@ -34,13 +31,6 @@ namespace math
 	template<uint32_t n> VectorFixed<n>::VectorFixed(const MatrixFixed<n, 1>& M) : MatrixFixed<n, 1>(M)
 	{
 		return;
-	}
-
-	//operators
-	template<uint32_t n> VectorFixed<n>& VectorFixed<n>::operator=(const MatrixFixed<n, 1>& M)
-	{
-		MatrixFixed<n, 1>::operator=(M);
-		return *this;
 	}
 
 	//linear
