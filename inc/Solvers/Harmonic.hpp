@@ -21,7 +21,7 @@ namespace math
 			{
 				Load, Frequency
 			};
-			
+
 			//tests
 			void test_inertia(void) const;
 			void test_damping(void) const;

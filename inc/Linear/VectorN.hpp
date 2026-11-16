@@ -47,7 +47,7 @@ namespace math
 		double norm(void) const;
 		VectorN& normalize(void);
 		VectorN unit(void) const;
-		
+
 		//utility
 		VectorN& zeros(void);
 		VectorN& randu(double = - 1, double = +1);
