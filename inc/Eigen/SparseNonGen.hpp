@@ -5,6 +5,11 @@
 
 namespace math
 {
+	class Sparse;
+}
+
+namespace math
+{
 	namespace eigen
 	{
 		class SparseNonGen : public SparseNon
