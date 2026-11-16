@@ -1,6 +1,5 @@
 //std
 #include <cmath>
-#include <cstring>
 #include <stdexcept>
 
 //Math

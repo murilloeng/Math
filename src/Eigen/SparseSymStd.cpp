@@ -1,6 +1,3 @@
-//std
-#include <cstring>
-
 //Math
 #include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Eigen/SparseSymStd.hpp"

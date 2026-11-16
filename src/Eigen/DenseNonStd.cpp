@@ -1,7 +1,3 @@
-//std
-#include <cfloat>
-#include <cstring>
-
 //Math
 #include "Math/inc/Eigen/DenseNonStd.hpp"
 

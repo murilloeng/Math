@@ -1,6 +1,3 @@
-//std
-#include <cfloat>
-
 //Math
 #include "Math/inc/Eigen/DenseNon.hpp"
 

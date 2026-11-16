@@ -4,7 +4,6 @@
 #include <stdexcept>
 
 //Math
-#include "Math/inc/Linear/VectorN.hpp"
 #include "Math/inc/Solvers/Newmark.hpp"
 
 //x: state

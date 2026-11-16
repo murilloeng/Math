@@ -4,9 +4,6 @@
 #include <cstdint>
 #include <functional>
 
-//Math
-#include "Math/inc/Solvers/StopCriteria.hpp"
-
 namespace math
 {
 	namespace solvers

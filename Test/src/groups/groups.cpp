@@ -1,5 +1,4 @@
 //std
-#include <cmath>
 #include <ctime>
 
 //Math

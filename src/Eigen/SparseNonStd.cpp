@@ -1,6 +1,5 @@
 //std
 #include <cstdio>
-#include <cstring>
 
 //Math
 #include "Math/inc/Linear/Sparse.hpp"

@@ -2,7 +2,6 @@
 
 //std
 #include <vector>
-#include <string>
 
 //Math
 #include "Math/inc/Validation/Item.hpp"

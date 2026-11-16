@@ -6,7 +6,6 @@
 #include "Math/inc/Groups/GSO3.hpp"
 #include "Math/inc/Groups/ASE3.hpp"
 #include "Math/inc/Groups/GSE3.hpp"
-#include "Math/inc/Miscellaneous/rotations.hpp"
 
 namespace math
 {

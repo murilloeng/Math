@@ -1,7 +1,6 @@
 //Math
 #include "Math/inc/Groups/ASO2.hpp"
 #include "Math/inc/Groups/GSO2.hpp"
-#include "Math/inc/Miscellaneous/util.hpp"
 
 namespace math
 {

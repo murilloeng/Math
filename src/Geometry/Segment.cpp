@@ -1,6 +1,3 @@
-//std
-#include <cmath>
-
 //Math
 #include "Math/inc/Miscellaneous/util.hpp"
 #include "Math/inc/Geometry/Line.hpp"

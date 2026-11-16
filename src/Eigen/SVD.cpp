@@ -1,7 +1,3 @@
-//std
-#include <cmath>
-#include <cstring>
-
 //Math
 #include "Math/inc/Eigen/SVD.hpp"
 #include "Math/inc/Miscellaneous/util.hpp"

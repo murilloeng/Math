@@ -1,5 +1,4 @@
 //std
-#include <cfloat>
 #include <cstring>
 
 //Math

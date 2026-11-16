@@ -3,7 +3,6 @@
 #include <cstring>
 
 //Math
-#include "Math/inc/Solvers/Implicit.hpp"
 #include "Math/inc/Solvers/Incremental.hpp"
 
 namespace math

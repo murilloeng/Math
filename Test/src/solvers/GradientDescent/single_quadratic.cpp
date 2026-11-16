@@ -2,7 +2,6 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/Linear/VectorN.hpp"
 #include "Math/inc/Solvers/GradientDescent.hpp"
 
 //Test

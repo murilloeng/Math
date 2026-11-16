@@ -3,11 +3,7 @@
 #include <stdexcept>
 
 //Test
-#include "Math/Test/inc/eigen.hpp"
-#include "Math/Test/inc/groups.hpp"
 #include "Math/Test/inc/solvers.hpp"
-#include "Math/Test/inc/geometry.hpp"
-#include "Math/Test/inc/validation.hpp"
 
 int main(void)
 {

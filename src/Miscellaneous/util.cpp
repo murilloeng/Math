@@ -1,10 +1,8 @@
 //std
 #include <cmath>
 #include <ctime>
-#include <cfloat>
 #include <cstdio>
 #include <cstring>
-#include <malloc.h>
 #include <stdexcept>
 
 //fftw
@@ -12,8 +10,6 @@
 
 //Math
 #include "Math/inc/Miscellaneous/util.hpp"
-#include "Math/inc/Linear/VectorN.hpp"
-#include "Math/inc/Linear/MatrixN.hpp"
 
 namespace math
 {
