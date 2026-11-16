@@ -2,7 +2,12 @@
 
 //std
 #include <cstdint>
+#include <cstring>
+#include <stdexcept>
 #include <initializer_list>
+
+//Math
+#include "Math/inc/Linear/Matrix.hpp"
 
 //defines
 #ifndef VECTOR_STATIC_SIZE
@@ -26,6 +31,7 @@ namespace math
 		VectorN(double*, uint32_t);
 		VectorN(const double*, uint32_t);
 		VectorN(std::initializer_list<double>);
+		template<uint32_t n> VectorN(const Vector<n>&);
 
 		//destructor
 		virtual ~VectorN(void);
@@ -66,6 +72,7 @@ namespace math
 		VectorN& operator=(double);
 		VectorN& operator=(const double*);
 		VectorN& operator=(const VectorN&);
+		template<uint32_t n> VectorN& operator=(const Vector<n>&);
 		VectorN& operator=(std::initializer_list<double>);
 
 		VectorN& operator+=(double);
@@ -77,6 +84,8 @@ namespace math
 		VectorN& operator-=(const double*);
 		VectorN& operator+=(const VectorN&);
 		VectorN& operator-=(const VectorN&);
+		template<uint32_t n> VectorN& operator+=(const Vector<n>&);
+		template<uint32_t n> VectorN& operator-=(const Vector<n>&);
 
 		double& operator[](uint32_t);
 		const double& operator[](uint32_t) const;
@@ -95,4 +104,51 @@ namespace math
 		friend class math::SpanN;
 		friend class math::MatrixN;
 	};
+}
+
+namespace math
+{
+	//constructors
+	template<uint32_t n> VectorN::VectorN(const Vector<n>& v) : VectorN(n)
+	{
+		memcpy(m_data_ptr, v.data(), n * sizeof(double));
+	}
+
+	//operators
+	template<uint32_t n> VectorN& VectorN::operator=(const Vector<n>& v)
+	{
+		//check
+		if(m_rows != n)
+		{
+			throw std::runtime_error("VectorN assign has incompatible dimensions!");
+		}
+		//assign
+		memcpy(m_data_ptr, v.data(), n * sizeof(double));
+		//return
+		return *this;
+	}
+	template<uint32_t n> VectorN& VectorN::operator+=(const Vector<n>& v)
+	{
+		if(m_rows != n)
+		{
+			throw std::runtime_error("VectorN increment has incompatible dimensions!");
+		}
+		for(uint32_t i = 0; i < n; i++)
+		{
+			m_data_ptr[i] += v[i];
+		}
+		return *this;
+	}
+	template<uint32_t n> VectorN& VectorN::operator-=(const Vector<n>& v)
+	{
+		if(m_rows != n)
+		{
+			throw std::runtime_error("VectorN increment has incompatible dimensions!");
+		}
+		for(uint32_t i = 0; i < n; i++)
+		{
+			m_data_ptr[i] -= v[i];
+		}
+		return *this;
+	}
 }

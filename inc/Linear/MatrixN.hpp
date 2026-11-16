@@ -33,6 +33,7 @@ namespace math
 		MatrixN(double*, uint32_t, uint32_t);
 		MatrixN(const double*, uint32_t, uint32_t);
 		MatrixN(std::initializer_list<std::initializer_list<double>>);
+		template<uint32_t r, uint32_t c> MatrixN(const Matrix<r, c>&);
 
 		//destructor
 		virtual ~MatrixN(void);
@@ -63,6 +64,8 @@ namespace math
 		MatrixN& operator-=(const MatrixN&);
 		MatrixN& operator+=(const double*);
 		MatrixN& operator-=(const double*);
+		template<uint32_t r, uint32_t c> MatrixN& operator+=(const Matrix<r, c>&);
+		template<uint32_t r, uint32_t c> MatrixN& operator-=(const Matrix<r, c>&);
 
 		double& operator[](uint32_t);
 		double& operator()(uint32_t);
@@ -140,4 +143,57 @@ namespace math
 		friend class math::SpanN;
 		friend class math::VectorN;
 	};
+}
+
+namespace math
+{
+	//constructors
+	template<uint32_t r, uint32_t c> MatrixN::MatrixN(const Matrix<r, c>& M) : MatrixN(r, c)
+	{
+		memcpy(m_data_ptr, M.data(), r * c * sizeof(double));
+	}
+
+	//operators
+	template<uint32_t r, uint32_t c> MatrixN& MatrixN::operator=(const Matrix<r, c>& M)
+	{
+		//check
+		if(m_rows != r || m_cols != c)
+		{
+			throw std::runtime_error("MatrixN assign has incompatible dimensions!");
+		}
+		//assign
+		memcpy(m_data_ptr, M.data(), r * c * sizeof(double));
+		//return
+		return *this;
+	}
+	template<uint32_t r, uint32_t c> MatrixN& MatrixN::operator+=(const Matrix<r, c>& M)
+	{
+		//check
+		if(m_rows != r || m_cols != c)
+		{
+			throw std::runtime_error("MatrixN increment has incompatible dimensions!");
+		}
+		//compute
+		for(uint32_t i = 0; i < r * c; i++)
+		{
+			m_data_ptr[i] += M.data()[i];
+		}
+		//return
+		return *this;
+	}
+	template<uint32_t r, uint32_t c> MatrixN& MatrixN::operator-=(const Matrix<r, c>& M)
+	{
+		//check
+		if(m_rows != r || m_cols != c)
+		{
+			throw std::runtime_error("MatrixN increment has incompatible dimensions!");
+		}
+		//compute
+		for(uint32_t i = 0; i < r * c; i++)
+		{
+			m_data_ptr[i] -= M.data()[i];
+		}
+		//return
+		return *this;
+	}
 }

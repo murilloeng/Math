@@ -225,18 +225,6 @@ namespace math
 		//return
 		return *this;
 	}
-	template<uint32_t r, uint32_t c> MatrixN& MatrixN::operator=(const Matrix<r, c>& M)
-	{
-		//check
-		if(m_rows != r || m_cols != c)
-		{
-			throw std::runtime_error("MatrixN assign has incompatible dimensions!");
-		}
-		//assign
-		memcpy(m_data_ptr, M.data(), r * c * sizeof(double));
-		//return
-		return *this;
-	}
 
 	MatrixN& MatrixN::operator+=(double s)
 	{
