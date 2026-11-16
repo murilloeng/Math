@@ -11,7 +11,7 @@ namespace math
 
 namespace math
 {
-	class GSE3 : public LieGroup<GSE3, ASE3>
+	class GSE3 : public LieGroup<GSE3, ASE3, 4, 3>
 	{
 	public:
 		//constructor
@@ -26,8 +26,8 @@ namespace math
 
 		//actions
 		GSO3 gso3(void) const;
-		Matrix matrix(void) const override;
-		Vector action(const Vector&) const override;
+		Mat4 matrix(void) const override;
+		Vec3 action(const Vec3&) const override;
 
 		//operators
 		double& operator[](uint32_t) override;

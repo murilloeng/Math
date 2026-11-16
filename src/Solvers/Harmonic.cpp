@@ -4,9 +4,9 @@
 #include <stdexcept>
 
 //Math
-#include "Math/inc/Linear/Span.hpp"
-#include "Math/inc/Linear/Vector.hpp"
-#include "Math/inc/Linear/Matrix.hpp"
+#include "Math/inc/Linear/SpanX.hpp"
+#include "Math/inc/Linear/VectorX.hpp"
+#include "Math/inc/Linear/MatrixX.hpp"
 #include "Math/inc/Solvers/Harmonic.hpp"
 #include "Math/inc/Miscellaneous/util.hpp"
 
@@ -84,21 +84,21 @@ namespace math
 			double t, w, l;
 			const uint32_t nt = 1000;
 			const uint32_t nd = m_dofs;
-			math::Vector xd(nd), vd(nd), ad(nd);
-			math::Matrix Ma(nd, nd), Mn(nd, nd), Me(nd, nd);
+			math::VectorX xd(nd), vd(nd), ad(nd);
+			math::MatrixX Ma(nd, nd), Mn(nd, nd), Me(nd, nd);
 			//function
 			std::function<void(double*, const double*)> function = [this, &t, &w, &l, nd, &xd, &vd](double* r, const double* a){
-				math::Matrix M(nd, nd);
-				math::Vector fi(nd), fe(nd);
+				math::MatrixX M(nd, nd);
+				math::VectorX fi(nd), fe(nd);
 				m_inertia(M.data(), xd.data());
 				m_external_force(fe.data(), xd.data(), t, w);
 				m_internal_force(fi.data(), xd.data(), vd.data());
-				math::Vector(r, nd) = l * fe - fi - M * math::Vector(a, nd);
+				math::VectorX(r, nd) = l * fe - fi - M * math::VectorX(a, nd);
 			};
 			//gradient
 			std::function<void(double*, const double*)> gradient = [this, nd, &xd](double* M, const double*){
 				m_inertia(M, xd.data());
-				math::Matrix(M, nd, nd) *= -1;
+				math::MatrixX(M, nd, nd) *= -1;
 			};
 			//test
 			for(uint32_t i = 0; i < nt; i++)
@@ -132,21 +132,21 @@ namespace math
 			double t, w, l;
 			const uint32_t nt = 1000;
 			const uint32_t nd = m_dofs;
-			math::Vector xd(nd), vd(nd), ad(nd);
-			math::Matrix Ca(nd, nd), Cn(nd, nd), Ce(nd, nd);
+			math::VectorX xd(nd), vd(nd), ad(nd);
+			math::MatrixX Ca(nd, nd), Cn(nd, nd), Ce(nd, nd);
 			//function
 			std::function<void(double*, const double*)> function = [this, &t, &w, &l, nd, &xd, &ad](double* r, const double* v){
-				math::Matrix M(nd, nd);
-				math::Vector fi(nd), fe(nd);
+				math::MatrixX M(nd, nd);
+				math::VectorX fi(nd), fe(nd);
 				m_inertia(M.data(), xd.data());
 				m_internal_force(fi.data(), xd.data(), v);
 				m_external_force(fe.data(), xd.data(), t, w);
-				math::Vector(r, nd) = l * fe - fi - M * ad;
+				math::VectorX(r, nd) = l * fe - fi - M * ad;
 			};
 			//gradient
 			std::function<void(double*, const double*)> gradient = [this, nd, &xd](double* C, const double* v){
 				m_damping(C, xd.data(), v);
-				math::Matrix(C, nd, nd) *= -1;
+				math::MatrixX(C, nd, nd) *= -1;
 			};
 			//test
 			for(uint32_t i = 0; i < nt; i++)
@@ -180,21 +180,21 @@ namespace math
 			double t, w, l;
 			const uint32_t nt = 1000;
 			const uint32_t nd = m_dofs;
-			math::Vector xd(nd), vd(nd), ad(nd);
-			math::Matrix Ka(nd, nd), Kn(nd, nd), Ke(nd, nd);
+			math::VectorX xd(nd), vd(nd), ad(nd);
+			math::MatrixX Ka(nd, nd), Kn(nd, nd), Ke(nd, nd);
 			//function
 			std::function<void(double*, const double*)> function = [this, &t, &w, &l, nd, &vd, &ad](double* r, const double* x){
-				math::Matrix M(nd, nd);
-				math::Vector fi(nd), fe(nd);
+				math::MatrixX M(nd, nd);
+				math::VectorX fi(nd), fe(nd);
 				m_inertia(M.data(), x);
 				m_external_force(fe.data(), x, t, w);
 				m_internal_force(fi.data(), x, vd.data());
-				math::Vector(r, nd) = l * fe - fi - M * ad;
+				math::VectorX(r, nd) = l * fe - fi - M * ad;
 			};
 			//gradient
 			std::function<void(double*, const double*)> gradient = [this, nd, &vd, &ad, &t, &w, &l](double* K, const double* x){
 				m_stiffness(K, x, vd.data(), ad.data(), t, w, l);
-				math::Matrix(K, nd, nd) *= -1;
+				math::MatrixX(K, nd, nd) *= -1;
 			};
 			//test
 			for(uint32_t i = 0; i < nt; i++)
@@ -611,10 +611,10 @@ namespace math
 		void Harmonic::compute_harmonic_tangent_z(double* K, const double* z)
 		{
 			//data
-			Matrix Ks(K, m_size, m_size);
-			const Matrix Kd(m_Kd, m_dofs, m_dofs);
-			const Matrix Cd(m_Cd, m_dofs, m_dofs);
-			const Matrix Md(m_Md, m_dofs, m_dofs);
+			MatrixX Ks(K, m_size, m_size);
+			const MatrixX Kd(m_Kd, m_dofs, m_dofs);
+			const MatrixX Cd(m_Cd, m_dofs, m_dofs);
+			const MatrixX Md(m_Md, m_dofs, m_dofs);
 			//tangent
 			memset(K, 0, m_size * m_size * sizeof(double));
 			for(uint32_t k = 0; k < m_quadrature_order; k++)

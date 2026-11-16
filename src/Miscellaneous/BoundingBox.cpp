@@ -6,7 +6,7 @@
 #include <cstring>
 
 //Math
-#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Matrix.hpp"
 #include "Math/inc/Miscellaneous/BoundingBox.hpp"
 
 namespace math

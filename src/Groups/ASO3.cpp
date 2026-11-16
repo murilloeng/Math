@@ -3,8 +3,6 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/Linear/Vec3.hpp"
-#include "Math/inc/Linear/Mat3.hpp"
 #include "Math/inc/Groups/ASO3.hpp"
 #include "Math/inc/Groups/GSO3.hpp"
 #include "Math/inc/Miscellaneous/rotations.hpp"
@@ -54,52 +52,47 @@ namespace math
 	//random
 	ASO3& ASO3::randu(double a, double b)
 	{
-		vector().randu(a, b);
-		return *this;
+		return *this = ASO3(Vec3().randu(a, b).data());
 	}
 
 	//linear
-	Vector ASO3::vector(void)
+	Vec3 ASO3::vector(void) const
 	{
-		return Vector(m_data, 3);
+		return Vec3(m_data);
 	}
-	Vector ASO3::vector(void) const
-	{
-		return Vector(m_data, 3);
-	}
-	Matrix ASO3::matrix(void) const
+	Mat3 ASO3::matrix(void) const
 	{
 		const double t1 = m_data[0];
 		const double t2 = m_data[1];
 		const double t3 = m_data[2];
-		return Matrix({{0, -t3, t2}, {t3, 0, -t1}, {-t2, t1, 0}});
+		return Mat3({0, -t3, t2}, {t3, 0, -t1}, {-t2, t1, 0});
 	}
-	Matrix ASO3::adjoint(void) const
+	Mat3 ASO3::adjoint(void) const
 	{
 		const double t1 = m_data[0];
 		const double t2 = m_data[1];
 		const double t3 = m_data[2];
-		return Matrix({{0, -t3, t2}, {t3, 0, -t1}, {-t2, t1, 0}});
+		return Mat3({0, -t3, t2}, {t3, 0, -t1}, {-t2, t1, 0});
 	}
-	Matrix ASO3::jacobian(void) const
+	Mat3 ASO3::jacobian(void) const
 	{
-		const Matrix A = matrix();
+		const Mat3 A = matrix();
 		const double t1 = m_data[0];
 		const double t2 = m_data[1];
 		const double t3 = m_data[2];
 		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
-		return Matrix::eye(3, 3) - fn(tn, 2) * A + fn(tn, 3) * A * A;
+		return Mat3(Mode::eye) - fn(tn, 2) * A + fn(tn, 3) * A * A;
 	}
-	Matrix ASO3::jacobian_inverse(void) const
+	Mat3 ASO3::jacobian_inverse(void) const
 	{
-		const Matrix A = matrix();
+		const Mat3 A = matrix();
 		const double t1 = m_data[0];
 		const double t2 = m_data[1];
 		const double t3 = m_data[2];
 		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
-		return Matrix::eye(3, 3) + A / 2 + (fn(tn, 3) - 2 * fn(tn, 4)) / fn(tn, 2) / 2 * A * A;
+		return Mat3(Mode::eye) + A / 2 + (fn(tn, 3) - 2 * fn(tn, 4)) / fn(tn, 2) / 2 * A * A;
 	}
-	Matrix ASO3::jacobian_gradient(const Vector& vector) const
+	Mat3 ASO3::jacobian_gradient(const Vec3& vector) const
 	{
 		//data
 		const Vec3 t(m_data);
@@ -110,7 +103,7 @@ namespace math
 		const double f4 = fn(tn, 4);
 		const double f5 = fn(tn, 5);
 		//gradient
-		Matrix G(3, 3, Mode::zeros);
+		Mat3 G(Mode::zeros);
 		G += (2 * f4 - f3) * t.cross(u).outer(t);
 		G += (3 * f5 - f4) * t.cross(t.cross(u)).outer(t);
 		G -= f2 * u.spin() + f3 * t.cross(u).spin() + f3 * t.spin() * u.spin();
@@ -205,7 +198,7 @@ namespace math
 		{
 			v1.randu(-1, +1);
 			v2.randu(-1, +1);
-			const Matrix A1 = v1.matrix(), A2 = v2.matrix();
+			const Mat3 A1 = v1.matrix(), A2 = v2.matrix();
 			test = test && (v1.bracket(v2).matrix() - (A1 * A2 - A2 * A1)).norm() < tolerance;
 		}
 		//print
@@ -231,7 +224,7 @@ namespace math
 	bool ASO3::test_jacobian(uint32_t nt, double tolerance)
 	{
 		//test
-		Matrix Jn(3, 3);
+		Mat3 Jn;
 		bool test = true;
 		ASO3 v, vm, vp, dm, dp;
 		const double h = 1.00e-6;
@@ -264,7 +257,7 @@ namespace math
 		for(uint32_t i = 0; i < nt; i++)
 		{
 			v.randu(-1, +1);
-			test = test && (v.jacobian() * v.jacobian_inverse() - Matrix::eye(3, 3)).norm() < tolerance;
+			test = test && (v.jacobian() * v.jacobian_inverse() - Mat3(Mode::eye)).norm() < tolerance;
 		}
 		//print
 		printf("ASO3 jacobian inverse test:\t%s!\n", test ? "ok" : "not ok");

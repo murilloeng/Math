@@ -4,12 +4,11 @@
 #include <cstdint>
 
 //Math
-#include "Math/inc/Linear/Vector.hpp"
 #include "Math/inc/Linear/Matrix.hpp"
 
 namespace math
 {
-	template <class Group, class Algebra> class LieAlgebra
+	template <class Group, class Algebra, uint32_t n, uint32_t d> class LieAlgebra
 	{
 	public:
 		//constructor
@@ -26,13 +25,12 @@ namespace math
 		virtual Algebra& randu(double, double) = 0;
 
 		//linear
-		virtual Vector vector(void) = 0;
-		virtual Vector vector(void) const = 0;
-		virtual Matrix matrix(void) const = 0;
-		virtual Matrix adjoint(void) const = 0;
-		virtual Matrix jacobian(void) const = 0;
-		virtual Matrix jacobian_inverse(void) const = 0;
-		virtual Matrix jacobian_gradient(const Vector&) const = 0;
+		virtual Vector<d> vector(void) const = 0;
+		virtual Matrix<n, n> matrix(void) const = 0;
+		virtual Matrix<d, d> adjoint(void) const = 0;
+		virtual Matrix<d, d> jacobian(void) const = 0;
+		virtual Matrix<d, d> jacobian_inverse(void) const = 0;
+		virtual Matrix<d, d> jacobian_gradient(const Vector<d>&) const = 0;
 
 		//operators
 		virtual Algebra& operator*=(double) = 0;

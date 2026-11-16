@@ -9,8 +9,8 @@
 
 //Math
 #include "Math/inc/Linear/Sparse.hpp"
-#include "Math/inc/Linear/Vector.hpp"
-#include "Math/inc/Linear/Matrix.hpp"
+#include "Math/inc/Linear/VectorX.hpp"
+#include "Math/inc/Linear/MatrixX.hpp"
 
 namespace math
 {
@@ -88,7 +88,7 @@ namespace math
 		//check
 		if(!m_own)
 		{
-			throw std::runtime_error("Sparse pattern change called on Matrix that does not own its memory!");
+			throw std::runtime_error("Sparse pattern change called on MatrixX that does not own its memory!");
 		}
 		//setup
 		cleanup();
@@ -145,7 +145,7 @@ namespace math
 	{
 		return bilinear(v, v);
 	}
-	double Sparse::bilinear(const Vector& v) const
+	double Sparse::bilinear(const VectorX& v) const
 	{
 		return bilinear(v, v);
 	}
@@ -163,7 +163,7 @@ namespace math
 		//return
 		return s;
 	}
-	double Sparse::bilinear(const Vector& v1, const Vector& v2) const
+	double Sparse::bilinear(const VectorX& v1, const VectorX& v2) const
 	{
 		//check
 		if(m_rows != v1.rows() || m_cols != v2.rows())
@@ -175,7 +175,7 @@ namespace math
 	}
 
 	//solve
-	bool Sparse::solve(Vector& x, const Vector& f) const
+	bool Sparse::solve(VectorX& x, const VectorX& f) const
 	{
 		//check
 		if(m_cols != x.rows() || m_rows != f.rows())
@@ -185,7 +185,7 @@ namespace math
 		//return
 		return solve(x.data(), f.data(), 1);
 	}
-	bool Sparse::solve(Matrix& x, const Matrix& f) const
+	bool Sparse::solve(MatrixX& x, const MatrixX& f) const
 	{
 		//check
 		if(m_cols != x.rows() || m_rows != f.rows() || x.cols() != f.cols())
@@ -250,7 +250,7 @@ namespace math
 			umfpack_di_symbolic(n, n, c, r, Kd, &m_symbolic, nullptr, nullptr) == UMFPACK_OK &&
 			umfpack_di_numeric(c, r, Kd, m_symbolic, &m_numeric, nullptr, nullptr) == UMFPACK_OK;
 	}
-	bool Sparse::substitute(Vector& x, const Vector& f) const
+	bool Sparse::substitute(VectorX& x, const VectorX& f) const
 	{
 		//check
 		if(m_cols != x.rows() || m_rows != f.rows())
@@ -260,7 +260,7 @@ namespace math
 		//return
 		return substitute(x.data(), f.data(), 1);
 	}
-	bool Sparse::substitute(Matrix& x, const Matrix& f) const
+	bool Sparse::substitute(MatrixX& x, const MatrixX& f) const
 	{
 		//check
 		if(m_cols != x.rows() || m_rows != f.rows() || x.cols() != f.cols())
@@ -294,15 +294,15 @@ namespace math
 	}
 
 	//operators
-	Vector Sparse::operator*(const Vector& v) const
+	VectorX Sparse::operator*(const VectorX& v) const
 	{
 		//check
 		if(m_cols != v.rows())
 		{
-			throw std::runtime_error("Error: Sparse Vector product called with incompatible dimentions!");
+			throw std::runtime_error("Error: Sparse VectorX product called with incompatible dimentions!");
 		}
 		//vector
-		Vector r(v.rows());
+		VectorX r(v.rows());
 		product(r.data(), v.data());
 		//return
 		return r;
@@ -331,10 +331,10 @@ namespace math
 	}
 
 	//convert
-	Matrix Sparse::convert(void) const
+	MatrixX Sparse::convert(void) const
 	{
 		//data
-		Matrix M(m_rows, m_cols);
+		MatrixX M(m_rows, m_cols);
 		//convert
 		M.zeros();
 		for(uint32_t i = 0; i < m_cols; i++)
@@ -362,14 +362,14 @@ namespace math
 	}
 
 	//span
-	void Sparse::span(Sparse& Matrix, uint32_t i, uint32_t j) const
+	void Sparse::span(Sparse& MatrixX, uint32_t i, uint32_t j) const
 	{
 		//data
-		span_check(Matrix, i, j, true);
-		const uint32_t nc = Matrix.m_cols;
-		const uint32_t nr = Matrix.m_rows;
+		span_check(MatrixX, i, j, true);
+		const uint32_t nc = MatrixX.m_cols;
+		const uint32_t nr = MatrixX.m_rows;
 		//setup
-		span_count(Matrix, i, j, true);
+		span_count(MatrixX, i, j, true);
 		for(uint32_t a = 0; a < nc; a++)
 		{
 			uint32_t counter = 0;
@@ -377,19 +377,19 @@ namespace math
 			{
 				if(m_rows_map_ref[b] >= int32_t(i) && m_rows_map_ref[b] < int32_t(i + nr))
 				{
-					Matrix.m_data_ptr[Matrix.m_cols_map_ptr[a] + counter] = m_data_ref[b];
-					Matrix.m_rows_map_ptr[Matrix.m_cols_map_ptr[a] + counter] = m_rows_map_ref[b] - i;
+					MatrixX.m_data_ptr[MatrixX.m_cols_map_ptr[a] + counter] = m_data_ref[b];
+					MatrixX.m_rows_map_ptr[MatrixX.m_cols_map_ptr[a] + counter] = m_rows_map_ref[b] - i;
 					counter++;
 				}
 			}
 		}
 	}
-	void Sparse::span_data(Sparse& Matrix, uint32_t i, uint32_t j) const
+	void Sparse::span_data(Sparse& MatrixX, uint32_t i, uint32_t j) const
 	{
 		//data
-		span_check(Matrix, i, j, false);
-		const uint32_t nr = Matrix.m_rows;
-		const uint32_t nc = Matrix.m_cols;
+		span_check(MatrixX, i, j, false);
+		const uint32_t nr = MatrixX.m_rows;
+		const uint32_t nc = MatrixX.m_cols;
 		//setup
 		for(uint32_t a = 0; a < nc; a++)
 		{
@@ -398,20 +398,20 @@ namespace math
 			{
 				if(m_rows_map_ref[b] >= int32_t(i) && m_rows_map_ref[b] < int32_t(i + nr))
 				{
-					Matrix.m_data_ptr[Matrix.m_cols_map_ref[a] + counter] = m_data_ref[b];
+					MatrixX.m_data_ptr[MatrixX.m_cols_map_ref[a] + counter] = m_data_ref[b];
 					counter++;
 				}
 			}
 		}
 	}
-	void Sparse::span_pattern(Sparse& Matrix, uint32_t i, uint32_t j) const
+	void Sparse::span_pattern(Sparse& MatrixX, uint32_t i, uint32_t j) const
 	{
 		//data
-		span_check(Matrix, i, j, true);
-		const uint32_t nr = Matrix.m_rows;
-		const uint32_t nc = Matrix.m_cols;
+		span_check(MatrixX, i, j, true);
+		const uint32_t nr = MatrixX.m_rows;
+		const uint32_t nc = MatrixX.m_cols;
 		//setup
-		span_count(Matrix, i, j, false);
+		span_count(MatrixX, i, j, false);
 		for(uint32_t a = 0; a < nc; a++)
 		{
 			uint32_t counter = 0;
@@ -419,7 +419,7 @@ namespace math
 			{
 				if(m_rows_map_ref[b] >= int32_t(i) && m_rows_map_ref[b] < int32_t(i + nr))
 				{
-					Matrix.m_rows_map_ptr[Matrix.m_cols_map_ptr[a] + counter] = m_rows_map_ref[b] - i;
+					MatrixX.m_rows_map_ptr[MatrixX.m_cols_map_ptr[a] + counter] = m_rows_map_ref[b] - i;
 					counter++;
 				}
 			}
@@ -487,38 +487,38 @@ namespace math
 	}
 
 	//Span
-	void Sparse::span_count(Sparse& Matrix, uint32_t i, uint32_t j, bool data) const
+	void Sparse::span_count(Sparse& MatrixX, uint32_t i, uint32_t j, bool data) const
 	{
 		//data
-		Matrix.cleanup();
-		const uint32_t nc = Matrix.m_cols;
-		const uint32_t nr = Matrix.m_rows;
-		Matrix.m_cols_map_ref = Matrix.m_cols_map_ptr = new int32_t[nc + 1];
+		MatrixX.cleanup();
+		const uint32_t nc = MatrixX.m_cols;
+		const uint32_t nr = MatrixX.m_rows;
+		MatrixX.m_cols_map_ref = MatrixX.m_cols_map_ptr = new int32_t[nc + 1];
 		//count
-		Matrix.m_cols_map_ptr[0] = 0;
+		MatrixX.m_cols_map_ptr[0] = 0;
 		for(uint32_t a = 0; a < nc; a++)
 		{
-			Matrix.m_cols_map_ptr[a + 1] = Matrix.m_cols_map_ptr[a];
+			MatrixX.m_cols_map_ptr[a + 1] = MatrixX.m_cols_map_ptr[a];
 			for(int32_t b = m_cols_map_ref[j + a]; b < m_cols_map_ref[j + a + 1]; b++)
 			{
 				if(m_rows_map_ref[b] >= int32_t(i) && m_rows_map_ref[b] < int32_t(i + nr))
 				{
-					Matrix.m_cols_map_ptr[a + 1]++;
+					MatrixX.m_cols_map_ptr[a + 1]++;
 				}
 			}
 		}
-		if(data) Matrix.m_data_ref = Matrix.m_data_ptr = new double[Matrix.m_cols_map_ptr[nc]];
-		Matrix.m_rows_map_ref = Matrix.m_rows_map_ptr = new int32_t[Matrix.m_cols_map_ptr[nc]];
+		if(data) MatrixX.m_data_ref = MatrixX.m_data_ptr = new double[MatrixX.m_cols_map_ptr[nc]];
+		MatrixX.m_rows_map_ref = MatrixX.m_rows_map_ptr = new int32_t[MatrixX.m_cols_map_ptr[nc]];
 	}
-	void Sparse::span_check(Sparse& Matrix, uint32_t i, uint32_t j, bool owner_check) const
+	void Sparse::span_check(Sparse& MatrixX, uint32_t i, uint32_t j, bool owner_check) const
 	{
-		if(owner_check && !Matrix.m_own)
+		if(owner_check && !MatrixX.m_own)
 		{
-			throw std::runtime_error("Sparse Span called on Matrix that does not own its memory!");
+			throw std::runtime_error("Sparse SpanX called on MatrixX that does not own its memory!");
 		}
-		if(i + Matrix.m_rows > m_rows || j + Matrix.m_cols > m_cols)
+		if(i + MatrixX.m_rows > m_rows || j + MatrixX.m_cols > m_cols)
 		{
-			throw std::runtime_error("Sparse Span has incompatible dimensions!");
+			throw std::runtime_error("Sparse SpanX has incompatible dimensions!");
 		}
 	}
 }

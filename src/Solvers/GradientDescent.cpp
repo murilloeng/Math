@@ -2,7 +2,7 @@
 #include <stdexcept>
 
 //Math
-#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/VectorX.hpp"
 #include "Math/inc/Solvers/GradientDescent.hpp"
 
 namespace math
@@ -90,13 +90,13 @@ namespace math
 		}
 		bool GradientDescent::predictor(void)
 		{
-			math::Vector(m_dx, m_size).zeros();
-			math::Vector(m_ddx, m_size).zeros();
+			math::VectorX(m_dx, m_size).zeros();
+			math::VectorX(m_ddx, m_size).zeros();
 			return true;
 		}
 		bool GradientDescent::corrector(void)
 		{
-			math::Vector(m_dx, m_size) += math::Vector(m_ddx, m_size) = -m_dp0 * math::Vector(m_r, m_size);
+			math::VectorX(m_dx, m_size) += math::VectorX(m_ddx, m_size) = -m_dp0 * math::VectorX(m_r, m_size);
 			return true;
 		}
 	}

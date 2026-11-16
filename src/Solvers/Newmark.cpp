@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 //Math
-#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/VectorX.hpp"
 #include "Math/inc/Solvers/Newmark.hpp"
 
 //x: state
@@ -180,7 +180,7 @@ namespace math
 			//solve
 			if(!Solver::solve(m_K, m_r, m_ddx))
 			{
-				if(!m_silent) printf("Unable to decompose system Matrix in corrector!\n");
+				if(!m_silent) printf("Unable to decompose system MatrixX in corrector!\n");
 				return false;
 			}
 			//update

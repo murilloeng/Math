@@ -3,8 +3,8 @@
 #include <cstring>
 
 //Math
-#include "Math/inc/Linear/Vector.hpp"
-#include "Math/inc/Linear/Matrix.hpp"
+#include "Math/inc/Linear/VectorX.hpp"
+#include "Math/inc/Linear/MatrixX.hpp"
 #include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Solvers/Solver.hpp"
 
@@ -410,17 +410,17 @@ namespace math
 			if(m_rows_map == nullptr || m_cols_map == nullptr)
 			{
 				//data
-				math::Vector xm(x, m_size);
-				const math::Vector fm(f, m_size);
-				const math::Matrix Km(K, m_size, m_size);
+				math::VectorX xm(x, m_size);
+				const math::VectorX fm(f, m_size);
+				const math::MatrixX Km(K, m_size, m_size);
 				//solve
 				return Km.solve(xm, fm);
 			}
 			else
 			{
 				//data
-				math::Vector xm(x, m_size);
-				const math::Vector fm(f, m_size);
+				math::VectorX xm(x, m_size);
+				const math::VectorX fm(f, m_size);
 				const math::Sparse Km(K, m_rows_map, m_cols_map, m_size, m_size);
 				//solve
 				return Km.solve(xm, fm);

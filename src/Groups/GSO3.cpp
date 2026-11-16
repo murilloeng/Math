@@ -26,10 +26,10 @@ namespace math
 	}
 
 	//actions
-	Matrix GSO3::matrix(void) const
+	Mat3 GSO3::matrix(void) const
 	{
 		//data
-		Matrix R(3, 3);
+		Mat3 R;
 		const double q0 = m_data[0];
 		const double q1 = m_data[1];
 		const double q2 = m_data[2];
@@ -47,10 +47,10 @@ namespace math
 		//return
 		return R;
 	}
-	Vector GSO3::action(const Vector& v) const
+	Vec3 GSO3::action(const Vec3& v) const
 	{
 		//data
-		Vector r(3);
+		Vec3 r;
 		const double v1 = v[0];
 		const double v2 = v[1];
 		const double v3 = v[2];

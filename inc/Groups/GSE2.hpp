@@ -10,7 +10,7 @@ namespace math
 
 namespace math
 {
-	class GSE2 : public LieGroup<GSE2, ASE2>
+	class GSE2 : public LieGroup<GSE2, ASE2, 3, 2>
 	{
 	public:
 		//constructor
@@ -24,8 +24,8 @@ namespace math
 		GSE2& randu(double, double) override;
 
 		//actions
-		Matrix matrix(void) const override;
-		Vector action(const Vector&) const override;
+		Mat3 matrix(void) const override;
+		Vec2 action(const Vec2&) const override;
 
 		//operators
 		double& operator[](uint32_t) override;

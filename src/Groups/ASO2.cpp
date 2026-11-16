@@ -28,38 +28,33 @@ namespace math
 	//random
 	ASO2& ASO2::randu(double a, double b)
 	{
-		vector().randu(a, b);
-		return *this;
+		return *this = ASO2(Vec1().randu(a, b).data());
 	}
 
 	//linear
-	Vector ASO2::vector(void)
+	Vec1 ASO2::vector(void) const
 	{
-		return Vector(&m_data, 1);
+		return Vec1(m_data);
 	}
-	Vector ASO2::vector(void) const
+	Mat2 ASO2::matrix(void) const
 	{
-		return Vector(&m_data, 1);
+		return Mat2({0, -m_data}, {m_data, 0});
 	}
-	Matrix ASO2::matrix(void) const
+	Mat1 ASO2::adjoint(void) const
 	{
-		return Matrix({{0, -m_data}, {m_data, 0}});
+		return Mat1(0.0);
 	}
-	Matrix ASO2::adjoint(void) const
+	Mat1 ASO2::jacobian(void) const
 	{
-		return Matrix({{0}});
+		return Mat1(1.0);
 	}
-	Matrix ASO2::jacobian(void) const
+	Mat1 ASO2::jacobian_inverse(void) const
 	{
-		return Matrix({{1}});
+		return Mat1(1.0);
 	}
-	Matrix ASO2::jacobian_inverse(void) const
+	Mat1 ASO2::jacobian_gradient(const Vec1&) const
 	{
-		return Matrix({{1}});
-	}
-	Matrix ASO2::jacobian_gradient(const Vector&) const
-	{
-		return Matrix({{0}});
+		return Mat1(0.0);
 	}
 
 	//operators
@@ -149,7 +144,7 @@ namespace math
 		{
 			v1.randu(-1, +1);
 			v2.randu(-1, +1);
-			const Matrix A1 = v1.matrix(), A2 = v2.matrix();
+			const Mat2 A1 = v1.matrix(), A2 = v2.matrix();
 			test = test && (v1.bracket(v2).matrix() - (A1 * A2 - A2 * A1)).norm() < tolerance;
 		}
 		//print
@@ -176,7 +171,7 @@ namespace math
 	{
 		//test
 		ASO2 v;
-		Matrix Jn(1, 1);
+		Matrix<1, 1> Jn;
 		bool test = true;
 		const double h = 1.00e-06;
 		for(uint32_t i = 0; i < nt; i++)
@@ -200,7 +195,7 @@ namespace math
 		for(uint32_t i = 0; i < nt; i++)
 		{
 			v.randu(-1, +1);
-			test = test && (v.jacobian() * v.jacobian_inverse() - Matrix::eye(1, 1)).norm() < tolerance;
+			test = test && (v.jacobian() * v.jacobian_inverse() - Matrix<1, 1>(Mode::eye)).norm() < tolerance;
 		}
 		//print
 		printf("ASO2 jacobian inverse test:\t%s!\n", test ? "ok" : "not ok");

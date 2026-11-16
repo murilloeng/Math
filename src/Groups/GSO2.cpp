@@ -21,17 +21,17 @@ namespace math
 	}
 
 	//actions
-	Matrix GSO2::matrix(void) const
+	Mat2 GSO2::matrix(void) const
 	{
 		const double c = cos(m_data);
 		const double s = sin(m_data);
-		return Matrix({{c, -s}, {s, c}});
+		return Mat2({c, -s}, {s, c});
 	}
-	Vector GSO2::action(const Vector& v) const
+	Vec2 GSO2::action(const Vec2& v) const
 	{
 		const double c = cos(m_data);
 		const double s = sin(m_data);
-		return Vector({c * v[0] - s * v[1], s * v[0] + c * v[1]});
+		return Vec2(c * v[0] - s * v[1], s * v[0] + c * v[1]);
 	}
 
 	//operations

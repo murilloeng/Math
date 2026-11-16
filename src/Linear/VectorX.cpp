@@ -6,14 +6,13 @@
 #include <stdexcept>
 
 //Math
-#include "Math/inc/Linear/Vec3.hpp"
-#include "Math/inc/Linear/Vector.hpp"
-#include "Math/inc/Linear/Matrix.hpp"
+#include "Math/inc/Linear/VectorX.hpp"
+#include "Math/inc/Linear/MatrixX.hpp"
 
 namespace math
 {
 	//constructors
-	Vector::Vector(uint32_t rows) : m_own{true}, m_rows{rows}
+	VectorX::VectorX(uint32_t rows) : m_own{true}, m_rows{rows}
 	{
 		if(m_rows <= VECTOR_STATIC_SIZE)
 		{
@@ -24,29 +23,25 @@ namespace math
 			m_data_ref = m_data_ptr = new double[m_rows];
 		}
 	}
-	Vector::Vector(const Vec3& v) : Vector(3)
-	{
-		memcpy(m_data_ptr, v.m_data, m_rows * sizeof(double));
-	}
-	Vector::Vector(const Vector& v) : Vector(v.m_rows)
+	VectorX::VectorX(const VectorX& v) : VectorX(v.m_rows)
 	{
 		memcpy(m_data_ptr, v.m_data_ref, m_rows * sizeof(double));
 	}
-	Vector::Vector(double* ptr, uint32_t rows) : m_own{false}, m_rows{rows}, m_data_ptr{ptr}, m_data_ref{ptr}
+	VectorX::VectorX(double* ptr, uint32_t rows) : m_own{false}, m_rows{rows}, m_data_ptr{ptr}, m_data_ref{ptr}
 	{
 		return;
 	}
-	Vector::Vector(const double* ptr, uint32_t rows) : m_own{false}, m_rows{rows}, m_data_ptr{nullptr}, m_data_ref{ptr}
+	VectorX::VectorX(const double* ptr, uint32_t rows) : m_own{false}, m_rows{rows}, m_data_ptr{nullptr}, m_data_ref{ptr}
 	{
 		return;
 	}
-	Vector::Vector(std::initializer_list<double> list) : Vector((uint32_t) list.size())
+	VectorX::VectorX(std::initializer_list<double> list) : VectorX((uint32_t) list.size())
 	{
 		memcpy(m_data_ptr, list.begin(), list.size() * sizeof(double));
 	}
 
 	//destructor
-	Vector::~Vector(void)
+	VectorX::~VectorX(void)
 	{
 		if(m_own && m_data_ptr != m_data_mem)
 		{
@@ -55,23 +50,23 @@ namespace math
 	}
 
 	//size
-	uint32_t Vector::rows(void) const
+	uint32_t VectorX::rows(void) const
 	{
 		return m_rows;
 	}
 
 	//data
-	double* Vector::data(void)
+	double* VectorX::data(void)
 	{
 		return m_data_ptr;
 	}
-	const double* Vector::data(void) const
+	const double* VectorX::data(void) const
 	{
 		return m_data_ref;
 	}
 
 	//direction
-	double Vector::norm(void) const
+	double VectorX::norm(void) const
 	{
 		double s = 0;
 		for(uint32_t i = 0; i < m_rows; i++)
@@ -80,22 +75,22 @@ namespace math
 		}
 		return sqrt(s);
 	}
-	Vector& Vector::normalize(void)
+	VectorX& VectorX::normalize(void)
 	{
 		return *this /= norm();
 	}
-	Vector Vector::unit(void) const
+	VectorX VectorX::unit(void) const
 	{
 		return *this / norm();
 	}
 
 	//utility
-	Vector& Vector::zeros(void)
+	VectorX& VectorX::zeros(void)
 	{
 		memset(m_data_ptr, 0, m_rows * sizeof(double));
 		return *this;
 	}
-	Vector& Vector::randu(double a, double b)
+	VectorX& VectorX::randu(double a, double b)
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -103,7 +98,7 @@ namespace math
 		}
 		return *this;
 	}
-	void Vector::print(const char* header, double cutoff) const
+	void VectorX::print(const char* header, double cutoff) const
 	{
 		if(strlen(header) != 0)
 		{
@@ -123,13 +118,13 @@ namespace math
 	}
 
 	//products
-	Matrix Vector::outer(void) const
+	MatrixX VectorX::outer(void) const
 	{
 		return outer(*this);
 	}
-	Matrix Vector::outer(const Vector& v) const
+	MatrixX VectorX::outer(const VectorX& v) const
 	{
-		Matrix m(m_rows, v.m_rows);
+		MatrixX m(m_rows, v.m_rows);
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
 			for(uint32_t j = 0; j < v.m_rows; j++)
@@ -139,12 +134,12 @@ namespace math
 		}
 		return m;
 	}
-	double Vector::inner(const Vector& v) const
+	double VectorX::inner(const VectorX& v) const
 	{
 		double s = 0;
 		if(m_rows != v.m_rows)
 		{
-			throw std::runtime_error("Vector inner product called with inconsistent dimensions!");
+			throw std::runtime_error("VectorX inner product called with inconsistent dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -152,7 +147,7 @@ namespace math
 		}
 		return s;
 	}
-	double Vector::inner(const double* v) const
+	double VectorX::inner(const double* v) const
 	{
 		double s = 0;
 		for(uint32_t i = 0; i < m_rows; i++)
@@ -163,29 +158,29 @@ namespace math
 	}
 
 	//operators
-	Vector Vector::operator+(void) const
+	VectorX VectorX::operator+(void) const
 	{
 		return *this;
 	}
-	Vector Vector::operator-(void) const
+	VectorX VectorX::operator-(void) const
 	{
-		return -1 * Vector(*this);
+		return -1 * VectorX(*this);
 	}
-	Vector Vector::operator/(double s) const
+	VectorX VectorX::operator/(double s) const
 	{
-		return Vector(*this) /= s;
-	}
-
-	Vector Vector::operator+(const Vector& v) const
-	{
-		return Vector(*this) += v;
-	}
-	Vector Vector::operator-(const Vector& v) const
-	{
-		return Vector(*this) -= v;
+		return VectorX(*this) /= s;
 	}
 
-	Vector& Vector::operator=(double s)
+	VectorX VectorX::operator+(const VectorX& v) const
+	{
+		return VectorX(*this) += v;
+	}
+	VectorX VectorX::operator-(const VectorX& v) const
+	{
+		return VectorX(*this) -= v;
+	}
+
+	VectorX& VectorX::operator=(double s)
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -193,29 +188,29 @@ namespace math
 		}
 		return *this;
 	}
-	Vector& Vector::operator=(const double* v)
+	VectorX& VectorX::operator=(const double* v)
 	{
 		memcpy(m_data_ptr, v, m_rows * sizeof(double));
 		return *this;
 	}
-	Vector& Vector::operator=(const Vector& v)
+	VectorX& VectorX::operator=(const VectorX& v)
 	{
 		//check
 		if(m_rows != v.m_rows)
 		{
-			throw std::runtime_error("Vector assign has incompatible dimensions!");
+			throw std::runtime_error("VectorX assign has incompatible dimensions!");
 		}
 		//assign
 		memcpy(m_data_ptr, v.m_data_ref, m_rows * sizeof(double));
 		//return
 		return *this;
 	}
-	Vector& Vector::operator=(std::initializer_list<double> list)
+	VectorX& VectorX::operator=(std::initializer_list<double> list)
 	{
 		//check
 		if(list.size() != m_rows)
 		{
-			throw std::runtime_error("Vector assign has incompatible dimensions!");
+			throw std::runtime_error("VectorX assign has incompatible dimensions!");
 		}
 		//assign
 		memcpy(m_data_ptr, list.begin(), m_rows * sizeof(double));
@@ -223,7 +218,7 @@ namespace math
 		return *this;
 	}
 
-	Vector& Vector::operator+=(double s)
+	VectorX& VectorX::operator+=(double s)
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -231,7 +226,7 @@ namespace math
 		}
 		return *this;
 	}
-	Vector& Vector::operator-=(double s)
+	VectorX& VectorX::operator-=(double s)
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -239,7 +234,7 @@ namespace math
 		}
 		return *this;
 	}
-	Vector& Vector::operator*=(double s)
+	VectorX& VectorX::operator*=(double s)
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -247,7 +242,7 @@ namespace math
 		}
 		return *this;
 	}
-	Vector& Vector::operator/=(double s)
+	VectorX& VectorX::operator/=(double s)
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -256,7 +251,7 @@ namespace math
 		return *this;
 	}
 
-	Vector& Vector::operator+=(const double* v)
+	VectorX& VectorX::operator+=(const double* v)
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -264,7 +259,7 @@ namespace math
 		}
 		return *this;
 	}
-	Vector& Vector::operator-=(const double* v)
+	VectorX& VectorX::operator-=(const double* v)
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -272,11 +267,11 @@ namespace math
 		}
 		return *this;
 	}
-	Vector& Vector::operator+=(const Vector& v)
+	VectorX& VectorX::operator+=(const VectorX& v)
 	{
 		if(m_rows != v.m_rows)
 		{
-			throw std::runtime_error("Vector increment has incompatible dimensions!");
+			throw std::runtime_error("VectorX increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -284,11 +279,11 @@ namespace math
 		}
 		return *this;
 	}
-	Vector& Vector::operator-=(const Vector& v)
+	VectorX& VectorX::operator-=(const VectorX& v)
 	{
 		if(m_rows != v.m_rows)
 		{
-			throw std::runtime_error("Vector increment has incompatible dimensions!");
+			throw std::runtime_error("VectorX increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -297,17 +292,17 @@ namespace math
 		return *this;
 	}
 
-	double& Vector::operator[](uint32_t index)
+	double& VectorX::operator[](uint32_t index)
 	{
 		return m_data_ptr[index];
 	}
-	const double& Vector::operator[](uint32_t index) const
+	const double& VectorX::operator[](uint32_t index) const
 	{
 		return m_data_ref[index];
 	}
 
-	Vector operator*(double s, const Vector& v)
+	VectorX operator*(double s, const VectorX& v)
 	{
-		return Vector(v) *= s;
+		return VectorX(v) *= s;
 	}
 }

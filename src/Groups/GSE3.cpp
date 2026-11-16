@@ -6,7 +6,6 @@
 #include "Math/inc/Groups/GSO3.hpp"
 #include "Math/inc/Groups/ASE3.hpp"
 #include "Math/inc/Groups/GSE3.hpp"
-#include "Math/inc/Linear/Vec3.hpp"
 #include "Math/inc/Miscellaneous/rotations.hpp"
 
 namespace math
@@ -32,10 +31,10 @@ namespace math
 	{
 		return GSO3(m_data[3], m_data[4], m_data[5], m_data[6]);
 	}
-	Matrix GSE3::matrix(void) const
+	Mat4 GSE3::matrix(void) const
 	{
 		//data
-		Matrix H(4, 4);
+		Mat4 H;
 		const double x1 = m_data[0];
 		const double x2 = m_data[1];
 		const double x3 = m_data[2];
@@ -61,10 +60,10 @@ namespace math
 		//return
 		return H;
 	}
-	Vector GSE3::action(const Vector& v) const
+	Vec3 GSE3::action(const Vec3& v) const
 	{
 		//data
-		Vector r(3);
+		Vec3 r;
 		const double v1 = v[0];
 		const double v2 = v[1];
 		const double v3 = v[2];
@@ -100,7 +99,7 @@ namespace math
 	{
 		//data
 		const ASO3 t = GSO3(m_data + 3).log();
-		const Vector u = t.jacobian_inverse().transpose() * Vector(m_data, 3);
+		const Vec3 u = t.jacobian_inverse().transpose() * Vec3(m_data);
 		//return
 		return ASE3(u[0], u[1], u[2], t[0], t[1], t[2]);
 	}

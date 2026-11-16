@@ -10,7 +10,7 @@ namespace math
 
 namespace math
 {
-	class ASO2 : public LieAlgebra<GSO2, ASO2>
+	class ASO2 : public LieAlgebra<GSO2, ASO2, 2, 1>
 	{
 	public:
 		//constructor
@@ -28,13 +28,12 @@ namespace math
 		ASO2& randu(double, double) override;
 
 		//linear
-		Vector vector(void) override;
-		Vector vector(void) const override;
-		Matrix matrix(void) const override;
-		Matrix adjoint(void) const override;
-		Matrix jacobian(void) const override;
-		Matrix jacobian_inverse(void) const override;
-		Matrix jacobian_gradient(const Vector&) const override;
+		Vec1 vector(void) const override;
+		Mat2 matrix(void) const override;
+		Mat1 adjoint(void) const override;
+		Mat1 jacobian(void) const override;
+		Mat1 jacobian_inverse(void) const override;
+		Mat1 jacobian_gradient(const Vec1&) const override;
 
 		//operators
 		ASO2& operator*=(double) override;

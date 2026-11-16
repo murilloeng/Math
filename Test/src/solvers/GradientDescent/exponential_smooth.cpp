@@ -3,7 +3,7 @@
 #include <cstdio>
 
 //Math
-#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/VectorX.hpp"
 #include "Math/inc/Solvers/GradientDescent.hpp"
 
 //Test

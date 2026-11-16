@@ -3,7 +3,7 @@
 
 //Math
 #include "Math/inc/Miscellaneous/util.hpp"
-#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/VectorX.hpp"
 #include "Math/inc/Solvers/Solver.hpp"
 #include "Math/inc/Solvers/Continuation.hpp"
 
@@ -73,17 +73,17 @@ namespace math
 		double Continuation::predictor_minimal_norm(void) const
 		{
 			//data
-			const math::Vector dx(m_solver->m_dx, m_solver->m_size);
-			const math::Vector dxr(m_solver->m_dxr, m_solver->m_size);
-			const math::Vector dxt(m_solver->m_dxt, m_solver->m_size);
+			const math::VectorX dx(m_solver->m_dx, m_solver->m_size);
+			const math::VectorX dxr(m_solver->m_dxr, m_solver->m_size);
+			const math::VectorX dxt(m_solver->m_dxt, m_solver->m_size);
 			//predictor
 			return (dx - dxr).inner(dxt) / dxt.inner(dxt);
 		}
 		double Continuation::corrector_minimal_norm(void) const
 		{
 			//data
-			const math::Vector ddxr(m_solver->m_ddxr, m_solver->m_size);
-			const math::Vector ddxt(m_solver->m_ddxt, m_solver->m_size);
+			const math::VectorX ddxr(m_solver->m_ddxr, m_solver->m_size);
+			const math::VectorX ddxt(m_solver->m_ddxt, m_solver->m_size);
 			//corrector
 			return -ddxr.inner(ddxt) / ddxt.inner(ddxt);
 		}
@@ -109,9 +109,9 @@ namespace math
 		{
 			//data
 			const double dl = m_solver->m_dp;
-			const math::Vector dx(m_solver->m_dx, m_solver->m_size);
-			const math::Vector dxr(m_solver->m_dxr, m_solver->m_size);
-			const math::Vector dxt(m_solver->m_dxt, m_solver->m_size);
+			const math::VectorX dx(m_solver->m_dx, m_solver->m_size);
+			const math::VectorX dxr(m_solver->m_dxr, m_solver->m_size);
+			const math::VectorX dxt(m_solver->m_dxt, m_solver->m_size);
 			//data
 			const double b = dxt.inner(dxr);
 			const double a = dxt.inner(dxt) + 1;
@@ -125,9 +125,9 @@ namespace math
 		{
 			//data
 			const double dl = m_solver->m_dp;
-			const math::Vector dx(m_solver->m_dx, m_solver->m_size);
-			const math::Vector ddxr(m_solver->m_ddxr, m_solver->m_size);
-			const math::Vector ddxt(m_solver->m_ddxt, m_solver->m_size);
+			const math::VectorX dx(m_solver->m_dx, m_solver->m_size);
+			const math::VectorX ddxr(m_solver->m_ddxr, m_solver->m_size);
+			const math::VectorX ddxt(m_solver->m_ddxt, m_solver->m_size);
 			//data
 			const double a = ddxt.inner(ddxt) + 1;
 			const double c = ddxr.inner(ddxr + 2 * dx);
@@ -140,9 +140,9 @@ namespace math
 		double Continuation::predictor_arc_length_cylindrical(void) const
 		{
 			//data
-			const math::Vector dx(m_solver->m_dx, m_solver->m_size);
-			const math::Vector dxr(m_solver->m_dxr, m_solver->m_size);
-			const math::Vector dxt(m_solver->m_dxt, m_solver->m_size);
+			const math::VectorX dx(m_solver->m_dx, m_solver->m_size);
+			const math::VectorX dxr(m_solver->m_dxr, m_solver->m_size);
+			const math::VectorX dxt(m_solver->m_dxt, m_solver->m_size);
 			//data
 			const double a = dxt.inner(dxt);
 			const double b = dxt.inner(dxr);
@@ -154,9 +154,9 @@ namespace math
 		double Continuation::corrector_arc_length_cylindrical(void) const
 		{
 			//data
-			const math::Vector dx(m_solver->m_dx, m_solver->m_size);
-			const math::Vector ddxr(m_solver->m_ddxr, m_solver->m_size);
-			const math::Vector ddxt(m_solver->m_ddxt, m_solver->m_size);
+			const math::VectorX dx(m_solver->m_dx, m_solver->m_size);
+			const math::VectorX ddxr(m_solver->m_ddxr, m_solver->m_size);
+			const math::VectorX ddxt(m_solver->m_ddxt, m_solver->m_size);
 			//data
 			const double a = ddxt.inner(ddxt);
 			const double b = ddxt.inner(ddxr + dx);

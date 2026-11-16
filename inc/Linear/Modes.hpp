@@ -7,6 +7,6 @@ namespace math
 {
 	enum class Mode : uint32_t
 	{
-		zeros, eye
+		zeros, eye, none
 	};
 }

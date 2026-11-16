@@ -1,5 +1,5 @@
 //Math
-#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/VectorX.hpp"
 #include "Math/inc/Solvers/Implicit.hpp"
 #include "Math/inc/Solvers/Convergence.hpp"
 
@@ -50,10 +50,10 @@ namespace math
 		bool Convergence::check(void) const
 		{
 			//data
-			const math::Vector r(m_solver->m_r, m_solver->m_size);
-			const math::Vector fe(m_solver->m_fe, m_solver->m_size);
-			const math::Vector dx(m_solver->m_dx, m_solver->m_size);
-			const math::Vector ddx(m_solver->m_ddx, m_solver->m_size);
+			const math::VectorX r(m_solver->m_r, m_solver->m_size);
+			const math::VectorX fe(m_solver->m_fe, m_solver->m_size);
+			const math::VectorX dx(m_solver->m_dx, m_solver->m_size);
+			const math::VectorX ddx(m_solver->m_ddx, m_solver->m_size);
 			//tests
 			const bool test_fixed = ~m_types & 1 << uint32_t(Type::Fixed) || r.norm() < m_tolerance;
 			const bool test_force = ~m_types & 1 << uint32_t(Type::Force) || r.norm() < m_tolerance * fe.norm();

@@ -42,34 +42,29 @@ namespace math
 	//random
 	ASE2& ASE2::randu(double a, double b)
 	{
-		vector().randu(a, b);
-		return *this;
+		return *this = ASE2(Vec3().randu(a, b).data());
 	}
 
 	//linear
-	Vector ASE2::vector(void)
+	Vec3 ASE2::vector(void) const
 	{
-		return Vector(m_data, 3);
+		return Vec3(m_data);
 	}
-	Vector ASE2::vector(void) const
-	{
-		return Vector(m_data, 3);
-	}
-	Matrix ASE2::matrix(void) const
+	Mat3 ASE2::matrix(void) const
 	{
 		const double u1 = m_data[0];
 		const double u2 = m_data[1];
 		const double tr = m_data[2];
-		return Matrix({{0, -tr, u1}, {tr, 0, u2}, {0, 0, 0}});
+		return Mat3({0, -tr, u1}, {tr, 0, u2}, {0, 0, 0});
 	}
-	Matrix ASE2::adjoint(void) const
+	Mat3 ASE2::adjoint(void) const
 	{
 		const double u1 = m_data[0];
 		const double u2 = m_data[1];
 		const double tr = m_data[2];
-		return Matrix({{0, -tr, u2}, {tr, 0, -u1}, {0, 0, 0}});
+		return Mat3({0, -tr, u2}, {tr, 0, -u1}, {0, 0, 0});
 	}
-	Matrix ASE2::jacobian(void) const
+	Mat3 ASE2::jacobian(void) const
 	{
 		const double u1 = m_data[0];
 		const double u2 = m_data[1];
@@ -77,13 +72,13 @@ namespace math
 		const double f1 = fn(tr, 1);
 		const double f2 = fn(tr, 2);
 		const double f3 = fn(tr, 3);
-		return Matrix({
+		return Mat3(
 			{f1, +tr * f2, tr * f3 * u1 - f2 * u2},
 			{-tr * f2, f1, tr * f3 * u2 + f2 * u1},
 			{0, 0, 1}
-		});
+		);
 	}
-	Matrix ASE2::jacobian_inverse(void) const
+	Mat3 ASE2::jacobian_inverse(void) const
 	{
 		const double u1 = m_data[0];
 		const double u2 = m_data[1];
@@ -92,13 +87,13 @@ namespace math
 		const double f2 = fn(tr, 2);
 		const double f3 = fn(tr, 3);
 		const double f4 = fn(tr, 4);
-		return Matrix({
+		return Mat3(
 			{f1 / f2 / 2, -tr / 2, tr * (f3 - 2 * f4) / f2 / 2 * u1 + u2 / 2},
 			{+tr / 2, f1 / f2 / 2, tr * (f3 - 2 * f4) / f2 / 2 * u2 - u1 / 2},
 			{0, 0, 1}
-		});
+		);
 	}
-	Matrix ASE2::jacobian_gradient(const Vector& vector) const
+	Mat3 ASE2::jacobian_gradient(const Vec3& vector) const
 	{
 		//data
 		const double u1 = m_data[0];
@@ -116,11 +111,11 @@ namespace math
 		const double gv1 = (f3 * u1 + tr * df3 * u1 - df2 * u2) * v1;
 		const double gv2 = (f3 * u2 + tr * df3 * u2 + df2 * u1) * v2;
 		//gradient
-		return Matrix({
+		return Mat3(
 			{0, 0, df1 * v1 - f2 * v2 - tr * df2 * v2},
 			{0, 0, df1 * v2 + f2 * v1 + tr * df2 * v1},
 			{tr * f3 * v1 + f2 * v2, tr * f3 * v2 - f2 * v1, gv1 + gv2}
-		});
+		);
 	}
 
 	//operators
@@ -192,8 +187,8 @@ namespace math
 		bool test = true;
 		for(uint32_t i = 0; i < nt; i++)
 		{
-			v1.vector().randu(-1, +1);
-			v2.vector().randu(-1, +1);
+			v1.randu(-1, +1);
+			v2.randu(-1, +1);
 			test = test && (v1.adjoint() * v2.vector() - v1.bracket(v2).vector()).norm() < tolerance;
 		}
 		//print
@@ -208,9 +203,9 @@ namespace math
 		bool test = true;
 		for(uint32_t i = 0; i < nt; i++)
 		{
-			v1.vector().randu();
-			v2.vector().randu();
-			const Matrix A1 = v1.matrix(), A2 = v2.matrix();
+			v1.randu(-1, +1);
+			v2.randu(-1, +1);
+			const Mat3 A1 = v1.matrix(), A2 = v2.matrix();
 			test = test && (v1.bracket(v2).matrix() - (A1 * A2 - A2 * A1)).norm() < tolerance;
 		}
 		//print
@@ -236,7 +231,7 @@ namespace math
 	bool ASE2::test_jacobian(uint32_t nt, double tolerance)
 	{
 		//test
-		Matrix Jn(3, 3);
+		Mat3 Jn;
 		bool test = true;
 		ASE2 v, vm, vp, dm, dp;
 		const double h = 1.00e-6;
@@ -269,7 +264,7 @@ namespace math
 		for(uint32_t i = 0; i < nt; i++)
 		{
 			v.randu(-1, +1);
-			test = test && (v.jacobian() * v.jacobian_inverse() - Matrix::eye(3, 3)).norm() < tolerance;
+			test = test && (v.jacobian() * v.jacobian_inverse() - Mat3(Mode::eye)).norm() < tolerance;
 		}
 		//print
 		printf("ASE2 jacobian inverse test:\t%s!\n", test ? "ok" : "not ok");

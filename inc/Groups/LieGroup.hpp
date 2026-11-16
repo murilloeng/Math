@@ -1,11 +1,14 @@
 #pragma once
 
+//std
+#include <cstdint>
+
 //Math
-#include "Math/inc/Linear/Vector.hpp"
+#include "Math/inc/Linear/Matrix.hpp"
 
 namespace math
 {
-	template <class Group, class Algebra> class LieGroup
+	template <class Group, class Algebra, uint32_t n, uint32_t k> class LieGroup
 	{
 	public:
 		//constructor
@@ -18,8 +21,8 @@ namespace math
 		virtual Group& randu(double, double) = 0;
 
 		//actions
-		virtual Matrix matrix(void) const = 0;
-		virtual Vector action(const Vector&) const = 0;
+		virtual Matrix<n, n> matrix(void) const = 0;
+		virtual Vector<k> action(const Vector<k>&) const = 0;
 
 		//operations
 		virtual Algebra log(void) const = 0;

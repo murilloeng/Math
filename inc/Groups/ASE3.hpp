@@ -10,7 +10,7 @@ namespace math
 
 namespace math
 {
-	class ASE3 : public LieAlgebra<GSE3, ASE3>
+	class ASE3 : public LieAlgebra<GSE3, ASE3, 4, 6>
 	{
 	public:
 		//constructor
@@ -28,13 +28,12 @@ namespace math
 		ASE3& randu(double, double) override;
 
 		//linear
-		Vector vector(void) override;
-		Vector vector(void) const override;
-		Matrix matrix(void) const override;
-		Matrix adjoint(void) const override;
-		Matrix jacobian(void) const override;
-		Matrix jacobian_inverse(void) const override;
-		Matrix jacobian_gradient(const Vector&) const override;
+		Vec6 vector(void) const override;
+		Mat4 matrix(void) const override;
+		Mat6 adjoint(void) const override;
+		Mat6 jacobian(void) const override;
+		Mat6 jacobian_inverse(void) const override;
+		Mat6 jacobian_gradient(const Vec6&) const override;
 
 		//operators
 		ASE3& operator*=(double) override;

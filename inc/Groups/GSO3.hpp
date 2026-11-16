@@ -10,7 +10,7 @@ namespace math
 
 namespace math
 {
-	class GSO3 : public LieGroup<GSO3, ASO3>
+	class GSO3 : public LieGroup<GSO3, ASO3, 3, 3>
 	{
 	public:
 		//constructor
@@ -24,8 +24,8 @@ namespace math
 		GSO3& randu(double, double) override;
 
 		//actions
-		Matrix matrix(void) const override;
-		Vector action(const Vector&) const override;
+		Mat3 matrix(void) const override;
+		Vec3 action(const Vec3&) const override;
 
 		//operators
 		double& operator[](uint32_t) override;

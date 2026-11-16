@@ -5,9 +5,8 @@
 //Math
 #include "Math/inc/Groups/ASE3.hpp"
 #include "Math/inc/Groups/GSE3.hpp"
-#include "Math/inc/Linear/Vec3.hpp"
-#include "Math/inc/Linear/Mat3.hpp"
-#include "Math/inc/Linear/Span.hpp"
+#include "Math/inc/Linear/SpanFixed.hpp"
+#include "Math/inc/Linear/Matrix.hpp"
 #include "Math/inc/Miscellaneous/rotations.hpp"
 
 namespace math
@@ -79,20 +78,15 @@ namespace math
 	//random
 	ASE3& ASE3::randu(double a, double b)
 	{
-		vector().randu(a, b);
-		return *this;
+		return *this = ASE3(Vec6().randu(a, b).data());
 	}
 
 	//linear
-	Vector ASE3::vector(void)
+	Vec6 ASE3::vector(void) const
 	{
-		return Vector(m_data, 6);
+		return Vec6(m_data);
 	}
-	Vector ASE3::vector(void) const
-	{
-		return Vector(m_data, 6);
-	}
-	Matrix ASE3::matrix(void) const
+	Mat4 ASE3::matrix(void) const
 	{
 		const double u1 = m_data[0];
 		const double u2 = m_data[1];
@@ -100,9 +94,9 @@ namespace math
 		const double t1 = m_data[3];
 		const double t2 = m_data[4];
 		const double t3 = m_data[5];
-		return Matrix({{0, -t3, t2, u1}, {t3, 0, -t1, u2}, {-t2, t1, 0, u3}, {0, 0, 0, 0}});
+		return Mat4({0, -t3, t2, u1}, {t3, 0, -t1, u2}, {-t2, t1, 0, u3}, {0, 0, 0, 0});
 	}
-	Matrix ASE3::adjoint(void) const
+	Mat6 ASE3::adjoint(void) const
 	{
 		const double u1 = m_data[0];
 		const double u2 = m_data[1];
@@ -110,17 +104,17 @@ namespace math
 		const double t1 = m_data[3];
 		const double t2 = m_data[4];
 		const double t3 = m_data[5];
-		return Matrix({
+		return Mat6(
 			{0, -t3, t2, 0, -u3, u2},
 			{t3, 0, -t1, u3, 0, -u1},
 			{-t2, t1, 0, -u2, u1, 0},
 			{0, 0, 0, 0, -t3, t2}, {0, 0, 0, t3, 0, -t1}, {0, 0, 0, -t2, t1, 0}
-		});
+		);
 	}
-	Matrix ASE3::jacobian(void) const
+	Mat6 ASE3::jacobian(void) const
 	{
 		//data
-		Matrix J(6, 6);
+		Mat6 J;
 		const Vec3 u(m_data + 0), t(m_data + 3);
 		const Vec3 a = t.cross(u), b = t.cross(t.cross(u));
 		const Mat3 Su = u.spin(), St = t.spin(), I(Mode::eye);
@@ -135,16 +129,17 @@ namespace math
 		const Mat3 A1 = f2 * Su + f3 * (2 * St * Su - Su * St);
 		const Mat3 A2 = (2 * f4 - f3) * a.outer(t) + (3 * f5 - f4) * b.outer(t);
 		//jacobian
-		J.span(3, 0) = 0;
-		J.span(0, 3) = Ri * (A2 - A1);
-		J.span(0, 0) = J.span(3, 3) = I - f2 * St + f3 * St * St;
+		J.span<3, 3>(3, 0) = 0;
+		J.span<3, 3>(0, 3) = Ri * (A2 - A1);
+		J.span<3, 3>(0, 0) = I - f2 * St + f3 * St * St;
+		J.span<3, 3>(3, 3) = I - f2 * St + f3 * St * St;
 		//return
 		return J;
 	}
-	Matrix ASE3::jacobian_inverse(void) const
+	Mat6 ASE3::jacobian_inverse(void) const
 	{
 		//data
-		Matrix Ji(6, 6);
+		Mat6 Ji;
 		const Vec3 u(m_data + 0), t(m_data + 3);
 		const Vec3 a = t.cross(u), b = t.cross(t.cross(u));
 		const Mat3 Su = u.spin(), St = t.spin(), I(Mode::eye);
@@ -160,16 +155,17 @@ namespace math
 		const Mat3 A2 = (2 * f4 - f3) * a.outer(t) + (3 * f5 - f4) * b.outer(t);
 		const Mat3 Ti = I + St / 2 + (f3 - 2 * f4) / f2 / 2 * St * St;
 		//jacobian
-		Ji.span(3, 0) = 0;
-		Ji.span(0, 0) = Ji.span(3, 3) = Ti;
-		Ji.span(0, 3) = -Ti * Ri * (A2 - A1) * Ti;
+		Ji.span<3, 3>(3, 0) = 0;
+		Ji.span<3, 3>(0, 0) = Ti;
+		Ji.span<3, 3>(3, 3) = Ti;
+		Ji.span<3, 3>(0, 3) = -Ti * Ri * (A2 - A1) * Ti;
 		//return
 		return Ji;
 	}
-	Matrix ASE3::jacobian_gradient(const Vector& vector) const
+	Mat6 ASE3::jacobian_gradient(const Vec6& vector) const
 	{
 		//data
-		Matrix G(6, 6);
+		Mat6 G;
 		const Vec3 u(m_data + 0), t(m_data + 3);
 		const Vec3 a = t.cross(u), b = t.cross(t.cross(u));
 		const Vec3 vu(vector.data()), vt(vector.data() + 3);
@@ -194,32 +190,32 @@ namespace math
 		const Vec3 ru = vu + f1 * t.cross(vu) + f2 * t.cross(t.cross(vu));
 		//gradient
 		G.zeros();
-		G.span(0, 3) -= f2 * vu.spin();
-		G.span(3, 3) -= f2 * vt.spin();
-		G.span(3, 0) -= f2 * ru.spin();
-		G.span(3, 3) += df2 * a.inner(ru) * I;
-		G.span(3, 3) += df3 * b.inner(ru) * I;
-		G.span(0, 3) -= f3 * t.cross(vu).spin();
-		G.span(3, 3) -= f3 * t.cross(vt).spin();
-		G.span(3, 3) -= f3 * u.cross(ru).spin();
-		G.span(0, 3) -= f3 * t.spin() * vu.spin();
-		G.span(3, 3) -= f3 * t.spin() * vt.spin();
-		G.span(0, 3) += df2 * t.cross(vu).outer(t);
-		G.span(3, 3) += df2 * t.cross(vt).outer(t);
-		G.span(3, 3) += df2 * t.outer(u.cross(ru));
-		G.span(3, 3) += df2 * (u.cross(ru)).outer(t);
-		G.span(3, 3) += ddf2 * a.inner(ru) * t.outer(t);
-		G.span(3, 3) += ddf3 * b.inner(ru) * t.outer(t);
-		G.span(3, 0) += (2 * f4 - f3) * t.outer(ru) * St;
-		G.span(0, 3) += df3 * t.cross(t.cross(vu)).outer(t);
-		G.span(3, 3) += df3 * t.cross(t.cross(vt)).outer(t);
-		G.span(3, 3) += df3 * t.cross(u.cross(ru)).outer(t);
-		G.span(3, 0) += (3 * f5 - f4) * t.outer(ru) * St * St;
-		G.span(3, 3) -= 2 * df3 * u.cross(t.cross(ru)).outer(t);
-		G.span(3, 3) -= 2 * f3 * (u.inner(ru) * I - ru.outer(u));
-		G.span(3, 3) -= (A2 - A1).transpose() * R * vu.spin() * J;
-		G.span(3, 0) += f3 * (2 * t.cross(ru).spin() - St * ru.spin());
-		G.span(3, 3) += df3 * t.outer(t.inner(ru) * u + t.inner(u) * ru - 2 * u.inner(ru) * t);
+		G.span<3, 3>(0, 3) -= f2 * vu.spin();
+		G.span<3, 3>(3, 3) -= f2 * vt.spin();
+		G.span<3, 3>(3, 0) -= f2 * ru.spin();
+		G.span<3, 3>(3, 3) += df2 * a.inner(ru) * I;
+		G.span<3, 3>(3, 3) += df3 * b.inner(ru) * I;
+		G.span<3, 3>(0, 3) -= f3 * t.cross(vu).spin();
+		G.span<3, 3>(3, 3) -= f3 * t.cross(vt).spin();
+		G.span<3, 3>(3, 3) -= f3 * u.cross(ru).spin();
+		G.span<3, 3>(0, 3) -= f3 * t.spin() * vu.spin();
+		G.span<3, 3>(3, 3) -= f3 * t.spin() * vt.spin();
+		G.span<3, 3>(0, 3) += df2 * t.cross(vu).outer(t);
+		G.span<3, 3>(3, 3) += df2 * t.cross(vt).outer(t);
+		G.span<3, 3>(3, 3) += df2 * t.outer(u.cross(ru));
+		G.span<3, 3>(3, 3) += df2 * (u.cross(ru)).outer(t);
+		G.span<3, 3>(3, 3) += ddf2 * a.inner(ru) * t.outer(t);
+		G.span<3, 3>(3, 3) += ddf3 * b.inner(ru) * t.outer(t);
+		G.span<3, 3>(3, 0) += (2 * f4 - f3) * t.outer(ru) * St;
+		G.span<3, 3>(0, 3) += df3 * t.cross(t.cross(vu)).outer(t);
+		G.span<3, 3>(3, 3) += df3 * t.cross(t.cross(vt)).outer(t);
+		G.span<3, 3>(3, 3) += df3 * t.cross(u.cross(ru)).outer(t);
+		G.span<3, 3>(3, 0) += (3 * f5 - f4) * t.outer(ru) * St * St;
+		G.span<3, 3>(3, 3) -= 2 * df3 * u.cross(t.cross(ru)).outer(t);
+		G.span<3, 3>(3, 3) -= 2 * f3 * (u.inner(ru) * I - ru.outer(u));
+		G.span<3, 3>(3, 3) -= (A2 - A1).transpose() * R * vu.spin() * J;
+		G.span<3, 3>(3, 0) += f3 * (2 * t.cross(ru).spin() - St * ru.spin());
+		G.span<3, 3>(3, 3) += df3 * t.outer(t.inner(ru) * u + t.inner(u) * ru - 2 * u.inner(ru) * t);
 		//return
 		return G;
 	}
@@ -311,7 +307,7 @@ namespace math
 		{
 			v1.randu(-1, +1);
 			v2.randu(-1, +1);
-			const Matrix A1 = v1.matrix(), A2 = v2.matrix();
+			const Mat4 A1 = v1.matrix(), A2 = v2.matrix();
 			test = test && (v1.bracket(v2).matrix() - (A1 * A2 - A2 * A1)).norm() < tolerance;
 		}
 		//print
@@ -337,7 +333,7 @@ namespace math
 	bool ASE3::test_jacobian(uint32_t nt, double tolerance)
 	{
 		//test
-		Matrix Jn(6, 6);
+		Mat6 Jn;
 		bool test = true;
 		ASE3 v, vm, vp, dm, dp;
 		const double h = 1.00e-6;
@@ -370,7 +366,7 @@ namespace math
 		for(uint32_t i = 0; i < nt; i++)
 		{
 			v.randu(-1, +1);
-			test = test && (v.jacobian() * v.jacobian_inverse() - Matrix::eye(6, 6)).norm() < tolerance;
+			test = test && (v.jacobian() * v.jacobian_inverse() - Mat6(Mode::eye)).norm() < tolerance;
 		}
 		//print
 		printf("ASE3 jacobian inverse test:\t%s!\n", test ? "ok" : "not ok");

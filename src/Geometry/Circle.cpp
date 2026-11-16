@@ -1,6 +1,4 @@
 //Math
-#include "Math/inc/Linear/Vec3.hpp"
-#include "Math/inc/Linear/Mat3.hpp"
 #include "Math/inc/Geometry/Circle.hpp"
 
 namespace math

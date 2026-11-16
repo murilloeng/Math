@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Math/inc/Linear/Vec3.hpp"
+#include "Math/inc/Linear/Matrix.hpp"
 
 namespace math
 {

@@ -26,21 +26,21 @@ namespace math
 	}
 
 	//actions
-	Matrix GSE2::matrix(void) const
+	Mat3 GSE2::matrix(void) const
 	{
 		const double x1 = m_data[0];
 		const double x2 = m_data[1];
 		const double ct = cos(m_data[2]);
 		const double st = sin(m_data[2]);
-		return Matrix({{ct, -st, x1}, {st, ct, x2}, {0, 0, 1}});
+		return Mat3({ct, -st, x1}, {st, ct, x2}, {0, 0, 1});
 	}
-	Vector GSE2::action(const Vector& v) const
+	Vec2 GSE2::action(const Vec2& v) const
 	{
 		const double x1 = m_data[0];
 		const double x2 = m_data[1];
 		const double ct = cos(m_data[2]);
 		const double st = sin(m_data[2]);
-		return Vector({x1 + ct * v[0] - st * v[1], x2 + st * v[0] + ct * v[1]});
+		return Vec2(x1 + ct * v[0] - st * v[1], x2 + st * v[0] + ct * v[1]);
 	}
 
 	//operations
