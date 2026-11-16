@@ -12,8 +12,8 @@
 
 //Math
 #include "Math/inc/Miscellaneous/util.hpp"
-#include "Math/inc/Linear/VectorX.hpp"
-#include "Math/inc/Linear/MatrixX.hpp"
+#include "Math/inc/Linear/VectorN.hpp"
+#include "Math/inc/Linear/MatrixN.hpp"
 
 namespace math
 {

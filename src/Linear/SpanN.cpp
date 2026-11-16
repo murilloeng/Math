@@ -2,20 +2,20 @@
 #include <stdexcept>
 
 //Math
-#include "Math/inc/Linear/SpanX.hpp"
-#include "Math/inc/Linear/MatrixX.hpp"
-#include "Math/inc/Linear/VectorX.hpp"
+#include "Math/inc/Linear/SpanN.hpp"
+#include "Math/inc/Linear/MatrixN.hpp"
+#include "Math/inc/Linear/VectorN.hpp"
 
 namespace math
 {
 	//constructors
-	SpanX::SpanX(MatrixX& K, uint32_t row, uint32_t col, uint32_t rows, uint32_t cols) : m_K{K}, m_row{row}, m_col{col}, m_rows{rows}, m_cols{cols}
+	SpanN::SpanN(MatrixN& K, uint32_t row, uint32_t col, uint32_t rows, uint32_t cols) : m_K{K}, m_row{row}, m_col{col}, m_rows{rows}, m_cols{cols}
 	{
 		return;
 	}
 
 	//linear
-	void SpanX::eye(void) const
+	void SpanN::eye(void) const
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -25,13 +25,13 @@ namespace math
 			}
 		}
 	}
-	void SpanX::zeros(void) const
+	void SpanN::zeros(void) const
 	{
 		*this = 0;
 	}
 
 	//opertors
-	const SpanX& SpanX::operator=(double v) const
+	const SpanN& SpanN::operator=(double v) const
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -42,11 +42,11 @@ namespace math
 		}
 		return *this;
 	}
-	const SpanX& SpanX::operator=(const SpanX& s) const
+	const SpanN& SpanN::operator=(const SpanN& s) const
 	{
 		if(m_rows != s.m_rows || m_cols != s.m_cols)
 		{
-			throw std::runtime_error("SpanX assign has incompatible dimensions!");
+			throw std::runtime_error("SpanN assign has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -57,11 +57,11 @@ namespace math
 		}
 		return *this;
 	}
-	const SpanX& SpanX::operator=(const MatrixX& M) const
+	const SpanN& SpanN::operator=(const MatrixN& M) const
 	{
 		if(m_rows != M.m_rows || m_cols != M.m_cols)
 		{
-			throw std::runtime_error("SpanX assign has incompatible dimensions!");
+			throw std::runtime_error("SpanN assign has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -72,11 +72,11 @@ namespace math
 		}
 		return *this;
 	}
-	const SpanX& SpanX::operator=(const VectorX& v) const
+	const SpanN& SpanN::operator=(const VectorN& v) const
 	{
 		if(m_rows != v.m_rows || m_cols != 1)
 		{
-			throw std::runtime_error("SpanX assign has incompatible dimensions!");
+			throw std::runtime_error("SpanN assign has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -85,7 +85,7 @@ namespace math
 		return *this;
 	}
 
-	const SpanX& SpanX::operator+=(double v) const
+	const SpanN& SpanN::operator+=(double v) const
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -96,11 +96,11 @@ namespace math
 		}
 		return *this;
 	}
-	const SpanX& SpanX::operator+=(const SpanX& s) const
+	const SpanN& SpanN::operator+=(const SpanN& s) const
 	{
 		if(m_rows != s.m_rows || m_cols != s.m_cols)
 		{
-			throw std::runtime_error("SpanX increment has incompatible dimensions!");
+			throw std::runtime_error("SpanN increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -111,11 +111,11 @@ namespace math
 		}
 		return *this;
 	}
-	const SpanX& SpanX::operator+=(const MatrixX& k) const
+	const SpanN& SpanN::operator+=(const MatrixN& k) const
 	{
 		if(m_rows != k.m_rows || m_cols != k.m_cols)
 		{
-			throw std::runtime_error("SpanX increment has incompatible dimensions!");
+			throw std::runtime_error("SpanN increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -127,7 +127,7 @@ namespace math
 		return *this;
 	}
 
-	const SpanX& SpanX::operator-=(double v) const
+	const SpanN& SpanN::operator-=(double v) const
 	{
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -138,11 +138,11 @@ namespace math
 		}
 		return *this;
 	}
-	const SpanX& SpanX::operator-=(const SpanX& s) const
+	const SpanN& SpanN::operator-=(const SpanN& s) const
 	{
 		if(s.m_rows != m_rows || s.m_cols != m_cols)
 		{
-			throw std::runtime_error("SpanX increment has incompatible dimensions!");
+			throw std::runtime_error("SpanN increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -153,11 +153,11 @@ namespace math
 		}
 		return *this;
 	}
-	const SpanX& SpanX::operator-=(const MatrixX& k) const
+	const SpanN& SpanN::operator-=(const MatrixN& k) const
 	{
 		if(m_rows != k.m_rows || m_cols != k.m_cols)
 		{
-			throw std::runtime_error("SpanX increment has incompatible dimensions!");
+			throw std::runtime_error("SpanN increment has incompatible dimensions!");
 		}
 		for(uint32_t i = 0; i < m_rows; i++)
 		{
@@ -169,19 +169,19 @@ namespace math
 		return *this;
 	}
 
-	double& SpanX::operator()(uint32_t i, uint32_t j) const
+	double& SpanN::operator()(uint32_t i, uint32_t j) const
 	{
 		return m_K(i + m_row, j + m_col);
 	}
 
 	//friends
-	MatrixX operator*(const SpanX& s, const MatrixX& k)
+	MatrixN operator*(const SpanN& s, const MatrixN& k)
 	{
 		if(s.m_cols != k.m_rows)
 		{
-			throw std::runtime_error("SpanX-MatrixX product has incompatible dimensions!");
+			throw std::runtime_error("SpanN-MatrixN product has incompatible dimensions!");
 		}
-		MatrixX r(s.m_rows, k.m_cols);
+		MatrixN r(s.m_rows, k.m_cols);
 		for(uint32_t i = 0; i < s.m_rows; i++)
 		{
 			for(uint32_t j = 0; j < k.m_cols; j++)
@@ -195,13 +195,13 @@ namespace math
 		}
 		return r;
 	}
-	MatrixX operator*(const MatrixX& k, const SpanX& s)
+	MatrixN operator*(const MatrixN& k, const SpanN& s)
 	{
 		if(k.m_cols != s.m_rows)
 		{
-			throw std::runtime_error("SpanX-MatrixX product has incompatible dimensions!");
+			throw std::runtime_error("SpanN-MatrixN product has incompatible dimensions!");
 		}
-		MatrixX r(k.m_rows, s.m_cols);
+		MatrixN r(k.m_rows, s.m_cols);
 		for(uint32_t i = 0; i < k.m_rows; i++)
 		{
 			for(uint32_t j = 0; j < s.m_cols; j++)

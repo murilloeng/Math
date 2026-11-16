@@ -10,8 +10,8 @@
 
 //Math
 #include "Math/Test/inc/eigen.hpp"
-#include "Math/inc/Linear/MatrixX.hpp"
-#include "Math/inc/Linear/VectorX.hpp"
+#include "Math/inc/Linear/MatrixN.hpp"
+#include "Math/inc/Linear/VectorN.hpp"
 #include "Math/inc/Linear/Sparse.hpp"
 #include "Math/inc/Miscellaneous/util.hpp"
 
@@ -225,7 +225,7 @@ void tests::eigen::dense_svd(void)
 			const double sj = s[j];
 			const double* u = U + i * j;
 			const double* v = V + i * j;
-			test = test && fabs(math::MatrixX(B, i, i).bilinear(u, v) - sj) < 1e-5;
+			test = test && fabs(math::MatrixN(B, i, i).bilinear(u, v) - sj) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
 		printf("Test eigen dense svd %3d: ok!\n", i);
@@ -250,7 +250,7 @@ void tests::eigen::dense_sym_std_full(void)
 		{
 			const double w = s[j];
 			const double* z = U + i * j;
-			test = test && fabs(math::MatrixX(B, i, i).bilinear(z) - w) < 1e-5;
+			test = test && fabs(math::MatrixN(B, i, i).bilinear(z) - w) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
 		printf("Test eigen dense sym std full %3d: ok!\n", i);
@@ -279,8 +279,8 @@ void tests::eigen::dense_sym_gen_full(void)
 		{
 			const double w = s[j];
 			const double* z = U + i * j;
-			test = test && fabs(math::MatrixX(C, i, i).bilinear(z) - w) < 1e-5;
-			test = test && fabs(math::MatrixX(D, i, i).bilinear(z) - 1) < 1e-5;
+			test = test && fabs(math::MatrixN(C, i, i).bilinear(z) - w) < 1e-5;
+			test = test && fabs(math::MatrixN(D, i, i).bilinear(z) - 1) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
 		printf("Test eigen dense sym gen full %3d: ok!\n", i);
@@ -306,7 +306,7 @@ void tests::eigen::dense_sym_std_part(void)
 		{
 			const double w = s[j];
 			const double* z = U + i * j;
-			test = test && fabs(math::MatrixX(B, i, i).bilinear(z) - w) < 1e-5;
+			test = test && fabs(math::MatrixN(B, i, i).bilinear(z) - w) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
 		printf("Test eigen dense sym std part %3d: ok!\n", i);
@@ -336,8 +336,8 @@ void tests::eigen::dense_sym_gen_part(void)
 		{
 			const double w = s[j];
 			const double* z = U + i * j;
-			test = test && fabs(math::MatrixX(C, i, i).bilinear(z) - w) < 1e-5;
-			test = test && fabs(math::MatrixX(D, i, i).bilinear(z) - 1) < 1e-5;
+			test = test && fabs(math::MatrixN(C, i, i).bilinear(z) - w) < 1e-5;
+			test = test && fabs(math::MatrixN(D, i, i).bilinear(z) - 1) < 1e-5;
 		}
 		if(!test) throw std::runtime_error("Error");
 		printf("Test eigen dense sym gen part %3d: ok!\n", i);
@@ -357,7 +357,7 @@ void tests::eigen::dense_non_std_full(void)
 	double B[order_max * order_max];
 	for(uint32_t i = 1; i <= order_max; i++)
 	{
-		math::MatrixX Am(B, i, i);
+		math::MatrixN Am(B, i, i);
 		random_dense_non(A, i);
 		memcpy(B, A, i * i * sizeof(double));
 		bool test = math::eigen::DenseNonStd(i, A, sr, si, U, V).compute();
@@ -372,15 +372,15 @@ void tests::eigen::dense_non_std_full(void)
 			}
 			else if(wi > 0)
 			{
-				math::VectorX zr(U + i * (j + 0), i);
-				math::VectorX zi(U + i * (j + 1), i);
+				math::VectorN zr(U + i * (j + 0), i);
+				math::VectorN zi(U + i * (j + 1), i);
 				test = test && fabs((Am.bilinear(zr, zr) + Am.bilinear(zi, zi)) / (zr.inner(zr) + zi.inner(zi)) - wr) < 1e-5;
 				test = test && fabs((Am.bilinear(zr, zi) - Am.bilinear(zi, zr)) / (zr.inner(zr) + zi.inner(zi)) - wi) < 1e-5;
 			}
 			else if(wi < 0)
 			{
-				math::VectorX zr(U + i * (j - 1), i);
-				math::VectorX zi(U + i * (j + 0), i);
+				math::VectorN zr(U + i * (j - 1), i);
+				math::VectorN zi(U + i * (j + 0), i);
 				test = test && fabs((Am.bilinear(zr, zr) + Am.bilinear(zi, zi)) / (zr.inner(zr) + zi.inner(zi)) - wr) < 1e-5;
 				test = test && fabs((Am.bilinear(zi, zr) - Am.bilinear(zr, zi)) / (zr.inner(zr) + zi.inner(zi)) - wi) < 1e-5;
 			}
@@ -405,8 +405,8 @@ void tests::eigen::dense_non_gen_full(void)
 	double D[order_max * order_max];
 	for(uint32_t i = 1; i <= order_max; i++)
 	{
-		math::MatrixX Am(C, i, i);
-		math::MatrixX Bm(D, i, i);
+		math::MatrixN Am(C, i, i);
+		math::MatrixN Bm(D, i, i);
 		random_dense_non(A, i);
 		random_dense_non(B, i);
 		memcpy(C, A, i * i * sizeof(double));
@@ -423,8 +423,8 @@ void tests::eigen::dense_non_gen_full(void)
 			}
 			else if(wi > 0)
 			{
-				math::VectorX zr(U + i * (j + 0), i);
-				math::VectorX zi(U + i * (j + 1), i);
+				math::VectorN zr(U + i * (j + 0), i);
+				math::VectorN zi(U + i * (j + 1), i);
 				const double Au = Am.bilinear(zr, zr) + Am.bilinear(zi, zi);
 				const double Ac = Am.bilinear(zr, zi) - Am.bilinear(zi, zr);
 				const double Bu = Bm.bilinear(zr, zr) + Bm.bilinear(zi, zi);
@@ -433,8 +433,8 @@ void tests::eigen::dense_non_gen_full(void)
 			}
 			else if(wi < 0)
 			{
-				math::VectorX zr(U + i * (j - 1), i);
-				math::VectorX zi(U + i * (j + 0), i);
+				math::VectorN zr(U + i * (j - 1), i);
+				math::VectorN zi(U + i * (j + 0), i);
 				const double Au = Am.bilinear(zr, zr) + Am.bilinear(zi, zi);
 				const double Ac = Am.bilinear(zr, zi) - Am.bilinear(zi, zr);
 				const double Bu = Bm.bilinear(zr, zr) + Bm.bilinear(zi, zi);
@@ -470,7 +470,7 @@ void tests::eigen::sparse_svd(void)
 			//reference
 			const uint32_t order = rows < cols ? rows : cols;
 			const math::Sparse As(Am, rm, cm, rows, cols);
-			math::MatrixX D = As.convert();
+			math::MatrixN D = As.convert();
 			double* sd = new double[order];
 			double* Ud = new double[rows * rows];
 			double* Vd = new double[cols * cols];
@@ -485,20 +485,20 @@ void tests::eigen::sparse_svd(void)
 				//A * v = s * u
 				As.product(w, v);
 				for(uint32_t p = 0; p < rows; p++) w[p] -= s[j] * u[p];
-				test = test && math::VectorX(w, rows).norm() < 1e-5;
+				test = test && math::VectorN(w, rows).norm() < 1e-5;
 				//A^T * u = s * v
 				for(uint32_t p = 0; p < cols; p++)
 				{
 					w[p] = -s[j] * v[p];
 					for(int32_t q = cm[p]; q < cm[p + 1]; q++) w[p] += Am[q] * u[rm[q]];
 				}
-				test = test && math::VectorX(w, cols).norm() < 1e-5;
+				test = test && math::VectorN(w, cols).norm() < 1e-5;
 				//orthonormality
 				for(uint32_t p = 0; p <= j; p++)
 				{
 					const double e = p == j;
-					test = test && fabs(math::VectorX(u, rows).inner(U + rows * p) - e) < 1e-5;
-					test = test && fabs(math::VectorX(v, cols).inner(V + cols * p) - e) < 1e-5;
+					test = test && fabs(math::VectorN(u, rows).inner(U + rows * p) - e) < 1e-5;
+					test = test && fabs(math::VectorN(v, cols).inner(V + cols * p) - e) < 1e-5;
 				}
 			}
 			delete[] Am;
@@ -586,15 +586,15 @@ void tests::eigen::sparse_non_std_part(void)
 			}
 			else if(wi > 0)
 			{
-				math::VectorX zr(U + i * (j + 0), i);
-				math::VectorX zi(U + i * (j + 1), i);
+				math::VectorN zr(U + i * (j + 0), i);
+				math::VectorN zi(U + i * (j + 1), i);
 				test = test && fabs((As.bilinear(zr, zr) + As.bilinear(zi, zi)) / (zr.inner(zr) + zi.inner(zi)) - wr) < 1e-5;
 				test = test && fabs((As.bilinear(zr, zi) - As.bilinear(zi, zr)) / (zr.inner(zr) + zi.inner(zi)) - wi) < 1e-5;
 			}
 			else if(wi < 0)
 			{
-				math::VectorX zr(U + i * (j - 1), i);
-				math::VectorX zi(U + i * (j + 0), i);
+				math::VectorN zr(U + i * (j - 1), i);
+				math::VectorN zi(U + i * (j + 0), i);
 				test = test && fabs((As.bilinear(zr, zr) + As.bilinear(zi, zi)) / (zr.inner(zr) + zi.inner(zi)) - wr) < 1e-5;
 				test = test && fabs((As.bilinear(zi, zr) - As.bilinear(zr, zi)) / (zr.inner(zr) + zi.inner(zi)) - wi) < 1e-5;
 			}
@@ -633,8 +633,8 @@ void tests::eigen::sparse_non_gen_part(void)
 			}
 			else if(wi > 0)
 			{
-				math::VectorX zr(U + i * (j + 0), i);
-				math::VectorX zi(U + i * (j + 1), i);
+				math::VectorN zr(U + i * (j + 0), i);
+				math::VectorN zi(U + i * (j + 1), i);
 				const double Au = As.bilinear(zr, zr) + As.bilinear(zi, zi);
 				const double Ac = As.bilinear(zr, zi) - As.bilinear(zi, zr);
 				const double Bu = Bs.bilinear(zr, zr) + Bs.bilinear(zi, zi);
@@ -643,8 +643,8 @@ void tests::eigen::sparse_non_gen_part(void)
 			}
 			else if(wi < 0)
 			{
-				math::VectorX zr(U + i * (j - 1), i);
-				math::VectorX zi(U + i * (j + 0), i);
+				math::VectorN zr(U + i * (j - 1), i);
+				math::VectorN zi(U + i * (j + 0), i);
 				const double Au = As.bilinear(zr, zr) + As.bilinear(zi, zi);
 				const double Ac = As.bilinear(zr, zi) - As.bilinear(zi, zr);
 				const double Bu = Bs.bilinear(zr, zr) + Bs.bilinear(zi, zi);

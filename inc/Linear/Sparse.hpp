@@ -5,8 +5,8 @@
 
 namespace math
 {
-	class VectorX;
-	class MatrixX;
+	class VectorN;
+	class MatrixN;
 }
 
 namespace math
@@ -44,28 +44,28 @@ namespace math
 		double norm(void) const;
 		double trace(void) const;
 		double bilinear(const double*) const;
-		double bilinear(const VectorX&) const;
+		double bilinear(const VectorN&) const;
 		double bilinear(const double*, const double*) const;
-		double bilinear(const VectorX&, const VectorX&) const;
+		double bilinear(const VectorN&, const VectorN&) const;
 
 		//solve
-		bool solve(VectorX&, const VectorX&) const;
-		bool solve(MatrixX&, const MatrixX&) const;
+		bool solve(VectorN&, const VectorN&) const;
+		bool solve(MatrixN&, const MatrixN&) const;
 		bool solve(double*, const double*, uint32_t) const;
 
 		void release(void) const;
 		bool decompose(void) const;
-		bool substitute(VectorX&, const VectorX&) const;
-		bool substitute(MatrixX&, const MatrixX&) const;
+		bool substitute(VectorN&, const VectorN&) const;
+		bool substitute(MatrixN&, const MatrixN&) const;
 		bool substitute(double*, const double*, uint32_t) const;
 
 		//operators
-		VectorX operator*(const VectorX&) const;
+		VectorN operator*(const VectorN&) const;
 		double& operator()(uint32_t, uint32_t);
 		const double& operator()(uint32_t, uint32_t) const;
 
 		//convert
-		MatrixX convert(void) const;
+		MatrixN convert(void) const;
 
 		//product
 		void product(double*, const double*) const;

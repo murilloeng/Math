@@ -5,7 +5,7 @@
 #include <cstdint>
 
 //Math
-#include "Math/inc/Linear/VectorX.hpp"
+#include "Math/inc/Linear/VectorN.hpp"
 #include "Math/inc/Geometry/Circle.hpp"
 
 //Tests
@@ -22,10 +22,10 @@ void tests::geometry::circle(void)
 		n.randu();
 		xc.randu();
 		n.normalize();
-		math::VectorX(&r, 1).randu(0, 1);
-		math::VectorX(&q1, 1).randu(0, 1);
-		math::VectorX(&q2, 1).randu(0, 1);
-		math::VectorX(&q3, 1).randu(0, 1);
+		math::VectorN(&r, 1).randu(0, 1);
+		math::VectorN(&q1, 1).randu(0, 1);
+		math::VectorN(&q2, 1).randu(0, 1);
+		math::VectorN(&q3, 1).randu(0, 1);
 		n.triad(t1, t2);
 
 		x1 = xc + r * (cos(q1) * t1 + sin(q1) * t2);

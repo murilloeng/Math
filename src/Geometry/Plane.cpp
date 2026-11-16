@@ -1,6 +1,6 @@
 //Math
-#include "Math/inc/Linear/VectorX.hpp"
-#include "Math/inc/Linear/MatrixX.hpp"
+#include "Math/inc/Linear/VectorN.hpp"
+#include "Math/inc/Linear/MatrixN.hpp"
 #include "Math/inc/Geometry/Line.hpp"
 #include "Math/inc/Geometry/Point.hpp"
 #include "Math/inc/Geometry/Plane.hpp"
@@ -28,7 +28,7 @@ namespace math
 		double Plane::distance(const Plane& plane) const
 		{
 			//data
-			VectorX p(4);
+			VectorN p(4);
 			const Vec3& x1 = m_point;
 			const Vec3& n1 = m_normal;
 			const Vec3& x2 = plane.m_point;
@@ -39,13 +39,13 @@ namespace math
 			n1.triad(u1, v1);
 			n2.triad(u2, v2);
 			//distance
-			const VectorX b = {
+			const VectorN b = {
 				+(x2 - x1).inner(u1),
 				+(x2 - x1).inner(v1),
 				-(x2 - x1).inner(u2),
 				-(x2 - x1).inner(v2)
 			};
-			const MatrixX A = {
+			const MatrixN A = {
 				{1, 0, -u1.inner(u2), -u1.inner(v2)},
 				{0, 1, -v1.inner(u2), -v1.inner(v2)},
 				{-u2.inner(u1), -u2.inner(v1), 1, 0},
