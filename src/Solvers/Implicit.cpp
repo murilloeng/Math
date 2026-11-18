@@ -11,7 +11,7 @@ namespace math
 		//constructor
 		Implicit::Implicit(void) :
 			m_convergence{this}, m_continuation{this},
-			m_attempt{0}, m_attempt_max{5}, m_iteration{0}, m_iteration_max{10}
+			m_attempt{0}, m_attempt_max{5}, m_iteration{0}, m_iteration_max{10}, m_iteration_desired{4}
 		{
 			return;
 		}
@@ -42,6 +42,15 @@ namespace math
 		uint32_t Implicit::iteration_max(uint32_t iteration_max)
 		{
 			return m_iteration_max = iteration_max;
+		}
+
+		uint32_t Implicit::iteration_desired(void) const
+		{
+			return m_iteration_desired;
+		}
+		uint32_t Implicit::iteration_desired(uint32_t iteration_desired)
+		{
+			return m_iteration_desired = iteration_desired;
 		}
 
 		Convergence& Implicit::convergence(void)

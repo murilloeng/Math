@@ -29,6 +29,23 @@ namespace math
 			uint32_t step_max(uint32_t);
 			uint32_t step_max(void) const;
 
+			bool step_adapt(bool);
+			bool step_adapt(void) const;
+
+			double step_scale(void) const;
+
+			double step_scale_min(double);
+			double step_scale_min(void) const;
+
+			double step_scale_max(double);
+			double step_scale_max(void) const;
+
+			double step_factor_min(double);
+			double step_factor_min(void) const;
+
+			double step_factor_max(double);
+			double step_factor_max(void) const;
+
 			StopCriteria& stop_criteria(void);
 
 			const double* time_data(void) const;
@@ -73,10 +90,12 @@ namespace math
 			void allocate_energies(void) override;
 
 			//data
-			bool m_stability;
-			bool* m_stability_data;
+			bool m_step_adapt, m_step_stop;
 			uint32_t m_step, m_step_max;
 			StopCriteria m_stop_criteria;
+			bool m_stability, *m_stability_data;
+			double m_step_factor_min, m_step_factor_max;
+			double m_step_scale, m_step_scale_min, m_step_scale_max;
 
 			double *m_p_data, *m_t_data;
 			double *m_x_data, *m_v_data, *m_a_data;

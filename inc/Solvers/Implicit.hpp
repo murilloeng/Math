@@ -29,6 +29,9 @@ namespace math
 			uint32_t iteration_max(uint32_t);
 			uint32_t iteration_max(void) const;
 
+			uint32_t iteration_desired(uint32_t);
+			uint32_t iteration_desired(void) const;
+
 			Convergence& convergence(void);
 			Continuation& continuation(void);
 
@@ -44,7 +47,7 @@ namespace math
 			Convergence m_convergence;
 			Continuation m_continuation;
 			uint32_t m_attempt, m_attempt_max;
-			uint32_t m_iteration, m_iteration_max;
+			uint32_t m_iteration, m_iteration_max, m_iteration_desired;
 
 			//friends
 			friend class math::solvers::Convergence;

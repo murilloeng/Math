@@ -105,11 +105,11 @@ namespace math
 		}
 		bool StopCriteria::stop_load_limit_minimum(void) const
 		{
-			return m_solver->m_p_new < m_load_min;
+			return m_solver->m_p_new <= m_load_min;
 		}
 		bool StopCriteria::stop_load_limit_maximum(void) const
 		{
-			return m_solver->m_p_new > m_load_max;
+			return m_solver->m_p_new >= m_load_max;
 		}
 		bool StopCriteria::stop_load_local_minimum(void) const
 		{

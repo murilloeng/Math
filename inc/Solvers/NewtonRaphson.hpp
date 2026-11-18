@@ -50,6 +50,12 @@ namespace math
 			bool predictor(void) override;
 			bool corrector(void) override;
 
+			//step
+			void compute_step_clip(void);
+			void compute_step_scale(void);
+			void compute_step_solve(void);
+			void compute_step_limit(void);
+
 			//data
 			EnergyCallback m_energy;
 			SystemCallback m_system;

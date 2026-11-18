@@ -11,8 +11,10 @@ namespace math
 	{
 		//constructor
 		Incremental::Incremental(void) :
+			m_step_adapt{false}, m_step_stop{false}, m_step{0}, m_step_max{100}, m_stop_criteria{this},
 			m_stability{false}, m_stability_data{nullptr},
-			m_step{0}, m_step_max{100}, m_stop_criteria{this},
+			m_step_factor_min{5.00e-01}, m_step_factor_max{2.00e+00}, 
+			m_step_scale{1}, m_step_scale_min{1.00e-03}, m_step_scale_max{1.00e+03},
 			m_p_data{nullptr}, m_t_data{nullptr},
 			m_x_data{nullptr}, m_v_data{nullptr}, m_a_data{nullptr},
 			m_T_data{nullptr}, m_U_data{nullptr}, m_V_data{nullptr}
@@ -55,6 +57,7 @@ namespace math
 					if(!m_silent) printf("Solver failed in step %d!\n", m_step);
 					break;
 				}
+				if(m_step_stop) break;
 				print();
 				if(m_callback_step) m_callback_step();
 			}
@@ -91,6 +94,56 @@ namespace math
 		uint32_t Incremental::step_max(uint32_t step_max)
 		{
 			return m_step_max = step_max;
+		}
+
+		bool Incremental::step_adapt(void) const
+		{
+			return m_step_adapt;
+		}
+		bool Incremental::step_adapt(bool step_adapt)
+		{
+			return m_step_adapt = step_adapt;
+		}
+
+		double Incremental::step_scale(void) const
+		{
+			return m_step_scale;
+		}
+
+		double Incremental::step_scale_min(void) const
+		{
+			return m_step_scale_min;
+		}
+		double Incremental::step_scale_min(double step_scale_min)
+		{
+			return m_step_scale_min = step_scale_min;
+		}
+
+		double Incremental::step_scale_max(void) const
+		{
+			return m_step_scale_max;
+		}
+		double Incremental::step_scale_max(double step_scale_max)
+		{
+			return m_step_scale_max = step_scale_max;
+		}
+
+		double Incremental::step_factor_min(void) const
+		{
+			return m_step_factor_min;
+		}
+		double Incremental::step_factor_min(double step_factor_min)
+		{
+			return m_step_factor_min = step_factor_min;
+		}
+
+		double Incremental::step_factor_max(void) const
+		{
+			return m_step_factor_max;
+		}
+		double Incremental::step_factor_max(double step_factor_max)
+		{
+			return m_step_factor_max = step_factor_max;
 		}
 
 		StopCriteria& Incremental::stop_criteria(void)
@@ -239,10 +292,13 @@ namespace math
 		{
 			if(m_silent) return;
 			printf("Step: %4d ", m_step);
+			if(m_step_adapt) printf("Scale: %+.2e ", m_step_scale);
 		}
 		void Incremental::setup(void)
 		{
 			m_step = 0;
+			m_step_scale = 1;
+			m_step_stop = false;
 			m_dt = (m_t_max - m_t_min) / m_step_max;
 		}
 		void Incremental::record(void)
