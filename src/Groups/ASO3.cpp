@@ -10,6 +10,10 @@
 namespace math
 {
 	//constructor
+	ASO3::ASO3(const Vec3& data) : m_data{data[0], data[1], data[2]}
+	{
+		return;
+	}
 	ASO3::ASO3(const double* data) : m_data{data[0], data[1], data[2]}
 	{
 		return;

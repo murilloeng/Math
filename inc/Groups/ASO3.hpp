@@ -14,6 +14,7 @@ namespace math
 	{
 	public:
 		//constructor
+		explicit ASO3(const Vec3&);
 		explicit ASO3(const double*);
 		explicit ASO3(double = 0, double = 0, double = 0);
 
