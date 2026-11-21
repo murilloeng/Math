@@ -171,8 +171,10 @@ namespace math
 		}
 		bool Newmark::corrector(void)
 		{
+			//data
+			const uint32_t nz = m_cols_map ? m_cols_map[m_size] : m_size * m_size;
 			//tangent
-			for(uint32_t i = 0; i < m_size * m_size; i++)
+			for(uint32_t i = 0; i < nz; i++)
 			{
 				m_K[i] += m_g * m_C[i] / m_b / m_dt + m_M[i] / m_b / m_dt / m_dt;
 			}
