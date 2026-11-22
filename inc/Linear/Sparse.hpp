@@ -60,8 +60,9 @@ namespace math
 		bool substitute(double*, const double*, uint32_t) const;
 
 		//operators
-		VectorN operator*(const VectorN&) const;
+		double& operator[](uint32_t);
 		double& operator()(uint32_t, uint32_t);
+		VectorN operator*(const VectorN&) const;
 		const double& operator()(uint32_t, uint32_t) const;
 
 		//convert

@@ -307,6 +307,10 @@ namespace math
 		//return
 		return r;
 	}
+	double& Sparse::operator[](uint32_t i)
+	{
+		return m_data_ptr[i];
+	}
 	double& Sparse::operator()(uint32_t i, uint32_t j)
 	{
 		for(int32_t k = m_cols_map_ref[j]; k < m_cols_map_ref[j + 1]; k++)
