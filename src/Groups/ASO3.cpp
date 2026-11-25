@@ -26,31 +26,15 @@ namespace math
 	//group
 	GSO3 ASO3::exp(void) const
 	{
-		//data
-		const double t1 = m_data[0];
-		const double t2 = m_data[1];
-		const double t3 = m_data[2];
-		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
-		//functions
+		const Vec3 t(m_data);
+		const double tn = t.norm();
 		const double f0 = fn(tn / 2, 0);
 		const double f1 = fn(tn / 2, 1);
-		//quaternion
-		const double q0 = f0;
-		const double q1 = f1 * t1 / 2;
-		const double q2 = f1 * t2 / 2;
-		const double q3 = f1 * t3 / 2;
-		//return
-		return GSO3(q0, q1, q2, q3);
+		return GSO3(f0, f1 * t[0] / 2, f1 * t[1] / 2, f1 * t[2] / 2);
 	}
 	ASO3 ASO3::bracket(const ASO3& v) const
 	{
-		const double t1 = m_data[0];
-		const double t2 = m_data[1];
-		const double t3 = m_data[2];
-		const double v1 = v.m_data[0];
-		const double v2 = v.m_data[1];
-		const double v3 = v.m_data[2];
-		return ASO3(t2 * v3 - t3 * v2, t3 * v1 - t1 * v3, t1 * v2 - t2 * v1);
+		return ASO3(Vec3(m_data).cross(Vec3(v.m_data)));
 	}
 
 	//random
@@ -66,35 +50,30 @@ namespace math
 	}
 	Mat3 ASO3::matrix(void) const
 	{
-		const double t1 = m_data[0];
-		const double t2 = m_data[1];
-		const double t3 = m_data[2];
-		return Mat3({0, -t3, t2}, {t3, 0, -t1}, {-t2, t1, 0});
+		return Vec3(m_data).spin();
 	}
 	Mat3 ASO3::adjoint(void) const
 	{
-		const double t1 = m_data[0];
-		const double t2 = m_data[1];
-		const double t3 = m_data[2];
-		return Mat3({0, -t3, t2}, {t3, 0, -t1}, {-t2, t1, 0});
+		return Vec3(m_data).spin();
 	}
 	Mat3 ASO3::jacobian(void) const
 	{
-		const Mat3 A = matrix();
-		const double t1 = m_data[0];
-		const double t2 = m_data[1];
-		const double t3 = m_data[2];
-		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
-		return Mat3(Mode::eye) - fn(tn, 2) * A + fn(tn, 3) * A * A;
+		const Vec3 t(m_data);
+		const Mat3 T = t.spin();
+		const double tn = t.norm();
+		const double f2 = fn(tn, 2);
+		const double f3 = fn(tn, 3);
+		return Mat3(Mode::eye) - f2 * T + f3 * T * T;
 	}
 	Mat3 ASO3::jacobian_inverse(void) const
 	{
-		const Mat3 A = matrix();
-		const double t1 = m_data[0];
-		const double t2 = m_data[1];
-		const double t3 = m_data[2];
-		const double tn = sqrt(t1 * t1 + t2 * t2 + t3 * t3);
-		return Mat3(Mode::eye) + A / 2 + (fn(tn, 3) - 2 * fn(tn, 4)) / fn(tn, 2) / 2 * A * A;
+		const Vec3 t(m_data);
+		const Mat3 T = t.spin();
+		const double tn = t.norm();
+		const double f2 = fn(tn, 2);
+		const double f3 = fn(tn, 3);
+		const double f4 = fn(tn, 4);
+		return Mat3(Mode::eye) + T / 2 + (f3 - 2 * f4) / f2 / 2 * T * T;
 	}
 	Mat3 ASO3::jacobian_gradient(const Vec3& vector) const
 	{
@@ -113,6 +92,21 @@ namespace math
 		G -= f2 * u.spin() + f3 * t.cross(u).spin() + f3 * t.spin() * u.spin();
 		//return
 		return G;
+	}
+	Mat3 ASO3::jacobian_inverse_gradient(const Vec3& v, bool transpose) const
+	{
+		const Vec3 t(m_data);
+		const Mat3 T = t.spin();
+		const Mat3 V = v.spin();
+		const Mat3 M = v.outer(t);
+		const double tn = t.norm();
+		const double f2 = fn(tn, 2);
+		const double f3 = fn(tn, 3);
+		const double f4 = fn(tn, 4);
+		const double f5 = fn(tn, 5);
+		const double f6 = fn(tn, 6);
+		const double st = transpose ? +1 : -1;
+		return st * V / 2 + (f3 - 2 * f4) / f2 / 2 * (V * T - 2 * T * V) + (f5 - 4 * f6) / f2 / 2 * T * T * M;
 	}
 
 	//operators
