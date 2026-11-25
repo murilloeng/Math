@@ -36,6 +36,7 @@ namespace math
 		Mat3 jacobian_inverse(void) const override;
 		Mat3 jacobian_gradient(const Vec3&) const override;
 		Mat3 jacobian_inverse_gradient(const Vec3&, bool) const;
+		Mat3 jacobian_inverse_hessian(const Vec3&, const Vec3&, bool, bool) const;
 
 		//operators
 		ASO3& operator*=(double) override;

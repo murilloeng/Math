@@ -108,6 +108,40 @@ namespace math
 		const double st = transpose ? +1 : -1;
 		return st * V / 2 + (f3 - 2 * f4) / f2 / 2 * (V * T - 2 * T * V) + (f5 - 4 * f6) / f2 / 2 * T * T * M;
 	}
+	Mat3 ASO3::jacobian_inverse_hessian(const Vec3& v, const Vec3& w, bool transpose, bool variable) const
+	{
+		//data
+		const Vec3 t(m_data);
+		const Mat3 T = t.spin();
+		const Mat3 V = v.spin();
+		const Mat3 W = w.spin();
+		const Mat3 M1 = v.outer(t);
+		const Mat3 M2 = v.outer(w);
+		const Mat3 M3 = w.outer(t);
+		const double tn = t.norm();
+		const double f2 = fn(tn, 2);
+		const double f3 = fn(tn, 3);
+		const double f4 = fn(tn, 4);
+		const double f5 = fn(tn, 5);
+		const double f6 = fn(tn, 6);
+		const double f7 = fn(tn, 7);
+		const double f8 = fn(tn, 8);
+		const double st = transpose ? +1 : -1;
+		const double an = (f3 - 2 * f4) / f2 / 2;
+		const double bn = (f5 - 4 * f6) / f2 / 2;
+		const double cn = (9 * f7 - f6 - 24 * f8) / f2 / 2 + 2 * an * bn;
+		//hessian
+		if(!variable)
+		{
+			return -st * W / 2 + an * (T * W + W * T) + bn * t.inner(w) * T * T;
+		}
+		else
+		{
+			return 
+				an * (V * W - 2 * W * V) + bn * (V * T - 2 * T * V) * M3 + 
+				bn * (t.inner(w) * (V * T - 2 * T * V) + T * T * M2) + cn * T * T * M1 * M3;
+		}
+	}
 
 	//operators
 	ASO3& ASO3::operator*=(double s)
